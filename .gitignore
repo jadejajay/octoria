@@ -1,0 +1,21 @@
+node_modules/
+.expo/
+dist/
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+android/
+yarn-error.log
+/coverage
+# macOS
+.DS_Store
+firebase-export-1694701754315JszpLE/
+google-services.json
+storage.rules
+firestore.rules
+firebase.json
