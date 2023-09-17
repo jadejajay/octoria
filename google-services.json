@@ -1,0 +1,363 @@
+{
+  "project_info": {
+    "project_number": "799733583398",
+    "firebase_url": "https://speedy-league-335221-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "speedy-league-335221",
+    "storage_bucket": "speedy-league-335221.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:799733583398:android:fc7734d9bcf1844099a0e7",
+        "android_client_info": {
+          "package_name": "com.flutterflow.finwallet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "799733583398-ugop18bo0q50apk1uiof89ft9f6drae6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALjxwhCaDfUcbJbIaQN2JpsIO-kait5fw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "799733583398-ugop18bo0q50apk1uiof89ft9f6drae6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "799733583398-7s24s11jjfk5fk34a00l68rtjfqel4ag.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.flutterflow.finwallet"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:799733583398:android:767f8563df26791a99a0e7",
+        "android_client_info": {
+          "package_name": "com.ibais"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "799733583398-8vdrb0dvksk302rfum99v34bslaumf0v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ibais",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "799733583398-i3ji876a8ia70dk7pm6hbnqfp92l2920.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ibais",
+            "certificate_hash": "fa25467d4982229076ce21090f54f5d99f5e8fee"
+          }
+        },
+        {
+          "client_id": "799733583398-ugop18bo0q50apk1uiof89ft9f6drae6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALjxwhCaDfUcbJbIaQN2JpsIO-kait5fw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "799733583398-ugop18bo0q50apk1uiof89ft9f6drae6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "799733583398-7s24s11jjfk5fk34a00l68rtjfqel4ag.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.flutterflow.finwallet"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:799733583398:android:ea52490e06ab021e99a0e7",
+        "android_client_info": {
+          "package_name": "com.ibais.development"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "799733583398-cge9cbnjrrfjruhrms3aaogsaico47uh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ibais.development",
+            "certificate_hash": "fa25467d4982229076ce21090f54f5d99f5e8fee"
+          }
+        },
+        {
+          "client_id": "799733583398-th9iqptgjq5i4ok23r4r2dj0lsoanhqd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ibais.development",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "799733583398-ugop18bo0q50apk1uiof89ft9f6drae6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALjxwhCaDfUcbJbIaQN2JpsIO-kait5fw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "799733583398-ugop18bo0q50apk1uiof89ft9f6drae6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "799733583398-7s24s11jjfk5fk34a00l68rtjfqel4ag.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.flutterflow.finwallet"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:799733583398:android:29e76f80a5935eb999a0e7",
+        "android_client_info": {
+          "package_name": "com.ibaismedia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "799733583398-pm32f98frivn0k1j5sloa4amf7j40lpt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ibaismedia",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "799733583398-ugop18bo0q50apk1uiof89ft9f6drae6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALjxwhCaDfUcbJbIaQN2JpsIO-kait5fw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "799733583398-ugop18bo0q50apk1uiof89ft9f6drae6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "799733583398-7s24s11jjfk5fk34a00l68rtjfqel4ag.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.flutterflow.finwallet"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:799733583398:android:f0e656cab806296399a0e7",
+        "android_client_info": {
+          "package_name": "com.ibaismedia.ibaismedia"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "799733583398-ugop18bo0q50apk1uiof89ft9f6drae6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALjxwhCaDfUcbJbIaQN2JpsIO-kait5fw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "799733583398-ugop18bo0q50apk1uiof89ft9f6drae6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "799733583398-7s24s11jjfk5fk34a00l68rtjfqel4ag.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.flutterflow.finwallet"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:799733583398:android:4a9963076e2bf7d199a0e7",
+        "android_client_info": {
+          "package_name": "com.mainapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "799733583398-jpaqkd3ja91cd8vv2vd07hv3svef1r4d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mainapp",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "799733583398-ugop18bo0q50apk1uiof89ft9f6drae6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALjxwhCaDfUcbJbIaQN2JpsIO-kait5fw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "799733583398-ugop18bo0q50apk1uiof89ft9f6drae6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "799733583398-7s24s11jjfk5fk34a00l68rtjfqel4ag.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.flutterflow.finwallet"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:799733583398:android:8c469c4a15384cb399a0e7",
+        "android_client_info": {
+          "package_name": "com.octoria.development"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "799733583398-qkjp5p6mb5oju6m2gal27gfv3iacjo00.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.octoria.development",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "799733583398-ugop18bo0q50apk1uiof89ft9f6drae6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALjxwhCaDfUcbJbIaQN2JpsIO-kait5fw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "799733583398-ugop18bo0q50apk1uiof89ft9f6drae6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "799733583398-7s24s11jjfk5fk34a00l68rtjfqel4ag.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.flutterflow.finwallet"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:799733583398:android:593f83768d4acfb599a0e7",
+        "android_client_info": {
+          "package_name": "com.sharva"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "799733583398-j78hq1qorgt1vpdta5s0kao91hpa1jud.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sharva",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "799733583398-ugop18bo0q50apk1uiof89ft9f6drae6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALjxwhCaDfUcbJbIaQN2JpsIO-kait5fw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "799733583398-ugop18bo0q50apk1uiof89ft9f6drae6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "799733583398-7s24s11jjfk5fk34a00l68rtjfqel4ag.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.flutterflow.finwallet"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

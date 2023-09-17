@@ -7,11 +7,11 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: Env.NAME,
   description: `${Env.NAME} Mobile App`,
-  owner: Env.EXPO_ACCOUNT_OWNER,
+  owner: 'jadeja5645',
   slug: 'octoria',
   version: Env.VERSION.toString(),
   orientation: 'portrait',
-  icon: './assets/icon1.png',
+  icon: './assets/icon.png',
   userInterfaceStyle: 'automatic',
   splash: {
     image: './assets/splash.png',
@@ -19,6 +19,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     backgroundColor: '#FFFFFF',
   },
   updates: {
+    url: 'https://u.expo.dev/c7642e3d-4e71-4000-83da-ef31f330ec8d',
     fallbackToCacheTimeout: 0,
   },
   assetBundlePatterns: ['**/*'],
@@ -28,15 +29,15 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
 
   android: {
-    googleServicesFile: './google-services.json',
+    googleServicesFile: 'google-services.json',
     adaptiveIcon: {
-      foregroundImage: './assets/adaptive-icon1.png',
+      foregroundImage: './assets/adaptive-icon.png',
       backgroundColor: '#FFFFFF',
     },
     package: Env.PACKAGE,
   },
   web: {
-    favicon: './assets/favicon1.png',
+    favicon: './assets/favicon.png',
   },
   plugins: [
     ['@bacons/link-assets', ['./assets/fonts/Inter.ttf']],

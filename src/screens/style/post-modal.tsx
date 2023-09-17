@@ -3,7 +3,6 @@
 import { MaterialIcons } from '@expo/vector-icons';
 // import { ReactToJson } from '@/core/react-to-json';
 import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 import { LinearGradient } from 'expo-linear-gradient';
 // import { useIsFocused, useNavigation } from '@react-navigation/native';
 import * as MediaLibrary from 'expo-media-library';
@@ -20,6 +19,7 @@ import { captureRef } from 'react-native-view-shot';
 
 import { shareImageWithTitle } from '@/core';
 import useFirebaseStorageLiveQuery from '@/core/hooks/use-firebase-storage';
+import useFirestoreDocLiveQuery from '@/core/hooks/use-firestore-doc';
 import { ActivityIndicator, Text, TouchableOpacity, View } from '@/ui';
 
 const user = auth().currentUser;
@@ -28,7 +28,8 @@ type Props = {
 };
 export const PostModal = ({ data }: Props) => {
   const [modalVisible, setModalVisible] = useState(false);
-
+  const title = useFirestoreDocLiveQuery('links', 'share');
+  const User = useFirestoreDocLiveQuery('Users', user?.uid as string);
   const { downloadURL } = useFirebaseStorageLiveQuery('/app_assets/logo.png');
   const [name, setName] = useState('Guest');
   const [photo, setPhoto] = useState('');
@@ -37,22 +38,11 @@ export const PostModal = ({ data }: Props) => {
 
   useEffect(() => {
     if (user) {
-      SetUserType();
+      setPhoto(User?.data?.photoUrl);
+      setName(User?.data?.name);
       setModalVisible(true);
     }
-  }, []);
-
-  const SetUserType = async () => {
-    try {
-      firestore()
-        .collection('Users')
-        .doc(user?.uid)
-        .onSnapshot((documentSnapshot) => {
-          setPhoto(documentSnapshot?.data()?.photoUrl);
-          setName(documentSnapshot?.data()?.name);
-        });
-    } catch (error) {}
-  };
+  }, [User?.data?.name, User?.data?.photoUrl]);
 
   const onShare = async () => {
     try {
@@ -61,7 +51,7 @@ export const PostModal = ({ data }: Props) => {
         height: 440,
         quality: 1,
       });
-      shareImageWithTitle(localUri);
+      shareImageWithTitle(localUri, title?.data?.value);
       // handleWhatsappShare(localUri);
       setLoading(false);
     } catch (e) {

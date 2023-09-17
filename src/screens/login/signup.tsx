@@ -106,6 +106,7 @@ export const SignUpForm = () => {
 
     if (!result.canceled) {
       setIsLoading(true);
+
       const x = await uploadImage(result.assets[0].uri.toString());
       setIsLoading(false);
       if (x) setImage(x);

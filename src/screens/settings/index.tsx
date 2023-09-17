@@ -3,12 +3,13 @@
 import { Env } from '@env';
 // import { useColorScheme } from 'nativewind';
 import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 // import jwtDecode from 'jwt-decode';
 import * as React from 'react';
 import { Image } from 'react-native';
 
+import { openLinkInBrowser } from '@/core';
+import useFirestoreDocLiveQuery from '@/core/hooks/use-firestore-doc';
 // import { useAuth } from '@/core';
 import { Button, FocusAwareStatusBar, ScrollView, Text, View } from '@/ui';
 import { Github, Rate, Share, Support, Website } from '@/ui/icons';
@@ -22,27 +23,9 @@ const user = auth().currentUser;
 export const Settings = () => {
   const { navigate } = useNavigation();
   // const isFocused = useIsFocused();
-  const [type, setType] = React.useState('');
-  const [type2, setType2] = React.useState('');
-  const [image, setImage] = React.useState('');
-  const [name, setName] = React.useState('');
+  const { data } = useFirestoreDocLiveQuery('links', 'settings');
+  const User = useFirestoreDocLiveQuery('Users', user?.uid as string);
 
-  React.useEffect(() => {
-    const sub = firestore()
-      .collection('Users')
-      .doc(user?.uid)
-      .onSnapshot((documentSnapshot) => {
-        const x = documentSnapshot?.data()?.type.toString();
-        const x2 = documentSnapshot?.data()?.business.toString();
-        const x3 = documentSnapshot?.data()?.name.toString();
-        const x4 = documentSnapshot?.data()?.photoUrl.toString();
-        setType(x);
-        setType2(x2);
-        setName(x3);
-        setImage(x4);
-      });
-    return () => sub();
-  }, []);
   // React.useEffect(() => {
   //   user?.reload().then(() => {
   //     setImage(user?.photoURL || '');
@@ -66,9 +49,9 @@ export const Settings = () => {
               className="h-32 w-32 rounded-xl p-1"
               style={{ backgroundColor: 'white', elevation: 4 }}
             >
-              {image && (
+              {User?.data?.photoUrl && (
                 <Image
-                  source={{ uri: image }}
+                  source={{ uri: User?.data?.photoUrl }}
                   style={{ flex: 1, borderRadius: 8 }}
                 />
               )}
@@ -79,21 +62,21 @@ export const Settings = () => {
                 numberOfLines={1}
                 className="font-varela font-bold"
               >
-                {name}
+                {User?.data?.name}
               </Text>
               <Text
                 variant="sm"
                 numberOfLines={1}
                 className="font-varela text-slate-400"
               >
-                {type2}
+                {User?.data?.type}
               </Text>
               <Text
                 variant="sm"
                 numberOfLines={1}
                 className="font-varela text-slate-400"
               >
-                {type}
+                {User?.data?.business}
               </Text>
               <Button
                 label="Edit"
@@ -142,32 +125,52 @@ export const Settings = () => {
             <Item
               text="settings.share"
               icon={<Share color={iconColor} />}
-              onPress={() => {}}
+              onPress={() => {
+                data?.share ? openLinkInBrowser(data?.share) : {};
+              }}
             />
             <Item
               text="settings.rate"
               icon={<Rate color={iconColor} />}
-              onPress={() => {}}
+              onPress={() => {
+                data?.rate ? openLinkInBrowser(data?.rate) : {};
+              }}
             />
             <Item
               text="settings.support"
               icon={<Support color={iconColor} />}
-              onPress={() => {}}
+              onPress={() => {
+                data?.support ? openLinkInBrowser(data?.support) : {};
+              }}
             />
           </ItemsContainer>
 
           <ItemsContainer title="settings.links">
-            <Item text="settings.privacy" onPress={() => {}} />
-            <Item text="settings.terms" onPress={() => {}} />
+            <Item
+              text="settings.privacy"
+              onPress={() => {
+                data?.privacy ? openLinkInBrowser(data?.privacy) : {};
+              }}
+            />
+            <Item
+              text="settings.terms"
+              onPress={() => {
+                data?.terms ? openLinkInBrowser(data?.terms) : {};
+              }}
+            />
             <Item
               text="settings.github"
               icon={<Github color={iconColor} />}
-              onPress={() => {}}
+              onPress={() => {
+                data?.github ? openLinkInBrowser(data?.github) : {};
+              }}
             />
             <Item
               text="settings.website"
               icon={<Website color={iconColor} />}
-              onPress={() => {}}
+              onPress={() => {
+                data?.website ? openLinkInBrowser(data?.website) : {};
+              }}
             />
           </ItemsContainer>
 

@@ -73,14 +73,14 @@ export function calculatePercentage(
   return Number(x.toFixed(0));
 }
 
-export const handleWhatsappShare = async (fileUri: any) => {
+export const handleWhatsappShare = async (fileUri: any, title: any) => {
   //https://api.whatsapp.com/send?phone=918734845201&text=
   // openLinkInBrowser(LINK);
   try {
     //@ts-ignore
     const options: ShareSingleOptions = {
       title: 'Share via WhatsApp',
-      message: 'Octoria Product',
+      message: title,
       // type: 'image/*',
       // url: item.image3d, // The URI of the image you want to share
       // image: item.image3d,
@@ -100,24 +100,16 @@ export const handleWhatsappShare = async (fileUri: any) => {
   }
 };
 
-export const shareImageWithTitle = async (fileUri: any) => {
+export const shareImageWithTitle = async (fileUri: any, title: any) => {
   try {
-    fetch('http://itekindia.com/sharva/api/share-title.php')
-      .then((response) => response.text())
-      .then((result) => {
-        // Handle the result here
-        const options: Sharing.SharingOptions = {
-          mimeType: 'image/*', // Replace with the actual MIME type of your image
-          UTI: 'image/*',
-          dialogTitle: result, // Specify the title for the share dialog
-        };
+    // Handle the result here
+    const options: Sharing.SharingOptions = {
+      mimeType: 'image/*', // Replace with the actual MIME type of your image
+      UTI: 'image/*',
+      dialogTitle: title, // Specify the title for the share dialog
+    };
 
-        Sharing.shareAsync(fileUri, options);
-      })
-      .catch((error) => {
-        // Handle any errors that occur during the request
-        console.error(error);
-      });
+    Sharing.shareAsync(fileUri, options);
   } catch (error) {
     console.error('Error sharing image:', error);
   }

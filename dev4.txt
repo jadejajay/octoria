@@ -5,3 +5,37 @@ https://www.artstation.com/?sort_by=community&dimension=all
 https://www.deviantart.com/almaseria/art/Material-Study-Procreate-902663875
 https://www.svgrepo.com/svg/86725/person
 https://notifee.app/react-native/docs/triggers
+
+
+
+
+///////////////////////////////////////////
+firebase
+    firestore
+        favorite
+        MainCarousel
+        mainCategory
+        Users
+        links
+           background
+               url
+           server
+               url
+           settings
+               github
+               privacy
+               rate
+               share
+               support
+               terms
+               website
+
+    storage
+        /app_assets/logo.png
+server
+   octoria/search.php?search={string}&page={number}
+   octoria/product.php?id={productId:string}
+   octoria/featured.php
+   octoria/gst.php
+   octoria/products-image/product.php?imageUrl={product.image}
+

@@ -3,7 +3,7 @@
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 
-import { Env } from '@/core/env';
+import useFirestoreDocLiveQuery from '@/core/hooks/use-firestore-doc';
 import type { RouteProp } from '@/navigation/types';
 import { EmptyList, FocusAwareStatusBar, ScrollView, Text, View } from '@/ui';
 import AbsoluteButton from '@/ui/core/absolute-button';
@@ -17,17 +17,18 @@ export const Post = ({ route }: { route: RouteProp<'Post'> }) => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
   const [data, setData] = React.useState<Product>();
+  const server = useFirestoreDocLiveQuery('links', 'server');
 
   React.useEffect(() => {
     fetchData();
-  }, []);
+  }, [server.isLoading]);
   const fetchData = async () => {
     // Replace 'your_api_endpoint' with the actual API endpoint for paginated search
     try {
       setIsLoading(true);
-      if (route.params.id) {
+      if (!server.isLoading) {
         const response = await fetch(
-          `${Env.API_URL}octoria/product.php?id=${route.params.id}`
+          `${server.data?.url}octoria/product.php?id=${route.params.id}`
         );
         const jsonData = await response.json();
         //@ts-ignore

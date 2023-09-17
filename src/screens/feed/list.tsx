@@ -1,13 +1,9 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  useFocusEffect,
-  useIsFocused,
-  useNavigation,
-} from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, { useEffect } from 'react';
 
-import { Env } from '@/core/env';
+import useFirestoreDocLiveQuery from '@/core/hooks/use-firestore-doc';
 import { getItem } from '@/core/storage';
 import { EmptyList, FocusAwareStatusBar, List, Text, View } from '@/ui';
 import type { Product } from '@/ui/widgets/product-type';
@@ -16,26 +12,31 @@ import { Header } from '@/ui/widgets/products-list/header';
 import { Card } from './card';
 
 export const Feed = () => {
+  const search = getItem<string>('search') || 'Hardware';
   const [globalSearch, setGlobalSearch] = React.useState<string>('');
   const [initialData, setInitialData] = React.useState<any[]>([]);
   const [currentPage, setCurrentPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(1);
   const [isLoading, setIsLoading] = React.useState(false);
   const [isError, setIsError] = React.useState(false);
+  const server = useFirestoreDocLiveQuery('links', 'server');
+
   const isFocused = useIsFocused();
 
   const fetchData = async (query: string) => {
     // Replace 'your_api_endpoint' with the actual API endpoint for paginated search
     try {
       setIsLoading(true);
-      const response = await fetch(
-        `${Env.API_URL}octoria/search.php?search=${query}&page=${currentPage}`
-      );
-      const jsonData = await response.json();
+      if (!server.isLoading) {
+        const response = await fetch(
+          `${server.data?.url}octoria/search.php?search=${query}&page=${currentPage}`
+        );
+        const jsonData = await response.json();
 
-      setInitialData([...initialData, ...jsonData.data]);
-      setTotalPages(jsonData.totalPages);
-      setIsLoading(false);
+        setInitialData([...initialData, ...jsonData.data]);
+        setTotalPages(jsonData.totalPages);
+        setIsLoading(false);
+      }
     } catch (error) {
       setIsError(true);
     }
@@ -44,32 +45,36 @@ export const Feed = () => {
     // Replace 'your_api_endpoint' with the actual API endpoint for paginated search
     try {
       setIsLoading(true);
-      const response = await fetch(
-        `${Env.API_URL}octoria/search.php?search=${query}&page=${currentPage}`
-      );
-      const jsonData = await response.json();
-      setInitialData(jsonData.data);
-      setTotalPages(jsonData.totalPages);
-      setIsLoading(false);
+      if (!server.isLoading) {
+        const response = await fetch(
+          `${server.data?.url}octoria/search.php?search=${query}&page=${currentPage}`
+        );
+        const jsonData = await response.json();
+        setInitialData(jsonData.data);
+        setTotalPages(jsonData.totalPages);
+        setIsLoading(false);
+      }
     } catch (error) {
       setIsError(true);
     }
   };
   const { navigate } = useNavigation();
-  useFocusEffect(
-    React.useCallback(() => {
-      // Perform actions or fetch data here
-      const search = getItem<string>('search') || 'Hardware';
-      setGlobalSearch(search);
-      // Don't forget to return a cleanup function if necessary
-      return () => {
-        // Perform cleanup when the screen loses focus (optional)
-      };
-    }, [])
-  );
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     // Perform actions or fetch data here
+
+  //     // Don't forget to return a cleanup function if necessary
+  //     return () => {
+  //       // Perform cleanup when the screen loses focus (optional)
+  //     };
+  //   }, [])
+  // );
+  useEffect(() => {
+    setGlobalSearch(search);
+  }, [search]);
   useEffect(() => {
     fetchData2(globalSearch);
-  }, [globalSearch, isFocused]);
+  }, [globalSearch, isFocused, server.isLoading]);
 
   const handleSearch = () => {
     setCurrentPage(1);

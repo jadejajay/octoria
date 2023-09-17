@@ -1,24 +1,18 @@
 import firestore from '@react-native-firebase/firestore'; // Import Firestore from your Firebase package
 import { useEffect, useState } from 'react';
 
-function useFirestoreLiveQuery(collectionName: string) {
+function useFirestoreDocLiveQuery(collectionName: string, id: string) {
   const [data, setData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Reference to the Firestore collection
-    const collectionRef = firestore().collection(collectionName);
+    const collectionRef = firestore().collection(collectionName).doc(id);
 
     // Subscribe to real-time updates
     const unsubscribe = collectionRef.onSnapshot((querySnapshot) => {
-      const updatedData: any = [];
-      querySnapshot.forEach((doc) => {
-        // Extract the document data along with its ID
-        const docData = doc.data();
-        const docWithId = { id: doc.id, ...docData };
-        updatedData.push(docWithId);
-      });
-
+      const updatedData: any = querySnapshot?.data();
+      // Extract the document data along with its ID
       // Update the state with the live data
       setData(updatedData);
       setIsLoading(false);
@@ -26,9 +20,9 @@ function useFirestoreLiveQuery(collectionName: string) {
 
     // Clean up the subscription when the component unmounts
     return () => unsubscribe();
-  }, [collectionName]);
+  }, [collectionName, id]);
 
   return { data, isLoading };
 }
 
-export default useFirestoreLiveQuery;
+export default useFirestoreDocLiveQuery;

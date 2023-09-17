@@ -10,6 +10,7 @@ import type { ShareSingleOptions, Social } from 'react-native-share';
 import Share from 'react-native-share';
 
 import useFavorites from '@/core/hooks/use-favorite';
+import useFirestoreDocLiveQuery from '@/core/hooks/use-firestore-doc';
 // import { addToCart } from '@/core';
 import { Text, TouchableOpacity, View } from '@/ui';
 
@@ -23,7 +24,8 @@ export const ProductDetails = ({ item }: { item: Product }) => {
   const isItemInFavorites = isFavorite(item.id);
   const [Size, setSize] = React.useState('');
   const [Finishing, setFinishing] = React.useState('');
-
+  const server = useFirestoreDocLiveQuery('links', 'server');
+  const share = useFirestoreDocLiveQuery('links', 'share');
   const handleButtonPress1 = (_: any, item2: any) => {
     setSize(item2);
   };
@@ -59,9 +61,9 @@ export const ProductDetails = ({ item }: { item: Product }) => {
           ? ' and ' + Finishing + ' Finishing'
           : Finishing + ' Finishing'
         : ''
-    }  from mobile application. http://itekindia.com/octoria/products-image/product.php?imageUrl=${
-      item.image3d
-    }`;
+    }  from mobile application. ${
+      server.data?.url
+    }octoria/products-image/product.php?imageUrl=${item.image3d}`;
     // openLinkInBrowser(LINK);
     try {
       const options: ShareSingleOptions = {
@@ -73,7 +75,7 @@ export const ProductDetails = ({ item }: { item: Product }) => {
         // filename: item.image3d,
         social: Share.Social.WHATSAPP as Social,
         //@ts-ignore
-        whatsAppNumber: '918734845201',
+        whatsAppNumber: share?.data?.phone,
         appId: 'com.whatsapp',
       };
 

@@ -5,7 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import * as MediaLibrary from 'expo-media-library';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Image as IMage,
   Modal,
@@ -19,6 +19,7 @@ import { ImageBackground } from 'react-native';
 import { captureRef } from 'react-native-view-shot';
 
 import { shareImageWithTitle } from '@/core';
+import useFirestoreDocLiveQuery from '@/core/hooks/use-firestore-doc';
 // import { shareImageWithTitle } from '@/core';
 import { ActivityIndicator } from '@/ui';
 import AbsoluteButton from '@/ui/core/absolute-button';
@@ -27,10 +28,15 @@ import Gestures from '../lib';
 
 export function ShareCam({ route }: any) {
   const { url } = route.params;
-  const [Image, setImage] = useState('http://itekindia.com/wood.jpg');
+  const share = useFirestoreDocLiveQuery('links', 'share');
+  const { data, isLoading } = useFirestoreDocLiveQuery('links', 'background');
+  const [image, setImage] = useState('');
   const imgRef = useRef();
   const [loading, setLoading] = useState(false);
   const { goBack } = useNavigation();
+  useEffect(() => {
+    setImage(data?.url);
+  }, [data?.url, isLoading]);
 
   async function handleDownload() {
     try {
@@ -39,11 +45,19 @@ export function ShareCam({ route }: any) {
         height: 440,
         quality: 1,
       });
-
-      await MediaLibrary.saveToLibraryAsync(localUri);
-      setLoading(false);
-      if (localUri) {
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      if (status === 'granted') {
+        // You have permission to write to the storage here
+        await MediaLibrary.saveToLibraryAsync(localUri);
         ToastAndroid.show('Photo Saved to Gallery !', ToastAndroid.SHORT);
+        setLoading(false);
+      } else {
+        ToastAndroid.show(
+          'Permission denied go to setting and give permission !',
+          ToastAndroid.SHORT
+        );
+        setLoading(false);
+        // Handle the case where permission is denied
       }
     } catch (e) {
       console.log(e);
@@ -68,19 +82,22 @@ export function ShareCam({ route }: any) {
         height: 440,
         quality: 1,
       });
-      shareImageWithTitle(localUri);
+      shareImageWithTitle(localUri, share?.data?.value);
       setLoading(false);
     } catch (e) {
       console.log(e);
     }
   };
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.container}>
         <ImageBackground
           style={styles.camera}
-          source={{ uri: Image }}
+          source={{ uri: image }}
           resizeMode="cover"
           //@ts-ignore
           ref={imgRef}

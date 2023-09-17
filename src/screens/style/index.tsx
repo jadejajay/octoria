@@ -3,9 +3,9 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 
 import { speak } from '@/core';
-import { Env } from '@/core/env';
 import { getGreetingByTimezone } from '@/core/greet';
 import useFirestoreLiveQuery from '@/core/hooks/use-firestore';
+import useFirestoreDocLiveQuery from '@/core/hooks/use-firestore-doc';
 import useMainCategories from '@/core/hooks/use-main-categories';
 import { setItem } from '@/core/storage';
 import { FocusAwareStatusBar, ScrollView, View } from '@/ui';
@@ -21,25 +21,32 @@ import { PostModal } from './post-modal';
 
 export const Style = () => {
   const { navigate } = useNavigation();
+  const server = useFirestoreDocLiveQuery('links', 'server');
   const { MainCategoriesData, isLoading } = useMainCategories();
   const FestivalImage = useFirestoreLiveQuery('FestivalImage');
-  const greet = getGreetingByTimezone();
 
   const [isProductsLoading, setIsProductsLoading] = useState(false);
   const [data2, setData2] = React.useState<Product[]>([]);
   React.useEffect(() => {
-    fetchData();
+    const greet = getGreetingByTimezone();
     speak(`${greet} sir, welcome back`);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  React.useEffect(() => {
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [server.isLoading]);
   const fetchData = async () => {
     // Replace 'your_api_endpoint' with the actual API endpoint for paginated search
     try {
       setIsProductsLoading(true);
-      const response2 = await fetch(`${Env.API_URL}octoria/featured.php`);
-      const jsonData2 = await response2.json();
-      setData2(jsonData2);
-      setIsProductsLoading(false);
+      if (!server.isLoading) {
+        const response2 = await fetch(
+          `${server.data?.url}octoria/featured.php`
+        );
+        const jsonData2 = await response2.json();
+        setData2(jsonData2);
+        setIsProductsLoading(false);
+      }
     } catch (error) {}
   };
 
