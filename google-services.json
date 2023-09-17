@@ -272,6 +272,42 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:799733583398:android:fcc34bf511d9a26599a0e7",
+        "android_client_info": {
+          "package_name": "com.octoria"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "799733583398-ugop18bo0q50apk1uiof89ft9f6drae6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALjxwhCaDfUcbJbIaQN2JpsIO-kait5fw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "799733583398-ugop18bo0q50apk1uiof89ft9f6drae6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "799733583398-7s24s11jjfk5fk34a00l68rtjfqel4ag.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.flutterflow.finwallet"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:799733583398:android:8c469c4a15384cb399a0e7",
         "android_client_info": {
           "package_name": "com.octoria.development"
