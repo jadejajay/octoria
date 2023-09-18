@@ -51,6 +51,17 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       {
         android: {
           kotlinVersion: '1.7.22', // this is for softinput package
+          packagingOptions: {
+            pickFirst: [
+              'lib/x86/libc++_shared.so',
+              'lib/x86_64/libjsc.so',
+              'lib/arm64-v8a/libjsc.so',
+              'lib/arm64-v8a/libc++_shared.so',
+              'lib/x86_64/libc++_shared.so',
+              'lib/armeabi-v7a/libc++_shared.so',
+            ],
+          },
+          usesCleartextTraffic: true,
         },
       },
     ],
