@@ -44,7 +44,7 @@ export const Style = () => {
         const response2 = await axios.get(
           `${server.data?.url}octoria/featured.php`
         );
-        const jsonData2 = response2.data;
+        const jsonData2 = await response2.data;
         setData2(jsonData2);
         setIsProductsLoading(false);
       }

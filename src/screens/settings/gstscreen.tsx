@@ -47,12 +47,13 @@ export const GstView = ({}: Props) => {
     setLoading(true);
     axios
       .get(
-        `http://sheet.gstincheck.co.in/check/${
+        `https://sheet.gstincheck.co.in/check/${
           apiKey?.data?.apikey
         }/${search.toUpperCase()}`
       )
       .then((res) => {
         setResult(res.data);
+
         setLoading(false);
       });
     setLoading(false);
