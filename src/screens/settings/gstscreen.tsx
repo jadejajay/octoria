@@ -6,7 +6,7 @@ import axios from 'axios';
 import * as React from 'react';
 import { Modal, StyleSheet, ToastAndroid } from 'react-native';
 
-import { Env } from '@/core/env';
+import useFirestoreDocLiveQuery from '@/core/hooks/use-firestore-doc';
 import {
   ActivityIndicator,
   Input,
@@ -28,24 +28,28 @@ export const GstView = ({}: Props) => {
     }
   );
   const [loading, setLoading] = React.useState(false);
-  const [apiKey, setApiKey] = React.useState(
-    'e494d334bcd83ed215f6b2398dfc2a4a'
-  );
-  React.useEffect(() => {
-    const fetchApi = async () => {
-      await axios.get(`${Env.API_URL}octoria/gst.php`).then((res) => {
-        setApiKey(res.data);
-        setLoading(false);
-      });
-    };
-    fetchApi();
-  }, []);
+  const apiKey = useFirestoreDocLiveQuery('links', 'gstapi');
+
+  // const [apiKey, setApiKey] = React.useState(
+  //   'e494d334bcd83ed215f6b2398dfc2a4a'
+  // );
+
+  // React.useEffect(() => {
+  //   const fetchApi = async () => {
+  //     await axios.get(`${Env.API_URL}octoria/gst.php`).then((res) => {
+  //       setLoading(false);
+  //     });
+  //   };
+  //   fetchApi();
+  // }, []);
 
   const handleSearch = () => {
     setLoading(true);
     axios
       .get(
-        `http://sheet.gstincheck.co.in/check/${apiKey}/${search.toUpperCase()}`
+        `http://sheet.gstincheck.co.in/check/${
+          apiKey?.data?.apikey
+        }/${search.toUpperCase()}`
       )
       .then((res) => {
         setResult(res.data);

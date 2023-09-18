@@ -13,6 +13,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   orientation: 'portrait',
   icon: './assets/icon.png',
   userInterfaceStyle: 'automatic',
+  scheme: 'octoria',
   splash: {
     image: './assets/splash.png',
     resizeMode: 'cover',

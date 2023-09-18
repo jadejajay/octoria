@@ -1,5 +1,6 @@
 // import MenuIcon from '@/ui/icons/menu';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 import React, { useState } from 'react';
 
 import { speak } from '@/core';
@@ -40,10 +41,10 @@ export const Style = () => {
     try {
       setIsProductsLoading(true);
       if (!server.isLoading) {
-        const response2 = await fetch(
+        const response2 = await axios.get(
           `${server.data?.url}octoria/featured.php`
         );
-        const jsonData2 = await response2.json();
+        const jsonData2 = response2.data;
         setData2(jsonData2);
         setIsProductsLoading(false);
       }
@@ -80,7 +81,8 @@ export const Style = () => {
             });
           }}
         />
-        <NewProductList data={data2} isLoading={isProductsLoading} />
+        {data2 && <NewProductList data={data2} isLoading={isProductsLoading} />}
+
         {FestivalImage.isLoading ? null : (
           <PostModal data={FestivalImage.data} />
         )}
