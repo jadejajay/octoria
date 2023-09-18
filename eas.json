@@ -10,7 +10,7 @@
         "image": "latest"
       },
       "android": {
-        "buildType": "apk",
+        "buildType": "app-bundle",
         "image": "latest"
       },
       "env": {
