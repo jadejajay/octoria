@@ -19,9 +19,9 @@ import colors from '@/ui/theme/colors';
 import { Item } from './item';
 import { ItemsContainer } from './items-container';
 // import { ThemeItem } from './theme-item';
-const user = auth().currentUser;
 export const Settings = () => {
   const { navigate } = useNavigation();
+  const user = auth().currentUser;
   // const isFocused = useIsFocused();
   const { data } = useFirestoreDocLiveQuery('links', 'settings');
   const User = useFirestoreDocLiveQuery('Users', user?.uid as string);

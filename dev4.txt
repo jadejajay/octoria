@@ -57,5 +57,59 @@ server
             keyPassword 'android'
         }
     }
+///////////////////////////////////////////////////////////////////////////////////////
+
+√ What do you want to do? » Set up a new keystore
+√ Assign a name to your build credentials: ... Build Credentials dxOx1B5h44
+√ Generate a new Android Keystore? ... yes
+√ Created keystore
+√ Created Android build credentials Build Credentials dxOx1B5h44
+Press any key to continue...
+
+
+Android Credentials
+Project                 octoria
+Application Identifier  com.octoria.development
+
+Push Notifications (FCM)
+  None assigned yet
+
+Google Service Account Key For Submissions
+  None assigned yet
+
+Configuration: Build Credentials dxOx1B5h44 (Default)
+Keystore
+Type                JKS
+Key Alias           1dd779821deaf4c89904a08c66be7b5d
+MD5 Fingerprint     BE:1A:15:EE:14:65:BC:B5:0B:5A:8F:6F:5F:BE:91:76
+SHA1 Fingerprint    64:6A:D3:1D:8A:3B:19:8C:16:EA:F1:AB:30:4E:DD:32:BE:84:DD:A0
+SHA256 Fingerprint  EC:BF:31:81:F7:B8:77:18:7B:9C:98:B1:C8:3C:EF:3A:B1:93:2C:22:29:2E:DE:1E:02:02:22:32:81:E7:C0:54
+Updated             9 seconds ago
+Configuration: Build Credentials dxOx1B5h44 (Default)
+Keystore
+Type                JKS
+Key Alias           1dd779821deaf4c89904a08c66be7b5d
+MD5 Fingerprint     BE:1A:15:EE:14:65:BC:B5:0B:5A:8F:6F:5F:BE:91:76
+SHA1 Fingerprint    64:6A:D3:1D:8A:3B:19:8C:16:EA:F1:AB:30:4E:DD:32:BE:84:DD:A0
+SHA256 Fingerprint  EC:BF:31:81:F7:B8:77:18:7B:9C:98:B1:C8:3C:EF:3A:B1:93:2C:22:29:2E:DE:1E:02:02:22:32:81:E7:C0:54
+Updated             1 minute ago
+///////////////////////////////////////////////////////////////////////////////////////
+keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android 
+keytool -list -v -keystore {keystore_name} -alias {alias_name}
+Alias name: androiddebugkey
+Creation date: 24-Jan-2023
+Entry type: PrivateKeyEntry
+Certificate chain length: 1
+Certificate[1]:
+Owner: C=US, O=Android, CN=Android Debug
+Issuer: C=US, O=Android, CN=Android Debug
+Serial number: 1
+Valid from: Tue Jan 24 16:26:54 IST 2023 until: Thu Jan 16 16:26:54 IST 2053
+Certificate fingerprints:
+         SHA1: FA:25:46:7D:49:82:22:90:76:CE:21:09:0F:54:F5:D9:9F:5E:8F:EE
+         SHA256: D8:A6:4C:84:99:4D:D1:A0:06:BA:8C:2B:A0:C7:D7:00:85:11:0B:B7:F9:E2:14:9E:CA:BE:5F:5D:F9:DD:5C:A0
+Signature algorithm name: SHA256withRSA
+Subject Public Key Algorithm: 2048-bit RSA key
+Version: 1
 
 //android tutorial

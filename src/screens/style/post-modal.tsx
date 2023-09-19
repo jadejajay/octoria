@@ -22,11 +22,11 @@ import useFirebaseStorageLiveQuery from '@/core/hooks/use-firebase-storage';
 import useFirestoreDocLiveQuery from '@/core/hooks/use-firestore-doc';
 import { ActivityIndicator, Text, TouchableOpacity, View } from '@/ui';
 
-const user = auth().currentUser;
 type Props = {
   data: any;
 };
 export const PostModal = ({ data }: Props) => {
+  const user = auth().currentUser;
   const [modalVisible, setModalVisible] = useState(false);
   const title = useFirestoreDocLiveQuery('links', 'share');
   const User = useFirestoreDocLiveQuery('Users', user?.uid as string);
@@ -42,7 +42,7 @@ export const PostModal = ({ data }: Props) => {
       setName(User?.data?.name);
       setModalVisible(true);
     }
-  }, [User?.data?.name, User?.data?.photoUrl]);
+  }, [User?.data?.name, User?.data?.photoUrl, user]);
 
   const onShare = async () => {
     try {

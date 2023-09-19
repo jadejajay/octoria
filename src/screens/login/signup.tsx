@@ -31,7 +31,6 @@ const schema = z.object({
   type: z.string(),
   business: z.string().max(50),
 });
-const user = auth().currentUser;
 
 type FormType = z.infer<typeof schema>;
 
@@ -49,11 +48,9 @@ export const SignUpForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [type2, setType] = useState('');
   const { canGoBack, goBack } = useNavigation();
+  const user = auth().currentUser;
 
   useEffect(() => {
-    // firestore().collection('Test').doc(user?.uid).set({
-    //   business: 'this is tets',
-    // });
     if (user) {
       setValue('name', uname2);
       setValue('email', email2);
@@ -97,6 +94,7 @@ export const SignUpForm = () => {
 
   const handleImage = async () => {
     // No permissions request is necessary for launching the image library
+    setIsLoading(true);
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -105,11 +103,9 @@ export const SignUpForm = () => {
     });
 
     if (!result.canceled) {
-      setIsLoading(true);
-
       const x = await uploadImage(result.assets[0].uri.toString());
+      setImage(x as string);
       setIsLoading(false);
-      if (x) setImage(x);
     }
   };
   async function uploadImage(uri: string) {
@@ -122,7 +118,6 @@ export const SignUpForm = () => {
       // const update = {
       //   photoURL: x,
       // };
-
       // await user.updateProfile(update);
       return x;
     }
