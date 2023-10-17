@@ -19,7 +19,7 @@ export const buttonVariants: BVariant = {
   defaults: {
     container:
       'flex-row items-center justify-center rounded-full px-12 py-3 my-2',
-    label: 'text-[16px] font-medium text-white',
+    label: 'text-[16px] text-gray-200 font-varela',
     indicator: 'text-white h-[30px]',
   },
   primary: {
@@ -43,6 +43,7 @@ interface Props extends TouchableOpacityProps {
   variant?: VariantName;
   label?: string;
   loading?: boolean;
+  textColor?: string;
 }
 
 export const Button = ({
@@ -50,6 +51,7 @@ export const Button = ({
   loading = false,
   variant = 'primary',
   disabled = false,
+  textColor = 'grey',
   ...props
 }: Props) => {
   return (
@@ -76,6 +78,7 @@ export const Button = ({
           ${buttonVariants.defaults.label}
            ${buttonVariants[variant].label}
           `}
+          style={{ color: textColor }}
         >
           {label}
         </Text>

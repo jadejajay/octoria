@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    canvas {
+      cursor: crosshair;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Color Picker</h1>
+  <canvas id="colorCanvas" width="1024" height="1024"></canvas>
+
+  <script>
+    const canvas = document.getElementById('colorCanvas');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+
+    // Load an image (replace 'image.png' with your image URL)
+    img.src = 'kehar.png';
+
+    // Once the image is loaded, draw it on the canvas
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      // Add a click event listener to the canvas
+      canvas.addEventListener('click', (e) => {
+        const x = e.offsetX;
+        const y = e.offsetY;
+
+        // Get the color data at the clicked pixel
+        const colorData = ctx.getImageData(x, y, 1, 1).data;
+
+        // Send the color data back to React Native
+        window.ReactNativeWebView.postMessage(JSON.stringify(colorData));
+      });
+    };
+  </script>
+</body>
+
+</html>

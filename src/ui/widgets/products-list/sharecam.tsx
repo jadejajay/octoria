@@ -19,7 +19,7 @@ import { ImageBackground } from 'react-native';
 import { captureRef } from 'react-native-view-shot';
 
 import { shareImageWithTitle } from '@/core';
-import useFirestoreDocLiveQuery from '@/core/hooks/use-firestore-doc';
+import { useLinks } from '@/core/mainscreen';
 // import { shareImageWithTitle } from '@/core';
 import { ActivityIndicator } from '@/ui';
 import AbsoluteButton from '@/ui/core/absolute-button';
@@ -28,15 +28,33 @@ import Gestures from '../lib';
 
 export function ShareCam({ route }: any) {
   const { url } = route.params;
-  const share = useFirestoreDocLiveQuery('links', 'share');
-  const { data, isLoading } = useFirestoreDocLiveQuery('links', 'background');
-  const [image, setImage] = useState('');
+  const server = useLinks();
+  const demoLink =
+    'https://firebasestorage.googleapis.com/v0/b/speedy-league-335221.appspot.com/o/app_assets%2Fwood.jpg?alt=media&token=f21faf5c-5f0a-4330-a81d-242ca9ba21c3';
+  const demoShare = 'Hello, This Post is Generate by Octoria Application.';
+  // const share = useFirestoreDocLiveQuery('links', 'share');
+  // const { data, isLoading } = useFirestoreDocLiveQuery('links', 'background');
+  const [image, setImage] = useState(demoLink);
   const imgRef = useRef();
   const [loading, setLoading] = useState(false);
+  const [share, setShare] = useState(demoShare);
   const { goBack } = useNavigation();
+  // useEffect(() => {
+  //   setImage(data?.url);
+  // }, [data?.url, isLoading]);
   useEffect(() => {
-    setImage(data?.url);
-  }, [data?.url, isLoading]);
+    const shareLink = server.LinksData.find((item) => item.id === 'share');
+    const backgroundLink = server.LinksData.find(
+      (item) => item.id === 'background'
+    );
+    if (shareLink) {
+      setShare(shareLink.value!);
+    }
+    if (backgroundLink) {
+      setImage(backgroundLink.url!);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [server.isLoading]);
 
   async function handleDownload() {
     try {
@@ -59,19 +77,23 @@ export function ShareCam({ route }: any) {
         setLoading(false);
         // Handle the case where permission is denied
       }
-    } catch (e) {
-      console.log(e);
+    } catch (_) {
+      ToastAndroid.show('download Failed !', ToastAndroid.SHORT);
     }
   }
   const pickImage = async () => {
-    let result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [3, 4],
-      quality: 1,
-    });
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
+    try {
+      let result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [3, 4],
+        quality: 1,
+      });
+      if (!result.canceled) {
+        setImage(result.assets[0].uri);
+      }
+    } catch (error) {
+      ToastAndroid.show('Something Unexpected Happen !', ToastAndroid.SHORT);
     }
   };
 
@@ -82,13 +104,13 @@ export function ShareCam({ route }: any) {
         height: 440,
         quality: 1,
       });
-      shareImageWithTitle(localUri, share?.data?.value);
+      shareImageWithTitle(localUri, share);
       setLoading(false);
     } catch (e) {
-      console.log(e);
+      ToastAndroid.show('Sharing failed !', ToastAndroid.SHORT);
     }
   };
-  if (isLoading) {
+  if (server.isLoading) {
     return null;
   }
 

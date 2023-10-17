@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 // import storage from '@react-native-firebase/storage';
 import * as Sharing from 'expo-sharing';
 import * as Speech from 'expo-speech';
@@ -126,4 +127,111 @@ const speechOptions = {
 export async function speak(text: string) {
   const thingToSay = text;
   Speech.speak(thingToSay, speechOptions);
+}
+
+export function invertColor(hexColor: string) {
+  // Remove the '#' if it's included
+  hexColor = hexColor.replace(/^#/, '');
+
+  // Convert the hex color to RGB
+  const r = parseInt(hexColor.slice(0, 2), 16);
+  const g = parseInt(hexColor.slice(2, 4), 16);
+  const b = parseInt(hexColor.slice(4, 6), 16);
+
+  // Invert the RGB values
+  const invertedR = 255 - r;
+  const invertedG = 255 - g;
+  const invertedB = 255 - b;
+
+  // Convert the inverted RGB values back to hexadecimal
+  const invertedHexColor = `#${(
+    (invertedR << 16) |
+    (invertedG << 8) |
+    invertedB
+  )
+    .toString(16)
+    .padStart(6, '0')}`;
+
+  return invertedHexColor;
+}
+
+export function generateRandomCharmColor() {
+  // Define the hue range for charm colors (e.g., 0 to 360 for the full range)
+  const minHue = 60; // Adjust these values as needed
+  const maxHue = 240;
+
+  // Generate a random hue within the specified range
+  const hue = Math.floor(Math.random() * (maxHue - minHue + 1)) + minHue;
+
+  // Set saturation and value to create a more pastel color
+  const saturation = Math.floor(Math.random() * (80 - 40 + 1)) + 40; // Adjust these values as needed
+  const value = Math.floor(Math.random() * (80 - 40 + 1)) + 40;
+
+  // Alpha value
+  const alpha = 88;
+
+  // Convert HSV to RGB
+  const chroma = (1 - Math.abs(2 * value - 1)) * saturation;
+  const huePrime = hue / 60;
+  const x = chroma * (1 - Math.abs((huePrime % 2) - 1));
+  const m = value - chroma / 2;
+
+  let r, g, b;
+
+  if (huePrime >= 0 && huePrime < 1) {
+    r = chroma;
+    g = x;
+    b = 0;
+  } else if (huePrime >= 1 && huePrime < 2) {
+    r = x;
+    g = chroma;
+    b = 0;
+  } else if (huePrime >= 2 && huePrime < 3) {
+    r = 0;
+    g = chroma;
+    b = x;
+  } else if (huePrime >= 3 && huePrime < 4) {
+    r = 0;
+    g = x;
+    b = chroma;
+  } else if (huePrime >= 4 && huePrime < 5) {
+    r = x;
+    g = 0;
+    b = chroma;
+  } else {
+    r = chroma;
+    g = 0;
+    b = x;
+  }
+
+  r = Math.floor((r + m) * 255);
+  g = Math.floor((g + m) * 255);
+  b = Math.floor((b + m) * 255);
+
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+export function generateRandomCharmColor2() {
+  const isPrimaryColor = (color: any) => {
+    const primaryColors = [
+      'ff0000', // Red
+      '00ff00', // Green
+      '0000ff', // Blue
+      'ff00ff', // Magenta
+      'ffff00', // Yellow
+      '00ffff', // Cyan
+    ];
+    return primaryColors.includes(color);
+  };
+
+  let color;
+  do {
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    color = `#${r.toString(16).padStart(2, '0')}${g
+      .toString(16)
+      .padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+  } while (isPrimaryColor(color));
+
+  return color;
 }

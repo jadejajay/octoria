@@ -8,6 +8,11 @@ module.exports = {
       fontFamily: {
         inter: ['Inter'],
         varela: ['VarelaRound-Regular'],
+        kalam: ['Kalam-Regular'],
+        aquire: ['Aquire'],
+        gobold: ['Gobold-Regular'],
+        monumentextended: ['MonumentExtended-Regular'],
+        poppins: ['Poppins-Regular'],
       },
       colors,
     },

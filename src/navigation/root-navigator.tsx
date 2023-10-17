@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 /* eslint-disable react-hooks/exhaustive-deps */
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -9,6 +10,7 @@ import React, { useEffect, useState } from 'react';
 import { useIsFirstTime, useIsSignUp } from '@/core/hooks';
 import { Onboarding } from '@/screens';
 import { SignUpForm } from '@/screens/login/signup';
+import { ImageEditor } from '@/screens/style/image-editor';
 
 import { AuthNavigator } from './auth-navigator';
 import { NavigationContainer } from './navigation-container';
@@ -59,6 +61,7 @@ export const Root = () => {
   //https://images.ganeshaspeaks.com/GSV7/images/Diwali-21-750.webp
   return (
     <Stack.Navigator
+      id="root-navigator"
       screenOptions={{
         headerShown: false,
         gestureEnabled: false,
@@ -71,7 +74,10 @@ export const Root = () => {
         <Stack.Group>
           {user !== null ? (
             isSignUp ? (
-              <Stack.Screen name="App" component={TabNavigator} />
+              <>
+                <Stack.Screen name="App" component={TabNavigator} />
+                <Stack.Screen name="ImageEditor" component={ImageEditor} />
+              </>
             ) : (
               <Stack.Screen name="SignUp" component={SignUpForm} />
             )

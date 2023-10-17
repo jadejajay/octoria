@@ -57,7 +57,7 @@ export const SignUpForm = () => {
       setValue('business', business2);
       setValue('type', type2);
     }
-  }, [business2, email2, type2, uname2, image2, isFocused]);
+  }, [business2, email2, type2, uname2, isFocused]);
   useEffect(() => {
     if (user) {
       SetUserType();
@@ -124,32 +124,40 @@ export const SignUpForm = () => {
   }
 
   const onSubmit = (data: FormType) => {
-    try {
-      firestore()
-        .collection('Users')
-        .doc(user?.uid)
-        .set({
-          business: data.business,
-          type: data.type,
-          email: data.email,
-          name: data.name,
-          photoUrl: image2,
-        })
-        .then(() => {
-          showMessage({
-            message: 'Profile updated successfully',
-            type: 'success',
+    if (!image2) {
+      showMessage({
+        message: 'Add your Photo to continue',
+        type: 'danger',
+      });
+    } else {
+      try {
+        firestore()
+          .collection('Users')
+          .doc(user?.uid)
+          .set({
+            business: data.business,
+            type: data.type,
+            email: data.email,
+            name: data.name,
+            photoUrl: image2,
+          })
+          .then(() => {
+            showMessage({
+              message: 'Profile updated successfully',
+              type: 'success',
+            });
+            if (canGoBack()) goBack();
+            setIsSignUp(true);
+          })
+          .catch(() => {
+            showMessage({
+              message: 'Error updating profile',
+              type: 'danger',
+            });
           });
-          if (canGoBack()) goBack();
-          setIsSignUp(true);
-        })
-        .catch(() => {
-          showMessage({
-            message: 'Error updating profile',
-            type: 'danger',
-          });
-        });
-    } catch (error) {}
+      } catch (error) {}
+    }
+
     // user?.updateProfile({
     //   displayName: data.name,
     // });
@@ -228,7 +236,7 @@ export const SignUpForm = () => {
           label="Submit"
           onPress={handleSubmit(onSubmit)}
           variant="outline"
-          disabled={image2 ? false : true}
+          // disabled={image2 ? false : true}
         />
       </ScrollView>
     </View>

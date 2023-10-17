@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Image, StyleSheet } from 'react-native';
+import Shimmer from 'react-native-shimmer';
 
 import { Text, View } from '@/ui';
 
@@ -23,7 +24,9 @@ export const Greeting = ({}: Props) => {
         </View>
       </View>
       <View className="pr-4">
-        <Image style={styles.image} source={require('assets/logo_big.png')} />
+        <Shimmer tilt={45} duration={2000} opacity={1} animationOpacity={0.6}>
+          <Image style={styles.image} source={require('assets/logo_big.png')} />
+        </Shimmer>
       </View>
     </View>
   );

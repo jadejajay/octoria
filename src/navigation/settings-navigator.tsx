@@ -19,7 +19,7 @@ const Stack = createNativeStackNavigator<SettingStackParamList>();
 
 export const SettingNavigator = () => {
   return (
-    <Stack.Navigator initialRouteName="Settings">
+    <Stack.Navigator initialRouteName="Settings" id="setting-navigator">
       <Stack.Group
         screenOptions={{
           headerShown: false,

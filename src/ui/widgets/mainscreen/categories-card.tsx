@@ -3,14 +3,12 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
 import { setItem } from '@/core/storage';
+import type { MainCategory } from '@/types';
 import { Image, Text, View } from '@/ui';
 import { AnimatedButton } from '@/ui/core/animated-button';
 
 type Props = {
-  item: {
-    image: string;
-    title: string;
-  };
+  item: MainCategory;
 };
 export const CategoriesCard = ({ item }: Props) => {
   const { navigate } = useNavigation();

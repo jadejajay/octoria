@@ -17,7 +17,7 @@ const Stack = createNativeStackNavigator<FeedStackParamList>();
 
 export const FeedNavigator = () => {
   return (
-    <Stack.Navigator initialRouteName="Feed">
+    <Stack.Navigator initialRouteName="Feed" id="feed-navigator">
       <Stack.Group
         screenOptions={{
           headerShown: false,

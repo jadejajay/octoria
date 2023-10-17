@@ -40,7 +40,7 @@ export const PostModal = ({ data }: Props) => {
     if (user) {
       setPhoto(User?.data?.photoUrl);
       setName(User?.data?.name);
-      setModalVisible(true);
+      if (User?.data?.photoUrl && User?.data?.name) setModalVisible(true);
     }
   }, [User?.data?.name, User?.data?.photoUrl, user]);
 

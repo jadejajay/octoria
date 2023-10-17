@@ -41,8 +41,18 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     favicon: './assets/favicon.png',
   },
   plugins: [
-    ['@bacons/link-assets', ['./assets/fonts/Inter.ttf']],
-    ['@bacons/link-assets', ['./assets/fonts/VarelaRound-Regular.ttf']],
+    [
+      '@bacons/link-assets',
+      [
+        './assets/fonts/VarelaRound-Regular.ttf',
+        './assets/fonts/Kalam-Regular.ttf',
+        './assets/fonts/Aquire.otf',
+        './assets/fonts/Gobold-Regular.otf',
+        './assets/fonts/MonumentExtended-Regular.otf',
+        './assets/fonts/Poppins-Regular.ttf',
+        './assets/fonts/Inter.ttf',
+      ],
+    ],
     '@react-native-firebase/app',
     '@react-native-firebase/auth',
     'expo-localization',

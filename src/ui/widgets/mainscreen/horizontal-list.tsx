@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { FlatList } from 'react-native';
 
+import type { MainCategory } from '@/types';
+
 import { CategoriesCard } from './categories-card';
 
 type Props = {
-  data: any;
+  data: MainCategory[];
 };
 export const CategoriesList = ({ data }: Props) => {
   return (

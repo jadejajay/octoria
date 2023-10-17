@@ -18,7 +18,7 @@ const Stack = createNativeStackNavigator<HomeStackParamList>();
 
 export const HomeNavigator = () => {
   return (
-    <Stack.Navigator initialRouteName="Style">
+    <Stack.Navigator initialRouteName="Style" id="home-navigator">
       <Stack.Group
         screenOptions={{
           headerShown: false,
