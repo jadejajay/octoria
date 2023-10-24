@@ -2,10 +2,9 @@ import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
+import type { Product } from '@/types';
 import { Image, Text, View } from '@/ui';
 import { AnimatedButton } from '@/ui/core/animated-button';
-
-import type { Product } from '../product-type';
 
 type Props = {
   item: Product;
@@ -23,20 +22,23 @@ export const ProductCardHorizontal = ({ item, index }: Props) => {
     >
       <View className="flex-column m-2 overflow-hidden ">
         <View className="h-56 w-full ">
-          <Image src={item.images[0]} style={styles.image} resizeMode="cover" />
+          <Image
+            src={item?.images[0]}
+            style={styles.image}
+            resizeMode="cover"
+          />
         </View>
         <Text variant="sm" className="font-bold text-slate-500">
-          {item.name}
+          {item?.name}
         </Text>
         {item?.description && (
           <Text variant="sm" numberOfLines={2} className=" text-slate-500">
-            {item.description}
+            {item?.description}
           </Text>
         )}
-
         {item?.price ? (
           <Text variant="sm" className="font-bold text-slate-500 ">
-            Rs.{item.price}
+            Rs.{item?.price}
           </Text>
         ) : null}
       </View>

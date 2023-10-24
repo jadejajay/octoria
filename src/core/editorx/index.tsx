@@ -3,112 +3,27 @@ import { produce } from 'immer';
 import { create } from 'zustand';
 
 import { createSelectors } from '../utils';
-const DATA = {
-  backgroundImage: 'http://itekindia.com/chats/bgimages/imageedit.png',
+const DATA: EditorData = {
+  backgroundPost: 'http://itekindia.com/chats/bgimages/imageedit.png',
+  bgType: 'photo',
   frame: 'http://itekindia.com/chats/frames/format20.png',
-  elements: [
-    {
-      id: '1',
-      name: 'elements',
-      component: 'image',
-      properties: {
-        image:
-          'https://images.wallpapersden.com/image/download/cute-baby-groot-in-suit-4k_bGZpaG6UmZqaraWkpJRmbmdlrWZlbWU.jpg',
-        resizeMode: 'contain',
-        offset: {
-          x: -137.32856130599976,
-          y: -139.38782453536987,
-        },
-        start: {
-          x: -137.32856130599976,
-          y: -139.38782453536987,
-        },
-        scale: 0.1922575519401993,
-        width: 367.44515429135464,
-        height: 346.48610608147186,
-        rotation: 0.018163833782218863,
-      },
-    },
-    {
-      id: '3',
-      name: 'elements3',
-      component: 'text',
-      properties: {
-        text: 'this is demo text',
-        textProps: {
-          style: {
-            color: 'green',
-            fontSize: 20,
-            fontWeight: 'bold',
-            textAlign: 'center',
-            textShadowColor: 'rgba(0, 0, 0, 0.75)',
-            textShadowOffset: { width: -1, height: 1 },
-            textShadowRadius: 10,
-          },
-        },
-        offset: {
-          x: -137.32856130599976,
-          y: -139.38782453536987,
-        },
-        start: {
-          x: -137.32856130599976,
-          y: -139.38782453536987,
-        },
-        scale: 1,
-        width: 367.44515429135464,
-        height: 346.48610608147186,
-        rotation: 0.018163833782218863,
-      },
-    },
-    {
-      id: '2',
-      name: 'elements2',
-      component: 'image',
-      properties: {
-        image:
-          'https://img.freepik.com/free-photo/autumn-leaf-falling-revealing-intricate-leaf-vein-generated-by-ai_188544-9869.jpg',
-        resizeMode: 'stretch',
-        text: 'Hello World!',
-        textProps: {
-          style: {
-            color: 'white',
-            fontSize: 20,
-            fontWeight: 'bold',
-            textAlign: 'center',
-            textShadowColor: 'rgba(0, 0, 0, 0.75)',
-            textShadowOffset: { width: -1, height: 1 },
-            textShadowRadius: 10,
-          },
-        },
-        offset: {
-          x: -30.491697788238525,
-          y: -17.398582458496094,
-        },
-        start: {
-          x: -30.491697788238525,
-          y: -17.398582458496094,
-        },
-        scale: 0.3842920031518914,
-        width: 570.7199909687042,
-        height: 593.7907910346985,
-        rotation: 0,
-      },
-    },
-  ],
+  elements: [],
 };
 
-interface ElementProperties {
+export interface ElementProperties {
   image?: string;
   resizeMode?: string;
   text?: string;
   textProps?: {
-    style: any;
+    style: {
+      [key: string]: any;
+    };
+    [key: string]: any;
+  };
+  viewProps?: {
+    [key: string]: any;
   };
   offset: {
-    x: number;
-    y: number;
-  };
-  start: {
     x: number;
     y: number;
   };
@@ -118,20 +33,22 @@ interface ElementProperties {
   rotation: number;
 }
 
-interface Element {
+export interface Element {
   id: string;
   name: string;
   component: string;
   properties: ElementProperties;
 }
 
-interface EditorData {
-  backgroundImage: string;
+export interface EditorData {
+  bgType: 'photo' | 'video';
+  backgroundPost?: string;
+  color?: string;
   frame: string;
   elements: Element[];
 }
 
-interface EditorXState {
+export interface EditorXState {
   editorData: EditorData;
   selectedItem: number;
   activeWidget: string;
@@ -141,9 +58,12 @@ interface EditorXState {
   canUndo: boolean;
   canRedo: boolean;
   setData: (newData: any) => void;
+  setTextStyle: (newData: any) => void;
+  setText: (newData: any) => void;
+  setImage: (newData: any) => void;
   setSelectedItem: (index: number) => void;
   setActiveWidget: (wdg: string) => void;
-  setBackground: (url: string) => void;
+  setBackground: (url: string, type: 'photo' | 'video') => void;
   setFrame: (url: string) => void;
   getData: (id: number) => Element;
   deleteElement: (id: number) => void;
@@ -156,7 +76,7 @@ interface EditorXState {
 const _useEditorX = create<EditorXState>((set, get) => ({
   editorData: DATA,
   selectedItem: -1,
-  activeWidget: 'background',
+  activeWidget: 'Photos',
   past: [],
   present: null,
   future: [],
@@ -189,6 +109,46 @@ const _useEditorX = create<EditorXState>((set, get) => ({
       })
     );
   },
+  setTextStyle: (newData) => {
+    set(
+      produce((state: EditorXState) => {
+        const index = newData.id;
+        if (index > -1) {
+          const textProps =
+            state.editorData.elements[index].properties?.textProps;
+          if (textProps !== undefined) {
+            textProps.style = {
+              ...textProps.style,
+              ...newData.props,
+            };
+          }
+        }
+        return state;
+      })
+    );
+  },
+  setText: (newData) => {
+    set(
+      produce((state: EditorXState) => {
+        const index = newData.id;
+        if (index > -1) {
+          state.editorData.elements[index].properties.text = newData.text;
+        }
+        return state;
+      })
+    );
+  },
+  setImage: (newData) => {
+    set(
+      produce((state: EditorXState) => {
+        const index = newData.id;
+        if (index > -1) {
+          state.editorData.elements[index].properties.image = newData.text;
+        }
+        return state;
+      })
+    );
+  },
   setSelectedItem: (index) => {
     set(
       produce((state: EditorXState) => {
@@ -205,7 +165,7 @@ const _useEditorX = create<EditorXState>((set, get) => ({
       })
     );
   },
-  setBackground: (url) => {
+  setBackground: (url, type) => {
     set(
       produce((state: EditorXState) => {
         // state.past = [
@@ -220,7 +180,8 @@ const _useEditorX = create<EditorXState>((set, get) => ({
         // state.future = [];
         // state.canUndo = true;
         // state.canRedo = false;
-        state.editorData.backgroundImage = url;
+        state.editorData.backgroundPost = url;
+        state.editorData.bgType = type;
         return state;
       })
     );
@@ -272,6 +233,7 @@ const _useEditorX = create<EditorXState>((set, get) => ({
   addElement: (data) => {
     set(
       produce((state: EditorXState) => {
+        const num = state.editorData.elements.length + 1;
         // state.past = [
         //   ...state.past,
         //   {
@@ -284,7 +246,6 @@ const _useEditorX = create<EditorXState>((set, get) => ({
         // state.future = [];
         // state.canUndo = true;
         // state.canRedo = false;
-        const num = state.editorData.elements.length + 1;
         const element = {
           id: num,
           name: `elements${num}`,
@@ -293,22 +254,17 @@ const _useEditorX = create<EditorXState>((set, get) => ({
             image: '',
             resizeMode: 'cover',
             text: '',
+            viewProps: {
+              style: {
+                overflow: 'hidden',
+              },
+            },
             textProps: {
               style: {
-                color: 'white',
-                fontSize: 18,
-                fontWeight: 'bold',
                 textAlign: 'center',
-                textShadowColor: 'rgba(0, 0, 0, 0.75)',
-                textShadowOffset: { width: -1, height: 1 },
-                textShadowRadius: 10,
               },
             },
             offset: {
-              x: 0,
-              y: 0,
-            },
-            start: {
               x: 0,
               y: 0,
             },
@@ -319,6 +275,7 @@ const _useEditorX = create<EditorXState>((set, get) => ({
           },
         };
         state.editorData.elements.push({ ...element, ...data });
+        state.selectedItem = num;
         return state;
       })
     );

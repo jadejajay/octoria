@@ -11,10 +11,10 @@ import Share from 'react-native-share';
 
 import useFavorites from '@/core/hooks/use-favorite';
 import useFirestoreDocLiveQuery from '@/core/hooks/use-firestore-doc';
+import type { Product } from '@/types';
 // import { addToCart } from '@/core';
 import { Text, TouchableOpacity, View } from '@/ui';
 
-import type { Product } from '../product-type';
 import ButtonRow from './button-row';
 import HorizontalLine from './horizontal-line';
 

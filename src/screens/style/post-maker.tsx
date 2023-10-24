@@ -21,7 +21,7 @@ export const PostCard = ({}: Props) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        getParent()?.getParent()?.navigate('ImageEditor', {
+        getParent()?.getParent()?.navigate('DayList', {
           url: 'https://picsum.photos/200/200',
         });
       }}

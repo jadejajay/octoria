@@ -85,8 +85,14 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
     setData({ id: props.index, props: { rotation: radians } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const moveToCenter = useCallback(() => {
+    offset.value = withTiming({ x: 0, y: 0 });
+    setData({ id: props.index, props: { offset: { x: 0, y: 0 } } });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const getState = useCallback(
     () => ({
+      index: index,
       offset: offset.value,
       start: start.value,
       scale: scale.value,
@@ -101,9 +107,10 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
     ref,
     () => ({
       rotateToDegree,
+      moveToCenter,
       getState,
     }),
-    [rotateToDegree, getState]
+    [rotateToDegree, moveToCenter, getState]
   );
   const dragGesture = Gesture.Pan()
     .averageTouches(true)

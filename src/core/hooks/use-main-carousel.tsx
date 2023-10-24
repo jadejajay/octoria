@@ -13,9 +13,7 @@ function useMainCarousel() {
         querySnapshot.forEach((doc) => {
           const favoriteData = doc.data();
           // Filter documents based on userId
-          if (favoriteData) {
-            updatedMainCarousel.push({ id: doc.id, ...favoriteData });
-          }
+          updatedMainCarousel.push({ id: doc.id, ...favoriteData });
         });
 
         setMainCarousel(updatedMainCarousel);

@@ -1,0 +1,46 @@
+acpid	 	Copying
+alsa_driver	 	Copying
+alsa_lib	 	Copying
+autofs	Copyright	Copying
+busybox	 	Copying
+dialog	 	Copying
+ffmpeg	 	Copying
+Freetype	FTL	Copying
+glib	 	Copying
+grub	 	Copying
+grub_install	README	 
+gtk	 	Copying
+ion_install	
+README (grub_install) README (zlib)
+
+Copying
+Copying (grub)
+
+kernel	Note	Copying
+libc	License	Copying
+libjpeg	README	 
+lilo	 	Copying
+MPlayer-1.0pre7	Copyright	License
+ncurses	Announce	 
+python	License	 
+SDL	License	 
+syslinux	 	Copying
+util-linux	Copying_UCB	Copying_GPL
+xorg	 	License
+zlib	README	 
+Download Source Code
+You can download the machine-readable source code of the corresponding licensed component by clicking the download button. Please pay attention to the copyright notice, warranty disclaimer and a copy of license agreement accompanying these source codes.
+
+Download Now
+
+List of Components in PowerDirector, PowerProducer, MediaShow
+PThreadVC2.dll		LGPL license
+libebml.dll		LGPL license
+libmatroska.dll		LGPL license
+cv100.dll		BSD license
+cv200.dll		BSD license
+cvaux100.dll		BSD license
+cxcore100.dll		BSD license
+cxcore110.dll		BSD license
+cxcore200.dll		BSD license
+highgui100.dll		BSD license

@@ -2,43 +2,43 @@ import type { EditingFeaturesType } from '@/types';
 
 export const EditingFeatures: EditingFeaturesType[] = [
   {
-    name: 'background',
+    name: 'Photos',
     icon: 'image-area',
   },
   {
-    name: 'info',
-    icon: 'account-box-outline',
+    name: 'Videos',
+    icon: 'video',
   },
   {
-    name: 'frames',
+    name: 'Frames',
     icon: 'image-frame',
   },
   {
-    name: 'text',
+    name: 'Text',
     icon: 'format-text',
   },
   {
-    name: 'image',
+    name: 'Image',
     icon: 'image-edit',
   },
   {
-    name: 'logos',
+    name: 'Logos',
     icon: 'professional-hexagon',
   },
   {
-    name: 'products',
+    name: 'Products',
     icon: 'audio-input-rca',
   },
   {
-    name: 'stickers',
+    name: 'Stickers',
     icon: 'sticker-emoji',
   },
   {
-    name: 'shape',
+    name: 'Shape',
     icon: 'shape',
   },
   {
-    name: 'elements',
+    name: 'Elements',
     icon: 'image-filter-vintage',
   },
 ];

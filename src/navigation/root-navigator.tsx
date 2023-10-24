@@ -10,9 +10,11 @@ import React, { useEffect, useState } from 'react';
 import { useIsFirstTime, useIsSignUp } from '@/core/hooks';
 import { Onboarding } from '@/screens';
 import { SignUpForm } from '@/screens/login/signup';
+import { DayList } from '@/screens/style/editor/day-list';
 import { ImageEditor } from '@/screens/style/image-editor';
 
 import { AuthNavigator } from './auth-navigator';
+import { loadDataFromFirestore } from './loads';
 import { NavigationContainer } from './navigation-container';
 import { TabNavigator } from './tab-navigator';
 const Stack = createNativeStackNavigator();
@@ -27,6 +29,7 @@ export const Root = () => {
   const [user, setUser] = useState<any>();
 
   const hideSplash = React.useCallback(async () => {
+    await loadDataFromFirestore();
     await SplashScreen.hideAsync();
   }, []);
   useEffect(() => {
@@ -76,6 +79,7 @@ export const Root = () => {
             isSignUp ? (
               <>
                 <Stack.Screen name="App" component={TabNavigator} />
+                <Stack.Screen name="DayList" component={DayList} />
                 <Stack.Screen name="ImageEditor" component={ImageEditor} />
               </>
             ) : (

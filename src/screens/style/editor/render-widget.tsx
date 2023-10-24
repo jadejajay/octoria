@@ -1,124 +1,128 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable max-lines-per-function */
+import { ResizeMode, Video } from 'expo-av';
 import * as MediaLibrary from 'expo-media-library';
-import React, { useEffect } from 'react';
-import { Image, Linking, Modal } from 'react-native';
-import { showMessage } from 'react-native-flash-message';
+import React from 'react';
+import { Image, Modal, ToastAndroid } from 'react-native';
 
 // import { handleWhatsappShare } from '@/core';
-import { Button, Text, View } from '@/ui';
+import { ActivityIndicator, Button, Text, View } from '@/ui';
 type Props8 = {
   isVisible: boolean;
+  progress: number;
+  isLoading: boolean;
   onClose: () => void;
   render: () => void;
-  renderedImage: string | undefined;
-  setRenderedImageExtension: any;
+  type: 'photo' | 'video';
+  renderedAsset: string | undefined;
   renderWidth: number;
 };
 export const RenderWidget = ({
   isVisible,
+  isLoading,
+  progress,
   onClose,
+  type,
   render,
-  renderedImage,
-  setRenderedImageExtension,
-  renderWidth,
+  renderedAsset,
 }: Props8) => {
   const themecolor = 'white';
-  useEffect(() => {
-    render();
-    console.log(renderedImage);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isVisible]);
+  const resource = renderedAsset;
 
   const saveToGallery = async () => {
-    if (renderedImage) {
+    if (resource) {
       const albumName = await MediaLibrary.getAlbumAsync('Octoria');
       if (albumName) {
-        const asset = await MediaLibrary.createAssetAsync(renderedImage);
-        const _album = await MediaLibrary.addAssetsToAlbumAsync(
+        const asset = await MediaLibrary.createAssetAsync(resource);
+        const album = await MediaLibrary.addAssetsToAlbumAsync(
           asset,
           albumName.id,
           true
-        ).then((_) => {
-          console.log(
-            'Image saved successfully to IBAIS Media album in your gallery',
-            asset.uri
+        );
+        if (album) {
+          ToastAndroid.show(
+            `Post saved successfully to Octoria album in your gallery.`,
+            ToastAndroid.LONG
           );
-          showMessage({
-            type: 'success',
-            icon: 'success',
-            message: `Image saved successfully to IBAIS Media album in your gallery ${asset.uri}`,
-            duration: 4000,
-            onPress: () => {
-              Linking.openURL(asset.uri);
-            },
-          });
-
-          // handleWhatsappShare(asset.uri, 'this is my rendered image');
-        });
-        // const album = await MediaLibrary.createAlbumAsync(
-        //   'IBAIS Media',
-        //   asset,
-        //   false
-        // );
+        } else {
+          ToastAndroid.show(
+            `Error Creating assets give permissions`,
+            ToastAndroid.LONG
+          );
+        }
       } else {
-        const asset = await MediaLibrary.createAssetAsync(renderedImage);
-        const _album = await MediaLibrary.createAlbumAsync(
+        const asset = await MediaLibrary.createAssetAsync(resource);
+        const album = await MediaLibrary.createAlbumAsync(
           'Octoria',
           asset,
           true
-        ).then(
-          (_) => {
-            console.log(
-              'Image saved successfully to IBAIS Media album in your gallery',
-              asset.uri
-            );
-            showMessage({
-              type: 'success',
-              icon: 'success',
-              message: `Image saved successfully to IBAIS Media album in your gallery ${asset.uri}`,
-              duration: 4000,
-              onPress: () => {
-                Linking.openURL(asset.uri);
-              },
-            });
-            // handleWhatsappShare(asset.uri, 'this is my rendered image');
-          },
-          (e) => {
-            showMessage({
-              type: 'danger',
-              message: `Error Creating assets ${e}`,
-              duration: 4000,
-              onPress: () => {
-                Linking.openURL(asset.uri);
-              },
-            });
-          }
         );
+        if (album) {
+          ToastAndroid.show(
+            `Post saved successfully to Octoria album in your gallery.`,
+            ToastAndroid.LONG
+          );
+        } else {
+          ToastAndroid.show(
+            `Error Creating assets give permissions`,
+            ToastAndroid.LONG
+          );
+        }
       }
     }
-  };
-  const _changeExtenstion = (str: 'jpg' | 'png' | 'webm') => {
-    setRenderedImageExtension(str);
   };
   return (
     <Modal animationType="slide" visible={isVisible} onRequestClose={onClose}>
       <View
-        className="flex-1 items-center justify-center"
+        className="flex-1 items-center"
         style={{ backgroundColor: themecolor }}
       >
+        {isLoading && (
+          <View className="absolute z-50 h-full w-full flex-col items-center justify-start">
+            <View className="mt-40 h-20 w-full flex-col items-center justify-between">
+              <ActivityIndicator size={50} />
+              <Text className="font-varela text-lg">
+                Generating Your {type === 'video' ? 'Video' : 'Image'}
+                {progress % 2 === 0
+                  ? progress % 3 === 0
+                    ? progress % 5 === 0
+                      ? ' 😍'
+                      : ' 😋'
+                    : ' 😊'
+                  : ' 😑'}
+              </Text>
+            </View>
+          </View>
+        )}
         <View
-          className="overflow-hidden rounded-lg border-2 border-cyan-400"
-          style={{ width: renderWidth, height: renderWidth }}
+          className="overflow-hidden p-4"
+          style={{ width: '100%', aspectRatio: 1 }}
         >
-          {renderedImage && (
-            <Image
-              source={{ uri: renderedImage }}
-              style={{ width: '100%', height: '100%' }}
-              resizeMode="contain"
+          {type === 'video' && renderedAsset ? (
+            <Video
+              style={{ flex: 1 }}
+              source={{
+                uri: renderedAsset,
+              }}
+              isMuted={false}
+              volume={1}
+              shouldPlay={true}
+              useNativeControls={true}
+              resizeMode={ResizeMode.CONTAIN}
+              isLooping
             />
+          ) : (
+            type === 'photo' &&
+            renderedAsset && (
+              <Image
+                source={{ uri: renderedAsset }}
+                style={{ width: '100%', height: '100%' }}
+                resizeMode="contain"
+              />
+            )
           )}
         </View>
-        <Text className="text-base">select Render Component</Text>
+
         <Button variant="defaults" label="change resolution" onPress={render} />
         <Button
           variant="defaults"

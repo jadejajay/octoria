@@ -48,6 +48,28 @@ export const createSelectors = <S extends UseBoundStore<StoreApi<object>>>(
 //     return 'http://itekindia.com/sharva/Avatarbig.png';
 //   }
 // }
+export function isVideoURL(url: string): boolean {
+  // Define an array of video file extensions you want to consider as videos
+  const videoExtensions = [
+    'mp4',
+    'webm',
+    'ogg',
+    'mov',
+    'avi',
+    'flv',
+    'mkv',
+    'wmv',
+    'mpg',
+    'mpeg',
+  ];
+
+  // Get the file extension from the URL
+  const urlParts = url.split('.');
+  const fileExtension = urlParts[urlParts.length - 1].toLowerCase();
+
+  // Check if the file extension is in the list of video extensions
+  return videoExtensions.includes(fileExtension);
+}
 
 export function capitalizeWords(str: string) {
   // Split the string into an array of words
@@ -73,34 +95,6 @@ export function calculatePercentage(
   let x = Math.abs(percentage); // Return the absolute value of the percentage
   return Number(x.toFixed(0));
 }
-
-export const handleWhatsappShare = async (fileUri: any, title: any) => {
-  //https://api.whatsapp.com/send?phone=918734845201&text=
-  // openLinkInBrowser(LINK);
-  try {
-    //@ts-ignore
-    const options: ShareSingleOptions = {
-      title: 'Share via WhatsApp',
-      message: title,
-      // type: 'image/*',
-      // url: item.image3d, // The URI of the image you want to share
-      // image: item.image3d,
-      // filename: item.image3d,
-      url: fileUri, //'data:image/png;base64,<imageInBase64>',
-      type: 'image/*',
-      social: Share.Social.WHATSAPP as Social,
-      //@ts-ignore
-      // whatsAppNumber: '918734845201',
-      // appId: 'com.whatsapp',
-    };
-
-    await Share.shareSingle(options);
-  } catch (error) {
-    console.error(error);
-    ToastAndroid.show('Some Error', ToastAndroid.SHORT);
-  }
-};
-
 export const shareImageWithTitle = async (fileUri: any, title: any) => {
   try {
     // Handle the result here
@@ -235,3 +229,53 @@ export function generateRandomCharmColor2() {
 
   return color;
 }
+
+export function extractImagesFromObjects<T>(objectList: T[]): string[] {
+  const extractedImages: string[] = [];
+
+  objectList.forEach((obj: any) => {
+    const { images } = obj as { images: string[] };
+
+    if (images && images.length > 0) {
+      // Iterate through the images in the imageList
+      images.forEach((image) => {
+        // Do something with the image (e.g., push it to the extractedImages array)
+        if (!isVideoURL(image)) extractedImages.push(image);
+      });
+    }
+  });
+
+  return extractedImages;
+}
+export const handleWhatsappShare = async (
+  fileUri: any,
+  title: any,
+  whatsAppNumber: any = '918734845201'
+) => {
+  //https://api.whatsapp.com/send?phone=918734845201&text=
+  // openLinkInBrowser(LINK);
+  try {
+    //@ts-ignore
+    const options: ShareSingleOptions = {
+      title: 'Share via WhatsApp',
+      message: title,
+      // type: 'image/*',
+      // url: fileUri,
+      url: `data:image/png;base64,${fileUri}`,
+      // url: `http://itekindia.com/dashboard/test.jpg`, // The URI of the image you want to share
+      // image: fileUri,
+      // filename: item.image3d,
+      // url: 'http://itekindia.com/dashboard/bronco.jpg', //'data:image/png;base64,<imageInBase64>',
+      type: 'image/*',
+      social: Share.Social.WHATSAPP as Social,
+      //@ts-ignore
+      whatsAppNumber: whatsAppNumber,
+      appId: 'com.whatsapp',
+    };
+
+    await Share.shareSingle(options);
+  } catch (error) {
+    console.error(error);
+    ToastAndroid.show('Some Error', ToastAndroid.SHORT);
+  }
+};

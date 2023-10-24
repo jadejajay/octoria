@@ -1,9 +1,9 @@
 import * as React from 'react';
 
+import type { Product } from '@/types';
 // import { FlatList } from 'react-native';
 import { EmptyList, List } from '@/ui';
 
-import type { Product } from '../product-type';
 import { ProductCardHorizontal } from './product-card-horizontal';
 
 type Props = {
@@ -20,7 +20,7 @@ export const NewProductList = ({ data, isLoading }: Props) => {
       )}
       estimatedItemSize={100}
       ListEmptyComponent={<EmptyList isLoading={isLoading} />}
-      keyExtractor={(_, index) => `item-${index}`}
+      keyExtractor={(_, index) => `product-item-${index}`}
       numColumns={2}
       // onEndReached={() => handle()}
       onEndReachedThreshold={0.1}

@@ -1,17 +1,34 @@
 /* eslint-disable react-native/no-inline-styles */
+import { ResizeMode, Video } from 'expo-av';
 import React from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 
+import { isVideoURL } from '@/core';
 import { Image } from '@/ui';
 
 export const SLIDER_WIDTH = Dimensions.get('window').width;
 export const ITEM_WIDTH = Math.round(SLIDER_WIDTH);
 
 const CarouselCardItem = ({ item, index }: any) => {
+  const isVideo = isVideoURL(item);
+
   return (
     <View style={styles1.container} key={index}>
-      <Image src={item.imgUrl} style={styles1.image} resizeMode="contain" />
+      {isVideo ? (
+        <Video
+          style={{ flex: 1 }}
+          source={{
+            uri: item,
+          }}
+          shouldPlay
+          useNativeControls
+          resizeMode={ResizeMode.CONTAIN}
+          isLooping
+        />
+      ) : (
+        <Image src={item} style={styles1.image} resizeMode="contain" />
+      )}
     </View>
   );
 };
@@ -31,9 +48,10 @@ const styles1 = StyleSheet.create({
 });
 
 export const CarouselCards = ({ item }: any) => {
+  console.log(item);
+
   const [index, setIndex] = React.useState(0);
   const isCarousel = React.useRef(null);
-  const data = item.image.map((i: { image: any }) => ({ imgUrl: i }));
 
   return (
     <View style={{ width: '100%', height: 330 }}>
@@ -42,7 +60,7 @@ export const CarouselCards = ({ item }: any) => {
         loop
         layoutCardOffset={9}
         ref={isCarousel}
-        data={data}
+        data={item}
         renderItem={CarouselCardItem}
         sliderWidth={SLIDER_WIDTH}
         itemWidth={ITEM_WIDTH}
@@ -50,7 +68,7 @@ export const CarouselCards = ({ item }: any) => {
         useScrollView={true}
       />
       <Pagination
-        dotsLength={data.length}
+        dotsLength={item.length}
         activeDotIndex={index}
         //@ts-ignore
         carouselRef={isCarousel}

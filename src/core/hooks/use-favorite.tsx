@@ -11,14 +11,12 @@ function useFavorites() {
   useEffect(() => {
     const unsubscribe = firestore()
       .collection('favorites')
+      .where('userId', '==', userId)
       .onSnapshot((querySnapshot) => {
         const updatedFavorites: any = [];
         querySnapshot.forEach((doc) => {
           const favoriteData = doc.data();
-          // Filter documents based on userId
-          if (favoriteData.userId === userId) {
-            updatedFavorites.push({ id: doc.id, ...favoriteData });
-          }
+          updatedFavorites.push({ id: doc.id, ...favoriteData });
         });
 
         setFavorites(updatedFavorites);

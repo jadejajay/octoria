@@ -27,8 +27,10 @@
   "cSpell.words": [
     "animatable",
     "apikey",
+    "aquire",
     "collapsable",
     "Flashlist",
+    "gobold",
     "Lato",
     "nativewind",
     "ramda",
@@ -43,5 +45,6 @@
   "java.compile.nullAnalysis.mode": "automatic",
   "[html]": {
     "editor.defaultFormatter": "vscode.html-language-features"
-  } // make sure to disable i18n-ally in your global setting and only enable it for such projects
+  },
+  "java.configuration.updateBuildConfiguration": "disabled" // make sure to disable i18n-ally in your global setting and only enable it for such projects
 }

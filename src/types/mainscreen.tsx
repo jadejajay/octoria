@@ -2,6 +2,7 @@ export interface MainCategory {
   id: string;
   image: string;
   title: string;
+  color?: string;
   // Add your data properties here
 }
 export interface MainCategory2 {

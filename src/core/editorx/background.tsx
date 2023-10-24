@@ -1,4 +1,3 @@
-// useMainCategories
 import firestore from '@react-native-firebase/firestore';
 import { create } from 'zustand';
 

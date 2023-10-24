@@ -49,6 +49,10 @@ https://mugen87.github.io/yuka/docs/CellSpacePartitioning.html
 https://www.reddit.com/user/afromorris/
 https://github.com/wcandillon/can-it-be-done-in-react-native/blob/master/season4/src/Snapchat/Story.tsx
 https://www.npmjs.com/package/react-native-redash?activeTab=readme
+https://forum.videohelp.com/threads/384578-Can-FFMPEG-show-a-percentage-done-or-a-Progress-Bar
+https://github.com/sidneys/ffmpeg-progressbar-cli/blob/master/lib/main.js
+https://www.svgviewer.dev/
+https://alternativeto.net/software/cyberlink-powerdirector/?license=opensource
 
 ///////////////////////////////////////////
 firebase

@@ -26,6 +26,7 @@ export const ITWidget = ({
   const savedScale = useEditorX(
     (s) => s.editorData.elements[index]?.properties.scale
   );
+
   const handlePress = () => {
     // Increment the key to trigger a re-render and restart the animation
     setAnimationKey(animationKey + 1);
@@ -47,6 +48,7 @@ export const ITWidget = ({
         useNativeDriver={true}
         duration={800}
         style={{ flex: 1 }}
+        {...data?.viewProps}
       >
         {data?.image && (
           <Image
@@ -79,7 +81,6 @@ export const ITWidget = ({
     </TouchableOpacity>
   );
 };
-
 // properties: {
 //   image:
 //     'https://images.wallpapersden.com/image/download/cute-baby-groot-in-suit-4k_bGZpaG6UmZqaraWkpJRmbmdlrWZlbWU.jpg',

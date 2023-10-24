@@ -1,6 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope */
-import Slider from '@react-native-community/slider';
-import { type SetStateAction, useState } from 'react';
+import { type SetStateAction } from 'react';
 import { Modal, StyleSheet, TextInput } from 'react-native';
 
 import { Text, View } from '@/ui';
@@ -19,7 +18,6 @@ export const EditTextModal = ({
   SetModalVisible,
   onPress = () => {},
 }: Props) => {
-  const [fontSize, setFontSize] = useState(20);
   const handlePress = () => {
     SetModalVisible(false);
     onPress(text);
@@ -37,9 +35,7 @@ export const EditTextModal = ({
           className="h-5/6 w-11/12 items-center justify-center"
         >
           <TextInput
-            style={{
-              fontSize: fontSize,
-            }}
+            style={styles.textFont}
             value={text}
             autoFocus={true}
             multiline={true}
@@ -53,7 +49,7 @@ export const EditTextModal = ({
             onChangeText={(text2) => setText(text2)}
             onContentSizeChange={(e) => console.log(e.nativeEvent.contentSize)}
           />
-          <Slider
+          {/* <Slider
             vertical={true}
             value={fontSize}
             tapToSeek={true}
@@ -63,11 +59,14 @@ export const EditTextModal = ({
             onValueChange={setFontSize}
             minimumTrackTintColor="#0f0"
             maximumTrackTintColor="#000000"
-            trackImage={require('./FONT-SIZE.png')}
             thumbTintColor="transparent"
-          />
-          <Text variant="sm" className="text-center" onPress={handlePress}>
-            Set Text
+          /> */}
+          <Text
+            variant="sm"
+            className="rounded-full bg-black p-4 text-center font-varela text-white"
+            onPress={handlePress}
+          >
+            DONE 🥳
           </Text>
         </View>
       </View>
@@ -87,6 +86,9 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 20,
+  },
+  textFont: {
+    fontSize: 20,
   },
   slider: {
     top: 0,

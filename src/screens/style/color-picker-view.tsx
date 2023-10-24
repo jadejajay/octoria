@@ -1,5 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope */
-import type { SetStateAction } from 'react';
+import { useState } from 'react';
 import { Modal, StyleSheet } from 'react-native';
 
 import { invertColor } from '@/core';
@@ -9,21 +9,20 @@ import ColorPicker from './colorpicker';
 
 interface Props {
   Color?: string;
-  setColor: (color: SetStateAction<string>) => void;
   isModalVisible: boolean;
   SetModalVisible: (visible: boolean) => void;
   onPress?: (color: string) => void;
 }
 export const ColorPickerModal = ({
   Color = '#000000',
-  setColor,
   isModalVisible,
   SetModalVisible,
   onPress = () => {},
 }: Props) => {
+  const [color, setColor] = useState<string>(Color);
   const handlePress = () => {
     SetModalVisible(false);
-    onPress(Color);
+    onPress(color);
   };
   return (
     <Modal
@@ -35,25 +34,24 @@ export const ColorPickerModal = ({
       <View className="flex-1 items-center justify-center">
         <View
           className="h-5/6 w-11/12"
-          style={[styles.container, { backgroundColor: Color }]}
+          style={[styles.container, { backgroundColor: color }]}
         >
           <ColorPicker
+            color={color}
             thumbSize={40}
             sliderSize={40}
             noSnap={true}
             row={false}
             // discrete
-            onColorChange={(color: SetStateAction<string>) => setColor(color)}
-            onColorChangeComplete={(color: SetStateAction<string>) =>
-              setColor(color)
-            }
+            onColorChange={(color2: any) => setColor(color2)}
+            onColorChangeComplete={(color2: any) => setColor(color2)}
           />
           <Button
             label="Use This Color 🤩"
-            textColor={Color}
+            textColor={color}
             style={[
               styles.button,
-              { backgroundColor: `${invertColor(Color)}` },
+              { backgroundColor: `${invertColor(color)}` },
             ]}
             onPress={handlePress}
           />

@@ -1,65 +1,57 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useColorScheme } from 'nativewind';
-import React from 'react';
+import React, { useState } from 'react';
 
 import { View } from '@/ui';
 import { IconButton } from '@/ui/core/bounce';
 
 type Props3 = {
-  add: any;
-  element: any;
-  set: any;
-  state: any;
+  handleRotationPress: (r: number) => void;
+  handlePressMoveToCenter: () => void;
 };
-export const ImageWidget = ({ add, element, set, state }: Props3) => {
-  const { colorScheme } = useColorScheme();
-  const themecolor = colorScheme === 'dark' ? 'white' : 'black';
+export const ImageWidget = ({
+  handleRotationPress,
+  handlePressMoveToCenter,
+}: Props3) => {
+  const [rotationDegree, setRotationDegree] = useState(0);
+  const rotateRight = () => {
+    const newDegree = (rotationDegree + 90) % 360;
+    setRotationDegree(newDegree);
+    handleRotationPress(rotationDegree);
+  };
+
   return (
     <View className="flex-row flex-wrap justify-around">
       <IconButton
         icon={
-          <MaterialCommunityIcons
-            name="image-edit"
-            size={24}
-            color={themecolor}
-          />
+          <MaterialCommunityIcons name="image-edit" size={24} color={'black'} />
         }
-        onPress={() => {
-          add('Object1', 'image', {
-            image: 'http://itekindia.com/dashboard/ford.jpg',
-            width: '100%',
-            height: '100%',
-            borderRadius: 100,
-            transform: [{ scaleX: -1 }],
-          });
-        }}
+        onPress={() => {}}
         title="change image"
         className="my-1"
       />
       <IconButton
         icon={
           <MaterialCommunityIcons
-            name="image-auto-adjust"
+            name="image-filter-center-focus-weak"
             size={24}
-            color={themecolor}
+            color={'black'}
           />
         }
-        badgeValue={'✨Premium'}
-        onPress={() => {}}
-        title="A.I. Enhance"
+        onPress={handlePressMoveToCenter}
+        title="Center Image"
         className="my-1"
       />
       <IconButton
         icon={
           <MaterialCommunityIcons
-            name="image-size-select-large"
+            name="rotate-right"
             size={24}
-            color={themecolor}
+            color={'black'}
           />
         }
-        badgeValue={'✨Premium'}
-        onPress={() => {}}
-        title="Remove Background"
+        badgeValue={`${rotationDegree.toString()}deg`}
+        onPress={rotateRight}
+        title="Rotate"
         className="my-1"
       />
       <IconButton
@@ -67,10 +59,9 @@ export const ImageWidget = ({ add, element, set, state }: Props3) => {
           <MaterialCommunityIcons
             name="tooltip-image-outline"
             size={24}
-            color={themecolor}
+            color={'black'}
           />
         }
-        badgeValue={'✨Premium'}
         onPress={() => {}}
         title="A.I. Filters"
         className="my-1"
@@ -78,17 +69,3 @@ export const ImageWidget = ({ add, element, set, state }: Props3) => {
     </View>
   );
 };
-
-/* <TouchableOpacity
-onPress={() => {
-  add('Object1', 'image', {
-    image: 'http://itekindia.com/dashboard/ford.jpg',
-    width: '100%',
-    height: '100%',
-    borderRadius: 100,
-    transform: [{ scaleX: -1 }],
-  });
-}}
->
-<Text className="text-base">IMageWidget Component</Text>
-</TouchableOpacity> */

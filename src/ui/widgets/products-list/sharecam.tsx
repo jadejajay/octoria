@@ -15,34 +15,32 @@ import {
 } from 'react-native';
 import { ToastAndroid } from 'react-native';
 import { ImageBackground } from 'react-native';
+import { Image } from 'react-native';
 // import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { captureRef } from 'react-native-view-shot';
 
 import { shareImageWithTitle } from '@/core';
+import { useImageStore } from '@/core/camshare';
 import { useLinks } from '@/core/mainscreen';
 // import { shareImageWithTitle } from '@/core';
-import { ActivityIndicator } from '@/ui';
+import { ActivityIndicator, Text } from '@/ui';
 import AbsoluteButton from '@/ui/core/absolute-button';
 
-import Gestures from '../lib';
+import { Gestures } from './simultaneous-gesture';
+
+// import Gestures from '../lib';
 
 export function ShareCam({ route }: any) {
   const { url } = route.params;
   const server = useLinks();
-  const demoLink =
-    'https://firebasestorage.googleapis.com/v0/b/speedy-league-335221.appspot.com/o/app_assets%2Fwood.jpg?alt=media&token=f21faf5c-5f0a-4330-a81d-242ca9ba21c3';
   const demoShare = 'Hello, This Post is Generate by Octoria Application.';
-  // const share = useFirestoreDocLiveQuery('links', 'share');
-  // const { data, isLoading } = useFirestoreDocLiveQuery('links', 'background');
-  const [image, setImage] = useState(demoLink);
+  const { image, setImage } = useImageStore();
   const imgRef = useRef();
   const [loading, setLoading] = useState(false);
   const [share, setShare] = useState(demoShare);
   const { goBack } = useNavigation();
-  // useEffect(() => {
-  //   setImage(data?.url);
-  // }, [data?.url, isLoading]);
   useEffect(() => {
+    setLoading(true);
     const shareLink = server.LinksData.find((item) => item.id === 'share');
     const backgroundLink = server.LinksData.find(
       (item) => item.id === 'background'
@@ -53,31 +51,47 @@ export function ShareCam({ route }: any) {
     if (backgroundLink) {
       setImage(backgroundLink.url!);
     }
+    setLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [server.isLoading]);
 
+  const mediaLib = async (localUri: string) => {
+    const { status } = await MediaLibrary.requestPermissionsAsync();
+    if (status === 'granted') {
+      // You have permission to write to the storage here
+      MediaLibrary.saveToLibraryAsync(localUri);
+      ToastAndroid.show('Photo Saved to Gallery !', ToastAndroid.SHORT);
+      setLoading(false);
+    } else {
+      ToastAndroid.show(
+        'Permission denied go to setting and give permission !',
+        ToastAndroid.SHORT
+      );
+      setLoading(false);
+      // Handle the case where permission is denied
+    }
+  };
+  function delayedPromise(): Promise<void> {
+    setLoading(true);
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 800);
+    });
+  }
+
   async function handleDownload() {
+    const _ = await delayedPromise();
     try {
       setLoading(true);
-      const localUri = await captureRef(imgRef, {
-        height: 440,
+      const _localUri = await captureRef(imgRef, {
         quality: 1,
-      });
-      const { status } = await MediaLibrary.requestPermissionsAsync();
-      if (status === 'granted') {
-        // You have permission to write to the storage here
-        await MediaLibrary.saveToLibraryAsync(localUri);
-        ToastAndroid.show('Photo Saved to Gallery !', ToastAndroid.SHORT);
-        setLoading(false);
-      } else {
-        ToastAndroid.show(
-          'Permission denied go to setting and give permission !',
-          ToastAndroid.SHORT
-        );
-        setLoading(false);
-        // Handle the case where permission is denied
-      }
-    } catch (_) {
+      })
+        .then((localUri) => {
+          mediaLib(localUri);
+        })
+        .finally(() => setLoading(false));
+    } catch (error) {
       ToastAndroid.show('download Failed !', ToastAndroid.SHORT);
     }
   }
@@ -98,21 +112,20 @@ export function ShareCam({ route }: any) {
   };
 
   const handleShare = async () => {
+    const _ = await delayedPromise();
     try {
       setLoading(true);
-      const localUri = await captureRef(imgRef, {
-        height: 440,
+      const _localUri = await captureRef(imgRef, {
         quality: 1,
-      });
-      shareImageWithTitle(localUri, share);
-      setLoading(false);
+      })
+        .then((localUri) => {
+          shareImageWithTitle(localUri, share);
+        })
+        .finally(() => setLoading(false));
     } catch (e) {
       ToastAndroid.show('Sharing failed !', ToastAndroid.SHORT);
     }
   };
-  if (server.isLoading) {
-    return null;
-  }
 
   return (
     <View style={styles.container}>
@@ -125,20 +138,41 @@ export function ShareCam({ route }: any) {
           ref={imgRef}
         >
           <View style={styles.buttonContainer}>
-            {/* <PinchableBox image={url} /> */}
-            <Gestures>
-              <IMage
-                source={{
-                  uri: url,
-                }}
-                style={{
-                  width: 200,
-                  height: 200,
-                  resizeMode: 'contain',
-                }}
-              />
-            </Gestures>
+            <Gestures
+              comp={
+                <IMage
+                  source={{
+                    uri: url,
+                  }}
+                  style={{
+                    width: 200,
+                    height: 200,
+                    resizeMode: 'contain',
+                  }}
+                />
+              }
+            />
           </View>
+          {loading && (
+            <View
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'transparent',
+              }}
+            >
+              <Image
+                source={{ uri: 'http://itekindia.com/octoria/logo_big.png' }}
+                style={styles.image}
+                resizeMode="contain"
+              />
+            </View>
+          )}
         </ImageBackground>
         <AbsoluteButton
           iconName="arrow-back"
@@ -154,46 +188,41 @@ export function ShareCam({ route }: any) {
             <ActivityIndicator size="large" />
           </View>
         </Modal>
-
         <View
           style={{
             position: 'absolute',
             width: '100%',
             bottom: 50,
-            alignItems: 'center',
-            justifyContent: 'space-around',
             flexDirection: 'row',
-            borderRadius: 999,
+            justifyContent: 'space-around',
           }}
         >
           <TouchableOpacity
             onPress={handleShare}
-            style={{
-              alignSelf: 'center',
-              margin: 10,
-              marginRight: 50,
-            }}
+            style={{ flexDirection: 'column', alignItems: 'center' }}
           >
             <MaterialIcons name="share" size={30} color={'white'} />
+            <Text variant="xs" className="font-aquire text-white">
+              Share
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={pickImage}
-            style={{
-              alignSelf: 'center',
-              margin: 10,
-              marginRight: 50,
-            }}
+            style={{ flexDirection: 'column', alignItems: 'center' }}
           >
-            <MaterialIcons name="photo-camera-back" size={30} color={'white'} />
+            <MaterialIcons name="camera-enhance" size={30} color={'white'} />
+            <Text variant="xs" className="font-aquire text-white">
+              Camera
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={handleDownload}
-            style={{
-              alignSelf: 'center',
-              margin: 10,
-            }}
+            style={{ flexDirection: 'column', alignItems: 'center' }}
           >
             <MaterialIcons name="cloud-download" size={30} color={'white'} />
+            <Text variant="xs" className="font-aquire text-white">
+              Download
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -207,12 +236,9 @@ const styles = StyleSheet.create({
   },
   camera: {
     flex: 1,
-    // width: '100%',
-    // height: '100%',
     resizeMode: 'contain',
   },
   buttonContainer: {
-    // position: 'absolute',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
@@ -220,11 +246,20 @@ const styles = StyleSheet.create({
   sliderContainer: {
     flex: 1,
   },
+  image: {
+    width: 200,
+    height: 200,
+    opacity: 0.3,
+  },
+  absContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
   button: {
     flex: 1,
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // padding: 20,
   },
   text: {
     fontSize: 20,

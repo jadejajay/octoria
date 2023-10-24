@@ -16,7 +16,7 @@ export const HorizontalList = ({
   Header,
   onEndReached,
   snapToInterval,
-  estimatedItemSize = 50,
+  estimatedItemSize = 100,
 }: Props) => {
   return (
     <List

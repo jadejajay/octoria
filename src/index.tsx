@@ -21,9 +21,9 @@ SplashScreen.preventAutoHideAsync();
 const App = () => {
   usePreventScreenCapture();
   const auth = firebase.auth();
-  auth.useEmulator('http://localhost:9099');
-  firestore().useEmulator('localhost', 8080);
-  storage().useEmulator('localhost', 9199);
+  auth.useEmulator('http://192.168.0.8:9099');
+  firestore().useEmulator('192.168.0.8', 8080);
+  storage().useEmulator('192.168.0.8', 9199);
   return (
     <GestureHandlerRootView style={styles.container}>
       <APIProvider>

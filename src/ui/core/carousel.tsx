@@ -2,6 +2,7 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable react-native/no-inline-styles */
 import { useNavigation } from '@react-navigation/native';
+import { ResizeMode, Video } from 'expo-av';
 import React from 'react';
 import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
@@ -38,7 +39,23 @@ export const MainCarousel = () => {
         }}
       >
         <View style={styles1.container} key={index}>
-          <Image source={{ uri: item.image }} style={styles1.image} />
+          {item.image && (
+            <Image source={{ uri: item.image }} style={styles1.image} />
+          )}
+          {item.video && (
+            <>
+              <Video
+                style={{ flex: 1 }}
+                source={{
+                  uri: item.video,
+                }}
+                shouldPlay
+                useNativeControls
+                resizeMode={ResizeMode.COVER}
+                isLooping
+              />
+            </>
+          )}
         </View>
       </AnimatedButton>
     );
@@ -57,7 +74,7 @@ export const MainCarousel = () => {
         // activeSlideAlignment="center"
         aria-expanded={true}
         autoplay={true}
-        autoplayDelay={1000}
+        autoplayDelay={200}
         autoplayInterval={5000}
         automaticallyAdjustContentInsets={true}
         // bounces={false}
@@ -72,7 +89,7 @@ export const MainCarousel = () => {
         enableMomentum={true}
         // enableSnap={true}
         // fadingEdgeLength= 10
-        hasParallaxImages={true}
+        // hasParallaxImages={true}
         // hitSlop= { top: 20, bottom: 20, left: 20, right: 20 }
         inactiveSlideOpacity={0.7}
         inactiveSlideScale={0.9}
@@ -105,6 +122,7 @@ const styles1 = StyleSheet.create({
     width: ITEM_WIDTH * 0.88,
     height: 200,
     marginHorizontal: -horizontalMargin,
+    overflow: 'hidden',
   },
   image: {
     width: '100%',

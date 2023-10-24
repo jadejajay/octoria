@@ -1,16 +1,14 @@
-/* eslint-disable max-lines-per-function */
 // import MenuIcon from '@/ui/icons/menu';
 import { useNavigation } from '@react-navigation/native';
-import axios from 'axios';
-import React, { useState } from 'react';
+import React from 'react';
 
 import { speak } from '@/core';
 import { getGreetingByTimezone } from '@/core/greet';
 import useFirestoreLiveQuery from '@/core/hooks/use-firestore';
-import { useLinks, useMainCategories } from '@/core/mainscreen';
+import { useMainCategories } from '@/core/mainscreen';
+import { useProductsStore } from '@/core/mainscreen/products';
 // import useMainCategories from '@/core/hooks/use-main-categories';
 import { setItem } from '@/core/storage';
-import type { Product } from '@/types';
 import { FocusAwareStatusBar, ScrollView, View } from '@/ui';
 import { MainCarousel } from '@/ui/core/carousel';
 import { ChooseBrand } from '@/ui/widgets/mainscreen/categories-title';
@@ -26,13 +24,9 @@ export const Style = () => {
   const { navigate } = useNavigation();
   const { MainCategoriesData, isLoading, subscribeToMainCategories } =
     useMainCategories();
-  const server = useLinks();
   const FestivalImage = useFirestoreLiveQuery('FestivalImage');
-
-  const [isProductsLoading, setIsProductsLoading] = useState(false);
-  const [serverUrl, setServerUrl] = useState('');
-  const [data2, setData2] = React.useState<Product[]>([]);
-
+  const { productLoading, products } = useProductsStore();
+  const data = products.filter((product) => product.featured);
   //use effects start//////////////////////////////
   React.useEffect(() => {
     const greet = getGreetingByTimezone();
@@ -44,33 +38,6 @@ export const Style = () => {
     return () => unsubscribe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  React.useEffect(() => {
-    const unsubscribe = server.subscribeToLinks();
-    const serverLink = server.LinksData.find((item) => item.id === 'server');
-    if (serverLink) {
-      setServerUrl(serverLink.url!);
-    }
-    return () => unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [server.isLoading]);
-
-  React.useEffect(() => {
-    setServerUrl('http://itekindia.com/');
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [serverUrl]);
-  const fetchData = async () => {
-    // Replace 'your_api_endpoint' with the actual API endpoint for paginated search
-    try {
-      setIsProductsLoading(true);
-      if (!server.isLoading) {
-        const response2 = await axios.get(`${serverUrl}octoria/featured.php`);
-        const jsonData2 = await response2.data;
-        setData2(jsonData2);
-        setIsProductsLoading(false);
-      }
-    } catch (error) {}
-  };
 
   return (
     <>
@@ -89,7 +56,9 @@ export const Style = () => {
           <MainCarousel />
         </View>
         <ChooseBrand title={'Categories'} />
-        {isLoading ? null : <CategoriesList data={MainCategoriesData} />}
+        <View className="w-full">
+          {isLoading ? null : <CategoriesList data={MainCategoriesData} />}
+        </View>
         <PostCard />
 
         <ChooseBrand
@@ -103,7 +72,11 @@ export const Style = () => {
             });
           }}
         />
-        {data2 && <NewProductList data={data2} isLoading={isProductsLoading} />}
+        <View className="h-full w-full">
+          {data.length > 0 && (
+            <NewProductList data={data} isLoading={productLoading} />
+          )}
+        </View>
 
         {FestivalImage.isLoading ? null : (
           <PostModal data={FestivalImage.data} />

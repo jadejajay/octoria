@@ -1,64 +1,33 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable max-lines-per-function */
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 
-import useFirestoreDocLiveQuery from '@/core/hooks/use-firestore-doc';
+import { useProductsStore } from '@/core/mainscreen/products';
 import type { RouteProp } from '@/navigation/types';
-import { EmptyList, FocusAwareStatusBar, ScrollView, Text, View } from '@/ui';
+import {
+  ActivityIndicator,
+  EmptyList,
+  FocusAwareStatusBar,
+  ScrollView,
+  Text,
+  View,
+} from '@/ui';
 import AbsoluteButton from '@/ui/core/absolute-button';
-import type { Product } from '@/ui/widgets/product-type';
 import { CarouselCards } from '@/ui/widgets/products-list/product-carousel';
 import { ProductDetails } from '@/ui/widgets/products-list/product-details';
 
 export const Post = ({ route }: { route: RouteProp<'Post'> }) => {
   const navigation = useNavigation();
-
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [isError, setIsError] = React.useState(false);
-  const [data, setData] = React.useState<Product>();
-  const server = useFirestoreDocLiveQuery('links', 'server');
-
-  React.useEffect(() => {
-    fetchData();
-  }, [server.isLoading]);
-  const fetchData = async () => {
-    // Replace 'your_api_endpoint' with the actual API endpoint for paginated search
-    try {
-      setIsLoading(true);
-      if (!server.isLoading) {
-        const response = await fetch(
-          `${server.data?.url}octoria/product.php?id=${route.params.id}`
-        );
-        const jsonData = await response.json();
-        //@ts-ignore
-        setData(jsonData);
-        setIsLoading(false);
-      }
-    } catch (error) {
-      setIsError(true);
-    }
-  };
-
-  // if (isLoading) {
-  //   return (
-  //     <View className="flex-1 justify-center">
-  //       <ActivityIndicator />
-  //     </View>
-  //   );
-  // }
-  if (isError) {
+  const { products, productLoading } = useProductsStore();
+  const data = products.filter((pro) => pro.id === route.params.id)[0];
+  if (productLoading) {
     return (
       <View className="flex-1 justify-center">
-        <FocusAwareStatusBar />
-        <Text variant="md" className="text-center">
-          Error loading post
-        </Text>
+        <ActivityIndicator />
       </View>
     );
   }
-  if (data === undefined) {
-    return <EmptyList isLoading={isLoading} />;
+  if (data === undefined || !data) {
+    return <EmptyList isLoading={productLoading} />;
   }
 
   return (
@@ -66,11 +35,7 @@ export const Post = ({ route }: { route: RouteProp<'Post'> }) => {
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
         <FocusAwareStatusBar />
         <View className="mt-4 w-full">
-          <CarouselCards
-            item={{
-              image: data.images,
-            }}
-          />
+          <CarouselCards item={data.images} />
         </View>
         <View className="px-1">
           <Text variant="h2">{data.name}</Text>
