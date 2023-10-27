@@ -1,4 +1,12 @@
+/* eslint-disable max-lines-per-function */
 /* eslint-disable react-native/no-inline-styles */
+/*
+     -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
+    +* .##+ .@..*+ %+-:   *= -##-     :%  #*%  *++* +*.:@.:@--.-% -%.%*:: +* %%+.@ =%::*+ 
+ .  @::@*## +*  #=:%--.. .@ -@+#*     #= ##+@  .@-  @: :@ **--  @=#  .-** @.:% %#* %=:-@. 
+ =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
+                                                                                          
+*/
 import * as React from 'react';
 import { useState } from 'react';
 import * as Animatable from 'react-native-animatable';
@@ -10,6 +18,7 @@ import { Image, Text, TouchableOpacity } from '@/ui';
 
 type Props = {
   data: any;
+  id: any;
   index: number;
   onClick?: () => void;
   scale: SharedValue<any>;
@@ -17,12 +26,56 @@ type Props = {
 };
 export const ITWidget = ({
   data,
+  id,
   index,
   onClick,
   scale,
   isDragging,
 }: Props) => {
+  const userInfo = useEditorX((s) => s.businessData);
   const [animationKey, setAnimationKey] = useState<number>(0);
+  const [img, setImg] = useState('');
+  const [txt, setTxt] = useState('');
+  React.useEffect(() => {
+    switch (id) {
+      case 'user_name':
+        setTxt(userInfo.name);
+        break;
+      case 'user_photo':
+        setImg(userInfo.photo);
+        break;
+      case 'user_email':
+        setTxt(userInfo.email);
+        break;
+      case 'user_phone':
+        setTxt(userInfo.phone);
+        break;
+      case 'user_website':
+        setTxt(userInfo.website);
+        break;
+      case 'user_address':
+        setTxt(userInfo.address);
+        break;
+      default:
+        if (data?.image) {
+          setImg(data?.image);
+        }
+        if (data?.text) {
+          setTxt(data?.text);
+        }
+        break;
+    }
+  }, [
+    data?.image,
+    data?.text,
+    id,
+    userInfo.address,
+    userInfo.email,
+    userInfo.name,
+    userInfo.phone,
+    userInfo.photo,
+    userInfo.website,
+  ]);
   const savedScale = useEditorX(
     (s) => s.editorData.elements[index]?.properties.scale
   );
@@ -50,15 +103,15 @@ export const ITWidget = ({
         style={{ flex: 1 }}
         {...data?.viewProps}
       >
-        {data?.image && (
+        {img && (
           <Image
             key={`image_${index}`}
-            src={data?.image}
+            src={img}
             style={{ width: '100%', height: '100%' }}
             resizeMode={data?.resizeMode ? data?.resizeMode : 'cover'}
           />
         )}
-        {data?.text && (
+        {txt && (
           <Animated2.View
             key={`animated-view-text_${index}`}
             style={{
@@ -73,7 +126,7 @@ export const ITWidget = ({
             }}
           >
             <Text key={`itwidget-text_${index}`} {...data?.textProps}>
-              {data?.text}
+              {txt}
             </Text>
           </Animated2.View>
         )}
@@ -98,10 +151,6 @@ export const ITWidget = ({
 //     },
 //   },
 //   offset: {
-//     x: -137.32856130599976,
-//     y: -139.38782453536987,
-//   },
-//   start: {
 //     x: -137.32856130599976,
 //     y: -139.38782453536987,
 //   },

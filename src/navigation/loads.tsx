@@ -6,6 +6,7 @@ import firestore from '@react-native-firebase/firestore';
 import { useElementsStore } from '@/core/editorx/elements';
 import { useFestivalStore } from '@/core/editorx/festival';
 import { useFrameStore } from '@/core/editorx/frames';
+import { useImageListStore } from '@/core/editorx/image-element';
 import { useLogoStore } from '@/core/editorx/logos';
 import { usePostVideoStore } from '@/core/editorx/post-video';
 import { useShapesStore } from '@/core/editorx/shapes';
@@ -15,6 +16,7 @@ import type {
   ElementsType,
   FestivalType,
   FrameType,
+  ImageListType,
   LogosType,
   PostVideoType,
   Product,
@@ -33,11 +35,13 @@ const loadDataFromFirestore = async () => {
     const ShapesSnapshot = await firestore().collection('shapes').get();
     const LogosSnapshot = await firestore().collection('logosList').get();
     const PostVideosSnapshot = await firestore().collection('postVideos').get();
+    const ImagesSnapshot = await firestore().collection('imagesElement').get();
 
     const frame: FrameType[] = FrameSnapshot.docs.map((doc) => ({
       id: doc.id,
       image: doc.data()?.image,
       elements: doc.data()?.elements,
+      mainWidth: doc.data()?.mainWidth,
     }));
     const sticker: StickerType[] = StickersSnapshot.docs.map((doc) => ({
       id: doc.id,
@@ -82,6 +86,10 @@ const loadDataFromFirestore = async () => {
       video: doc.data()?.video,
       thumbnail: doc.data()?.thumbnail,
     }));
+    const imageList: ImageListType[] = ImagesSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      image: doc.data()?.image,
+    }));
 
     useFrameStore.setState({ frames: frame });
     useStickerStore.setState({ stickers: sticker });
@@ -91,6 +99,7 @@ const loadDataFromFirestore = async () => {
     useShapesStore.setState({ shapes: shape });
     useLogoStore.setState({ logos: logo });
     usePostVideoStore.setState({ postVideos: postVideos });
+    useImageListStore.setState({ images: imageList });
   } catch (error) {
     console.error('Error loading data from Firestore:', error);
   }

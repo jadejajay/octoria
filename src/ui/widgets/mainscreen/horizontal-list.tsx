@@ -12,31 +12,35 @@ type Props = {
 };
 export const CategoriesList = ({ data }: Props) => {
   const { navigate } = useNavigation();
-  return (
-    <FlatList
-      data={data}
-      horizontal
-      renderItem={({ item }) => {
-        return (
-          <View className="ml-2">
-            <RectCard
-              item={{
-                title: item.title,
-                color: item?.color!,
-                image: item.image,
-              }}
-              onClick={() => {
-                setItem('search', `${item.title}`);
-                //@ts-ignore
-                navigate('FeedNavigator', {
-                  screen: 'Feed',
-                });
-              }}
-            />
-          </View>
-        );
-      }}
-      showsHorizontalScrollIndicator={false}
-    />
-  );
+  const List = React.useCallback(() => {
+    return (
+      <FlatList
+        data={data}
+        horizontal
+        renderItem={({ item }) => {
+          return (
+            <View className="ml-2">
+              <RectCard
+                item={{
+                  title: item.title,
+                  color: item?.color!,
+                  image: item.image,
+                }}
+                onClick={() => {
+                  setItem('search', `${item.title}`);
+                  //@ts-ignore
+                  navigate('FeedNavigator', {
+                    screen: 'Feed',
+                  });
+                }}
+              />
+            </View>
+          );
+        }}
+        showsHorizontalScrollIndicator={false}
+      />
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  return <>{List()}</>;
 };

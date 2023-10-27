@@ -1,3 +1,5 @@
+import type { BusinessDataType } from '@/core';
+
 export interface MainCategory {
   id: string;
   image: string;
@@ -61,4 +63,13 @@ export interface BackgroundState {
   subscribeToBackground: (id: string) => void;
   subscribeToBackgroundMainList: () => void;
   subscribeToBackgroundSecondaryList: (id: string) => void;
+}
+
+export interface UserType {
+  name: string;
+  email: string;
+  business: string;
+  photoUrl: string;
+  type: string;
+  info: BusinessDataType;
 }

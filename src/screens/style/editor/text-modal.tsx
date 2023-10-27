@@ -1,3 +1,10 @@
+/*
+     -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
+    +* .##+ .@..*+ %+-:   *= -##-     :%  #*%  *++* +*.:@.:@--.-% -%.%*:: +* %%+.@ =%::*+ 
+ .  @::@*## +*  #=:%--.. .@ -@+#*     #= ##+@  .@-  @: :@ **--  @=#  .-** @.:% %#* %=:-@. 
+ =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
+                                                                                          
+*/
 import React, { useState } from 'react';
 import { Modal, TextInput } from 'react-native';
 import { StyleSheet } from 'react-native';
@@ -15,13 +22,13 @@ export const TextModal = ({ isModalVisible, SetModalVisible }: Props) => {
   const element = (text: string, width: number, height: number) => ({
     component: 'text',
     properties: {
-      height: height + 10,
-      width: width + 20,
+      height: height + 20,
+      width: width + 40,
       text: text,
       textProps: {
         style: {
           color: 'white',
-          fontSize: 20,
+          fontSize: 10,
           textAlign: 'center',
         },
       },
@@ -35,7 +42,7 @@ export const TextModal = ({ isModalVisible, SetModalVisible }: Props) => {
   });
   const handlePress = () => {
     SetModalVisible(false);
-    addElement(element(t, twh.width, twh.height));
+    if (t.length > 0) addElement(element(t, twh.width, twh.height));
   };
   return (
     <Modal

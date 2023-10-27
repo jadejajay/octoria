@@ -1,5 +1,12 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable max-lines-per-function */
+/*
+     -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
+    +* .##+ .@..*+ %+-:   *= -##-     :%  #*%  *++* +*.:@.:@--.-% -%.%*:: +* %%+.@ =%::*+ 
+ .  @::@*## +*  #=:%--.. .@ -@+#*     #= ##+@  .@-  @: :@ **--  @=#  .-** @.:% %#* %=:-@. 
+ =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
+                                                                                          
+*/
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { ResizeMode, Video } from 'expo-av';
@@ -17,7 +24,7 @@ import { showMessage } from 'react-native-flash-message';
 import ViewShot from 'react-native-view-shot';
 
 import type { Element } from '@/core';
-import { useEditorX } from '@/core';
+import { shuffleArray, useEditorX } from '@/core';
 import VideoCacheManager from '@/core/cache-util';
 import { EditingFeatures } from '@/core/editing-features.';
 import { useFestivalStore } from '@/core/editorx/festival';
@@ -57,6 +64,7 @@ type Props = {
   };
 };
 const resolution = 1024;
+//promise classes reference
 export const Editorx = ({ dim }: Props) => {
   // state management
   const bgType = useEditorX((state) => state.editorData.bgType);
@@ -69,11 +77,23 @@ export const Editorx = ({ dim }: Props) => {
   const setSelectedItem = useEditorX((state) => state.setSelectedItem);
   const setBg = useEditorX((s) => s.setBackground);
   const setFrm = useEditorX((s) => s.setFrame);
+  const saveFrame = useEditorX((s) => s.saveFrame);
+  const setDataById = useEditorX((s) => s.setDataById);
   const toggleWidget = useEditorX((s) => s.setActiveWidget);
   const [renderedAsset, setRenderedAsset] = useState<string>('');
   const festivals = useFestivalStore((s) => s.festival);
-  const frames = useFrameStore((s) => s.frames);
+  const sFestivals = shuffleArray(festivals);
+  const sFrame = useFrameStore((s) => s.frames);
+  // const sFrame = shuffleArray(frames);
   const postVideos = usePostVideoStore((s) => s.postVideos);
+  const sPostVideos = shuffleArray(postVideos);
+
+  console.log(
+    JSON.stringify(elements, null, 2),
+    '<============',
+    dim.width,
+    bgFrame
+  );
 
   // component specific
   const dirs = RNFetchBlob.fs.dirs.DocumentDir;
@@ -83,6 +103,7 @@ export const Editorx = ({ dim }: Props) => {
     rotateToDegree: (arg0: number) => void;
     moveToCenter: () => void;
     getState: () => any;
+    moveToPosition: ({ x, y }: { x: number; y: number }) => void;
   } | null>();
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
   const cacheManager = new VideoCacheManager();
@@ -179,7 +200,6 @@ export const Editorx = ({ dim }: Props) => {
       }
     });
   };
-
   const captureView = async () => {
     setSelectedItem(-1);
     toggleWidgetModal('Photos');
@@ -245,7 +265,6 @@ export const Editorx = ({ dim }: Props) => {
           const _result = await viewShotRef.current.capture().then(
             (uri: string) => {
               const out = `${dirs}/OCTORIA_${Date.now()}.mp4`;
-              // const cmd2 = `-i ${uri} -update 1 "${out2}"`;
               const cmd = `-i ${dwnVideo} -i ${uri} -filter_complex "[0:v]scale=${resolution}:${resolution} [video]; [video][1:v]overlay=0:0 [output]" -map 0:a -c:a copy -map 0:a -strict -2 -c:a aac -map "[output]"  -q:v 1 ${out}`;
               FFmpegKit.execute(cmd).then(async (session) => {
                 const returnCode = await session.getReturnCode();
@@ -294,17 +313,105 @@ export const Editorx = ({ dim }: Props) => {
       }
     }
   };
-
-  const handleRotationPress = (r: number) => {
-    // rotateToDegree 90 to magicRef
-    magicRef.current?.rotateToDegree(r);
-  };
-  const handlePressMoveToCenter = () => {
-    // rotateToDegree 90 to magicRef
-    magicRef.current?.moveToCenter();
-  };
-  return (
-    <View className="flex-1">
+  const PostBackgroundList = React.useCallback(
+    () => {
+      return (
+        <HorizontalList
+          key={'background cards'}
+          // eslint-disable-next-line react/no-unstable-nested-components
+          Comp={({ item }: { item: BackgroundType }) => (
+            <SmallCard
+              key={item.id}
+              onClick={() => {
+                setBg(item.image, 'photo');
+              }}
+              url={item.image}
+              // isSelected={BackGroundPicker.imageUri === item.image}
+            />
+          )}
+          // eslint-disable-next-line react/no-unstable-nested-components
+          Header={() => (
+            <SmallCard
+              onClick={() => setBackgroundModalVisible(true)}
+              url="http://itekindia.com/chats/upload.png"
+            />
+          )}
+          snapToInterval={128}
+          estimatedItemSize={100}
+          data={sFestivals}
+        />
+      );
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+  const PostVideoList = React.useCallback(
+    () => {
+      return (
+        <HorizontalList
+          key={'background Video cards'}
+          // eslint-disable-next-line react/no-unstable-nested-components
+          Comp={({ item }: { item: PostVideoType }) => (
+            <SmallCard2
+              key={item.id}
+              onClick={() => {
+                setBg(item.video, 'video');
+              }}
+              url={item.thumbnail}
+              // isSelected={BackGroundPicker.imageUri === item.image}
+            />
+          )}
+          // eslint-disable-next-line react/no-unstable-nested-components
+          Header={() => (
+            <SmallCard
+              onClick={() => setBackgroundVideoModalVisible(true)}
+              url="http://itekindia.com/chats/upload.png"
+            />
+          )}
+          snapToInterval={128}
+          estimatedItemSize={100}
+          data={sPostVideos}
+        />
+      );
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+  const PostFrameList = React.useCallback(() => {
+    return (
+      <HorizontalList
+        key={'frame cards'}
+        // eslint-disable-next-line react/no-unstable-nested-components
+        Comp={({ item }: { item: FrameType }) => (
+          <SmallCard
+            key={item.id}
+            onClick={() => {
+              setFrm(item.image);
+              if (item.mainWidth)
+                setDataById(item.elements, item.mainWidth, dim.width);
+              // setMagicController(!magicController);
+            }}
+            onLongPress={() => saveFrame(item.id, dim.width)}
+            url={item.image}
+            // isSelected={FramePicker.imageUri === item.image} // #00f
+          />
+        )}
+        // eslint-disable-next-line react/no-unstable-nested-components
+        Header={() => (
+          <SmallCard
+            onClick={() => setFrameModalVisible(true)}
+            url="http://itekindia.com/chats/upload.png"
+          />
+        )}
+        snapToInterval={128}
+        estimatedItemSize={100}
+        data={sFrame}
+      />
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const PostHeaderWidget = React.useCallback(() => {
+    return (
       <View id="header" style={styles.header}>
         <View className="flex-row items-baseline">
           <IconButton
@@ -327,124 +434,158 @@ export const Editorx = ({ dim }: Props) => {
           className="my-1 mx-2"
         />
       </View>
-      <View className="flex-1 justify-center">
-        {bgType === 'video' && (
-          <TouchableOpacity
-            style={[
-              { width: dim.width, height: dim.width, position: 'absolute' },
-            ]}
-            activeOpacity={1}
-            onPress={() => {
-              setSelectedItem(-1);
-              toggleWidgetModal('Videos');
-            }}
-          >
-            {dwnVideo && (
-              <Video
-                style={{ width: '100%', height: '100%' }}
-                source={{
-                  uri: dwnVideo,
-                }}
-                onError={(error) => {
-                  showMessage({
-                    type: 'danger',
-                    message: `Failed to Load Video ${error}`,
-                    duration: 2000,
-                  });
-                }}
-                shouldPlay={true}
-                isMuted={renderModalVisible}
-                volume={1}
-                useNativeControls={false}
-                resizeMode={ResizeMode.STRETCH}
-                isLooping
-              />
-            )}
-          </TouchableOpacity>
-        )}
-        <ViewShot
-          ref={viewShotRef}
-          style={[styles.canvas, { width: dim.width, height: dim.width }]}
-          options={{
-            format: 'png',
-            fileName: `OCTORIA_${Date.now()}`,
-            quality: 1,
-            width: resolution,
-            height: resolution,
-          }}
-        >
-          {bgPost && bgType === 'photo' && (
-            <TouchableOpacity
-              style={[
-                styles.background,
-                { width: dim.width, height: dim.width },
-              ]}
-              activeOpacity={1}
-              onPress={() => {
-                setSelectedItem(-1);
-                toggleWidgetModal('Photos');
-              }}
-            >
-              <Image
-                style={[
-                  styles.background,
-                  { width: dim.width, height: dim.width },
-                ]}
-                resizeMode="cover"
-                src={bgPost}
-              />
-            </TouchableOpacity>
-          )}
-          {bgFrame && (
-            <TouchableOpacity
-              style={[
-                styles.background,
-                { width: dim.width, height: dim.width },
-              ]}
-              activeOpacity={1}
-              onPress={() => {
-                setSelectedItem(-1);
-                toggleWidgetModal('Photos');
-              }}
-            >
-              <Image
-                style={[
-                  styles.background,
-                  { width: dim.width, height: dim.width },
-                ]}
-                resizeMode="stretch"
-                src={bgFrame}
-              />
-            </TouchableOpacity>
-          )}
-          {elements &&
-            elements.map((item: Element, index: number) => {
-              console.log(item);
-
-              return (
-                <Magic
-                  key={`Magic_${index}`}
-                  ref={selectedItem === index ? magicRef : null}
-                  isFocused={selectedItem === index ? true : false}
-                  index={index}
-                  onClick={() => {
-                    if (selectedItem === index) {
-                      setSelectedItem(-1);
-                      toggleWidgetModal('Photos');
-                    } else {
-                      setSelectedItem(index);
-                      if (item.component === 'text') {
-                        toggleWidgetModal('Text');
-                      } else {
-                        toggleWidgetModal('Image');
-                      }
-                    }
-                  }}
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const PostTextWidget = React.useCallback(() => {
+    return (
+      <TextWidget
+        onPress={() => setInfoModalVisible(true)}
+        handlePressMoveToPosition={handlePressMoveToPosition}
+        handleRotationPress={handleRotationPress}
+        handlePressMoveToCenter={handlePressMoveToCenter}
+      />
+    );
+  }, []);
+  const PostImageWidget = React.useCallback(() => {
+    return (
+      <ImageWidget
+        onPress={() => setInfoModalVisible(true)}
+        handlePressMoveToPosition={handlePressMoveToPosition}
+        handleRotationPress={handleRotationPress}
+        handlePressMoveToCenter={handlePressMoveToCenter}
+      />
+    );
+  }, []);
+  const EditingFeatureWidget = React.useCallback(() => {
+    return (
+      <HorizontalList
+        key={'editing icons'}
+        // eslint-disable-next-line react/no-unstable-nested-components
+        Comp={({ item }: { item: EditingFeaturesType }) => {
+          return (
+            <IconButton
+              key={item.name}
+              icon={
+                <MaterialCommunityIcons
+                  name={item.icon}
+                  size={20}
+                  color={'#07ab86'}
                 />
-              );
-            })}
-        </ViewShot>
-      </View>
+              }
+              title={item.name}
+              onPress={() => {
+                if (item.name === 'Image') {
+                  setImageModalVisible(true);
+                } else if (item.name === 'Text') {
+                  setTextModalVisible(true);
+                } else {
+                  toggleWidgetModal(item.name);
+                }
+              }}
+              className="my-1 mx-2"
+            />
+          );
+        }}
+        snapToInterval={80}
+        estimatedItemSize={55}
+        data={EditingFeatures}
+      />
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const VideoComponent = React.useCallback(
+    () => (
+      <Video
+        style={{ width: '100%', height: '100%' }}
+        source={{
+          uri: dwnVideo,
+        }}
+        onError={(error) => {
+          showMessage({
+            type: 'danger',
+            message: `Failed to Load Video ${error}`,
+            duration: 2000,
+          });
+        }}
+        shouldPlay={true}
+        isMuted={renderModalVisible}
+        volume={1}
+        useNativeControls={false}
+        resizeMode={ResizeMode.STRETCH}
+        isLooping
+      />
+    ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [dwnVideo]
+  );
+  const MagicComponent = React.useCallback(
+    (item: Element, index: number) => (
+      <Magic
+        key={`Magic_${index}`}
+        ref={selectedItem === index ? magicRef : null}
+        isFocused={selectedItem === index ? true : false}
+        index={index}
+        onClick={() => {
+          if (selectedItem === index) {
+            setSelectedItem(-1);
+            toggleWidgetModal('Photos');
+          } else {
+            setSelectedItem(index);
+            if (item.component === 'text') {
+              toggleWidgetModal('Text');
+            } else {
+              toggleWidgetModal('Image');
+            }
+          }
+        }}
+      />
+    ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [selectedItem]
+  );
+  const PostImageComponent = React.useCallback(
+    () => (
+      <TouchableOpacity
+        style={[styles.background, { width: dim.width, height: dim.width }]}
+        activeOpacity={1}
+        onPress={() => {
+          setSelectedItem(-1);
+          toggleWidgetModal('Photos');
+        }}
+      >
+        <Image
+          style={[styles.background, { width: dim.width, height: dim.width }]}
+          resizeMode="cover"
+          src={bgPost}
+        />
+      </TouchableOpacity>
+    ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [bgPost]
+  );
+  const PostFrameComponent = React.useCallback(
+    () => (
+      <TouchableOpacity
+        style={[styles.background, { width: dim.width, height: dim.width }]}
+        activeOpacity={1}
+        onPress={() => {
+          setSelectedItem(-1);
+          toggleWidgetModal('Photos');
+        }}
+      >
+        <Image
+          style={[styles.background, { width: dim.width, height: dim.width }]}
+          resizeMode="stretch"
+          src={bgFrame}
+        />
+      </TouchableOpacity>
+    ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [bgFrame]
+  );
+  const ModalList = React.useCallback(() => {
+    return (
       <View className="">
         <RenderWidget
           isVisible={renderModalVisible}
@@ -475,10 +616,12 @@ export const Editorx = ({ dim }: Props) => {
           isVisible={stickersModalVisible}
           onClose={() => setStickersModalVisible(false)}
         />
-        <InfoWidget
-          isVisible={infoModalVisible}
-          onClose={() => setInfoModalVisible(false)}
-        />
+        {infoModalVisible && (
+          <InfoWidget
+            isVisible={infoModalVisible}
+            onClose={() => setInfoModalVisible(false)}
+          />
+        )}
         <ShapesWidget
           isVisible={shapesModalVisible}
           onClose={() => setShapesModalVisible(false)}
@@ -504,115 +647,89 @@ export const Editorx = ({ dim }: Props) => {
           onClose={() => setImageModalVisible(false)}
         />
       </View>
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    backgroundModalVisible,
+    backgroundVideoModalVisible,
+    bgType,
+    elementsModalVisible,
+    frameModalVisible,
+    imageModalVisible,
+    infoModalVisible,
+    logosModalVisible,
+    productsModalVisible,
+    progress,
+    renderModalLoading,
+    renderModalVisible,
+    renderedAsset,
+    shapesModalVisible,
+    stickersModalVisible,
+    textModalVisible,
+  ]);
+  const handleRotationPress = (r: number) => {
+    // rotateToDegree 90 to magicRef
+    magicRef.current?.rotateToDegree(r);
+  };
+  const handlePressMoveToCenter = () => {
+    // rotateToDegree 90 to magicRef
+    magicRef.current?.moveToCenter();
+  };
+  const handlePressMoveToPosition = ({ x, y }: { x: number; y: number }) => {
+    // rotateToDegree 90 to magicRef
+    magicRef.current?.moveToPosition({ x, y });
+  };
+  return (
+    <View className="flex-1">
+      {PostHeaderWidget()}
+      <View className="flex-1 justify-center">
+        {bgType === 'video' && (
+          <TouchableOpacity
+            style={[
+              { width: dim.width, height: dim.width, position: 'absolute' },
+            ]}
+            activeOpacity={1}
+            onPress={() => {
+              setSelectedItem(-1);
+              toggleWidgetModal('Videos');
+            }}
+          >
+            {dwnVideo && <VideoComponent />}
+          </TouchableOpacity>
+        )}
+        <ViewShot
+          ref={viewShotRef}
+          style={[styles.canvas, { width: dim.width, height: dim.width }]}
+          options={{
+            format: 'png',
+            fileName: `OCTORIA_${Date.now()}`,
+            quality: 1,
+            width: resolution,
+            height: resolution,
+          }}
+        >
+          {bgPost && bgType === 'photo' && <PostImageComponent />}
+          {bgFrame && <PostFrameComponent />}
+          {elements &&
+            elements.map((item: Element, index: number) => {
+              return MagicComponent(item, index);
+            })}
+        </ViewShot>
+      </View>
+      {ModalList()}
       <View style={styles.widget}>
         <View className="overflow-hidden" style={{ height: 140 }}>
-          {/* //background/////////////////////////////////////////////////////// */}
-          {/* //background/////////////////////////////////////////////////////// */}
-          {/* //background/////////////////////////////////////////////////////// */}
-          {/* //background/////////////////////////////////////////////////////// */}
-          {widget === ('Photos' as 'Photos') && festivals.length > 0 && (
-            <HorizontalList
-              key={'background cards'}
-              // eslint-disable-next-line react/no-unstable-nested-components
-              Comp={({ item }: { item: BackgroundType }) => (
-                <SmallCard
-                  key={item.id}
-                  onClick={() => {
-                    setBg(item.image, 'photo');
-                  }}
-                  url={item.image}
-                  // isSelected={BackGroundPicker.imageUri === item.image}
-                />
-              )}
-              // eslint-disable-next-line react/no-unstable-nested-components
-              Header={() => (
-                <SmallCard
-                  onClick={() => setBackgroundModalVisible(true)}
-                  url="http://itekindia.com/chats/upload.png"
-                />
-              )}
-              snapToInterval={128}
-              estimatedItemSize={100}
-              data={festivals}
-            />
-          )}
-          {widget === ('Videos' as 'Videos') && postVideos.length > 0 && (
-            <HorizontalList
-              key={'background Video cards'}
-              // eslint-disable-next-line react/no-unstable-nested-components
-              Comp={({ item }: { item: PostVideoType }) => (
-                <SmallCard2
-                  key={item.id}
-                  onClick={() => {
-                    setBg(item.video, 'video');
-                  }}
-                  url={item.thumbnail}
-                  // isSelected={BackGroundPicker.imageUri === item.image}
-                />
-              )}
-              // eslint-disable-next-line react/no-unstable-nested-components
-              Header={() => (
-                <SmallCard
-                  onClick={() => setBackgroundVideoModalVisible(true)}
-                  url="http://itekindia.com/chats/upload.png"
-                />
-              )}
-              snapToInterval={128}
-              estimatedItemSize={100}
-              data={postVideos}
-            />
-          )}
-          {/* //frames////////////////////////////////////////////////////// */}
-          {/* //frames////////////////////////////////////////////////////// */}
-          {/* //frames////////////////////////////////////////////////////// */}
-          {/* //frames////////////////////////////////////////////////////// */}
-          {widget === ('Frames' as 'Frames') && frames.length > 0 && (
-            <HorizontalList
-              key={'frame cards'}
-              // eslint-disable-next-line react/no-unstable-nested-components
-              Comp={({ item }: { item: FrameType }) => (
-                <SmallCard
-                  key={item.id}
-                  onClick={() => {
-                    setFrm(item.image);
-                  }}
-                  url={item.image}
-                  // isSelected={FramePicker.imageUri === item.image}
-                />
-              )}
-              // eslint-disable-next-line react/no-unstable-nested-components
-              Header={() => (
-                <SmallCard
-                  onClick={() => setFrameModalVisible(true)}
-                  url="http://itekindia.com/chats/upload.png"
-                />
-              )}
-              snapToInterval={128}
-              estimatedItemSize={100}
-              data={frames}
-            />
-          )}
-          {/* //Text//////////////////////////////////////////////////////////// */}
-          {/* //Text//////////////////////////////////////////////////////////// */}
-          {/* //Text//////////////////////////////////////////////////////////// */}
-          {/* //Text//////////////////////////////////////////////////////////// */}
-          {widget === ('Text' as 'Text') && (
-            <TextWidget
-              state={selectedItem}
-              handleRotationPress={handleRotationPress}
-              handlePressMoveToCenter={handlePressMoveToCenter}
-            />
-          )}
-          {/* //image//////////////////////////////////////////////////////////// */}
-          {/* //image//////////////////////////////////////////////////////////// */}
-          {/* //image//////////////////////////////////////////////////////////// */}
-          {/* //image//////////////////////////////////////////////////////////// */}
-          {widget === ('Image' as 'Image') && (
-            <ImageWidget
-              handleRotationPress={handleRotationPress}
-              handlePressMoveToCenter={handlePressMoveToCenter}
-            />
-          )}
+          {widget === ('Photos' as 'Photos') &&
+            festivals.length > 0 &&
+            PostBackgroundList()}
+          {widget === ('Videos' as 'Videos') &&
+            postVideos.length > 0 &&
+            PostVideoList()}
+          {widget === ('Frames' as 'Frames') &&
+            sFrame.length > 0 &&
+            PostFrameList()}
+          {widget === ('Text' as 'Text') && PostTextWidget()}
+          {widget === ('Image' as 'Image') && PostImageWidget()}
         </View>
       </View>
       <View id="footer" style={styles.footer}>
@@ -623,38 +740,7 @@ export const Editorx = ({ dim }: Props) => {
             overflow: 'hidden',
           }}
         >
-          <HorizontalList
-            key={'editing icons'}
-            // eslint-disable-next-line react/no-unstable-nested-components
-            Comp={({ item }: { item: EditingFeaturesType }) => {
-              return (
-                <IconButton
-                  key={item.name}
-                  icon={
-                    <MaterialCommunityIcons
-                      name={item.icon}
-                      size={20}
-                      color={'#07ab86'}
-                    />
-                  }
-                  title={item.name}
-                  onPress={() => {
-                    if (item.name === 'Image') {
-                      setImageModalVisible(true);
-                    } else if (item.name === 'Text') {
-                      setTextModalVisible(true);
-                    } else {
-                      toggleWidgetModal(item.name);
-                    }
-                  }}
-                  className="my-1 mx-2"
-                />
-              );
-            }}
-            snapToInterval={80}
-            estimatedItemSize={55}
-            data={EditingFeatures}
-          />
+          <EditingFeatureWidget />
         </View>
       </View>
     </View>

@@ -1,3 +1,10 @@
+/*
+     -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
+    +* .##+ .@..*+ %+-:   *= -##-     :%  #*%  *++* +*.:@.:@--.-% -%.%*:: +* %%+.@ =%::*+ 
+ .  @::@*## +*  #=:%--.. .@ -@+#*     #= ##+@  .@-  @: :@ **--  @=#  .-** @.:% %#* %=:-@. 
+ =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
+                                                                                          
+*/
 import React, { useCallback } from 'react';
 import { Modal } from 'react-native';
 import { StyleSheet } from 'react-native';
@@ -34,7 +41,7 @@ export const LogosWidget = ({ isVisible, onClose }: Props9) => {
           Comp={CardComp}
           data={logos}
           estimatedItemSize={100}
-          numColumn={4}
+          numColumn={5}
         />
       </View>
     </Modal>
@@ -51,8 +58,8 @@ export const Card = ({ item, index, setElement, onClose }: Props) => {
   const element = {
     component: 'image',
     properties: {
-      height: 60,
-      width: 60,
+      height: 30,
+      width: 30,
       image: item.image,
       viewProps: {
         style: {

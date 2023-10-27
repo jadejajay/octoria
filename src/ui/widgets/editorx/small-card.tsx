@@ -7,13 +7,24 @@ import { Shadow } from '@/ui/core/shadow';
 
 type Props = {
   onClick?: () => void;
+  onLongPress?: () => void;
   index?: number;
   isSelected?: boolean;
   url?: string;
 };
-export const SmallCard = ({ onClick, index, isSelected, url }: Props) => {
+export const SmallCard = ({
+  onClick = () => {},
+  index,
+  isSelected,
+  url,
+  onLongPress = () => {},
+}: Props) => {
   return (
-    <TouchableOpacity onPress={onClick} activeOpacity={1}>
+    <TouchableOpacity
+      onPress={onClick}
+      onLongPress={onLongPress}
+      activeOpacity={1}
+    >
       <Shadow
         style={[
           styles.container,

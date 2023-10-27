@@ -22,17 +22,19 @@ type Props7 = {
   onClose: () => void;
 };
 const theme = '#07ab86';
-export const ImageModal = ({ isVisible, onClose }: Props7) => {
+export const ChangeImageModal = ({ isVisible, onClose }: Props7) => {
   const { images } = useImageListStore();
-  const addElement = useEditorX((s) => s.addElement);
+  const setImage = useEditorX((s) => s.setImage);
+  const state = useEditorX((s) => s.selectedItem);
 
   const CardComp = useCallback((item: any, index: number) => {
     return (
       <Card
         item={item.item}
         index={index}
-        addElement={addElement}
+        setImage={setImage}
         onClose={onClose}
+        state={state}
       />
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -45,7 +47,7 @@ export const ImageModal = ({ isVisible, onClose }: Props7) => {
         quality: 1,
       });
       if (!result.canceled) {
-        addElement(element(result.assets[0]?.uri));
+        setImage({ id: state, image: result.assets[0]?.uri });
         onClose();
       }
     } catch (error) {
@@ -60,7 +62,7 @@ export const ImageModal = ({ isVisible, onClose }: Props7) => {
         quality: 1,
       });
       if (!result.canceled) {
-        addElement(element(result.assets[0]?.uri));
+        setImage({ id: state, image: result.assets[0]?.uri });
         onClose();
       }
     } catch (error) {
@@ -109,10 +111,11 @@ export const ImageModal = ({ isVisible, onClose }: Props7) => {
 type Props = {
   item: ImageListType;
   index: number;
-  addElement: (element: any) => void;
+  state: any;
+  setImage: (element: any) => void;
   onClose: () => void;
 };
-export const Card = ({ item, index, addElement, onClose }: Props) => {
+export const Card = ({ item, index, setImage, onClose, state }: Props) => {
   return (
     <View className="flex-1 p-2">
       <TouchableOpacity
@@ -120,7 +123,7 @@ export const Card = ({ item, index, addElement, onClose }: Props) => {
         className="aspect-square w-full overflow-hidden rounded-lg bg-red-200"
         activeOpacity={1}
         onPress={() => {
-          addElement(element(item.image));
+          setImage({ id: state, image: item.image });
           onClose();
         }}
       >
@@ -134,29 +137,4 @@ const styles = StyleSheet.create({
   image: { width: '100%', height: '100%' },
   image2: { width: '100%', height: '100%', opacity: 1 },
   color1: { color: theme },
-});
-
-const element = (image: string) => ({
-  component: 'image',
-  properties: {
-    height: 100,
-    width: 100,
-    image: image,
-    viewProps: {
-      style: {
-        overflow: 'hidden',
-      },
-    },
-    resizeMode: 'stretch',
-    offset: {
-      x: 0,
-      y: 0,
-    },
-    start: {
-      x: 0,
-      y: 0,
-    },
-    scale: 1,
-    rotation: 0,
-  },
 });

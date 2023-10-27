@@ -11,19 +11,24 @@ type Props = {
   isLoading: boolean;
 };
 export const NewProductList = ({ data, isLoading }: Props) => {
-  return (
-    <List
-      key={7735}
-      data={data}
-      renderItem={({ item, index }) => (
-        <ProductCardHorizontal item={item} index={index} />
-      )}
-      estimatedItemSize={100}
-      ListEmptyComponent={<EmptyList isLoading={isLoading} />}
-      keyExtractor={(_, index) => `product-item-${index}`}
-      numColumns={2}
-      // onEndReached={() => handle()}
-      onEndReachedThreshold={0.1}
-    />
+  const ListComponent = React.useCallback(
+    () => (
+      <List
+        key={7735}
+        data={data}
+        renderItem={({ item, index }) => (
+          <ProductCardHorizontal item={item} index={index} />
+        )}
+        estimatedItemSize={100}
+        ListEmptyComponent={<EmptyList isLoading={isLoading} />}
+        keyExtractor={(_, index) => `product-item-${index}`}
+        numColumns={2}
+        // onEndReached={() => handle()}
+        onEndReachedThreshold={0.1}
+      />
+    ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
   );
+  return <>{ListComponent()}</>;
 };

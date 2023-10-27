@@ -53,6 +53,13 @@ https://forum.videohelp.com/threads/384578-Can-FFMPEG-show-a-percentage-done-or-
 https://github.com/sidneys/ffmpeg-progressbar-cli/blob/master/lib/main.js
 https://www.svgviewer.dev/
 https://alternativeto.net/software/cyberlink-powerdirector/?license=opensource
+https://cimage.se/doc/ascii-art
+https://www.php.net/manual/en/function.imagefilter.php
+https://react-native-share.github.io/react-native-share/docs/share-open
+https://www.ragingrock.com/AndroidAppRE/reversing_native_libs.html
+https://chris-yn-chen.medium.com/apk-reverse-engineering-df7ed8cec191
+https://www.remotion.dev/docs/lambda/webhooks
+https://www.remotion.dev/docs/renderer
 
 ///////////////////////////////////////////
 firebase
@@ -157,3 +164,4 @@ Subject Public Key Algorithm: 2048-bit RSA key
 Version: 1
 
 //android tutorial
+////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -6,16 +6,9 @@ import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import * as MediaLibrary from 'expo-media-library';
 import { useEffect, useRef, useState } from 'react';
-import {
-  Image as IMage,
-  Modal,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ToastAndroid } from 'react-native';
 import { ImageBackground } from 'react-native';
-import { Image } from 'react-native';
 // import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { captureRef } from 'react-native-view-shot';
 
@@ -23,7 +16,7 @@ import { shareImageWithTitle } from '@/core';
 import { useImageStore } from '@/core/camshare';
 import { useLinks } from '@/core/mainscreen';
 // import { shareImageWithTitle } from '@/core';
-import { ActivityIndicator, Text } from '@/ui';
+import { ActivityIndicator, Image, Text } from '@/ui';
 import AbsoluteButton from '@/ui/core/absolute-button';
 
 import { Gestures } from './simultaneous-gesture';
@@ -76,7 +69,7 @@ export function ShareCam({ route }: any) {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve();
-      }, 800);
+      }, 400);
     });
   }
 
@@ -140,15 +133,13 @@ export function ShareCam({ route }: any) {
           <View style={styles.buttonContainer}>
             <Gestures
               comp={
-                <IMage
-                  source={{
-                    uri: url,
-                  }}
+                <Image
+                  src={url}
                   style={{
-                    width: 200,
-                    height: 200,
-                    resizeMode: 'contain',
+                    width: 400,
+                    height: 400,
                   }}
+                  resizeMode="contain"
                 />
               }
             />
@@ -167,7 +158,7 @@ export function ShareCam({ route }: any) {
               }}
             >
               <Image
-                source={{ uri: 'http://itekindia.com/octoria/logo_big.png' }}
+                src={'http://itekindia.com/octoria/logo_big.png'}
                 style={styles.image}
                 resizeMode="contain"
               />
@@ -247,8 +238,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   image: {
-    width: 200,
-    height: 200,
+    width: 400,
+    height: 400,
     opacity: 0.3,
   },
   absContainer: {

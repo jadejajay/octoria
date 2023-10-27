@@ -1,13 +1,155 @@
 /* eslint-disable max-lines-per-function */
+import firestore from '@react-native-firebase/firestore';
 import { produce } from 'immer';
+import { showMessage } from 'react-native-flash-message';
 import { create } from 'zustand';
 
-import { createSelectors } from '../utils';
+// import auth from '@react-native-firebase/auth';
+import { createSelectors, newValue } from '../utils';
 const DATA: EditorData = {
   backgroundPost: 'http://itekindia.com/chats/bgimages/imageedit.png',
   bgType: 'photo',
   frame: 'http://itekindia.com/chats/frames/format20.png',
-  elements: [],
+  elements: [
+    {
+      id: 'user_photo',
+      name: 'user_photo',
+      component: 'image',
+      properties: {
+        height: 0,
+        width: 0,
+        image: '',
+        viewProps: {
+          style: {
+            overflow: 'hidden',
+            borderRadius: 0,
+          },
+        },
+        resizeMode: 'stretch',
+        offset: {
+          x: -124.50129079818726,
+          y: -163.30801391601562,
+        },
+        scale: 1,
+        rotation: 0,
+      },
+    },
+    {
+      id: 'user_name',
+      name: 'user_name',
+      component: 'text',
+      properties: {
+        height: 0,
+        width: 0,
+        text: '',
+        textProps: {
+          style: {
+            color: 'white',
+            fontSize: 20,
+            textAlign: 'center',
+          },
+        },
+        offset: {
+          x: 0,
+          y: 0,
+        },
+        scale: 1,
+        rotation: 0,
+      },
+    },
+    {
+      id: 'user_phone',
+      name: 'user_phone',
+      component: 'text',
+      properties: {
+        height: 0,
+        width: 0,
+        text: '',
+        textProps: {
+          style: {
+            color: 'white',
+            fontSize: 20,
+            textAlign: 'center',
+          },
+        },
+        offset: {
+          x: -111.52720820903778,
+          y: 121.70055782794952,
+        },
+        scale: 0.46586051485716096,
+        rotation: 0.00178283355834985,
+      },
+    },
+    {
+      id: 'user_email',
+      name: 'user_email',
+      component: 'text',
+      properties: {
+        height: 0,
+        width: 0,
+        text: '',
+        textProps: {
+          style: {
+            color: 'white',
+            fontSize: 20,
+            textAlign: 'center',
+          },
+        },
+        offset: {
+          x: 0,
+          y: 0,
+        },
+        scale: 0.6181012004858454,
+        rotation: 0,
+      },
+    },
+    {
+      id: 'user_website',
+      name: 'user_website',
+      component: 'text',
+      properties: {
+        height: 0,
+        width: 0,
+        text: '',
+        textProps: {
+          style: {
+            color: 'white',
+            fontSize: 20,
+            textAlign: 'center',
+          },
+        },
+        offset: {
+          x: -124.73283100128174,
+          y: 139.40884971618652,
+        },
+        scale: 0.4988879568385814,
+        rotation: 0,
+      },
+    },
+    {
+      id: 'user_address',
+      name: 'user_address',
+      component: 'text',
+      properties: {
+        height: 0,
+        width: 0,
+        text: '',
+        textProps: {
+          style: {
+            color: 'white',
+            fontSize: 20,
+            textAlign: 'center',
+          },
+        },
+        offset: {
+          x: -99.6798170208931,
+          y: 83.55881513655186,
+        },
+        scale: 0.5472514737254145,
+        rotation: 0,
+      },
+    },
+  ],
 };
 
 export interface ElementProperties {
@@ -21,6 +163,9 @@ export interface ElementProperties {
     [key: string]: any;
   };
   viewProps?: {
+    style: {
+      [key: string]: any;
+    };
     [key: string]: any;
   };
   offset: {
@@ -48,8 +193,17 @@ export interface EditorData {
   elements: Element[];
 }
 
+export type BusinessDataType = {
+  name: string;
+  photo: string;
+  email: string;
+  phone: string;
+  website: string;
+  address: string;
+};
 export interface EditorXState {
   editorData: EditorData;
+  businessData: BusinessDataType;
   selectedItem: number;
   activeWidget: string;
   past: any[];
@@ -57,10 +211,20 @@ export interface EditorXState {
   future: any[];
   canUndo: boolean;
   canRedo: boolean;
+  saveFrame: (id: string, width: number) => void;
   setData: (newData: any) => void;
+  isSpecial: () => boolean;
+  setBusiness: (data: BusinessDataType) => void;
+  setDataById: (
+    property: Element[] | undefined,
+    mainWidth: number,
+    currentWidth: number
+  ) => void;
   setTextStyle: (newData: any) => void;
+  setViewStyle: (newData: any) => void;
   setText: (newData: any) => void;
   setImage: (newData: any) => void;
+  setImageResizeMode: (newData: any) => void;
   setSelectedItem: (index: number) => void;
   setActiveWidget: (wdg: string) => void;
   setBackground: (url: string, type: 'photo' | 'video') => void;
@@ -72,9 +236,19 @@ export interface EditorXState {
   undo: () => void;
   redo: () => void;
 }
-
+// const id = auth().currentUser?.uid;
 const _useEditorX = create<EditorXState>((set, get) => ({
   editorData: DATA,
+  businessData: {
+    name: '',
+    photo: '',
+    email: '',
+    phone: '',
+    instagram: '',
+    facebook: '',
+    website: '',
+    address: '',
+  },
   selectedItem: -1,
   activeWidget: 'Photos',
   past: [],
@@ -82,6 +256,35 @@ const _useEditorX = create<EditorXState>((set, get) => ({
   future: [],
   canUndo: false,
   canRedo: false,
+  saveFrame: async (id, width) => {
+    const elements = get().editorData.elements;
+    try {
+      if (id) {
+        showMessage({
+          type: 'success',
+          message: 'Updating Data...',
+          duration: 4000,
+        });
+        await firestore().collection('frames').doc(id).set(
+          { elements: elements, mainWidth: width },
+          {
+            merge: true,
+          }
+        );
+        showMessage({
+          type: 'success',
+          message: 'Updated Data.',
+          duration: 4000,
+        });
+      }
+    } catch (error) {
+      showMessage({
+        type: 'danger',
+        message: 'Error Updating Data.',
+        duration: 4000,
+      });
+    }
+  },
   setData: (newData) => {
     set(
       produce((state: EditorXState) => {
@@ -104,10 +307,89 @@ const _useEditorX = create<EditorXState>((set, get) => ({
             ...newData.props,
           };
         }
-
         return state;
       })
     );
+  },
+  setBusiness: (data) => {
+    set(
+      produce((state: EditorXState) => {
+        state.businessData = data;
+        return state;
+      })
+    );
+  },
+  isSpecial: () => {
+    const id = get().editorData.elements[get().selectedItem].id.toString();
+    if (id?.includes('user_')) {
+      return true;
+    }
+    return false;
+  },
+  setDataById: (elements, mainWidth, currentWidth) => {
+    if (elements) {
+      const property2: Element[] = elements.map((element: Element, _) => {
+        return {
+          component: element.component,
+          id: element.id,
+          name: element.name,
+          properties: {
+            ...element.properties,
+            offset: {
+              x: newValue({
+                oldValue: element.properties.offset.x,
+                oldWidth: mainWidth,
+                newWidth: currentWidth,
+              }),
+              y: newValue({
+                oldValue: element.properties.offset.y,
+                oldWidth: mainWidth,
+                newWidth: currentWidth,
+              }),
+            },
+            scale: newValue({
+              oldValue: element.properties.scale,
+              oldWidth: mainWidth,
+              newWidth: currentWidth,
+            }),
+            width: newValue({
+              oldValue: element.properties.width,
+              oldWidth: mainWidth,
+              newWidth: currentWidth,
+            }),
+            height: newValue({
+              oldValue: element.properties.height,
+              oldWidth: mainWidth,
+              newWidth: currentWidth,
+            }),
+            rotation: newValue({
+              oldValue: element.properties.rotation,
+              oldWidth: mainWidth,
+              newWidth: currentWidth,
+            }),
+          },
+        };
+      });
+      set(
+        produce((state: EditorXState) => {
+          elements.map((element: Element, _) => {
+            const id = element.id;
+            const index = state.editorData.elements.findIndex(
+              (item) => item.id === id
+            );
+            console.log(id, index, '<============from set produce');
+
+            if (index > -1) {
+              state.editorData.elements[index] = {
+                ...state.editorData.elements[index],
+                ...property2[index],
+              };
+            }
+          });
+          return state;
+        })
+      );
+    }
   },
   setTextStyle: (newData) => {
     set(
@@ -119,6 +401,24 @@ const _useEditorX = create<EditorXState>((set, get) => ({
           if (textProps !== undefined) {
             textProps.style = {
               ...textProps.style,
+              ...newData.props,
+            };
+          }
+        }
+        return state;
+      })
+    );
+  },
+  setViewStyle: (newData) => {
+    set(
+      produce((state: EditorXState) => {
+        const index = newData.id;
+        if (index > -1) {
+          const viewProps =
+            state.editorData.elements[index].properties?.viewProps;
+          if (viewProps !== undefined) {
+            viewProps.style = {
+              ...viewProps.style,
               ...newData.props,
             };
           }
@@ -143,7 +443,19 @@ const _useEditorX = create<EditorXState>((set, get) => ({
       produce((state: EditorXState) => {
         const index = newData.id;
         if (index > -1) {
-          state.editorData.elements[index].properties.image = newData.text;
+          state.editorData.elements[index].properties.image = newData.image;
+        }
+        return state;
+      })
+    );
+  },
+  setImageResizeMode: (newData) => {
+    set(
+      produce((state: EditorXState) => {
+        const index = newData.id;
+        if (index > -1) {
+          state.editorData.elements[index].properties.resizeMode =
+            newData.resizeMode;
         }
         return state;
       })

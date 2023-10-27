@@ -6,9 +6,8 @@ import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { ToastAndroid } from 'react-native';
 import { showMessage } from 'react-native-flash-message';
-import type { ShareSingleOptions, Social } from 'react-native-share';
-import Share from 'react-native-share';
 
+import { getImageBase64, handleWhatsappShare } from '@/core';
 import useFavorites from '@/core/hooks/use-favorite';
 import useFirestoreDocLiveQuery from '@/core/hooks/use-firestore-doc';
 import type { Product } from '@/types';
@@ -24,7 +23,6 @@ export const ProductDetails = ({ item }: { item: Product }) => {
   const isItemInFavorites = isFavorite(item.id);
   const [Size, setSize] = React.useState('');
   const [Finishing, setFinishing] = React.useState('');
-  const server = useFirestoreDocLiveQuery('links', 'server');
   const share = useFirestoreDocLiveQuery('links', 'share');
   const handleButtonPress1 = (_: any, item2: any) => {
     setSize(item2);
@@ -32,27 +30,7 @@ export const ProductDetails = ({ item }: { item: Product }) => {
   const handleButtonPress2 = (_: any, item2: any) => {
     setFinishing(item2);
   };
-  // const handleEnquiry = () => {
-  //   const LINK = `https://api.whatsapp.com/send?phone=918734845201&text=Hello, I have an inquiry for Octoria Product ${
-  //     item.name
-  //   } ${Size ? ' with' : Finishing ? ' with' : ''} ${
-  //     Size ? Size + ' Size' : ''
-  //   } ${
-  //     Finishing
-  //       ? Size
-  //         ? ' and ' + Finishing + ' Finishing'
-  //         : Finishing + ' Finishing'
-  //       : ''
-  //   }  from mobile application. http://itekindia.com/octoria/products-image/demo.htm`;
-  //   openLinkInBrowser(LINK);
-  //   showMessage({
-  //     message: 'Enquiry sent successfully',
-  //     type: 'success',
-  //   });
-  // };
-
   const handleEnquiry = async () => {
-    //https://api.whatsapp.com/send?phone=918734845201&text=
     const LINK = `Hello, I have an inquiry for Octoria Product ${item.name} ${
       Size ? ' with' : Finishing ? ' with' : ''
     } ${Size ? Size + ' Size' : ''} ${
@@ -61,25 +39,10 @@ export const ProductDetails = ({ item }: { item: Product }) => {
           ? ' and ' + Finishing + ' Finishing'
           : Finishing + ' Finishing'
         : ''
-    }  from mobile application. ${
-      server.data?.url
-    }octoria/products-image/product.php?imageUrl=${item.image3d}`;
-    // openLinkInBrowser(LINK);
+    } from Octoria mobile application.`;
     try {
-      const options: ShareSingleOptions = {
-        title: 'Share via WhatsApp',
-        message: LINK,
-        // type: 'image/*',
-        // url: item.image3d, // The URI of the image you want to share
-        // image: item.image3d,
-        // filename: item.image3d,
-        social: Share.Social.WHATSAPP as Social,
-        //@ts-ignore
-        whatsAppNumber: share?.data?.phone,
-        appId: 'com.whatsapp',
-      };
-
-      await Share.shareSingle(options);
+      const fileUrl = await getImageBase64(item?.images[0]);
+      handleWhatsappShare(fileUrl, LINK, share?.data?.phone);
     } catch (error) {
       console.error(error);
       ToastAndroid.show('Some Error', ToastAndroid.SHORT);

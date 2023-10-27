@@ -1,3 +1,10 @@
+/*
+     -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
+    +* .##+ .@..*+ %+-:   *= -##-     :%  #*%  *++* +*.:@.:@--.-% -%.%*:: +* %%+.@ =%::*+ 
+ .  @::@*## +*  #=:%--.. .@ -@+#*     #= ##+@  .@-  @: :@ **--  @=#  .-** @.:% %#* %=:-@. 
+ =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
+                                                                                          
+*/
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
@@ -13,14 +20,16 @@ import { EditTextModal } from '../edit-text-modal';
 import { FontWidget } from './font-picker';
 
 type Props = {
-  state: any;
   handleRotationPress: (r: number) => void;
   handlePressMoveToCenter: () => void;
+  onPress: () => void;
+  handlePressMoveToPosition: ({ x, y }: { x: number; y: number }) => void;
 };
 // eslint-disable-next-line max-lines-per-function
 export const TextWidget = ({
-  state,
   handlePressMoveToCenter,
+  onPress,
+  handlePressMoveToPosition,
   handleRotationPress,
 }: Props) => {
   const themecolor = 'black';
@@ -32,8 +41,10 @@ export const TextWidget = ({
   // textShadowOffset: { width: -1, height: 1 },
   // textShadowRadius: 10,
   const setData = useEditorX((s) => s.setTextStyle);
+  const state = useEditorX((s) => s.selectedItem);
   const setText = useEditorX((s) => s.setText);
   const data = useEditorX((s) => s.editorData);
+  const isSpecial = useEditorX((s) => s.isSpecial);
   const [colorModalVisible, setColorModalVisible] = useState<boolean>(false);
   const [textModalVisible, setTextModalVisible] = useState<boolean>(false);
   const [fontModalVisible, setfontModalVisible] = useState<boolean>(false);
@@ -102,7 +113,11 @@ export const TextWidget = ({
       <IconButton
         icon={<Ionicons name="pencil-outline" size={20} color={themecolor} />}
         onPress={() => {
-          setTextModalVisible(true);
+          if (!isSpecial()) {
+            setTextModalVisible(true);
+          } else {
+            onPress();
+          }
         }}
         title="Edit"
         className="my-1"
@@ -210,6 +225,62 @@ export const TextWidget = ({
         icon={<FontAwesome name="rotate-right" size={18} color={themecolor} />}
         onPress={rotateRight}
         title="Rotate"
+        className="my-1"
+      />
+      <IconButton
+        icon={
+          <MaterialCommunityIcons
+            name="chevron-left-circle-outline"
+            size={24}
+            color={themecolor}
+          />
+        }
+        onPress={() => {
+          handlePressMoveToPosition({ x: -5, y: 0 });
+        }}
+        title="Move Left"
+        className="my-1"
+      />
+      <IconButton
+        icon={
+          <MaterialCommunityIcons
+            name="chevron-right-circle-outline"
+            size={24}
+            color={themecolor}
+          />
+        }
+        onPress={() => {
+          handlePressMoveToPosition({ x: 5, y: 0 });
+        }}
+        title="Move Right"
+        className="my-1"
+      />
+      <IconButton
+        icon={
+          <MaterialCommunityIcons
+            name="chevron-up-circle-outline"
+            size={24}
+            color={themecolor}
+          />
+        }
+        onPress={() => {
+          handlePressMoveToPosition({ x: 0, y: -5 });
+        }}
+        title="Move Up"
+        className="my-1"
+      />
+      <IconButton
+        icon={
+          <MaterialCommunityIcons
+            name="chevron-down-circle-outline"
+            size={24}
+            color={themecolor}
+          />
+        }
+        onPress={() => {
+          handlePressMoveToPosition({ x: 0, y: 5 });
+        }}
+        title="Move Down"
         className="my-1"
       />
     </View>

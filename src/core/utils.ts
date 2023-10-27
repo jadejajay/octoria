@@ -279,3 +279,41 @@ export const handleWhatsappShare = async (
     ToastAndroid.show('Some Error', ToastAndroid.SHORT);
   }
 };
+
+export function getImageBase64(url: string) {
+  return new Promise((resolve, reject) => {
+    fetch(url)
+      .then((response) => response.blob())
+      .then((blob) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          //@ts-ignore
+          const base64Data = reader?.result.split(',')[1]; // Remove data:image/jpeg;base64,
+          resolve(base64Data);
+        };
+        reader.readAsDataURL(blob);
+      })
+      .catch((error2) => {
+        reject(error2);
+      });
+  });
+}
+export function shuffleArray<T>(array: T[]): T[] {
+  const shuffledArray = [...array]; // Create a shallow copy to avoid modifying the original array.
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]]; // Swap elements at i and j.
+  }
+  return shuffledArray;
+}
+export const newValue = ({
+  newWidth,
+  oldWidth,
+  oldValue,
+}: {
+  newWidth: number;
+  oldWidth: number;
+  oldValue: number;
+}) => {
+  return (newWidth / oldWidth) * oldValue;
+};

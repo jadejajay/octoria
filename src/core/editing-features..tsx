@@ -10,6 +10,10 @@ export const EditingFeatures: EditingFeaturesType[] = [
     icon: 'video',
   },
   {
+    name: 'Info',
+    icon: 'card-account-details',
+  },
+  {
     name: 'Frames',
     icon: 'image-frame',
   },

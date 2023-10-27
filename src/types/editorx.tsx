@@ -1,9 +1,12 @@
 import type { ImageProps, TextProps, TextStyle, ViewStyle } from 'react-native';
 
+import type { Element } from '@/core';
+
 export type FrameType = {
   id: string;
   image: string;
-  elements?: any;
+  elements?: Element[];
+  mainWidth?: number;
 };
 export type BackgroundType = {
   id: string;

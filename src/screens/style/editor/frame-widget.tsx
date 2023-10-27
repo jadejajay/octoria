@@ -1,3 +1,10 @@
+/*
+     -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
+    +* .##+ .@..*+ %+-:   *= -##-     :%  #*%  *++* +*.:@.:@--.-% -%.%*:: +* %%+.@ =%::*+ 
+ .  @::@*## +*  #=:%--.. .@ -@+#*     #= ##+@  .@-  @: :@ **--  @=#  .-** @.:% %#* %=:-@. 
+ =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
+                                                                                          
+*/
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useCallback } from 'react';
@@ -48,12 +55,8 @@ export const FrameWidget = ({ isVisible, onClose }: Props5) => {
           onPress={pickImage}
           activeOpacity={1}
         >
-          <MaterialCommunityIcons
-            name="camera-enhance-outline"
-            size={40}
-            color={theme}
-          />
-          <Text className="font-kalam text-lg">Click Picture</Text>
+          <MaterialCommunityIcons name="camera-gopro" size={40} color={theme} />
+          <Text className="font-kalam text-lg">Select Picture</Text>
         </TouchableOpacity>
       </View>
       <View className="flex-1">

@@ -1,4 +1,11 @@
 /* eslint-disable max-lines-per-function */
+/*
+     -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
+    +* .##+ .@..*+ %+-:   *= -##-     :%  #*%  *++* +*.:@.:@--.-% -%.%*:: +* %%+.@ =%::*+ 
+ .  @::@*## +*  #=:%--.. .@ -@+#*     #= ##+@  .@-  @: :@ **--  @=#  .-** @.:% %#* %=:-@. 
+ =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
+                                                                                          
+*/
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import type { ForwardedRef } from 'react';
@@ -36,9 +43,11 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
   const copyElement = useEditorX((s) => s.copyElement);
   const setData = useEditorX((s) => s.setData);
   const data = useEditorX((s) => s.editorData.elements[index]?.properties);
+  const dataId = useEditorX((s) => s.editorData.elements[index]?.id);
   const sscale = useEditorX(
     (s) => s.editorData.elements[index]?.properties.scale
   );
+  const sFrame = useEditorX((s) => s.editorData.frame);
   const soffset = useEditorX(
     (s) => s.editorData.elements[index]?.properties?.offset
   );
@@ -62,6 +71,20 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
   const rotation = useSharedValue(srotation);
   const savedRotation = useSharedValue(srotation);
   const [isDragging, setIsDragging] = useState(false);
+
+  useEffect(() => {
+    offset.value = withTiming(soffset, { duration: 0 });
+    start.value = withTiming(soffset, { duration: 0 });
+    scale.value = withTiming(sscale, { duration: 0 });
+    savedScale.value = withTiming(sscale, { duration: 0 });
+    width.value = withTiming(swidth, { duration: 0 });
+    savedWidth.value = withTiming(swidth, { duration: 0 });
+    height.value = withTiming(sheight, { duration: 0 });
+    savedHeight.value = withTiming(sheight, { duration: 0 });
+    rotation.value = withTiming(srotation, { duration: 0 });
+    savedRotation.value = withTiming(srotation, { duration: 0 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sFrame]);
 
   useEffect(() => {
     setIndex(props.index);
@@ -90,6 +113,11 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
     setData({ id: props.index, props: { offset: { x: 0, y: 0 } } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const moveToPosition = useCallback(({ x, y }: { x: number; y: number }) => {
+    offset.value = withTiming({ x: offset.value.x + x, y: offset.value.y + y });
+    setData({ id: props.index, props: { offset: { x: x, y: y } } });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const getState = useCallback(
     () => ({
       index: index,
@@ -103,14 +131,44 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
+  // const setState = useCallback((state: ElementProperties) => {
+  //   // sOffset = {
+  //   //   x: newValue(state.offset.x),
+  //   //   y: state.offset.y,
+  //   // };
+  //   offset.value = withTiming(state.offset, { duration: 0 });
+  //   start.value = withTiming(state.offset, { duration: 0 });
+  //   scale.value = withTiming(state.scale, { duration: 0 });
+  //   savedScale.value = withTiming(state.scale, { duration: 0 });
+  //   width.value = withTiming(state.width, { duration: 0 });
+  //   savedWidth.value = withTiming(state.width, { duration: 0 });
+  //   height.value = withTiming(state.height, { duration: 0 });
+  //   savedHeight.value = withTiming(state.height, { duration: 0 });
+  //   rotation.value = withTiming(state.rotation, { duration: 0 });
+  //   savedRotation.value = withTiming(state.rotation, { duration: 0 });
+  //   setData({
+  //     id: props.index,
+  //     props: {
+  //       offset: state.offset,
+  //       scale: state.scale,
+  //       width: state.width,
+  //       height: state.height,
+  //       rotation: state.rotation,
+  //     },
+  //   });
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+
   useImperativeHandle(
     ref,
     () => ({
       rotateToDegree,
       moveToCenter,
       getState,
+      moveToPosition,
+      // setState,
     }),
-    [rotateToDegree, moveToCenter, getState]
+    [rotateToDegree, moveToCenter, getState, moveToPosition]
   );
   const dragGesture = Gesture.Pan()
     .averageTouches(true)
@@ -302,6 +360,7 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
           )}
 
           <ITWidget
+            id={dataId}
             key={`ITWidget-gesture-${index}`}
             data={data}
             index={props.index}
