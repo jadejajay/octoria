@@ -46,5 +46,8 @@
   "[html]": {
     "editor.defaultFormatter": "vscode.html-language-features"
   },
-  "java.configuration.updateBuildConfiguration": "disabled" // make sure to disable i18n-ally in your global setting and only enable it for such projects
+  "java.configuration.updateBuildConfiguration": "disabled",
+  "[java]": {
+    "editor.defaultFormatter": "redhat.java"
+  } // make sure to disable i18n-ally in your global setting and only enable it for such projects
 }

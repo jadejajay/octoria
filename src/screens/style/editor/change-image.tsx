@@ -120,7 +120,7 @@ export const Card = ({ item, index, setImage, onClose, state }: Props) => {
     <View className="flex-1 p-2">
       <TouchableOpacity
         key={`festival-card-${index}`}
-        className="aspect-square w-full overflow-hidden rounded-lg bg-red-200"
+        className="aspect-square w-full overflow-hidden rounded-lg bg-green-400"
         activeOpacity={1}
         onPress={() => {
           setImage({ id: state, image: item.image });

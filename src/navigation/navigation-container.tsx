@@ -6,13 +6,17 @@ import { useThemeConfig } from './use-theme-config';
 
 export const NavigationContainer = ({
   children,
+  linking,
 }: {
   children: React.ReactNode;
+  linking: any;
 }) => {
   const theme = useThemeConfig();
   return (
     <SafeAreaProvider>
-      <RNNavigationContainer theme={theme}>{children}</RNNavigationContainer>
+      <RNNavigationContainer linking={linking} theme={theme}>
+        {children}
+      </RNNavigationContainer>
     </SafeAreaProvider>
   );
 };

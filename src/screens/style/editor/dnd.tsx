@@ -70,7 +70,7 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
   const savedScale = useSharedValue(sscale);
   const rotation = useSharedValue(srotation);
   const savedRotation = useSharedValue(srotation);
-  const [isDragging, setIsDragging] = useState(false);
+  // const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     offset.value = withTiming(soffset, { duration: 0 });
@@ -131,33 +131,6 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-  // const setState = useCallback((state: ElementProperties) => {
-  //   // sOffset = {
-  //   //   x: newValue(state.offset.x),
-  //   //   y: state.offset.y,
-  //   // };
-  //   offset.value = withTiming(state.offset, { duration: 0 });
-  //   start.value = withTiming(state.offset, { duration: 0 });
-  //   scale.value = withTiming(state.scale, { duration: 0 });
-  //   savedScale.value = withTiming(state.scale, { duration: 0 });
-  //   width.value = withTiming(state.width, { duration: 0 });
-  //   savedWidth.value = withTiming(state.width, { duration: 0 });
-  //   height.value = withTiming(state.height, { duration: 0 });
-  //   savedHeight.value = withTiming(state.height, { duration: 0 });
-  //   rotation.value = withTiming(state.rotation, { duration: 0 });
-  //   savedRotation.value = withTiming(state.rotation, { duration: 0 });
-  //   setData({
-  //     id: props.index,
-  //     props: {
-  //       offset: state.offset,
-  //       scale: state.scale,
-  //       width: state.width,
-  //       height: state.height,
-  //       rotation: state.rotation,
-  //     },
-  //   });
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   useImperativeHandle(
     ref,
@@ -166,12 +139,12 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
       moveToCenter,
       getState,
       moveToPosition,
-      // setState,
     }),
     [rotateToDegree, moveToCenter, getState, moveToPosition]
   );
   const dragGesture = Gesture.Pan()
     .averageTouches(true)
+
     .onUpdate((e) => {
       if (isFocused) {
         offset.value = {
@@ -193,9 +166,7 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
       }
     });
   const zoomGesture = Gesture.Pinch()
-    .onStart(() => {
-      runOnJS(setIsDragging)(true);
-    })
+
     .onUpdate((event) => {
       if (isFocused) {
         scale.value = savedScale.value * event.scale;
@@ -206,7 +177,6 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
         savedScale.value = scale.value;
         runOnJS(setData)({ id: props.index, props: { scale: scale.value } });
       }
-      runOnJS(setIsDragging)(false);
     });
   const rotateGesture = Gesture.Rotation()
     .onUpdate((event) => {
@@ -233,7 +203,7 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
   };
   const pan2 = Gesture.Pan()
     .averageTouches(true)
-    .onStart(() => runOnJS(haptic)())
+    .onBegin(() => runOnJS(haptic)())
     .onUpdate((e) => {
       const angle = -savedRotation.value * (Math.PI / 180); // Convert degrees to radians
       const cos = Math.cos(angle);
@@ -247,7 +217,7 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
     });
   const pan3 = Gesture.Pan()
     .averageTouches(true)
-    .onStart(() => {
+    .onBegin(() => {
       runOnJS(haptic)();
     })
     .onUpdate((e) => {
@@ -320,7 +290,7 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
               <MaterialCommunityIcons
                 name="drag-horizontal"
                 size={16}
-                color="white"
+                color="#0284c7"
               />
             </Animated.View>
           </GestureDetector>
@@ -332,7 +302,7 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
               <MaterialCommunityIcons
                 name="drag-vertical"
                 size={16}
-                color="white"
+                color="#0284c7"
               />
             </Animated.View>
           </GestureDetector>
@@ -365,8 +335,8 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
             data={data}
             index={props.index}
             onClick={props.onClick}
-            scale={scale}
-            isDragging={isDragging}
+            // scale={scale}
+            // isDragging={isDragging}
           />
         </Animated.View>
       </GestureDetector>
@@ -378,8 +348,7 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     padding: 4,
-    backgroundColor: 'transparent',
-    borderColor: '#0284c7',
+    borderColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -387,7 +356,8 @@ const styles = StyleSheet.create({
     padding: 4,
     position: 'absolute',
     alignItems: 'center',
-    borderColor: '#0284c7',
+    borderColor: '#fff',
+
     justifyContent: 'center',
     backgroundColor: 'transparent',
   },
@@ -397,11 +367,12 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     borderWidth: 2,
+    zIndex: 1000,
     overflow: 'hidden',
     position: 'absolute',
     borderStyle: 'dashed',
-    borderColor: '#0284c7',
-    backgroundColor: '#0284c733',
+    borderColor: '#fff',
+    backgroundColor: '#0004',
   },
   shadow: {
     shadowColor: '#000',
@@ -415,22 +386,24 @@ const styles = StyleSheet.create({
     bottom: -7,
     height: 10,
     width: 40,
+    zIndex: 1000,
     overflow: 'hidden',
     alignItems: 'center',
     borderBottomStartRadius: 30,
     borderBottomEndRadius: 30,
-    backgroundColor: '#0284c7',
+    backgroundColor: '#fff',
   },
   rightTip: {
     position: 'absolute',
     right: -7,
     height: 40,
     width: 10,
+    zIndex: 1000,
     justifyContent: 'center',
     borderTopEndRadius: 30,
     borderBottomEndRadius: 30,
     overflow: 'hidden',
-    backgroundColor: '#0284c7',
+    backgroundColor: '#fff',
   },
   bottomRightTip: {
     position: 'absolute',
@@ -441,8 +414,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 5,
     borderRightWidth: 5,
     overflow: 'hidden',
+    zIndex: 1000,
     backgroundColor: 'transparent',
-    borderColor: '#0284c7',
+    borderColor: '#fff',
   },
 });
 

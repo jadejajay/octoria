@@ -115,10 +115,6 @@ export const SignUpForm = () => {
       const ref = storage().ref().child(`images/${user.uid}/avatar.png`);
       await ref.put(blob);
       let x = await ref.getDownloadURL();
-      // const update = {
-      //   photoURL: x,
-      // };
-      // await user.updateProfile(update);
       return x;
     }
   }
@@ -157,10 +153,6 @@ export const SignUpForm = () => {
           });
       } catch (error) {}
     }
-
-    // user?.updateProfile({
-    //   displayName: data.name,
-    // });
   };
   return (
     <View className="flex-1">
@@ -203,14 +195,12 @@ export const SignUpForm = () => {
         <ControlledInput
           //@ts-ignore
           control={control}
-          // className="bg-transparent"
           name="name"
           placeholder="Name"
         />
         <ControlledInput
           //@ts-ignore
           control={control}
-          // className="bg-transparent"
           name="email"
           placeholder="Email"
         />
@@ -218,7 +208,6 @@ export const SignUpForm = () => {
           //@ts-ignore
           control={control}
           name="business"
-          // className="bg-transparent"
           placeholder="Business Name"
         />
         <ControlledSelect
@@ -236,7 +225,6 @@ export const SignUpForm = () => {
           label="Submit"
           onPress={handleSubmit(onSubmit)}
           variant="outline"
-          // disabled={image2 ? false : true}
         />
       </ScrollView>
     </View>

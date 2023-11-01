@@ -64,10 +64,16 @@ export const InfoWidget = ({ isVisible, onClose }: Props5) => {
     // Subscribe to real-time updates
     const unsubscribe = collectionRef.onSnapshot((querySnapshot) => {
       const user: any = querySnapshot?.data();
+      console.log(user.business);
+
       const info: any = querySnapshot.get('info');
       // Extract the document data along with its ID
       // Update the state with the live data
-      const userName = info?.name ? info?.name : user?.name ? user?.name : '';
+      const userName = info?.name
+        ? info?.name
+        : user?.business
+        ? user?.business
+        : '';
       const userImage = info?.photo
         ? info?.photo
         : user?.photoUrl
@@ -95,6 +101,14 @@ export const InfoWidget = ({ isVisible, onClose }: Props5) => {
       setValue('phone', userPhone);
       setValue('website', userWebsite);
       setValue('address', userAddress);
+      setBusiness({
+        name: userName,
+        photo: userImage,
+        email: userEmail,
+        phone: userPhone,
+        website: userWebsite,
+        address: userAddress,
+      });
     });
     // Clean up the subscription when the component unmounts
     return () => unsubscribe();

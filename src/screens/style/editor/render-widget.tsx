@@ -9,18 +9,17 @@
 */
 import { ResizeMode, Video } from 'expo-av';
 import * as MediaLibrary from 'expo-media-library';
-import React from 'react';
-import { Image, Modal, ToastAndroid } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Modal, ToastAndroid } from 'react-native';
 
+import { useEditorX } from '@/core';
 // import { handleWhatsappShare } from '@/core';
-import { ActivityIndicator, Button, Text, View } from '@/ui';
+import { ActivityIndicator, Image, Text, TouchableOpacity, View } from '@/ui';
 type Props8 = {
   isVisible: boolean;
   progress: number;
   isLoading: boolean;
   onClose: () => void;
-  render: () => void;
-  type: 'photo' | 'video';
   renderedAsset: string | undefined;
   renderWidth: number;
 };
@@ -29,18 +28,18 @@ export const RenderWidget = ({
   isLoading,
   progress,
   onClose,
-  type,
-  render,
   renderedAsset,
 }: Props8) => {
-  const themecolor = 'white';
-  const resource = renderedAsset;
-
+  const type = useEditorX((state) => state.editorData.bgType);
+  const [res, setRes] = useState('');
+  useEffect(() => {
+    if (renderedAsset) setRes(renderedAsset);
+  }, [renderedAsset]);
   const saveToGallery = async () => {
-    if (resource) {
+    if (res) {
       const albumName = await MediaLibrary.getAlbumAsync('Octoria');
       if (albumName) {
-        const asset = await MediaLibrary.createAssetAsync(resource);
+        const asset = await MediaLibrary.createAssetAsync(res);
         const album = await MediaLibrary.addAssetsToAlbumAsync(
           asset,
           albumName.id,
@@ -58,7 +57,7 @@ export const RenderWidget = ({
           );
         }
       } else {
-        const asset = await MediaLibrary.createAssetAsync(resource);
+        const asset = await MediaLibrary.createAssetAsync(res);
         const album = await MediaLibrary.createAlbumAsync(
           'Octoria',
           asset,
@@ -80,10 +79,7 @@ export const RenderWidget = ({
   };
   return (
     <Modal animationType="slide" visible={isVisible} onRequestClose={onClose}>
-      <View
-        className="flex-1 items-center"
-        style={{ backgroundColor: themecolor }}
-      >
+      <View className="flex-1 items-center">
         {isLoading && (
           <View className="absolute z-50 h-full w-full flex-col items-center justify-start">
             <View className="mt-40 h-20 w-full flex-col items-center justify-between">
@@ -122,20 +118,44 @@ export const RenderWidget = ({
             type === 'photo' &&
             renderedAsset && (
               <Image
-                source={{ uri: renderedAsset }}
-                style={{ width: '100%', height: '100%' }}
+                src={renderedAsset}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  backgroundColor: 'yellow',
+                }}
                 resizeMode="contain"
               />
             )
           )}
         </View>
-
-        <Button variant="defaults" label="change resolution" onPress={render} />
-        <Button
-          variant="defaults"
-          label="Save to Gallery"
-          onPress={saveToGallery}
-        />
+        <View className="flex-column w-full items-center justify-around">
+          <View className="w-full flex-row items-center justify-around">
+            <Image
+              src={
+                'http://itekindia.com/chats/bgimages/whatsapp-1623579_1280.png'
+              }
+              style={{ width: 60, height: 60 }}
+              resizeMode="contain"
+            />
+            <Image
+              src={
+                'http://itekindia.com/chats/bgimages/instagram-1675670_1280.png'
+              }
+              style={{ width: 60, height: 60 }}
+              resizeMode="contain"
+            />
+          </View>
+          <TouchableOpacity onPress={saveToGallery} className="">
+            <Image
+              src={
+                'http://itekindia.com/chats/bgimages/download-155424_1280.png'
+              }
+              style={{ width: 200, height: 100 }}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+        </View>
       </View>
     </Modal>
   );

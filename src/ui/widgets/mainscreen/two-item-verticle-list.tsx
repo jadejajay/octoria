@@ -19,7 +19,7 @@ export const NewProductList = ({ data, isLoading }: Props) => {
         renderItem={({ item, index }) => (
           <ProductCardHorizontal item={item} index={index} />
         )}
-        estimatedItemSize={100}
+        estimatedItemSize={200}
         ListEmptyComponent={<EmptyList isLoading={isLoading} />}
         keyExtractor={(_, index) => `product-item-${index}`}
         numColumns={2}

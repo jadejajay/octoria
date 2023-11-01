@@ -4,21 +4,23 @@ import { produce } from 'immer';
 import { showMessage } from 'react-native-flash-message';
 import { create } from 'zustand';
 
-// import auth from '@react-native-firebase/auth';
+import { EDITORX_DATA } from '@/types';
+
+import { getItem } from '../storage';
 import { createSelectors, newValue } from '../utils';
 const DATA: EditorData = {
-  backgroundPost: 'http://itekindia.com/chats/bgimages/imageedit.png',
+  backgroundPost: '',
   bgType: 'photo',
-  frame: 'http://itekindia.com/chats/frames/format20.png',
+  frame: '',
   elements: [
     {
       id: 'user_photo',
       name: 'user_photo',
       component: 'image',
       properties: {
-        height: 0,
-        width: 0,
-        image: '',
+        height: 200,
+        width: 200,
+        image: 'http://itekindia.com/chats/festival/40-Earth Day.png',
         viewProps: {
           style: {
             overflow: 'hidden',
@@ -27,8 +29,8 @@ const DATA: EditorData = {
         },
         resizeMode: 'stretch',
         offset: {
-          x: -124.50129079818726,
-          y: -163.30801391601562,
+          x: 0,
+          y: 0,
         },
         scale: 1,
         rotation: 0,
@@ -39,13 +41,13 @@ const DATA: EditorData = {
       name: 'user_name',
       component: 'text',
       properties: {
-        height: 0,
-        width: 0,
-        text: '',
+        height: 200,
+        width: 200,
+        text: 'userName',
         textProps: {
           style: {
             color: 'white',
-            fontSize: 20,
+            fontSize: 6,
             textAlign: 'center',
           },
         },
@@ -62,36 +64,13 @@ const DATA: EditorData = {
       name: 'user_phone',
       component: 'text',
       properties: {
-        height: 0,
-        width: 0,
-        text: '',
+        height: 200,
+        width: 200,
+        text: 'usePhone',
         textProps: {
           style: {
             color: 'white',
-            fontSize: 20,
-            textAlign: 'center',
-          },
-        },
-        offset: {
-          x: -111.52720820903778,
-          y: 121.70055782794952,
-        },
-        scale: 0.46586051485716096,
-        rotation: 0.00178283355834985,
-      },
-    },
-    {
-      id: 'user_email',
-      name: 'user_email',
-      component: 'text',
-      properties: {
-        height: 0,
-        width: 0,
-        text: '',
-        textProps: {
-          style: {
-            color: 'white',
-            fontSize: 20,
+            fontSize: 6,
             textAlign: 'center',
           },
         },
@@ -99,7 +78,30 @@ const DATA: EditorData = {
           x: 0,
           y: 0,
         },
-        scale: 0.6181012004858454,
+        scale: 1,
+        rotation: 0,
+      },
+    },
+    {
+      id: 'user_email',
+      name: 'user_email',
+      component: 'text',
+      properties: {
+        height: 200,
+        width: 200,
+        text: 'userEmail',
+        textProps: {
+          style: {
+            color: 'white',
+            fontSize: 6,
+            textAlign: 'center',
+          },
+        },
+        offset: {
+          x: 0,
+          y: 0,
+        },
+        scale: 1,
         rotation: 0,
       },
     },
@@ -108,21 +110,21 @@ const DATA: EditorData = {
       name: 'user_website',
       component: 'text',
       properties: {
-        height: 0,
-        width: 0,
-        text: '',
+        height: 200,
+        width: 200,
+        text: 'userWEbsite',
         textProps: {
           style: {
             color: 'white',
-            fontSize: 20,
+            fontSize: 6,
             textAlign: 'center',
           },
         },
         offset: {
-          x: -124.73283100128174,
-          y: 139.40884971618652,
+          x: 0,
+          y: 0,
         },
-        scale: 0.4988879568385814,
+        scale: 1,
         rotation: 0,
       },
     },
@@ -131,21 +133,21 @@ const DATA: EditorData = {
       name: 'user_address',
       component: 'text',
       properties: {
-        height: 0,
-        width: 0,
-        text: '',
+        height: 200,
+        width: 200,
+        text: 'user addresssss',
         textProps: {
           style: {
             color: 'white',
-            fontSize: 20,
+            fontSize: 6,
             textAlign: 'center',
           },
         },
         offset: {
-          x: -99.6798170208931,
-          y: 83.55881513655186,
+          x: 0,
+          y: 0,
         },
-        scale: 0.5472514737254145,
+        scale: 1,
         rotation: 0,
       },
     },
@@ -154,7 +156,7 @@ const DATA: EditorData = {
 
 export interface ElementProperties {
   image?: string;
-  resizeMode?: string;
+  resizeMode?: 'center' | 'stretch' | 'contain' | 'cover' | undefined;
   text?: string;
   textProps?: {
     style: {
@@ -205,6 +207,7 @@ export interface EditorXState {
   editorData: EditorData;
   businessData: BusinessDataType;
   selectedItem: number;
+  categoryCode: number;
   activeWidget: string;
   past: any[];
   present: any | null;
@@ -212,7 +215,9 @@ export interface EditorXState {
   canUndo: boolean;
   canRedo: boolean;
   saveFrame: (id: string, width: number) => void;
+  setEditor: (id: any) => void;
   setData: (newData: any) => void;
+  setCategoryCode: (code: any) => void;
   isSpecial: () => boolean;
   setBusiness: (data: BusinessDataType) => void;
   setDataById: (
@@ -250,6 +255,7 @@ const _useEditorX = create<EditorXState>((set, get) => ({
     address: '',
   },
   selectedItem: -1,
+  categoryCode: 1,
   activeWidget: 'Photos',
   past: [],
   present: null,
@@ -285,6 +291,31 @@ const _useEditorX = create<EditorXState>((set, get) => ({
       });
     }
   },
+  setEditor: async (id) => {
+    const Data: string = await getItem(EDITORX_DATA);
+    const newData: EditorData = JSON.parse(Data);
+    if (newData?.bgType) {
+      set(
+        produce((state: EditorXState) => {
+          state.editorData = newData;
+          return state;
+        })
+      );
+    } else {
+      try {
+        const userDoc = await firestore().collection('Users').doc(id).get();
+        const data: EditorData = userDoc.data()?.editorData;
+        if (data) {
+          set(
+            produce((state: EditorXState) => {
+              state.editorData = data;
+              return state;
+            })
+          );
+        }
+      } catch (error) {}
+    }
+  },
   setData: (newData) => {
     set(
       produce((state: EditorXState) => {
@@ -307,6 +338,14 @@ const _useEditorX = create<EditorXState>((set, get) => ({
             ...newData.props,
           };
         }
+        return state;
+      })
+    );
+  },
+  setCategoryCode: (code) => {
+    set(
+      produce((state: EditorXState) => {
+        state.categoryCode = code;
         return state;
       })
     );

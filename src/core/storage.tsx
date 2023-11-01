@@ -14,3 +14,9 @@ export async function setItem<T>(key: string, value: T) {
 export async function removeItem(key: string) {
   storage.delete(key);
 }
+
+// export const storage = new MMKV({
+//   id: `user-${userId}-storage`,
+//   path: `${USER_DIRECTORY}/storage`,
+//   encryptionKey: 'hunter2'
+// })

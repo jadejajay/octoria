@@ -2,7 +2,6 @@
 /* eslint-disable max-lines-per-function */
 import { MaterialIcons } from '@expo/vector-icons';
 // import { ReactToJson } from '@/core/react-to-json';
-import auth from '@react-native-firebase/auth';
 import { LinearGradient } from 'expo-linear-gradient';
 // import { useIsFocused, useNavigation } from '@react-navigation/native';
 import * as MediaLibrary from 'expo-media-library';
@@ -18,37 +17,32 @@ import {
 import { captureRef } from 'react-native-view-shot';
 
 import { shareImageWithTitle } from '@/core';
-import useFirebaseStorageLiveQuery from '@/core/hooks/use-firebase-storage';
 import useFirestoreDocLiveQuery from '@/core/hooks/use-firestore-doc';
+import { useUserStore } from '@/core/mainscreen/user';
 import { ActivityIndicator, Text, TouchableOpacity, View } from '@/ui';
 
 type Props = {
   data: any;
 };
 export const PostModal = ({ data }: Props) => {
-  const user = auth().currentUser;
   const [modalVisible, setModalVisible] = useState(false);
   const title = useFirestoreDocLiveQuery('links', 'share');
-  const User = useFirestoreDocLiveQuery('Users', user?.uid as string);
-  const { downloadURL } = useFirebaseStorageLiveQuery('/app_assets/logo.png');
-  const [name, setName] = useState('Guest');
-  const [photo, setPhoto] = useState('');
   const [loading, setLoading] = useState(false);
   const imageRef = useRef();
-
-  useEffect(() => {
-    if (user) {
-      setPhoto(User?.data?.photoUrl);
-      setName(User?.data?.name);
-      if (User?.data?.photoUrl && User?.data?.name) setModalVisible(true);
-    }
-  }, [User?.data?.name, User?.data?.photoUrl, user]);
+  const User = useUserStore((s) => s.user);
+  useEffect(
+    () =>
+      setModalVisible((prev) => {
+        if (prev) return prev;
+        return true;
+      }),
+    []
+  );
 
   const onShare = async () => {
     try {
       setLoading(true);
       const localUri = await captureRef(imageRef, {
-        height: 440,
         quality: 1,
       });
       shareImageWithTitle(localUri, title?.data?.value);
@@ -121,7 +115,7 @@ export const PostModal = ({ data }: Props) => {
               elevation: 5,
             }}
           >
-            <Post data={data} name={name} photo={photo} logo={downloadURL} />
+            <Post data={data} name={User.name} photo={User.photoUrl} />
           </View>
         </TouchableWithoutFeedback>
         <View className="w-48 flex-row justify-between px-4">
@@ -151,12 +145,10 @@ export const PostModal = ({ data }: Props) => {
 
 const Post = ({
   data,
-  logo,
   name,
   photo,
 }: {
   data: any;
-  logo: string;
   name: string;
   photo: string;
 }) => {
@@ -165,14 +157,11 @@ const Post = ({
   return (
     <View className="flex-1 overflow-hidden bg-white">
       <View className="elevation-4 absolute top-3 -right-10 z-50 scale-75 flex-row items-center rounded-full bg-white p-2 pr-10">
-        {logo ? (
-          <Image
-            source={{ uri: logo }}
-            style={{ width: 24, height: 24 }}
-            resizeMode="contain"
-          />
-        ) : null}
-
+        <Image
+          source={require('../../../assets/logo.png')}
+          style={{ width: 24, height: 24 }}
+          resizeMode="contain"
+        />
         <Text className="ml-2 font-varela text-xs">IBAIS MEDIA</Text>
       </View>
       <View className="flex-1">

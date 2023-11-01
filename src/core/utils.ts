@@ -70,6 +70,50 @@ export function isVideoURL(url: string): boolean {
   // Check if the file extension is in the list of video extensions
   return videoExtensions.includes(fileExtension);
 }
+export function isImageURL(url: string): boolean {
+  // Define an array of image file extensions you want to consider as images
+  const imageExtensions = ['jpg', 'jpeg', 'png', 'bmp', 'webp'];
+  // Get the file extension from the URL
+  function getFileExtension(url2: string): string {
+    const urlParts = url2.split('.');
+    const fileExtension = urlParts[urlParts.length - 1].toLowerCase();
+    return fileExtension;
+  }
+  // Check if the file extension is in the list of image extensions
+  const fileExtension = getFileExtension(url);
+  const isImage = imageExtensions.includes(fileExtension);
+
+  return isImage;
+}
+export function identifyContentType(
+  contentLink: string
+): 'image' | 'video' | 'pdf' | 'unknown' {
+  // Extract the file extension from the content link
+  const segments = contentLink.split('/');
+  const filename = segments[segments.length - 1];
+  const fileExtension = filename.split('.').pop()?.toLowerCase();
+
+  if (fileExtension) {
+    if (
+      fileExtension === 'jpg' ||
+      fileExtension === 'jpeg' ||
+      fileExtension === 'png' ||
+      fileExtension === 'gif'
+    ) {
+      return 'image';
+    } else if (
+      fileExtension === 'mp4' ||
+      fileExtension === 'avi' ||
+      fileExtension === 'mov'
+    ) {
+      return 'video';
+    } else if (fileExtension === 'pdf') {
+      return 'pdf';
+    }
+  }
+
+  return 'unknown';
+}
 
 export function capitalizeWords(str: string) {
   // Split the string into an array of words

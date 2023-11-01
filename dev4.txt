@@ -60,6 +60,22 @@ https://www.ragingrock.com/AndroidAppRE/reversing_native_libs.html
 https://chris-yn-chen.medium.com/apk-reverse-engineering-df7ed8cec191
 https://www.remotion.dev/docs/lambda/webhooks
 https://www.remotion.dev/docs/renderer
+https://github.com/Jevon617/unplugin-svg-component/tree/main
+https://svgjs.dev/docs/3.0/
+https://github.com/image-js/image-js/tree/legacy
+https://www.npmjs.com/package/svgson
+https://www.npmjs.com/package/ffmpeg-kit-react-native?activeTab=readme
+https://www.typescriptlang.org/docs/handbook/mixins.html
+https://github.com/agmmnn/awesome-blender
+https://pixabay.com/users/kellepics-4893063/
+https://pixabay.com/users/tama66-1032521/
+https://pixabay.com/api/docs/#api_javascript_example
+https://developer.android.com/training/sharing/direct-share-targets
+https://anexpertcoder.hashnode.dev/app-shortcuts-in-react-native-never-let-your-app-shortcuts-open-any-random-app
+https://github.com/ajith-ab/react-native-receive-sharing-intent
+https://medium.com/swlh/sharing-image-to-android-app-using-intent-filter-to-react-native-d112308328d5
+https://archive.org/web/
+https://archive.org/details/books?page=2
 
 ///////////////////////////////////////////
 firebase
@@ -165,3 +181,4 @@ Version: 1
 
 //android tutorial
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
+https://stackoverflow.com/questions/44497929/digital-assets-link-link-to-my-website

@@ -72,11 +72,9 @@ export const addFrames = async () => {
 export const addData = async () => {
   try {
     const collection = firestore().collection('postVideos');
-    for (let i = 0; i < videos.length; i++) {
+    for (let i = 0; i < videoObjects.length; i++) {
       try {
-        await collection.add({
-          video: [`${videos[i]}`],
-        });
+        await collection.add(videoObjects[i]);
         console.log(`Added document ${i}`);
       } catch (error) {
         console.error(`Error adding document ${i}:`, error);
@@ -117,78 +115,429 @@ export const updateData = async () => {
     console.error(`Error adding document :`, error);
   }
 };
-
+const imageObjects = [
+  {
+    image: `http://itekindia.com/chats/festival/01-Utrayan.png`,
+    categoryCode: 2,
+    tags: 'Utrayan, festival, 14 february, makar sankranti',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/02-Republic Day.png`,
+    categoryCode: 4,
+    tags: 'Republic Day, festival, 26 january, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/03-Valentine Day.png`,
+    categoryCode: 2,
+    tags: 'Valentine Day, festival, 14 february, love',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/04-Holi.png`,
+    categoryCode: 2,
+    tags: 'Holi, festival, 29 march, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/05-Dhuleti.png`,
+    categoryCode: 2,
+    tags: 'Dhuleti, festival, 30 march, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/06-Mahashivratri.png`,
+    categoryCode: 2,
+    tags: 'Mahashivratri, festival, 11 march, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/07-Raksha Bandhan.png`,
+    categoryCode: 2,
+    tags: 'Raksha Bandhan, festival, 22 august, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/08-Independent Day.png`,
+    categoryCode: 4,
+    tags: 'Independent Day, festival, 15 august, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/09-Janmashatmi.png`,
+    categoryCode: 2,
+    tags: 'Janmashatmi, festival, 30 august, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/10-Ganesh Chaturthi.png`,
+    categoryCode: 2,
+    tags: 'Ganesh Chaturthi, festival, 10 september, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/11-Navratri.png`,
+    categoryCode: 2,
+    tags: 'Navratri, festival, 7 october, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/12-Ramnavmi.png`,
+    categoryCode: 2,
+    tags: 'Ramnavmi, festival, 2 april, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/13-Dusshera.png`,
+    categoryCode: 2,
+    tags: 'Dusshera, festival, 15 october, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/14-Dhan Teras.png`,
+    categoryCode: 2,
+    tags: 'Dhan Teras, festival, 2 november, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/15-Diwali.png`,
+    categoryCode: 2,
+    tags: 'Diwali, festival, 4 november, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/16-New Year.png`,
+    categoryCode: 2,
+    tags: 'New Year, festival, 1 january, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/17-Bhai Duj.png`,
+    categoryCode: 2,
+    tags: 'Bhai Duj, festival, 6 november, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/18-Xmas.png`,
+    categoryCode: 2,
+    tags: 'Xmas, festival, 25 december, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/19-Ghandhi Jayanti.png`,
+    categoryCode: 4,
+    tags: 'Ghandhi Jayanti, festival, 2 october, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/20-Hanuman Jayanti.png`,
+    categoryCode: 2,
+    tags: 'Hanuman Jayanti, festival, 27 april, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/21-Vivekanand Jayanti.png`,
+    categoryCode: 2,
+    tags: 'Vivekanand Jayanti, festival, 12 january, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/22-Mahavir Jayanti.png`,
+    categoryCode: 2,
+    tags: 'Mahavir Jayanti, festival, 25 april, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/23-Gurunanak Jayanti.png`,
+    categoryCode: 2,
+    tags: 'Gurunanak Jayanti, festival, 19 november, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/24-Vasant Panchami.png`,
+    categoryCode: 2,
+    tags: 'Vasant Panchami, festival, 16 february, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/25-Pongal.png`,
+    categoryCode: 2,
+    tags: 'Pongal, festival, 14 january, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/26-Gudi Padvo.png`,
+    categoryCode: 2,
+    tags: 'Gudi Padvo, festival, 13 april, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/28-Good Friday.png`,
+    categoryCode: 2,
+    tags: 'Good Friday, festival, 2 april, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/29-Rath Yatra.png`,
+    categoryCode: 2,
+    tags: 'Rath Yatra, festival, 12 july, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/30-Mothers Day.png`,
+    categoryCode: 4,
+    tags: 'Mothers Day, festival, 9 may, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/31-Fathers Day.png`,
+    categoryCode: 4,
+    tags: 'Fathers Day, festival, 20 june, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/32-World Heart Day.png`,
+    categoryCode: 4,
+    tags: 'World Heart Day, festival, 29 september, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/33-Friendship Day.png`,
+    categoryCode: 4,
+    tags: 'Friendship Day, festival, 1 august, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/34-Daughters Day.png`,
+    categoryCode: 4,
+    tags: 'Daughters Day, festival, 26 september, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/35-Eid Mubarak.png`,
+    categoryCode: 2,
+    tags: 'Eid Mubarak, festival, 13 may, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/36-Yoga Day.png`,
+    categoryCode: 4,
+    tags: 'Yoga Day, festival, 21 june, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/37-Onam.png`,
+    categoryCode: 2,
+    tags: 'Onam, festival, 12 august, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/38-Teahers Day.png`,
+    categoryCode: 4,
+    tags: 'Teahers Day, festival, 5 september, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/39-Guru Purnima.png`,
+    categoryCode: 2,
+    tags: 'Guru Purnima, festival, 24 july, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/40-Earth Day.png`,
+    categoryCode: 4,
+    tags: 'Earth Day, festival, 22 april, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/41-Children Day.png`,
+    categoryCode: 4,
+    tags: 'Children Day, festival, 14 november, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/42-Womens Day.png`,
+    categoryCode: 4,
+    tags: 'Womens Day, festival, 8 march, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/43-Shivaji Maharaj Jayanti.png`,
+    categoryCode: 2,
+    tags: 'Shivaji Maharaj Jayanti, festival, 19 february, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/44-New Year 2021.png`,
+    categoryCode: 2,
+    tags: 'New Year 2021, festival, 1 january, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/45-National Youth Day.png`,
+    categoryCode: 4,
+    tags: 'National Youth Day, festival, 12 january, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/46-Doctors Day.png`,
+    categoryCode: 4,
+    tags: 'Doctors Day, festival, 1 july, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/47-Army Day.png`,
+    categoryCode: 4,
+    tags: 'Army Day, festival, 15 january, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/48-Rishi Panchami.png`,
+    categoryCode: 2,
+    tags: 'Rishi Panchami, festival, 22 august, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/49- Sardar Patel Jayanti.png`,
+    categoryCode: 4,
+    tags: 'Sardar Patel Jayanti, festival, 31 october, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/50- Sharad Purnima.png`,
+    categoryCode: 2,
+    tags: 'Sharad Purnima, festival, 20 october, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/51- Karva Chowth.png`,
+    categoryCode: 2,
+    tags: 'Karva Chowth, festival, 24 october, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/52- Labhpacham.png`,
+    categoryCode: 2,
+    tags: 'Labhpacham, festival, 14 november, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/53- Jalaram Jayanti.png`,
+    categoryCode: 2,
+    tags: 'Jalaram Jayanti, festival, 30 october, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/54- Dew Diwali.png`,
+    categoryCode: 2,
+    tags: 'Dew Diwali, festival, 5 november, indian festival',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/55- World Bicycle Day.png`,
+    categoryCode: 4,
+    tags: 'World Bicycle Day, festival, 3 june, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/56- World environment day.png`,
+    categoryCode: 4,
+    tags: 'World environment day, festival, 5 june, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/57- World ocean day.png`,
+    categoryCode: 4,
+    tags: 'World ocean day, festival, 8 june, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/58- Anti Child Labour Day.png`,
+    categoryCode: 4,
+    tags: 'Anti Child Labour Day, festival, 12 june, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/59- World Blood Donor Day.png`,
+    categoryCode: 4,
+    tags: 'World Blood Donor Day, festival, 14 june, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/60 - Music Day.png`,
+    categoryCode: 4,
+    tags: 'Music Day, festival, 21 june, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/61 - World Senior Sitizen Day.png`,
+    categoryCode: 4,
+    tags: 'World Senior Sitizen Day, festival, 21 june, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/62 - World Photography Day.png`,
+    categoryCode: 4,
+    tags: 'World Photography Day, festival, 19 august, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/63 - Sports Day.png`,
+    categoryCode: 4,
+    tags: 'Sports Day, festival, 29 august, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/64 - World Television Day.png`,
+    categoryCode: 4,
+    tags: 'World Television Day, festival, 21 november, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/65 - World Aids Day.png`,
+    categoryCode: 4,
+    tags: 'World Aids Day, festival, 1 december, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/66 - Indian Navy Day.png`,
+    categoryCode: 4,
+    tags: 'Indian Navy Day, festival, 4 december, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/67 - Human Rights Day.png`,
+    categoryCode: 4,
+    tags: 'Human Rights Day, festival, 10 december, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/68 - Kisan Diwas.png`,
+    categoryCode: 4,
+    tags: 'Kisan Diwas, festival, 23 december, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/69 - Gujarat & Mharastra Stphtana Day.png`,
+    categoryCode: 4,
+    tags: 'Gujarat & Mharastra Stphtana Day, festival, 1 may, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/70 - World Handicapped Day.png`,
+    categoryCode: 4,
+    tags: 'World Handicapped Day, festival, 3 december, indian flag',
+  },
+  {
+    image: `http://itekindia.com/chats/festival/71 - World Labour Day.png`,
+    categoryCode: 4,
+    tags: 'World Labour Day, festival, 1 may, indian flag',
+  },
+];
 const _images2 = [
-  `01-Utrayan.png`,
-  `02-Republic Day.png`,
-  `03-Valentine Day.png`,
-  `04-Holi.png`,
-  `05-Dhuleti.png`,
-  `06-Mahashivratri.png`,
-  `07-Raksha Bandhan.png`,
-  `08-Independent Day.png`,
-  `09-Janmashatmi.png`,
-  `10-Ganesh Chaturthi.png`,
-  `11-Navratri.png`,
-  `12-Ramnavmi.png`,
-  `13-Dusshera.png`,
-  `14-Dhan Teras.png`,
-  `15-Diwali.png`,
-  `16-New Year.png`,
-  `17-Bhai Duj.png`,
-  `18-Xmas.png`,
-  `19-Ghandhi Jayanti.png`,
-  `20-Hanuman Jayanti.png`,
-  `21-Vivekanand Jayanti.png`,
-  `22-Mahavir Jayanti.png`,
-  `23-Gurunanak Jayanti.png`,
-  `24-Vasant Panchami.png`,
-  `25-Pongal.png`,
-  `26-Gudi Padvo.png`,
-  `28-Good Friday.png`,
-  `29-Rath Yatra.png`,
-  `30-Mothers Day.png`,
-  `31-Fathers Day.png`,
-  `32-World Heart Day.png`,
-  `33-Friendship Day.png`,
-  `34-Daughters Day.png`,
-  `35-Eid Mubarak.png`,
-  `36-Yoga Day.png`,
-  `37-Onam.png`,
-  `38-Teahers Day.png`,
-  `39-Guru Purnima.png`,
-  `40-Earth Day.png`,
-  `41-Children Day.png`,
-  `42-Womens Day.png`,
-  `43-Shivaji Maharaj Jayanti.png`,
-  `44-New Year 2021.png`,
-  `45-National Youth Day.png`,
-  `46-Doctors Day.png`,
-  `47-Army Day.png`,
-  `48-Rishi Panchami.png`,
-  `49- Sardar Patel Jayanti.png`,
-  `50- Sharad Purnima.png`,
-  `51- Karva Chowth.png`,
-  `52- Labhpacham.png`,
-  `53- Jalaram Jayanti.png`,
-  `54- Dew Diwali.png`,
-  `55- World Bicycle Day.png`,
-  `56- World environment day.png`,
-  `57- World ocean day.png`,
-  `58- Anti Child Labour Day.png`,
-  `59- World Blood Donor Day.png`,
-  `60 - Music Day.png`,
-  `61 - World Senior Sitizen Day.png`,
-  `62 - World Photography Day.png`,
-  `63 - Sports Day.png`,
-  `64 - World Television Day.png`,
-  `65 - World Aids Day.png`,
-  `66 - Indian Navy Day.png`,
-  `67 - Human Rights Day.png`,
-  `68 - Kisan Diwas.png`,
-  `69 - Gujarat & Mharastra Stphtana Day.png`,
-  `70 - World Handicapped Day.png`,
-  `71 - World Labour Day.png`,
+  `http://itekindia.com/chats/festival/01-Utrayan.png`,
+  `http://itekindia.com/chats/festival/02-Republic Day.png`,
+  `http://itekindia.com/chats/festival/03-Valentine Day.png`,
+  `http://itekindia.com/chats/festival/04-Holi.png`,
+  `http://itekindia.com/chats/festival/05-Dhuleti.png`,
+  `http://itekindia.com/chats/festival/06-Mahashivratri.png`,
+  `http://itekindia.com/chats/festival/07-Raksha Bandhan.png`,
+  `http://itekindia.com/chats/festival/08-Independent Day.png`,
+  `http://itekindia.com/chats/festival/09-Janmashatmi.png`,
+  `http://itekindia.com/chats/festival/10-Ganesh Chaturthi.png`,
+  `http://itekindia.com/chats/festival/11-Navratri.png`,
+  `http://itekindia.com/chats/festival/12-Ramnavmi.png`,
+  `http://itekindia.com/chats/festival/13-Dusshera.png`,
+  `http://itekindia.com/chats/festival/14-Dhan Teras.png`,
+  `http://itekindia.com/chats/festival/15-Diwali.png`,
+  `http://itekindia.com/chats/festival/16-New Year.png`,
+  `http://itekindia.com/chats/festival/17-Bhai Duj.png`,
+  `http://itekindia.com/chats/festival/18-Xmas.png`,
+  `http://itekindia.com/chats/festival/19-Ghandhi Jayanti.png`,
+  `http://itekindia.com/chats/festival/20-Hanuman Jayanti.png`,
+  `http://itekindia.com/chats/festival/21-Vivekanand Jayanti.png`,
+  `http://itekindia.com/chats/festival/22-Mahavir Jayanti.png`,
+  `http://itekindia.com/chats/festival/23-Gurunanak Jayanti.png`,
+  `http://itekindia.com/chats/festival/24-Vasant Panchami.png`,
+  `http://itekindia.com/chats/festival/25-Pongal.png`,
+  `http://itekindia.com/chats/festival/26-Gudi Padvo.png`,
+  `http://itekindia.com/chats/festival/28-Good Friday.png`,
+  `http://itekindia.com/chats/festival/29-Rath Yatra.png`,
+  `http://itekindia.com/chats/festival/30-Mothers Day.png`,
+  `http://itekindia.com/chats/festival/31-Fathers Day.png`,
+  `http://itekindia.com/chats/festival/32-World Heart Day.png`,
+  `http://itekindia.com/chats/festival/33-Friendship Day.png`,
+  `http://itekindia.com/chats/festival/34-Daughters Day.png`,
+  `http://itekindia.com/chats/festival/35-Eid Mubarak.png`,
+  `http://itekindia.com/chats/festival/36-Yoga Day.png`,
+  `http://itekindia.com/chats/festival/37-Onam.png`,
+  `http://itekindia.com/chats/festival/38-Teahers Day.png`,
+  `http://itekindia.com/chats/festival/39-Guru Purnima.png`,
+  `http://itekindia.com/chats/festival/40-Earth Day.png`,
+  `http://itekindia.com/chats/festival/41-Children Day.png`,
+  `http://itekindia.com/chats/festival/42-Womens Day.png`,
+  `http://itekindia.com/chats/festival/43-Shivaji Maharaj Jayanti.png`,
+  `http://itekindia.com/chats/festival/44-New Year 2021.png`,
+  `http://itekindia.com/chats/festival/45-National Youth Day.png`,
+  `http://itekindia.com/chats/festival/46-Doctors Day.png`,
+  `http://itekindia.com/chats/festival/47-Army Day.png`,
+  `http://itekindia.com/chats/festival/48-Rishi Panchami.png`,
+  `http://itekindia.com/chats/festival/49- Sardar Patel Jayanti.png`,
+  `http://itekindia.com/chats/festival/50- Sharad Purnima.png`,
+  `http://itekindia.com/chats/festival/51- Karva Chowth.png`,
+  `http://itekindia.com/chats/festival/52- Labhpacham.png`,
+  `http://itekindia.com/chats/festival/53- Jalaram Jayanti.png`,
+  `http://itekindia.com/chats/festival/54- Dew Diwali.png`,
+  `http://itekindia.com/chats/festival/55- World Bicycle Day.png`,
+  `http://itekindia.com/chats/festival/56- World environment day.png`,
+  `http://itekindia.com/chats/festival/57- World ocean day.png`,
+  `http://itekindia.com/chats/festival/58- Anti Child Labour Day.png`,
+  `http://itekindia.com/chats/festival/59- World Blood Donor Day.png`,
+  `http://itekindia.com/chats/festival/60 - Music Day.png`,
+  `http://itekindia.com/chats/festival/61 - World Senior Sitizen Day.png`,
+  `http://itekindia.com/chats/festival/62 - World Photography Day.png`,
+  `http://itekindia.com/chats/festival/63 - Sports Day.png`,
+  `http://itekindia.com/chats/festival/64 - World Television Day.png`,
+  `http://itekindia.com/chats/festival/65 - World Aids Day.png`,
+  `http://itekindia.com/chats/festival/66 - Indian Navy Day.png`,
+  `http://itekindia.com/chats/festival/67 - Human Rights Day.png`,
+  `http://itekindia.com/chats/festival/68 - Kisan Diwas.png`,
+  `http://itekindia.com/chats/festival/69 - Gujarat & Mharastra Stphtana Day.png`,
+  `http://itekindia.com/chats/festival/70 - World Handicapped Day.png`,
+  `http://itekindia.com/chats/festival/71 - World Labour Day.png`,
 ];
 
 const _images = [
@@ -226,25 +575,136 @@ const _images = [
   `http://itekindia.com/octoria/dashboard/uploads/Untitled-32.png`,
 ];
 
+const videoObjects = [
+  {
+    video: 'http://itekindia.com/chats/videos/1.mp4',
+    thumbnail: 'http://itekindia.com/chats/gifs/1.gif',
+    categoryCode: 2,
+    tags: 'dhan teras, fetival, diwali',
+  },
+  {
+    video: 'http://itekindia.com/chats/videos/2.mp4',
+    thumbnail: 'http://itekindia.com/chats/gifs/2.gif',
+    categoryCode: 4,
+    tags: 'engineers day, fetival',
+  },
+  {
+    video: 'http://itekindia.com/chats/videos/3.mp4',
+    thumbnail: 'http://itekindia.com/chats/gifs/3.gif',
+    categoryCode: 2,
+    tags: 'dhan teras, fetival, diwali',
+  },
+  {
+    video: 'http://itekindia.com/chats/videos/4.mp4',
+    thumbnail: 'http://itekindia.com/chats/gifs/4.gif',
+    categoryCode: 4,
+    tags: 'independence day, fetival, indian flag',
+  },
+  {
+    video: 'http://itekindia.com/chats/videos/5.mp4',
+    thumbnail: 'http://itekindia.com/chats/gifs/5.gif',
+    categoryCode: 2,
+    tags: 'bhai dooj, fetival',
+  },
+  {
+    video: 'http://itekindia.com/chats/videos/6.mp4',
+    thumbnail: 'http://itekindia.com/chats/gifs/6.gif',
+    categoryCode: 2,
+    tags: 'janmashthami, fetival',
+  },
+  {
+    video: 'http://itekindia.com/chats/videos/7.mp4',
+    thumbnail: 'http://itekindia.com/chats/gifs/7.gif',
+    categoryCode: 4,
+    tags: 'republic day, fetival, indian flag',
+  },
+  {
+    video: 'http://itekindia.com/chats/videos/8.mp4',
+    thumbnail: 'http://itekindia.com/chats/gifs/8.gif',
+    categoryCode: 4,
+    tags: 'indian air force day, fetival, indian flag',
+  },
+  {
+    video: 'http://itekindia.com/chats/videos/9.mp4',
+    thumbnail: 'http://itekindia.com/chats/gifs/9.gif',
+    categoryCode: 5,
+    tags: 'happy birthday, fetival',
+  },
+  {
+    video: 'http://itekindia.com/chats/videos/10.mp4',
+    thumbnail: 'http://itekindia.com/chats/gifs/10.gif',
+    categoryCode: 2,
+    tags: 'diwali, fetival',
+  },
+  {
+    video: 'http://itekindia.com/chats/videos/11.mp4',
+    thumbnail: 'http://itekindia.com/chats/gifs/11.gif',
+    categoryCode: 2,
+    tags: 'diwali, fetival',
+  },
+  {
+    video: 'http://itekindia.com/chats/videos/12.mp4',
+    thumbnail: 'http://itekindia.com/chats/gifs/12.gif',
+    categoryCode: 2,
+    tags: 'diwali, fetival',
+  },
+  {
+    video: 'http://itekindia.com/chats/videos/13.mp4',
+    thumbnail: 'http://itekindia.com/chats/gifs/13.gif',
+    categoryCode: 2,
+    tags: 'diwali, fetival',
+  },
+  {
+    video: 'http://itekindia.com/chats/videos/14.mp4',
+    thumbnail: 'http://itekindia.com/chats/gifs/14.gif',
+    categoryCode: 4,
+    tags: 'engineers day, fetival',
+  },
+  {
+    video: 'http://itekindia.com/chats/videos/15.mp4',
+    thumbnail: 'http://itekindia.com/chats/gifs/15.gif',
+    categoryCode: 2,
+    tags: 'ganesh chaturthi, fetival',
+  },
+  {
+    video: 'http://itekindia.com/chats/videos/16.mp4',
+    thumbnail: 'http://itekindia.com/chats/gifs/16.gif',
+    categoryCode: 2,
+    tags: 'ganesh chaturthi, fetival',
+  },
+  {
+    video: 'http://itekindia.com/chats/videos/17.mp4',
+    thumbnail: 'http://itekindia.com/chats/gifs/17.gif',
+    categoryCode: 2,
+    tags: 'mahavir jayanti, fetival',
+  },
+  {
+    video: 'http://itekindia.com/chats/videos/18.mp4',
+    thumbnail: 'http://itekindia.com/chats/gifs/18.gif',
+    categoryCode: 2,
+    tags: 'dussehra, fetival',
+  },
+];
+
 const videos = [
-  `http://itekindia.com/chats/videos/1.mp4`,
-  `http://itekindia.com/chats/videos/2.mp4`,
-  `http://itekindia.com/chats/videos/3.mp4`,
-  `http://itekindia.com/chats/videos/4.mp4`,
-  `http://itekindia.com/chats/videos/5.mp4`,
-  `http://itekindia.com/chats/videos/6.mp4`,
-  `http://itekindia.com/chats/videos/7.mp4`,
-  `http://itekindia.com/chats/videos/8.mp4`,
-  `http://itekindia.com/chats/videos/9.mp4`,
-  `http://itekindia.com/chats/videos/10.mp4`,
-  `http://itekindia.com/chats/videos/11.mp4`,
-  `http://itekindia.com/chats/videos/12.mp4`,
-  `http://itekindia.com/chats/videos/13.mp4`,
-  `http://itekindia.com/chats/videos/14.mp4`,
-  `http://itekindia.com/chats/videos/15.mp4`,
-  `http://itekindia.com/chats/videos/16.mp4`,
-  `http://itekindia.com/chats/videos/17.mp4`,
-  `http://itekindia.com/chats/videos/18.mp4`,
+  `http://itekindia.com/chats/videos/1.mp4`, //dhan teras
+  `http://itekindia.com/chats/videos/2.mp4`, //engineers day
+  `http://itekindia.com/chats/videos/3.mp4`, // dhan teras
+  `http://itekindia.com/chats/videos/4.mp4`, // independence day
+  `http://itekindia.com/chats/videos/5.mp4`, //bhai dooj
+  `http://itekindia.com/chats/videos/6.mp4`, // janmashthami
+  `http://itekindia.com/chats/videos/7.mp4`, // republic day
+  `http://itekindia.com/chats/videos/8.mp4`, // indian air force day
+  `http://itekindia.com/chats/videos/9.mp4`, // happy birthday
+  `http://itekindia.com/chats/videos/10.mp4`, //diwali
+  `http://itekindia.com/chats/videos/11.mp4`, //diwali
+  `http://itekindia.com/chats/videos/12.mp4`, //diwali
+  `http://itekindia.com/chats/videos/13.mp4`, //diwali
+  `http://itekindia.com/chats/videos/14.mp4`, // engineers day
+  `http://itekindia.com/chats/videos/15.mp4`, //ganesh chaturthi
+  `http://itekindia.com/chats/videos/16.mp4`, //ganesh chaturthi
+  `http://itekindia.com/chats/videos/17.mp4`, //mahavir jayanti
+  `http://itekindia.com/chats/videos/18.mp4`, // dussehra
 ];
 const videothumb = [
   `http://itekindia.com/chats/gifs/1.gif`,
@@ -265,4 +725,26 @@ const videothumb = [
   `http://itekindia.com/chats/gifs/16.gif`,
   `http://itekindia.com/chats/gifs/17.gif`,
   `http://itekindia.com/chats/gifs/18.gif`,
+];
+const categories = [
+  {
+    name: 'Start With Blank',
+    image: 'http://itekindia.com/chats/mainfestivalcategory/tiles.jpg',
+  },
+  {
+    name: 'Festival',
+    image: 'http://itekindia.com/chats/mainfestivalcategory/fireworks.jpg',
+  },
+  {
+    name: 'Business',
+    image: 'http://itekindia.com/chats/mainfestivalcategory/business.jpg',
+  },
+  {
+    name: 'Special Days',
+    image: 'http://itekindia.com/chats/mainfestivalcategory/indian-flag.jpg',
+  },
+  {
+    name: 'Greetings',
+    image: 'http://itekindia.com/chats/mainfestivalcategory/cake.jpg',
+  },
 ];

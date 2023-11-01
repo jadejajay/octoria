@@ -36,6 +36,65 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       backgroundColor: '#FFFFFF',
     },
     package: Env.PACKAGE,
+    intentFilters: [
+      {
+        action: 'SEND',
+        autoVerify: true,
+        data: [
+          {
+            mimeType: 'image/*',
+          },
+          {
+            mimeType: 'video/*',
+          },
+        ],
+        category: ['DEFAULT'],
+      },
+      {
+        action: 'VIEW',
+        autoVerify: true,
+        data: [
+          {
+            mimeType: 'image/*',
+          },
+          {
+            mimeType: 'video/*',
+          },
+        ],
+        category: ['DEFAULT'],
+      },
+      {
+        action: 'VIEW',
+        autoVerify: true,
+        data: [
+          {
+            scheme: 'http',
+            host: '*',
+            pathPrefix: '/editorx',
+            mimeType: 'image/*',
+          },
+          {
+            scheme: 'https',
+            host: '*',
+            pathPrefix: '/editorx',
+            mimeType: 'video/*',
+          },
+        ],
+        category: ['DEFAULT'],
+      },
+      {
+        action: 'VIEW',
+        autoVerify: true,
+        data: [
+          {
+            scheme: 'https',
+            host: 'octoriahardware.com',
+            mimeType: '*/*',
+          },
+        ],
+        category: ['DEFAULT', 'BROWSABLE'],
+      },
+    ],
   },
   web: {
     favicon: './assets/favicon.png',
@@ -64,9 +123,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
           minSdkVersion: 24,
           packagingOptions: {
             pickFirst: [
-              'lib/x86/libc++_shared.so',
               'lib/x86_64/libjsc.so',
               'lib/arm64-v8a/libjsc.so',
+              'lib/x86/libc++_shared.so',
               'lib/arm64-v8a/libc++_shared.so',
               'lib/x86_64/libc++_shared.so',
               'lib/armeabi-v7a/libc++_shared.so',

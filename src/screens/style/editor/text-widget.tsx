@@ -14,6 +14,7 @@ import { useEditorX } from '@/core';
 import { View } from '@/ui';
 import { IconButton } from '@/ui/core/bounce';
 import { IconButton2 } from '@/ui/core/bounce2';
+import { IconButtonW } from '@/ui/core/static-button';
 
 import { ColorPickerModal } from '../color-picker-view';
 import { EditTextModal } from '../edit-text-modal';
@@ -102,7 +103,7 @@ export const TextWidget = ({
         isModalVisible={textModalVisible}
         SetModalVisible={setTextModalVisible}
       />
-      <IconButton
+      <IconButtonW
         icon={<Ionicons name="eyedrop" size={20} color={themecolor} />}
         onPress={() => {
           setColorModalVisible(true);
@@ -110,7 +111,7 @@ export const TextWidget = ({
         title="Color"
         className="my-1"
       />
-      <IconButton
+      <IconButtonW
         icon={<Ionicons name="pencil-outline" size={20} color={themecolor} />}
         onPress={() => {
           if (!isSpecial()) {
@@ -122,7 +123,7 @@ export const TextWidget = ({
         title="Edit"
         className="my-1"
       />
-      <IconButton
+      <IconButtonW
         icon={
           <MaterialCommunityIcons
             name={'alpha-a-box-outline'}
@@ -209,7 +210,7 @@ export const TextWidget = ({
         className="my-1"
         active={isLineThrough ? true : false}
       />
-      <IconButton
+      <IconButtonW
         icon={
           <MaterialCommunityIcons
             name="image-filter-center-focus-strong"
@@ -227,7 +228,7 @@ export const TextWidget = ({
         title="Rotate"
         className="my-1"
       />
-      <IconButton
+      <IconButtonW
         icon={
           <MaterialCommunityIcons
             name="chevron-left-circle-outline"
@@ -241,7 +242,7 @@ export const TextWidget = ({
         title="Move Left"
         className="my-1"
       />
-      <IconButton
+      <IconButtonW
         icon={
           <MaterialCommunityIcons
             name="chevron-right-circle-outline"
@@ -255,7 +256,7 @@ export const TextWidget = ({
         title="Move Right"
         className="my-1"
       />
-      <IconButton
+      <IconButtonW
         icon={
           <MaterialCommunityIcons
             name="chevron-up-circle-outline"
@@ -269,7 +270,7 @@ export const TextWidget = ({
         title="Move Up"
         className="my-1"
       />
-      <IconButton
+      <IconButtonW
         icon={
           <MaterialCommunityIcons
             name="chevron-down-circle-outline"

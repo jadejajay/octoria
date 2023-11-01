@@ -2,7 +2,7 @@ import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
-import { setItem } from '@/core/storage';
+import { useSearchStore } from '@/core/mainscreen/search';
 import type { MainCategory } from '@/types';
 import { Image, Text, View } from '@/ui';
 import { AnimatedButton } from '@/ui/core/animated-button';
@@ -12,10 +12,11 @@ type Props = {
 };
 export const CategoriesCard = ({ item }: Props) => {
   const { navigate } = useNavigation();
+  const setSearch = useSearchStore((s) => s.setSearch);
   return (
     <AnimatedButton
       onClick={() => {
-        setItem('search', `${item.title}`);
+        setSearch(`${item.title}`);
         //@ts-ignore
         navigate('FeedNavigator', {
           screen: 'Feed',

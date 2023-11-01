@@ -2,20 +2,17 @@ import * as React from 'react';
 import { Image, StyleSheet } from 'react-native';
 import Shimmer from 'react-native-shimmer';
 
+import { useUserStore } from '@/core/mainscreen/user';
 import { Text, View } from '@/ui';
 
 type Props = {};
 export const Greeting = ({}: Props) => {
+  const name = useUserStore((s) => s.user.name);
   return (
     <View className="flex-row items-center justify-between">
       <View className="flex-column justify-start pl-4 pt-4">
-        {/* <View className="items-center justify-center rounded-full bg-slate-100 p-1"> */}
-        {/* <View className="translate-x-0.5 translate-y-1.5">
-        <MenuIcon />
-      </View> */}
-        {/* </View> */}
-        <Text variant="h1" className="font-varela font-bold">
-          Hello
+        <Text variant="h3" className="font-varela font-bold" numberOfLines={1}>
+          Hello, {name ? name : 'Guest'}
         </Text>
         <View className="flex-row">
           <Text variant="lg" className="font-varela text-slate-400">

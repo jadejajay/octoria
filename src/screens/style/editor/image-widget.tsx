@@ -12,6 +12,7 @@ import React, { useState } from 'react';
 import { useEditorX } from '@/core';
 import { View } from '@/ui';
 import { IconButton } from '@/ui/core/bounce';
+import { IconButtonW } from '@/ui/core/static-button';
 
 import { ChangeImageModal } from './change-image';
 
@@ -73,7 +74,7 @@ export const ImageWidget = ({
         isVisible={imageModalVisible}
         onClose={() => setImageModalVisible(false)}
       />
-      <IconButton
+      <IconButtonW
         icon={
           <MaterialCommunityIcons name="image-edit" size={24} color={'black'} />
         }
@@ -87,7 +88,7 @@ export const ImageWidget = ({
         title="change image"
         className="my-1"
       />
-      <IconButton
+      <IconButtonW
         icon={
           <MaterialCommunityIcons
             name="image-filter-center-focus-weak"
@@ -138,7 +139,7 @@ export const ImageWidget = ({
         title="Resize Mode"
         className="my-1"
       />
-      <IconButton
+      <IconButtonW
         icon={
           <MaterialCommunityIcons
             name="chevron-left-circle-outline"
@@ -152,7 +153,7 @@ export const ImageWidget = ({
         title="Move Left"
         className="my-1"
       />
-      <IconButton
+      <IconButtonW
         icon={
           <MaterialCommunityIcons
             name="chevron-right-circle-outline"
@@ -166,7 +167,7 @@ export const ImageWidget = ({
         title="Move Right"
         className="my-1"
       />
-      <IconButton
+      <IconButtonW
         icon={
           <MaterialCommunityIcons
             name="chevron-up-circle-outline"
@@ -180,7 +181,7 @@ export const ImageWidget = ({
         title="Move Up"
         className="my-1"
       />
-      <IconButton
+      <IconButtonW
         icon={
           <MaterialCommunityIcons
             name="chevron-down-circle-outline"

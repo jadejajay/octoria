@@ -39,7 +39,7 @@ export const ProductDetails = ({ item }: { item: Product }) => {
           ? ' and ' + Finishing + ' Finishing'
           : Finishing + ' Finishing'
         : ''
-    } from Octoria mobile application.`;
+    } from Octoria mobile application. octoria:///products/post/${item.id}`;
     try {
       const fileUrl = await getImageBase64(item?.images[0]);
       handleWhatsappShare(fileUrl, LINK, share?.data?.phone);

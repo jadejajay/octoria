@@ -4,9 +4,10 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 
-import { setItem } from '@/core/storage';
 import { colors, Input, TouchableOpacity, View } from '@/ui';
+import { useSearchStore } from '@/core/mainscreen/search';
 export const SearchBar = () => {
+  const setSearch = useSearchStore((s) => s.setSearch);
   const [searchText, setSearchText] = useState('');
   // const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
@@ -35,14 +36,14 @@ export const SearchBar = () => {
     // Set isLoading to true while fetching search results
     // setIsLoading(true);
     if (!searchText) {
-      setItem('search', `${placeholderArray[placeholderIndex]}`);
+      setSearch(`${placeholderArray[placeholderIndex]}`);
       //@ts-ignore
       navigation.navigate('FeedNavigator', {
         screen: 'Feed',
       });
       // search: placeholderArray[placeholderIndex],
     } else {
-      setItem('search', `${searchText}`);
+      setSearch(`${searchText}`);
       //@ts-ignore
       navigation.navigate('FeedNavigator', {
         screen: 'Feed',

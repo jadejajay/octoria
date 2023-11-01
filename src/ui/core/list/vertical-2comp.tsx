@@ -6,6 +6,7 @@ type Props = {
   data: any;
   Comp: any;
   Header?: any;
+  style?: any;
   onEndReached?: () => void;
   snapToInterval?: number;
   estimatedItemSize?: number;
@@ -14,6 +15,7 @@ type Props = {
 export const Vertical2CompList = ({
   data,
   Comp,
+  style,
   Header,
   onEndReached,
   numColumn = 2,
@@ -23,6 +25,7 @@ export const Vertical2CompList = ({
   return (
     <List
       data={data}
+      contentContainerStyle={style}
       numColumns={numColumn}
       onEndReached={onEndReached}
       keyExtractor={(_, index) => {
@@ -34,6 +37,7 @@ export const Vertical2CompList = ({
       renderItem={Comp}
       ListHeaderComponent={Header}
       showsVerticalScrollIndicator={false}
+      nestedScrollEnabled
     />
   );
 };

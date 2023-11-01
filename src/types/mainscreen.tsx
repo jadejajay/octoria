@@ -66,6 +66,7 @@ export interface BackgroundState {
 }
 
 export interface UserType {
+  id: string;
   name: string;
   email: string;
   business: string;

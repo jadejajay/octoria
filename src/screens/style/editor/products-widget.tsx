@@ -88,7 +88,7 @@ export const Card = ({ item, index, setElement, onClose }: Props) => {
   return (
     <TouchableOpacity
       key={`festival-card-${index}`}
-      className="m-2 aspect-[3/4] w-11/12 overflow-hidden rounded-lg bg-slate-100"
+      className="m-2 aspect-[3/4] w-11/12 overflow-hidden rounded-lg bg-green-400"
       activeOpacity={1}
       onPress={() => {
         setElement(element(item));

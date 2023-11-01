@@ -2,16 +2,17 @@ import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { FlatList } from 'react-native';
 
-import { setItem } from '@/core/storage';
 import type { MainCategory } from '@/types';
 import { View } from '@/ui';
 import { RectCard } from '@/ui/core/rect-card';
+import { useSearchStore } from '@/core/mainscreen/search';
 
 type Props = {
   data: MainCategory[];
 };
 export const CategoriesList = ({ data }: Props) => {
   const { navigate } = useNavigation();
+  const setSearch = useSearchStore((s) => s.setSearch);
   const List = React.useCallback(() => {
     return (
       <FlatList
@@ -27,7 +28,7 @@ export const CategoriesList = ({ data }: Props) => {
                   image: item.image,
                 }}
                 onClick={() => {
-                  setItem('search', `${item.title}`);
+                  setSearch(`${item.title}`)
                   //@ts-ignore
                   navigate('FeedNavigator', {
                     screen: 'Feed',

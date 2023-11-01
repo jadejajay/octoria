@@ -8,6 +8,7 @@ import { useFestivalStore } from '@/core/editorx/festival';
 import { useFrameStore } from '@/core/editorx/frames';
 import { useImageListStore } from '@/core/editorx/image-element';
 import { useLogoStore } from '@/core/editorx/logos';
+import { usePostMainCategoryStore } from '@/core/editorx/post-main-category';
 import { usePostVideoStore } from '@/core/editorx/post-video';
 import { useShapesStore } from '@/core/editorx/shapes';
 import { useStickerStore } from '@/core/editorx/stickers';
@@ -18,6 +19,7 @@ import type {
   FrameType,
   ImageListType,
   LogosType,
+  PostMainCategoryType,
   PostVideoType,
   Product,
   ShapesType,
@@ -28,7 +30,7 @@ const loadDataFromFirestore = async () => {
   try {
     const FrameSnapshot = await firestore().collection('frames').get();
     const StickersSnapshot = await firestore().collection('stickers').get();
-    const FestivalSnapshot = await firestore().collection('festival').get();
+    const FestivalSnapshot = await firestore().collection('postImages').get();
     useProductsStore.setState({ productLoading: true });
     const ProductSnapshot = await firestore().collection('productList').get();
     const ElementsSnapshot = await firestore().collection('elements').get();
@@ -36,6 +38,10 @@ const loadDataFromFirestore = async () => {
     const LogosSnapshot = await firestore().collection('logosList').get();
     const PostVideosSnapshot = await firestore().collection('postVideos').get();
     const ImagesSnapshot = await firestore().collection('imagesElement').get();
+    const PostMainCategorySnapshot = await firestore()
+      .collection('postMainCategory')
+      .orderBy('code')
+      .get();
 
     const frame: FrameType[] = FrameSnapshot.docs.map((doc) => ({
       id: doc.id,
@@ -50,6 +56,8 @@ const loadDataFromFirestore = async () => {
     const festival: FestivalType[] = FestivalSnapshot.docs.map((doc) => ({
       id: doc.id,
       image: doc.data()?.image,
+      categoryCode: doc.data()?.categoryCode,
+      tags: doc.data()?.tags,
     }));
     const product: Product[] = ProductSnapshot.docs.map((doc) => ({
       id: doc.id,
@@ -85,11 +93,20 @@ const loadDataFromFirestore = async () => {
       id: doc.id,
       video: doc.data()?.video,
       thumbnail: doc.data()?.thumbnail,
+      categoryCode: doc.data()?.categoryCode,
+      tags: doc.data()?.tags,
     }));
     const imageList: ImageListType[] = ImagesSnapshot.docs.map((doc) => ({
       id: doc.id,
       image: doc.data()?.image,
     }));
+    const postMainCategorySnapshotList: PostMainCategoryType[] =
+      PostMainCategorySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        image: doc.data()?.image,
+        name: doc.data()?.name,
+        code: doc.data()?.code,
+      }));
 
     useFrameStore.setState({ frames: frame });
     useStickerStore.setState({ stickers: sticker });
@@ -100,6 +117,9 @@ const loadDataFromFirestore = async () => {
     useLogoStore.setState({ logos: logo });
     usePostVideoStore.setState({ postVideos: postVideos });
     useImageListStore.setState({ images: imageList });
+    usePostMainCategoryStore.setState({
+      postMainCategory: postMainCategorySnapshotList,
+    });
   } catch (error) {
     console.error('Error loading data from Firestore:', error);
   }

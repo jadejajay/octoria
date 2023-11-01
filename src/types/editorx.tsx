@@ -2,6 +2,7 @@ import type { ImageProps, TextProps, TextStyle, ViewStyle } from 'react-native';
 
 import type { Element } from '@/core';
 
+export const EDITORX_DATA = 'EDITORX_DATA';
 export type FrameType = {
   id: string;
   image: string;
@@ -15,6 +16,8 @@ export type BackgroundType = {
 export type FestivalType = {
   id: string;
   image: string;
+  categoryCode: number;
+  tags: string;
 };
 export type ElementsType = {
   id: string;
@@ -36,10 +39,18 @@ export type LogosType = {
   id: string;
   image: string;
 };
+export type PostMainCategoryType = {
+  id: string;
+  image: string;
+  name: string;
+  code: number;
+};
 export type PostVideoType = {
   id: string;
   video: string;
   thumbnail: string;
+  categoryCode: number;
+  tags: string;
 };
 export type resolutionParams = {
   width: number;
