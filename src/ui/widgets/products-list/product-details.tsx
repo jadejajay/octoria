@@ -2,6 +2,7 @@
 /* eslint-disable max-lines-per-function */
 
 import { Entypo } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { ToastAndroid } from 'react-native';
@@ -39,7 +40,9 @@ export const ProductDetails = ({ item }: { item: Product }) => {
           ? ' and ' + Finishing + ' Finishing'
           : Finishing + ' Finishing'
         : ''
-    } from Octoria mobile application. octoria:///products/post/${item.id}`;
+    } from Octoria mobile application. https://octoriahardware.com/products/post/${
+      item.id
+    }`;
     try {
       const fileUrl = await getImageBase64(item?.images[0]);
       handleWhatsappShare(fileUrl, LINK, share?.data?.phone);
@@ -85,11 +88,35 @@ export const ProductDetails = ({ item }: { item: Product }) => {
                   className="px-2 font-varela leading-3 text-slate-400"
                   style={{ fontSize: 8 }}
                 >
-                  Use Your Own Background
+                  With Your Own Background
                 </Text>
               </View>
             </TouchableOpacity>
           )}
+        </View>
+        <View
+          className="mt-6 flex-row items-center justify-around rounded-xl p-2"
+          style={{ backgroundColor: 'white', elevation: 8 }}
+        >
+          <TouchableOpacity
+            onPress={() =>
+              navigation.getParent().navigate('ARView', {
+                url: item.image3d as string,
+              })
+            }
+            className="flex-row items-center"
+          >
+            <MaterialCommunityIcons name="rotate-3d" size={22} />
+            <View className="">
+              <Text className="px-2 font-varela text-sm">Try Now</Text>
+              {/* <Text
+                  className="px-2 font-varela leading-3 text-slate-400"
+                  style={{ fontSize: 8 }}
+                >
+                  With Your Own Background
+                </Text> */}
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
       {item?.material && (

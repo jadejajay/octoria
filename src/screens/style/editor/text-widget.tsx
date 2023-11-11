@@ -8,7 +8,9 @@
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
+import Slider from '@react-native-community/slider';
 import React, { useState } from 'react';
+import { StyleSheet } from 'react-native';
 
 import { useEditorX } from '@/core';
 import { View } from '@/ui';
@@ -49,16 +51,17 @@ export const TextWidget = ({
   const [colorModalVisible, setColorModalVisible] = useState<boolean>(false);
   const [textModalVisible, setTextModalVisible] = useState<boolean>(false);
   const [fontModalVisible, setfontModalVisible] = useState<boolean>(false);
+  const [sizeModalVisible, setSizeModalVisible] = useState<boolean>(false);
   const [rotationDegree, setRotationDegree] = useState(0);
-  const Color = data.elements[state].properties.textProps?.style?.color;
-  const Bold = data.elements[state].properties.textProps?.style?.fontWeight;
-  const Italic = data.elements[state].properties.textProps?.style?.fontStyle;
+  const Color = data.elements[state]?.properties?.textProps?.style?.color;
+  const Bold = data.elements[state]?.properties?.textProps?.style?.fontWeight;
+  const Italic = data.elements[state]?.properties?.textProps?.style?.fontStyle;
   const Underline =
-    data.elements[state].properties.textProps?.style?.textDecorationLine;
+    data.elements[state]?.properties?.textProps?.style?.textDecorationLine;
   const LineThrough =
-    data.elements[state].properties.textProps?.style?.textDecorationLine;
+    data.elements[state]?.properties?.textProps?.style?.textDecorationLine;
   const Shadow =
-    data.elements[state].properties.textProps?.style?.textShadowOffset;
+    data.elements[state]?.properties?.textProps?.style?.textShadowOffset;
 
   const isShadow = Shadow?.width === -1;
   const isLineThrough = LineThrough === 'line-through';
@@ -93,7 +96,7 @@ export const TextWidget = ({
         onClose={() => setfontModalVisible(false)}
       />
       <EditTextModal
-        text={data.elements[state].properties.text!}
+        text={data.elements[state]?.properties?.text!}
         setText={(text) => {
           setText({
             id: state,
@@ -284,6 +287,51 @@ export const TextWidget = ({
         title="Move Down"
         className="my-1"
       />
+      <IconButtonW
+        icon={
+          <MaterialCommunityIcons
+            name="format-size"
+            size={24}
+            color={themecolor}
+          />
+        }
+        onPress={() => {
+          setSizeModalVisible((s) => !s);
+        }}
+        title="Text Size"
+        className="my-1"
+      />
+      {sizeModalVisible ? (
+        <View className="absolute h-20 w-full items-center justify-center bg-white">
+          <Slider
+            style={styles.container}
+            minimumValue={8}
+            value={
+              data.elements[state]?.properties?.textProps?.style?.fontSize
+                ? data.elements[state]?.properties?.textProps?.style?.fontSize
+                : 20
+            }
+            maximumValue={80}
+            onValueChange={(value) => {
+              setData({
+                id: state,
+                props: {
+                  fontSize: value,
+                },
+              });
+            }}
+            minimumTrackTintColor="#FFFFFF"
+            maximumTrackTintColor="#000000"
+          />
+        </View>
+      ) : null}
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    width: '90%',
+    height: 20,
+  },
+});

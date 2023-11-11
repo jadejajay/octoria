@@ -16,6 +16,7 @@ export type FeedStackParamList = {
 const Stack = createNativeStackNavigator<FeedStackParamList>();
 
 export const FeedNavigator = () => {
+  console.log('feed navigator loaded', Date.now());
   return (
     <Stack.Navigator initialRouteName="Feed" id="feed-navigator">
       <Stack.Group

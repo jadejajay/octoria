@@ -28,11 +28,15 @@
     "animatable",
     "apikey",
     "aquire",
+    "BROWSABLE",
     "collapsable",
     "Flashlist",
     "gobold",
     "Lato",
+    "libc",
+    "libjsc",
     "nativewind",
+    "octoriahardware",
     "ramda",
     "scanqr",
     "tappable",
@@ -49,5 +53,6 @@
   "java.configuration.updateBuildConfiguration": "disabled",
   "[java]": {
     "editor.defaultFormatter": "redhat.java"
-  } // make sure to disable i18n-ally in your global setting and only enable it for such projects
+  },
+  "docify.commentService.docstringFormat": "JsDoc" // make sure to disable i18n-ally in your global setting and only enable it for such projects
 }

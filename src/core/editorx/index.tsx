@@ -18,8 +18,8 @@ const DATA: EditorData = {
       name: 'user_photo',
       component: 'image',
       properties: {
-        height: 200,
-        width: 200,
+        height: 0,
+        width: 0,
         image: 'http://itekindia.com/chats/festival/40-Earth Day.png',
         viewProps: {
           style: {
@@ -41,13 +41,13 @@ const DATA: EditorData = {
       name: 'user_name',
       component: 'text',
       properties: {
-        height: 200,
-        width: 200,
+        height: 0,
+        width: 0,
         text: 'userName',
         textProps: {
           style: {
             color: 'white',
-            fontSize: 6,
+            fontSize: 20,
             textAlign: 'center',
           },
         },
@@ -64,13 +64,13 @@ const DATA: EditorData = {
       name: 'user_phone',
       component: 'text',
       properties: {
-        height: 200,
-        width: 200,
+        height: 0,
+        width: 0,
         text: 'usePhone',
         textProps: {
           style: {
             color: 'white',
-            fontSize: 6,
+            fontSize: 20,
             textAlign: 'center',
           },
         },
@@ -87,13 +87,13 @@ const DATA: EditorData = {
       name: 'user_email',
       component: 'text',
       properties: {
-        height: 200,
-        width: 200,
+        height: 0,
+        width: 0,
         text: 'userEmail',
         textProps: {
           style: {
             color: 'white',
-            fontSize: 6,
+            fontSize: 20,
             textAlign: 'center',
           },
         },
@@ -110,13 +110,13 @@ const DATA: EditorData = {
       name: 'user_website',
       component: 'text',
       properties: {
-        height: 200,
-        width: 200,
-        text: 'userWEbsite',
+        height: 0,
+        width: 0,
+        text: 'userWebsite',
         textProps: {
           style: {
             color: 'white',
-            fontSize: 6,
+            fontSize: 20,
             textAlign: 'center',
           },
         },
@@ -133,13 +133,13 @@ const DATA: EditorData = {
       name: 'user_address',
       component: 'text',
       properties: {
-        height: 200,
-        width: 200,
-        text: 'user addresssss',
+        height: 0,
+        width: 0,
+        text: 'user address',
         textProps: {
           style: {
             color: 'white',
-            fontSize: 6,
+            fontSize: 20,
             textAlign: 'center',
           },
         },
@@ -416,8 +416,6 @@ const _useEditorX = create<EditorXState>((set, get) => ({
             const index = state.editorData.elements.findIndex(
               (item) => item.id === id
             );
-            console.log(id, index, '<============from set produce');
-
             if (index > -1) {
               state.editorData.elements[index] = {
                 ...state.editorData.elements[index],

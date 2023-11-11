@@ -18,6 +18,7 @@ export type SettingStackParamList = {
 const Stack = createNativeStackNavigator<SettingStackParamList>();
 
 export const SettingNavigator = () => {
+  console.log('setting navigator loaded', Date.now());
   return (
     <Stack.Navigator initialRouteName="Settings" id="setting-navigator">
       <Stack.Group

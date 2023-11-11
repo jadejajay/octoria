@@ -52,7 +52,7 @@ import storage from '@react-native-firebase/storage';
 import { usePreventScreenCapture } from 'expo-screen-capture';
 import * as SplashScreen from 'expo-splash-screen';
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { LogBox, StyleSheet } from 'react-native';
 import FlashMessage from 'react-native-flash-message';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -62,6 +62,18 @@ import { RootNavigator } from '@/navigation';
 
 import { preloadImages } from './ui';
 
+LogBox.ignoreLogs([
+  "ViewPropTypes will be removed from React Native. Migrate to ViewPropTypes exported from 'deprecated-react-native-prop-types'.",
+]);
+LogBox.ignoreLogs([
+  '`new NativeEventEmitter()` was called with a non-null argument without the required `addListener` method.',
+]);
+LogBox.ignoreLogs([
+  '`new NativeEventEmitter()` was called with a non-null argument without the required `removeListeners` method.',
+]);
+LogBox.ignoreLogs([
+  "ViewPropTypes will be removed from React Native, along with all other PropTypes. We recommend that you migrate away from PropTypes and switch to a type system like TypeScript. If you need to continue using ViewPropTypes, migrate to the 'deprecated-react-native-prop-types' package.",
+]);
 preloadImages([
   {
     uri: 'http://itekindia.com/octoria/logo_big.png',
@@ -71,11 +83,14 @@ loadSelectedTheme();
 SplashScreen.preventAutoHideAsync();
 
 const App = () => {
+  console.log('app started', Date.now());
+
   usePreventScreenCapture();
   const auth = firebase.auth();
   auth.useEmulator('http://192.168.0.8:9099');
   firestore().useEmulator('192.168.0.8', 8080);
   storage().useEmulator('192.168.0.8', 9199);
+  console.log('Emulator started', Date.now());
   return (
     <GestureHandlerRootView style={styles.container}>
       <APIProvider>

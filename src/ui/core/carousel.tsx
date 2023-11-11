@@ -51,6 +51,7 @@ export const MainCarousel = () => {
                 }}
                 shouldPlay
                 useNativeControls
+                isMuted
                 resizeMode={ResizeMode.COVER}
                 isLooping
               />

@@ -9,28 +9,20 @@
 */
 import * as React from 'react';
 import { useState } from 'react';
-import * as Animatable from 'react-native-animatable';
+import { TouchableOpacity } from 'react-native';
+import Animated, { ZoomIn } from 'react-native-reanimated';
 
-// import type { SharedValue } from 'react-native-reanimated';
 import { useEditorX } from '@/core';
-import { Image, Text, TouchableOpacity, View } from '@/ui';
+import { Image, Text, View } from '@/ui';
 
 type Props = {
   data: any;
   id: any;
   index: number;
   onClick?: () => void;
-  // scale: SharedValue<any>;
-  // isDragging: boolean;
 };
-export const ITWidget = ({
-  data,
-  id,
-  index,
-  onClick,
-}: // scale,
-// isDragging,
-Props) => {
+const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
+export const ITWidget = ({ data, id, index, onClick }: Props) => {
   const userInfo = useEditorX((s) => s.businessData);
   const [animationKey, setAnimationKey] = useState<number>(0);
   const [img, setImg] = useState('');
@@ -75,9 +67,6 @@ Props) => {
     userInfo.photo,
     userInfo.website,
   ]);
-  // const savedScale = useEditorX(
-  //   (s) => s.editorData.elements[index]?.properties.scale
-  // );
 
   const handlePress = () => {
     // Increment the key to trigger a re-render and restart the animation
@@ -85,18 +74,18 @@ Props) => {
     onClick?.();
   };
   return (
-    <TouchableOpacity
+    <View
       key={`anim_button_${index}`}
-      onPress={handlePress}
-      activeOpacity={1}
       style={{
         width: '100%',
         height: '100%',
       }}
     >
-      <Animatable.View
+      <AnimatedTouchable
         key={`ITWidget-${animationKey}-${index}`}
-        animation="zoomIn"
+        activeOpacity={1}
+        onPress={handlePress}
+        entering={ZoomIn}
         useNativeDriver={true}
         duration={800}
         style={{ flex: 1 }}
@@ -115,12 +104,16 @@ Props) => {
             key={`animated-view-text_${index}`}
             className="h-full w-full items-center justify-center"
           >
-            <Text key={`itwidget-text_${index}`} {...data?.textProps}>
+            <Text
+              key={`itwidget-text_${index}`}
+              onPress={handlePress}
+              {...data?.textProps}
+            >
               {txt}
             </Text>
           </View>
         )}
-      </Animatable.View>
-    </TouchableOpacity>
+      </AnimatedTouchable>
+    </View>
   );
 };

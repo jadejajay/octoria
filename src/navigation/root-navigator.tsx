@@ -8,12 +8,12 @@ import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect, useState } from 'react';
 
 import { useEditorX } from '@/core';
-// import { useAuth } from '@/core';
 import { useIsFirstTime, useIsSignUp } from '@/core/hooks';
 import { useUserStore } from '@/core/mainscreen/user';
 import { Onboarding } from '@/screens';
 import { SignUpForm } from '@/screens/login/signup';
 import { DayList } from '@/screens/style/editor/day-list';
+import { Tutorial } from '@/screens/style/editor/tutorials';
 import { ImageEditor } from '@/screens/style/image-editor';
 import type { UserType } from '@/types';
 
@@ -21,10 +21,12 @@ import { AuthNavigator } from './auth-navigator';
 import { loadDataFromFirestore } from './loads';
 import { NavigationContainer } from './navigation-container';
 import { TabNavigator } from './tab-navigator';
+import { ARView } from '../ui/widgets/products-list/arview';
 
 const Stack = createNativeStackNavigator();
 const prefix = Linking.createURL('/');
 export const Root = () => {
+  console.log('Root Stack Activated', Date.now());
   // const status = useAuth.use.status();
   const [isFirstTime] = useIsFirstTime();
   const [isSignUp, setIsSignUp] = useIsSignUp();
@@ -38,7 +40,7 @@ export const Root = () => {
 
   const hideSplash = React.useCallback(async () => {
     await SplashScreen.hideAsync();
-    await loadDataFromFirestore();
+    loadDataFromFirestore();
   }, []);
   useEffect(() => {
     if (initializing) {
@@ -84,6 +86,7 @@ export const Root = () => {
           });
           const isUserSignedUp = !!User?.email;
           setIsSignUp(isUserSignedUp);
+          console.log('user loaded', Date.now());
         } else {
           setIsSignUp(false);
         }
@@ -117,6 +120,8 @@ export const Root = () => {
                 <Stack.Screen name="App" component={TabNavigator} />
                 <Stack.Screen name="DayList" component={DayList} />
                 <Stack.Screen name="ImageEditor" component={ImageEditor} />
+                <Stack.Screen name="Tutorials" component={Tutorial} />
+                <Stack.Screen name="ARView" component={ARView} />
               </>
             ) : (
               <Stack.Screen name="SignUp" component={SignUpForm} />

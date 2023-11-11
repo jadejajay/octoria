@@ -20,23 +20,25 @@ import * as React from 'react';
 import { useRef, useState } from 'react';
 import { BackHandler, Linking, StyleSheet } from 'react-native';
 import RNFetchBlob from 'react-native-blob-util';
+import FastImage from 'react-native-fast-image';
 import { showMessage } from 'react-native-flash-message';
 import ViewShot from 'react-native-view-shot';
 
 import type { Element } from '@/core';
-import { shuffleArray, useEditorX } from '@/core';
-import VideoCacheManager from '@/core/cache-util';
+import { getImageBase64, shuffleArray, useEditorX } from '@/core';
+// import VideoCacheManager from '@/core/cache-util';
 import { EditingFeatures } from '@/core/editing-features.';
 import { useFestivalStore } from '@/core/editorx/festival';
 import { useFrameStore } from '@/core/editorx/frames';
 import { usePostVideoStore } from '@/core/editorx/post-video';
-import { setItem } from '@/core/storage';
+import { getItem, setItem } from '@/core/storage';
 import {
   type BackgroundType,
   type EditingFeaturesType,
   EDITORX_DATA,
   type FrameType,
   type PostVideoType,
+  SUB_CATEGORY,
 } from '@/types';
 import { Image, Text, TouchableOpacity, View } from '@/ui';
 import { IconButton } from '@/ui/core/bounce';
@@ -70,29 +72,50 @@ const resolution = 1024;
 export const Editorx = ({ dim }: Props) => {
   // state management
   const [dwnVideo, setDwnVideo] = useState<string>('');
+  const [sFestivals, setSFestivals] = useState<any>([]);
+  const [sPostVideos, setSPostVideos] = useState<any>([]);
+  // const [subCategoryCode, setSubCategoryCode] = useState<any>(1);
   const editorData = useEditorX((state) => state.editorData);
   const selectedItem = useEditorX((state) => state.selectedItem);
-  const categoryCode = useEditorX((state) => state.categoryCode);
   const widget = useEditorX((state) => state.activeWidget);
   const setSelectedItem = useEditorX((state) => state.setSelectedItem);
   const setBg = useEditorX((s) => s.setBackground);
   const setFrm = useEditorX((s) => s.setFrame);
-  const saveFrame = useEditorX((s) => s.saveFrame);
+  // const saveFrame = useEditorX((s) => s.saveFrame);
   const setDataById = useEditorX((s) => s.setDataById);
   const toggleWidget = useEditorX((s) => s.setActiveWidget);
   const [renderedAsset, setRenderedAsset] = useState<string>('');
+  const [renderedAssetData, setRenderedAssetData] = useState<string>('');
+
+  const { navigate } = useNavigation();
+
+  React.useEffect(
+    () => () => {
+      FFmpegKit.cancel();
+    },
+    []
+  );
+
+  const images = useFestivalStore((s) => s.festival);
+  const postVideos = usePostVideoStore((s) => s.postVideos);
+  const loadSubCat = React.useCallback(async () => {
+    const subC = await getItem(SUB_CATEGORY);
+    const tempVideos = postVideos.filter((img) => img.subCategory === subC);
+    const temp = images.filter((img) => img.subCategory === subC);
+    const sFestivals2 = shuffleArray(temp);
+    const sPostVideos2 = shuffleArray(tempVideos);
+    setSFestivals(sFestivals2);
+    setSPostVideos(sPostVideos2);
+  }, [images, postVideos]);
+
+  React.useEffect(() => {
+    loadSubCat();
+  }, [loadSubCat]);
 
   // data management
-  const images = useFestivalStore((s) => s.festival);
-  const temp = images.filter((img) => img.categoryCode === categoryCode);
-  const sFestivals = shuffleArray(temp);
+
   const frames = useFrameStore((s) => s.frames);
   const sFrame = shuffleArray(frames);
-  const postVideos = usePostVideoStore((s) => s.postVideos);
-  const tempVideos = postVideos.filter(
-    (img) => img.categoryCode === categoryCode
-  );
-  const sPostVideos = shuffleArray(tempVideos);
 
   // component specific
   const dirs = RNFetchBlob.fs.dirs.DocumentDir;
@@ -105,7 +128,7 @@ export const Editorx = ({ dim }: Props) => {
     moveToPosition: ({ x, y }: { x: number; y: number }) => void;
   } | null>();
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
-  const cacheManager = new VideoCacheManager();
+  // const cacheManager = new VideoCacheManager();
 
   // modal specific
   const [backgroundModalVisible, setBackgroundModalVisible] =
@@ -128,36 +151,31 @@ export const Editorx = ({ dim }: Props) => {
   const [renderModalLoading, setRenderModalLoading] = useState(false);
   const [progress, setProgress] = useState(0);
 
-  React.useEffect(
-    () => {
-      handleEditorx();
-    },
+  React.useEffect(() => {
+    handleEditorx();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-  React.useEffect(
-    () => {
-      editorData.bgType === 'video' &&
-        editorData.backgroundPost &&
-        downloadVideo(editorData.backgroundPost);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [editorData.backgroundPost]
-  );
-  useFocusEffect(() => {
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction
-    );
+  }, []);
+  React.useEffect(() => {
+    editorData.bgType === 'video' &&
+      editorData.backgroundPost &&
+      downloadVideo(editorData.backgroundPost);
+  }, [editorData.backgroundPost, editorData.bgType]);
 
-    return () => backHandler.remove();
-  });
-
-  const backAction = () => {
-    setItem(EDITORX_DATA, editorData);
+  const backAction = React.useCallback(() => {
+    setItem(EDITORX_DATA, JSON.stringify(editorData));
     goBack();
     return true;
-  };
+  }, [editorData, goBack]);
+  useFocusEffect(
+    React.useCallback(() => {
+      const backHandler = BackHandler.addEventListener(
+        'hardwareBackPress',
+        backAction
+      );
+
+      return () => backHandler.remove();
+    }, [backAction])
+  );
 
   const handleEditorx = async () => {
     if (!permissionResponse?.granted) {
@@ -176,56 +194,68 @@ export const Editorx = ({ dim }: Props) => {
       }
     }
   };
-  const toggleWidgetModal = (item: EditingFeaturesType['name']) => {
-    if (item === 'Photos') {
-      toggleWidget('Photos');
-    } else if (item === 'Videos') {
-      toggleWidget('Videos');
-    } else if (item === 'Frames') {
-      toggleWidget('Frames');
-    } else if (item === 'Info') {
-      setInfoModalVisible(true);
-    } else if (item === 'Text') {
-      toggleWidget('Text');
-    } else if (item === 'Stickers') {
-      setStickersModalVisible(true);
-    } else if (item === 'Shape') {
-      setShapesModalVisible(true);
-    } else if (item === 'Products') {
-      setProductsModalVisible(true);
-    } else if (item === 'Logos') {
-      setLogosModalVisible(true);
-    } else if (item === 'Image') {
-      toggleWidget('Image');
-    } else if (item === 'Elements') {
-      setElementsModalVisible(true);
-    }
-  };
+  const toggleWidgetModal = React.useCallback(
+    (item: EditingFeaturesType['name']) => {
+      if (item === 'Photos') {
+        toggleWidget('Photos');
+      } else if (item === 'Videos') {
+        toggleWidget('Videos');
+      } else if (item === 'Frames') {
+        toggleWidget('Frames');
+      } else if (item === 'Info') {
+        setInfoModalVisible(true);
+      } else if (item === 'Text') {
+        toggleWidget('Text');
+      } else if (item === 'Stickers') {
+        setStickersModalVisible(true);
+      } else if (item === 'Shape') {
+        setShapesModalVisible(true);
+      } else if (item === 'Products') {
+        setProductsModalVisible(true);
+      } else if (item === 'Logos') {
+        setLogosModalVisible(true);
+      } else if (item === 'Image') {
+        toggleWidget('Image');
+      } else if (item === 'Elements') {
+        setElementsModalVisible(true);
+      }
+    },
+    [toggleWidget]
+  );
 
   const downloadVideo = (url: string) => {
-    cacheManager.getVideo(url).then((localPath) => {
-      if (localPath) {
-        setDwnVideo(localPath);
-      } else {
-        showMessage({
-          type: 'danger',
-          message: `Failed to load Video`,
-          duration: 2000,
-        });
-      }
-    });
+    setDwnVideo(url);
+    // cacheManager.getVideo(url).then((localPath) => {
+    //   if (localPath) {
+    //     setDwnVideo(localPath);
+    //   } else {
+    //     showMessage({
+    //       type: 'danger',
+    //       message: `Failed to load Video`,
+    //       duration: 2000,
+    //     });
+    //   }
+    // });
   };
-  const captureView = async () => {
+
+  const captureView = React.useCallback(async () => {
+    console.log('capture called');
     setSelectedItem(-1);
     toggleWidgetModal('Photos');
-    if (editorData.backgroundPost && editorData.bgType === 'photo') {
+    if (editorData.bgType === 'photo') {
       try {
+        console.log('photo rendered');
+
         setRenderModalLoading(true);
         //@ts-ignore
         const _result = await viewShotRef.current.capture().then(
           (uri: string) => {
             // console.log('do something with ', uri);
             setRenderedAsset(uri);
+            getImageBase64(uri).then((base64: string) => {
+              setRenderedAssetData(base64);
+            });
+            console.log(uri, 'link of viewshot');
           },
           (error: any) => {
             showMessage({
@@ -244,11 +274,11 @@ export const Editorx = ({ dim }: Props) => {
           duration: 2000,
         });
       }
-      // `result` will contain the captured image in PNG format
-      // console.log('captured', JSON.stringify({ result }));
     } else {
       try {
+        console.log('tried to render video');
         if (dwnVideo) {
+          console.log('dwn load video available');
           setRenderedAsset('');
           setRenderModalLoading(true);
           let totalFrames = 0;
@@ -279,13 +309,17 @@ export const Editorx = ({ dim }: Props) => {
           //@ts-ignore
           const _result = await viewShotRef.current.capture().then(
             (uri: string) => {
+              console.log('view shot called from video');
               const out = `${dirs}/OCTORIA_${Date.now()}.mp4`;
               const cmd = `-i ${dwnVideo} -i ${uri} -filter_complex "[0:v]scale=${resolution}:${resolution} [video]; [video][1:v]overlay=0:0 [output]" -map 0:a -c:a copy -map 0:a -strict -2 -c:a aac -map "[output]"  -q:v 1 ${out}`;
               FFmpegKit.execute(cmd).then(async (session) => {
                 const returnCode = await session.getReturnCode();
                 if (ReturnCode.isSuccess(returnCode)) {
                   // SUCCESS
-                  setRenderedAsset(out);
+                  setRenderedAsset(`file://${out}`);
+                  getImageBase64(`file://${out}`).then((base64: string) => {
+                    setRenderedAssetData(base64);
+                  });
                   showMessage({
                     type: 'success',
                     icon: 'success',
@@ -319,6 +353,8 @@ export const Editorx = ({ dim }: Props) => {
           );
         }
       } catch (error) {
+        console.log(error, 'error occured idiota');
+
         setRenderModalLoading(false);
         showMessage({
           type: 'danger',
@@ -327,72 +363,67 @@ export const Editorx = ({ dim }: Props) => {
         });
       }
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dwnVideo, editorData.bgType]);
   // horizontal list
-  const PostBackgroundList = React.useCallback(
-    () => {
-      return (
-        <HorizontalList
-          key={'background cards'}
-          // eslint-disable-next-line react/no-unstable-nested-components
-          Comp={({ item }: { item: BackgroundType }) => (
-            <SmallCard
-              key={item.id}
-              onClick={() => {
-                setBg(item.image, 'photo');
-              }}
-              url={item.image}
-              // isSelected={BackGroundPicker.imageUri === item.image}
-            />
-          )}
-          // eslint-disable-next-line react/no-unstable-nested-components
-          Header={() => (
-            <SmallCard
-              onClick={() => setBackgroundModalVisible(true)}
-              url="http://itekindia.com/chats/mainfestivalcategory/camera.gif"
-            />
-          )}
-          snapToInterval={128}
-          estimatedItemSize={100}
-          data={sFestivals}
-        />
-      );
-    },
+  const PostBackgroundList = React.useCallback(() => {
+    return (
+      <HorizontalList
+        key={'background cards'}
+        // eslint-disable-next-line react/no-unstable-nested-components
+        Comp={({ item }: { item: BackgroundType }) => (
+          <SmallCard
+            key={item.id}
+            onClick={() => {
+              setBg(item.image, 'photo');
+            }}
+            url={item.image}
+            // isSelected={BackGroundPicker.imageUri === item.image}
+          />
+        )}
+        // eslint-disable-next-line react/no-unstable-nested-components
+        Header={() => (
+          <SmallCard
+            onClick={() => setBackgroundModalVisible(true)}
+            url="http://itekindia.com/chats/mainfestivalcategory/camera.gif"
+          />
+        )}
+        snapToInterval={128}
+        estimatedItemSize={100}
+        data={sFestivals}
+      />
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-  const PostVideoList = React.useCallback(
-    () => {
-      return (
-        <HorizontalList
-          key={'background Video cards'}
-          // eslint-disable-next-line react/no-unstable-nested-components
-          Comp={({ item }: { item: PostVideoType }) => (
-            <SmallCard2
-              key={item.id}
-              onClick={() => {
-                setBg(item.video, 'video');
-              }}
-              url={item.thumbnail}
-              // isSelected={BackGroundPicker.imageUri === item.image}
-            />
-          )}
-          // eslint-disable-next-line react/no-unstable-nested-components
-          Header={() => (
-            <SmallCard
-              onClick={() => setBackgroundVideoModalVisible(true)}
-              url="http://itekindia.com/chats/mainfestivalcategory/camera.gif"
-            />
-          )}
-          snapToInterval={128}
-          estimatedItemSize={100}
-          data={sPostVideos}
-        />
-      );
-    },
+  }, [sFestivals]);
+  const PostVideoList = React.useCallback(() => {
+    return (
+      <HorizontalList
+        key={'background Video cards'}
+        // eslint-disable-next-line react/no-unstable-nested-components
+        Comp={({ item }: { item: PostVideoType }) => (
+          <SmallCard2
+            key={item.id}
+            onClick={() => {
+              setBg(item.video, 'video');
+            }}
+            url={item.thumbnail}
+            // isSelected={BackGroundPicker.imageUri === item.image}
+          />
+        )}
+        // eslint-disable-next-line react/no-unstable-nested-components
+        Header={() => (
+          <SmallCard
+            onClick={() => setBackgroundVideoModalVisible(true)}
+            url="http://itekindia.com/chats/mainfestivalcategory/camera.gif"
+          />
+        )}
+        snapToInterval={128}
+        estimatedItemSize={100}
+        data={sPostVideos}
+      />
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
+  }, [sPostVideos]);
   const PostFrameList = React.useCallback(() => {
     return (
       <HorizontalList
@@ -407,7 +438,7 @@ export const Editorx = ({ dim }: Props) => {
                 setDataById(item.elements, item.mainWidth, dim.width);
               // setMagicController(!magicController);
             }}
-            onLongPress={() => saveFrame(item.id, dim.width)}
+            // onLongPress={() => saveFrame(item.id, dim.width)}
             url={item.image}
             // isSelected={FramePicker.imageUri === item.image} // #00f
           />
@@ -441,6 +472,12 @@ export const Editorx = ({ dim }: Props) => {
           <Text variant="lg" className="font-kalam">
             EditorX
           </Text>
+          <MaterialCommunityIcons
+            name="information-outline"
+            size={16}
+            onPress={() => navigate('Tutorials')}
+            style={{ marginLeft: 6 }}
+          />
         </View>
         <IconButton
           icon={<Feather name="upload" color={'#07ab86'} size={24} />}
@@ -452,8 +489,7 @@ export const Editorx = ({ dim }: Props) => {
         />
       </View>
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [backAction, captureView]);
   // text and image modify widget
   const PostTextWidget = React.useCallback(() => {
     return (
@@ -476,43 +512,45 @@ export const Editorx = ({ dim }: Props) => {
     );
   }, []);
   // main features widget
+  const FeatureComp = React.useCallback(
+    ({ item }: { item: EditingFeaturesType }) => {
+      return (
+        <IconButton
+          key={item.name}
+          icon={
+            <MaterialCommunityIcons
+              name={item.icon}
+              size={20}
+              color={'#07ab86'}
+            />
+          }
+          title={item.name}
+          onPress={() => {
+            if (item.name === 'Image') {
+              setImageModalVisible(true);
+            } else if (item.name === 'Text') {
+              setTextModalVisible(true);
+            } else {
+              toggleWidgetModal(item.name);
+            }
+          }}
+          className="my-1 mx-2"
+        />
+      );
+    },
+    [toggleWidgetModal]
+  );
   const EditingFeatureWidget = React.useCallback(() => {
     return (
       <HorizontalList
         key={'editing icons'}
-        // eslint-disable-next-line react/no-unstable-nested-components
-        Comp={({ item }: { item: EditingFeaturesType }) => {
-          return (
-            <IconButton
-              key={item.name}
-              icon={
-                <MaterialCommunityIcons
-                  name={item.icon}
-                  size={20}
-                  color={'#07ab86'}
-                />
-              }
-              title={item.name}
-              onPress={() => {
-                if (item.name === 'Image') {
-                  setImageModalVisible(true);
-                } else if (item.name === 'Text') {
-                  setTextModalVisible(true);
-                } else {
-                  toggleWidgetModal(item.name);
-                }
-              }}
-              className="my-1 mx-2"
-            />
-          );
-        }}
+        Comp={FeatureComp}
         snapToInterval={80}
         estimatedItemSize={55}
         data={EditingFeatures}
       />
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [FeatureComp]);
   // video component
   const VideoComponent = React.useCallback(
     () => (
@@ -536,8 +574,7 @@ export const Editorx = ({ dim }: Props) => {
         isLooping
       />
     ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [dwnVideo]
+    [dwnVideo, renderModalVisible]
   );
   // magic component
   const MagicComponent = React.useCallback(
@@ -562,8 +599,7 @@ export const Editorx = ({ dim }: Props) => {
         }}
       />
     ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [selectedItem]
+    [selectedItem, setSelectedItem, toggleWidgetModal]
   );
   // background post image and frame component
   const PostImageComponent = React.useCallback(
@@ -583,8 +619,7 @@ export const Editorx = ({ dim }: Props) => {
         />
       </TouchableOpacity>
     ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [editorData.backgroundPost]
+    [dim.width, editorData.backgroundPost, setSelectedItem, toggleWidgetModal]
   );
   const PostFrameComponent = React.useCallback(
     () => (
@@ -603,61 +638,72 @@ export const Editorx = ({ dim }: Props) => {
         />
       </TouchableOpacity>
     ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [editorData.frame]
+    [dim.width, editorData.frame, setSelectedItem, toggleWidgetModal]
   );
   // various modal list
   const RenderWidgetCallback = React.useCallback(() => {
     return (
-      <RenderWidget
-        isVisible={renderModalVisible}
-        onClose={() => {
-          FFmpegKit.cancel();
-          setRenderModalVisible(false);
-        }}
-        progress={progress}
-        renderedAsset={renderedAsset}
-        isLoading={renderModalLoading}
-        renderWidth={dim.width * 0.9}
-      />
+      renderModalVisible && (
+        <RenderWidget
+          isVisible={renderModalVisible}
+          onClose={() => {
+            FFmpegKit.cancel();
+            setRenderModalVisible(false);
+          }}
+          progress={progress}
+          renderedAsset={renderedAsset}
+          renderedAssetData={renderedAssetData}
+          isLoading={renderModalLoading}
+          renderWidth={dim.width * 0.9}
+        />
+      )
     );
   }, [
     dim.width,
     progress,
     renderModalLoading,
     renderModalVisible,
+    renderedAssetData,
     renderedAsset,
   ]);
   const BackgroundWidgetCallback = React.useCallback(() => {
     return (
-      <BackgroundWidget //background
-        isVisible={backgroundModalVisible}
-        onClose={() => setBackgroundModalVisible(false)}
-      />
+      backgroundModalVisible && (
+        <BackgroundWidget //background
+          isVisible={backgroundModalVisible}
+          onClose={() => setBackgroundModalVisible(false)}
+        />
+      )
     );
   }, [backgroundModalVisible]);
   const BackgroundVideosWidgetCallback = React.useCallback(() => {
     return (
-      <BackgroundVideosWidget //background Video
-        isVisible={backgroundVideoModalVisible}
-        onClose={() => setBackgroundVideoModalVisible(false)}
-      />
+      backgroundVideoModalVisible && (
+        <BackgroundVideosWidget //background Video
+          isVisible={backgroundVideoModalVisible}
+          onClose={() => setBackgroundVideoModalVisible(false)}
+        />
+      )
     );
   }, [backgroundVideoModalVisible]);
   const FrameWidgetCallback = React.useCallback(() => {
     return (
-      <FrameWidget //frame widget
-        isVisible={frameModalVisible}
-        onClose={() => setFrameModalVisible(false)}
-      />
+      frameModalVisible && (
+        <FrameWidget //frame widget
+          isVisible={frameModalVisible}
+          onClose={() => setFrameModalVisible(false)}
+        />
+      )
     );
   }, [frameModalVisible]);
   const StickersWidgetCallback = React.useCallback(() => {
     return (
-      <StickersWidget
-        isVisible={stickersModalVisible}
-        onClose={() => setStickersModalVisible(false)}
-      />
+      stickersModalVisible && (
+        <StickersWidget
+          isVisible={stickersModalVisible}
+          onClose={() => setStickersModalVisible(false)}
+        />
+      )
     );
   }, [stickersModalVisible]);
   const InfoWidgetCallback = React.useCallback(() => {
@@ -674,84 +720,64 @@ export const Editorx = ({ dim }: Props) => {
   }, [infoModalVisible]);
   const ShapesWidgetCallback = React.useCallback(() => {
     return (
-      <ShapesWidget
-        isVisible={shapesModalVisible}
-        onClose={() => setShapesModalVisible(false)}
-      />
+      shapesModalVisible && (
+        <ShapesWidget
+          isVisible={shapesModalVisible}
+          onClose={() => setShapesModalVisible(false)}
+        />
+      )
     );
   }, [shapesModalVisible]);
   const ProductsWidgetCallback = React.useCallback(() => {
     return (
-      <ProductsWidget
-        isVisible={productsModalVisible}
-        onClose={() => setProductsModalVisible(false)}
-      />
+      productsModalVisible && (
+        <ProductsWidget
+          isVisible={productsModalVisible}
+          onClose={() => setProductsModalVisible(false)}
+        />
+      )
     );
   }, [productsModalVisible]);
   const LogosWidgetCallback = React.useCallback(() => {
     return (
-      <LogosWidget
-        isVisible={logosModalVisible}
-        onClose={() => setLogosModalVisible(false)}
-      />
+      logosModalVisible && (
+        <LogosWidget
+          isVisible={logosModalVisible}
+          onClose={() => setLogosModalVisible(false)}
+        />
+      )
     );
   }, [logosModalVisible]);
   const ElementsWidgetCallback = React.useCallback(() => {
     return (
-      <ElementsWidget
-        isVisible={elementsModalVisible}
-        onClose={() => setElementsModalVisible(false)}
-      />
+      elementsModalVisible && (
+        <ElementsWidget
+          isVisible={elementsModalVisible}
+          onClose={() => setElementsModalVisible(false)}
+        />
+      )
     );
   }, [elementsModalVisible]);
   const TextWidgetCallback = React.useCallback(() => {
     return (
-      <TextModal
-        isModalVisible={textModalVisible}
-        SetModalVisible={setTextModalVisible}
-      />
+      textModalVisible && (
+        <TextModal
+          isModalVisible={textModalVisible}
+          SetModalVisible={setTextModalVisible}
+        />
+      )
     );
   }, [textModalVisible]);
   const ImageWidgetCallback = React.useCallback(() => {
     return (
-      <ImageModal
-        isVisible={imageModalVisible}
-        onClose={() => setImageModalVisible(false)}
-      />
+      imageModalVisible && (
+        <ImageModal
+          isVisible={imageModalVisible}
+          onClose={() => setImageModalVisible(false)}
+        />
+      )
     );
   }, [imageModalVisible]);
-
-  const ModalList = React.useCallback(() => {
-    return (
-      <View className="">
-        {RenderWidgetCallback()}
-        {BackgroundWidgetCallback()}
-        {BackgroundVideosWidgetCallback()}
-        {FrameWidgetCallback()}
-        {StickersWidgetCallback()}
-        {InfoWidgetCallback()}
-        {ShapesWidgetCallback()}
-        {ProductsWidgetCallback()}
-        {LogosWidgetCallback()}
-        {ElementsWidgetCallback()}
-        {TextWidgetCallback()}
-        {ImageWidgetCallback()}
-      </View>
-    );
-  }, [
-    BackgroundVideosWidgetCallback,
-    BackgroundWidgetCallback,
-    ElementsWidgetCallback,
-    FrameWidgetCallback,
-    ImageWidgetCallback,
-    InfoWidgetCallback,
-    LogosWidgetCallback,
-    ProductsWidgetCallback,
-    RenderWidgetCallback,
-    ShapesWidgetCallback,
-    StickersWidgetCallback,
-    TextWidgetCallback,
-  ]);
   const handleRotationPress = (r: number) => {
     // rotateToDegree 90 to magicRef
     magicRef.current?.rotateToDegree(r);
@@ -808,9 +834,33 @@ export const Editorx = ({ dim }: Props) => {
             editorData.elements.map((item: Element, index: number) => {
               return MagicComponent(item, index);
             })}
+          <View className="absolute top-1/2 -right-3 z-50">
+            <FastImage
+              source={require('../../../../assets/215.png')}
+              style={{
+                width: 50,
+                height: 20,
+                transform: [{ rotate: '-90deg' }],
+              }}
+              resizeMode="contain"
+            />
+          </View>
         </ViewShot>
       </TouchableOpacity>
-      {ModalList()}
+      <View className="">
+        {RenderWidgetCallback()}
+        {BackgroundWidgetCallback()}
+        {BackgroundVideosWidgetCallback()}
+        {FrameWidgetCallback()}
+        {StickersWidgetCallback()}
+        {InfoWidgetCallback()}
+        {ShapesWidgetCallback()}
+        {ProductsWidgetCallback()}
+        {LogosWidgetCallback()}
+        {ElementsWidgetCallback()}
+        {TextWidgetCallback()}
+        {ImageWidgetCallback()}
+      </View>
       <View style={styles.widget}>
         <View className="overflow-hidden" style={{ height: 140 }}>
           {widget === ('Photos' as 'Photos') &&

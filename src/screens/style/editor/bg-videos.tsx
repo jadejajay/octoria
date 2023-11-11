@@ -14,7 +14,7 @@ import { StyleSheet } from 'react-native';
 
 import { useEditorX } from '@/core';
 import { usePostVideoStore } from '@/core/editorx/post-video';
-import type { PostVideoType } from '@/types';
+import { type PostVideoType } from '@/types';
 import { Image, Text, TouchableOpacity, View } from '@/ui';
 import { Vertical2CompList } from '@/ui/core/list/vertical-2comp';
 type Props5 = {

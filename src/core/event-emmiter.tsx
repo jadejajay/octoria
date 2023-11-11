@@ -1,7 +1,7 @@
-// eventEmitter.js
+// // eventEmitter.js
 
-import { EventEmitter } from 'events';
+// import { EventEmitter } from 'events';
 
-const eventEmitter = new EventEmitter();
+// const eventEmitter = new EventEmitter();
 
-export default eventEmitter;
+// export default eventEmitter;

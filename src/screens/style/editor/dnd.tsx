@@ -335,8 +335,6 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
             data={data}
             index={props.index}
             onClick={props.onClick}
-            // scale={scale}
-            // isDragging={isDragging}
           />
         </Animated.View>
       </GestureDetector>

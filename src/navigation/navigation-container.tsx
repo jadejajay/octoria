@@ -11,6 +11,7 @@ export const NavigationContainer = ({
   children: React.ReactNode;
   linking: any;
 }) => {
+  console.log('navigation container loaded', Date.now());
   const theme = useThemeConfig();
   return (
     <SafeAreaProvider>

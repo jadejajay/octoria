@@ -45,6 +45,7 @@ export const LoginForm = () => {
         duration: 2000,
       });
     } catch (error) {
+      setIsLoading(false);
       showMessage({
         icon: 'danger',
         message: `Invalid credentials,${error}`,
@@ -64,6 +65,7 @@ export const LoginForm = () => {
         duration: 1000,
       });
     } catch (error) {
+      setIsLoading(false);
       showMessage({
         icon: 'danger',
         message: `Invalid credentials,${error}`,

@@ -1,12 +1,12 @@
 /* eslint-disable no-bitwise */
 // import storage from '@react-native-firebase/storage';
+import * as MediaLibrary from 'expo-media-library';
 import * as Sharing from 'expo-sharing';
 import * as Speech from 'expo-speech';
 import { Linking, Platform, ToastAndroid } from 'react-native';
 import type { ShareSingleOptions, Social } from 'react-native-share';
 import Share from 'react-native-share';
 import type { StoreApi, UseBoundStore } from 'zustand';
-
 export function openLinkInBrowser(url: string) {
   Linking.canOpenURL(url).then((canOpen) => canOpen && Linking.openURL(url));
 }
@@ -323,8 +323,166 @@ export const handleWhatsappShare = async (
     ToastAndroid.show('Some Error', ToastAndroid.SHORT);
   }
 };
+export const handleWhatsappShare2 = async (
+  fileUri: any,
+  title: any,
+  type: any
+) => {
+  //https://api.whatsapp.com/send?phone=918734845201&text=
+  // openLinkInBrowser(LINK);
+  try {
+    //@ts-ignore
+    const options: ShareSingleOptions = {
+      title: 'Share via WhatsApp',
+      message: title,
+      // type: 'image/*',
+      // url: fileUri,
+      url: `data:${type};base64,${fileUri}`,
+      // url: `http://itekindia.com/dashboard/test.jpg`, // The URI of the image you want to share
+      // image: fileUri,
+      // filename: item.image3d,
+      // url: 'http://itekindia.com/dashboard/bronco.jpg', //'data:image/png;base64,<imageInBase64>',
+      social: Share.Social.WHATSAPP as Social,
+      //@ts-ignore
+      appId: 'com.whatsapp',
+    };
+    console.log('whatsapp share called');
 
-export function getImageBase64(url: string) {
+    await Share.shareSingle(options);
+  } catch (error) {
+    console.error(error);
+    ToastAndroid.show('Some Error', ToastAndroid.SHORT);
+  }
+};
+export const handleInstagramShare = async (
+  fileUri: any,
+  title: any,
+  type: any
+) => {
+  //https://api.whatsapp.com/send?phone=918734845201&text=
+  // openLinkInBrowser(LINK);
+  try {
+    //@ts-ignore
+    const options: ShareSingleOptions = {
+      title: 'Share via Instagram',
+      message: title,
+      type: type,
+      // url: fileUri,
+      url: `data:${type};base64,${fileUri}`,
+      // url: `http://itekindia.com/dashboard/test.jpg`, // The URI of the image you want to share
+      // image: fileUri,
+      // filename: item.image3d,
+      // url: 'http://itekindia.com/dashboard/bronco.jpg', //'data:image/png;base64,<imageInBase64>',
+      social: Share.Social.INSTAGRAM as Social,
+    };
+    console.log('instagram share called');
+
+    await Share.shareSingle(options);
+  } catch (error) {
+    console.error(error);
+    ToastAndroid.show('Some Error', ToastAndroid.SHORT);
+  }
+};
+export const handleTelegramShare = async (
+  fileUri: any,
+  title: any,
+  type: any
+) => {
+  //https://api.whatsapp.com/send?phone=918734845201&text=
+  // openLinkInBrowser(LINK);
+  try {
+    //@ts-ignore
+    const options: ShareSingleOptions = {
+      title: 'Share via Telegram',
+      message: title,
+      type: type,
+      // url: fileUri,
+      url: `data:${type};base64,${fileUri}`,
+      // url: `http://itekindia.com/dashboard/test.jpg`, // The URI of the image you want to share
+      // image: fileUri,
+      // filename: item.image3d,
+      // url: 'http://itekindia.com/dashboard/bronco.jpg', //'data:image/png;base64,<imageInBase64>',
+      social: Share.Social.TELEGRAM as Social,
+    };
+    console.log('telegram share called');
+
+    await Share.shareSingle(options);
+  } catch (error) {
+    console.error(error);
+    ToastAndroid.show('Some Error', ToastAndroid.SHORT);
+  }
+};
+export const handleFacebookShare = async (
+  fileUri: any,
+  title: any,
+  type: any
+) => {
+  //https://api.whatsapp.com/send?phone=918734845201&text=
+  // openLinkInBrowser(LINK);
+  try {
+    //@ts-ignore
+    const options: ShareSingleOptions = {
+      title: 'Share via Facebook',
+      message: title,
+      type: type,
+      // url: fileUri,
+      url: `data:${type};base64,${fileUri}`,
+      // url: `http://itekindia.com/dashboard/test.jpg`, // The URI of the image you want to share
+      // image: fileUri,
+      // filename: item.image3d,
+      // url: 'http://itekindia.com/dashboard/bronco.jpg', //'data:image/png;base64,<imageInBase64>',
+      social: Share.Social.FACEBOOK as Social,
+    };
+    console.log('facebook share called');
+
+    await Share.shareSingle(options);
+  } catch (error) {
+    console.error(error);
+    ToastAndroid.show('Some Error', ToastAndroid.SHORT);
+  }
+};
+export const saveToGallery = async (res: string) => {
+  if (res) {
+    const albumName = await MediaLibrary.getAlbumAsync('Octoria');
+    if (albumName) {
+      const asset = await MediaLibrary.createAssetAsync(res);
+      const album = await MediaLibrary.addAssetsToAlbumAsync(
+        asset,
+        albumName.id,
+        true
+      );
+      if (album) {
+        ToastAndroid.show(
+          `Post saved successfully to Octoria album in your gallery.`,
+          ToastAndroid.LONG
+        );
+      } else {
+        ToastAndroid.show(
+          `Error Creating assets give permissions`,
+          ToastAndroid.LONG
+        );
+      }
+    } else {
+      const asset = await MediaLibrary.createAssetAsync(res);
+      const album = await MediaLibrary.createAlbumAsync('Octoria', asset, true);
+      if (album) {
+        ToastAndroid.show(
+          `Post saved successfully to Octoria album in your gallery.`,
+          ToastAndroid.LONG
+        );
+      } else {
+        ToastAndroid.show(
+          `Error Creating assets give permissions`,
+          ToastAndroid.LONG
+        );
+      }
+    }
+  }
+};
+
+export function getImageBase64(url: string): Promise<string> {
+  console.log('get base64 of url: ', url);
+
   return new Promise((resolve, reject) => {
     fetch(url)
       .then((response) => response.blob())
@@ -333,11 +491,14 @@ export function getImageBase64(url: string) {
         reader.onload = () => {
           //@ts-ignore
           const base64Data = reader?.result.split(',')[1]; // Remove data:image/jpeg;base64,
+          console.log('url to base64 resolved');
+
           resolve(base64Data);
         };
         reader.readAsDataURL(blob);
       })
       .catch((error2) => {
+        console.log('url to base64 rejected');
         reject(error2);
       });
   });

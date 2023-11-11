@@ -28,37 +28,9 @@ import type {
 
 const loadDataFromFirestore = async () => {
   try {
-    const FrameSnapshot = await firestore().collection('frames').get();
-    const StickersSnapshot = await firestore().collection('stickers').get();
-    const FestivalSnapshot = await firestore().collection('postImages').get();
     useProductsStore.setState({ productLoading: true });
+    console.log('loading started', Date.now());
     const ProductSnapshot = await firestore().collection('productList').get();
-    const ElementsSnapshot = await firestore().collection('elements').get();
-    const ShapesSnapshot = await firestore().collection('shapes').get();
-    const LogosSnapshot = await firestore().collection('logosList').get();
-    const PostVideosSnapshot = await firestore().collection('postVideos').get();
-    const ImagesSnapshot = await firestore().collection('imagesElement').get();
-    const PostMainCategorySnapshot = await firestore()
-      .collection('postMainCategory')
-      .orderBy('code')
-      .get();
-
-    const frame: FrameType[] = FrameSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      image: doc.data()?.image,
-      elements: doc.data()?.elements,
-      mainWidth: doc.data()?.mainWidth,
-    }));
-    const sticker: StickerType[] = StickersSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      image: doc.data()?.image,
-    }));
-    const festival: FestivalType[] = FestivalSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      image: doc.data()?.image,
-      categoryCode: doc.data()?.categoryCode,
-      tags: doc.data()?.tags,
-    }));
     const product: Product[] = ProductSnapshot.docs.map((doc) => ({
       id: doc.id,
       images: doc.data()?.images,
@@ -76,50 +48,97 @@ const loadDataFromFirestore = async () => {
       quantity: doc.data()?.quantity,
       featured: doc.data()?.featured,
     }));
-    useProductsStore.setState({ productLoading: false });
-    const element: ElementsType[] = ElementsSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      image: doc.data()?.image,
-    }));
-    const shape: ShapesType[] = ShapesSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      image: doc.data()?.image,
-    }));
-    const logo: LogosType[] = LogosSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      image: doc.data()?.image,
-    }));
-    const postVideos: PostVideoType[] = PostVideosSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      video: doc.data()?.video,
-      thumbnail: doc.data()?.thumbnail,
-      categoryCode: doc.data()?.categoryCode,
-      tags: doc.data()?.tags,
-    }));
-    const imageList: ImageListType[] = ImagesSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      image: doc.data()?.image,
-    }));
+    useProductsStore.setState({ products: product });
+    console.log('products loaded', Date.now());
+    const PostMainCategorySnapshot = await firestore()
+      .collection('postMainCategory')
+      .orderBy('code')
+      .get();
     const postMainCategorySnapshotList: PostMainCategoryType[] =
       PostMainCategorySnapshot.docs.map((doc) => ({
         id: doc.id,
         image: doc.data()?.image,
         name: doc.data()?.name,
         code: doc.data()?.code,
+        subCode: doc.data()?.subCode,
       }));
-
-    useFrameStore.setState({ frames: frame });
-    useStickerStore.setState({ stickers: sticker });
-    useFestivalStore.setState({ festival: festival });
-    useProductsStore.setState({ products: product });
-    useElementsStore.setState({ elements: element });
-    useShapesStore.setState({ shapes: shape });
-    useLogoStore.setState({ logos: logo });
-    usePostVideoStore.setState({ postVideos: postVideos });
-    useImageListStore.setState({ images: imageList });
     usePostMainCategoryStore.setState({
       postMainCategory: postMainCategorySnapshotList,
     });
+    console.log('post main category loaded', Date.now());
+    useProductsStore.setState({ productLoading: false });
+    // festival images and videos to load
+    const FestivalSnapshot = await firestore().collection('postImages').get();
+    const festival: FestivalType[] = FestivalSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      image: doc.data()?.image,
+      categoryCode: doc.data()?.categoryCode,
+      subCategory: doc.data()?.subCategory,
+      tags: doc.data()?.tags,
+    }));
+    useFestivalStore.setState({ festival: festival });
+    console.log('festival loaded', Date.now());
+    const PostVideosSnapshot = await firestore().collection('postVideos').get();
+    const postVideos: PostVideoType[] = PostVideosSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      video: doc.data()?.video,
+      thumbnail: doc.data()?.thumbnail,
+      categoryCode: doc.data()?.categoryCode,
+      subCategory: doc.data()?.subCategory,
+      tags: doc.data()?.tags,
+    }));
+    usePostVideoStore.setState({ postVideos: postVideos });
+    console.log('post videos loaded', Date.now());
+    // frames lower priority to load
+    const FrameSnapshot = await firestore().collection('frames').get();
+    const frame: FrameType[] = FrameSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      image: doc.data()?.image,
+      elements: doc.data()?.elements,
+      mainWidth: doc.data()?.mainWidth,
+    }));
+    useFrameStore.setState({ frames: frame });
+    console.log('frames loaded', Date.now());
+    // stickers lower priority to load
+    const StickersSnapshot = await firestore().collection('stickers').get();
+    const sticker: StickerType[] = StickersSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      image: doc.data()?.image,
+    }));
+    useStickerStore.setState({ stickers: sticker });
+    console.log('stickers loaded', Date.now());
+    // elements lower priority to load
+    const ElementsSnapshot = await firestore().collection('elements').get();
+    const element: ElementsType[] = ElementsSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      image: doc.data()?.image,
+    }));
+    useElementsStore.setState({ elements: element });
+    console.log('elements loaded', Date.now());
+    // shapes lower priority to load
+    const ShapesSnapshot = await firestore().collection('shapes').get();
+    const shape: ShapesType[] = ShapesSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      image: doc.data()?.image,
+    }));
+    useShapesStore.setState({ shapes: shape });
+    console.log('shapes loaded', Date.now());
+    // logos lower priority to load
+    const LogosSnapshot = await firestore().collection('logosList').get();
+    const logo: LogosType[] = LogosSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      image: doc.data()?.image,
+    }));
+    useLogoStore.setState({ logos: logo });
+    console.log('logos loaded', Date.now());
+    // image elements lower priority to load
+    const ImagesSnapshot = await firestore().collection('imagesElement').get();
+    const imageList: ImageListType[] = ImagesSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      image: doc.data()?.image,
+    }));
+    useImageListStore.setState({ images: imageList });
+    console.log('images loaded', Date.now());
   } catch (error) {
     console.error('Error loading data from Firestore:', error);
   }

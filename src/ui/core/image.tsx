@@ -1,6 +1,7 @@
 import React from 'react';
 import type { FastImageProps } from 'react-native-fast-image';
 import FastImage from 'react-native-fast-image';
+
 export type ImgProps = FastImageProps & {
   src?: string | undefined;
   style?: object;

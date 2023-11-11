@@ -14,7 +14,7 @@ import { StyleSheet } from 'react-native';
 
 import { useEditorX } from '@/core';
 import { useFestivalStore } from '@/core/editorx/festival';
-import type { FestivalType } from '@/types';
+import { type FestivalType } from '@/types';
 import { Image, Text, TouchableOpacity, View } from '@/ui';
 import { Vertical2CompList } from '@/ui/core/list/vertical-2comp';
 

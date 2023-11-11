@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable max-lines-per-function */
 
 /*
@@ -15,7 +16,6 @@ import * as ImagePicker from 'expo-image-picker';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { Modal } from 'react-native';
-import { Button } from 'react-native';
 import { showMessage } from 'react-native-flash-message';
 import * as z from 'zod';
 
@@ -44,11 +44,11 @@ const schema = z.object({
 });
 type FormType = z.infer<typeof schema>;
 
-const id = auth().currentUser?.uid;
 export const InfoWidget = ({ isVisible, onClose }: Props5) => {
   const { control, handleSubmit, setValue } = useForm<FormType>({
     resolver: zodResolver(schema),
   });
+  const id = auth().currentUser?.uid;
   const setBusiness = useEditorX((s) => s.setBusiness);
   const [data, setData] = useState({
     name: '',
@@ -64,7 +64,7 @@ export const InfoWidget = ({ isVisible, onClose }: Props5) => {
     // Subscribe to real-time updates
     const unsubscribe = collectionRef.onSnapshot((querySnapshot) => {
       const user: any = querySnapshot?.data();
-      console.log(user.business);
+      console.log(user?.business);
 
       const info: any = querySnapshot.get('info');
       // Extract the document data along with its ID
@@ -191,6 +191,9 @@ export const InfoWidget = ({ isVisible, onClose }: Props5) => {
                 <Image src={data.photo} style={{ width: wh, height: wh }} />
               )}
             </View>
+            <Text className="text-center" style={{ fontSize: 6 }}>
+              Click To Change Image
+            </Text>
           </TouchableOpacity>
           <Controller
             name="name"
@@ -280,7 +283,15 @@ export const InfoWidget = ({ isVisible, onClose }: Props5) => {
             )}
           />
           <View className="mt-4">
-            <Button title="Submit" onPress={handleSubmit(onSubmit)} />
+            <TouchableOpacity
+              className="rounded-lg border bg-white shadow-xl"
+              onPress={handleSubmit(onSubmit)}
+            >
+              <Text variant="xl" className="text-center">
+                Update
+              </Text>
+            </TouchableOpacity>
+            {/* <Button title="Submit" onPress={handleSubmit(onSubmit)} /> */}
           </View>
         </View>
       </ScrollView>

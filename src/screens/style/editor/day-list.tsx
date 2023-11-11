@@ -14,10 +14,12 @@ import { useEditorX } from '@/core';
 import { useFestivalStore } from '@/core/editorx/festival';
 import { usePostMainCategoryStore } from '@/core/editorx/post-main-category';
 import { usePostVideoStore } from '@/core/editorx/post-video';
-import type {
-  FestivalType,
-  PostMainCategoryType,
-  PostVideoType,
+import { setItem } from '@/core/storage';
+import {
+  type FestivalType,
+  type PostMainCategoryType,
+  type PostVideoType,
+  SUB_CATEGORY,
 } from '@/types';
 import { Image, Text, TouchableOpacity, View } from '@/ui';
 import { HorizontalList } from '@/ui/core/list/horizontal-list';
@@ -35,6 +37,44 @@ export const DayList = ({}: Props) => {
   React.useEffect(() => {
     // addData();
   }, []);
+  const handleNav1 = async (code: number, subCode: number) => {
+    console.log(
+      '🚀 ~ file: day-list.tsx ~ line 52 ~ handleNav1 ~ subCode',
+      subCode,
+      code
+    );
+    setCategoryCode(code);
+    await setItem(SUB_CATEGORY, subCode);
+    navigation.navigate('ImageEditor');
+  };
+  const handleNav3 = async (code: number, subCode: number, image1: any) => {
+    console.log(
+      '🚀 ~ file: day-list.tsx ~ line 52 ~ handleNav3 ~ subCode',
+      subCode,
+      code,
+      image1
+    );
+    setCategoryCode(code);
+    setbg(image1, 'photo');
+    await setItem(SUB_CATEGORY, subCode);
+    navigation.navigate('ImageEditor');
+  };
+  const handleNav4 = async (code: number, subCode: number, video: any) => {
+    console.log(
+      '🚀 ~ file: day-list.tsx ~ line 52 ~ handleNav4 ~ subCode',
+      subCode,
+      code,
+      video
+    );
+    setCategoryCode(code);
+    setbg(video, 'video');
+    await setItem(SUB_CATEGORY, subCode);
+    navigation.navigate('ImageEditor');
+  };
+  const handleNav2 = async () => {
+    await setItem(SUB_CATEGORY, 1);
+    navigation.navigate('ImageEditor');
+  };
   const CardComp = React.useCallback(
     ({ item, index }: { item: PostMainCategoryType; index: number }) => {
       const filtered = images.filter((img) => {
@@ -50,10 +90,7 @@ export const DayList = ({}: Props) => {
             style={styles.container2}
             className="mt-4 h-28 overflow-hidden rounded-lg bg-green-400"
             activeOpacity={1}
-            onPress={() => {
-              setCategoryCode(item.code);
-              navigation.navigate('ImageEditor');
-            }}
+            onPress={() => handleNav1(item.code, item.subCode)}
           >
             {item?.image && (
               <Image
@@ -121,7 +158,7 @@ export const DayList = ({}: Props) => {
           )}
           <TouchableOpacity
             className="absolute inset-0 items-center justify-center"
-            onPress={() => navigation.navigate('ImageEditor')}
+            onPress={() => handleNav2()}
             activeOpacity={1}
           >
             <Text className="font-kalam text-xl leading-10 text-green-400">
@@ -141,11 +178,9 @@ export const DayList = ({}: Props) => {
           key={`category-card-${index}`}
           className="h-28 w-28 p-1"
           activeOpacity={1}
-          onPress={() => {
-            setCategoryCode(item.categoryCode);
-            setbg(item.image, 'photo');
-            navigation.navigate('ImageEditor');
-          }}
+          onPress={() =>
+            handleNav3(item.categoryCode, item.subCategory, item.image)
+          }
         >
           <View
             className="overflow-hidden rounded-lg"
@@ -173,11 +208,9 @@ export const DayList = ({}: Props) => {
           key={`category-card-${index}`}
           className="h-28 w-28 p-1"
           activeOpacity={1}
-          onPress={() => {
-            setCategoryCode(item.categoryCode);
-            setbg(item.video, 'video');
-            navigation.navigate('ImageEditor');
-          }}
+          onPress={() =>
+            handleNav4(item.categoryCode, item.subCategory, item.video)
+          }
         >
           <View
             className="overflow-hidden rounded-lg"

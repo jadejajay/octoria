@@ -6,12 +6,18 @@ import auth from '@react-native-firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 // import jwtDecode from 'jwt-decode';
 import * as React from 'react';
-import { Image } from 'react-native';
 
 import { openLinkInBrowser } from '@/core';
 import useFirestoreDocLiveQuery from '@/core/hooks/use-firestore-doc';
 // import { useAuth } from '@/core';
-import { Button, FocusAwareStatusBar, ScrollView, Text, View } from '@/ui';
+import {
+  Button,
+  FocusAwareStatusBar,
+  Image,
+  ScrollView,
+  Text,
+  View,
+} from '@/ui';
 import { Github, Rate, Share, Support, Website } from '@/ui/icons';
 import QR from '@/ui/icons/qr';
 import colors from '@/ui/theme/colors';
@@ -51,7 +57,7 @@ export const Settings = () => {
             >
               {User?.data?.photoUrl && (
                 <Image
-                  source={{ uri: User?.data?.photoUrl }}
+                  src={User?.data?.photoUrl}
                   style={{ flex: 1, borderRadius: 8 }}
                 />
               )}

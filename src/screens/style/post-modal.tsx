@@ -5,7 +5,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 // import { useIsFocused, useNavigation } from '@react-navigation/native';
 import * as MediaLibrary from 'expo-media-library';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Image,
   Modal,
@@ -14,30 +14,26 @@ import {
   ToastAndroid,
   TouchableWithoutFeedback,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import { captureRef } from 'react-native-view-shot';
 
 import { shareImageWithTitle } from '@/core';
-import useFirestoreDocLiveQuery from '@/core/hooks/use-firestore-doc';
-import { useUserStore } from '@/core/mainscreen/user';
 import { ActivityIndicator, Text, TouchableOpacity, View } from '@/ui';
 
 type Props = {
   data: any;
+  modalVisible: any;
+  setModalVisible: any;
+  User: any;
 };
-export const PostModal = ({ data }: Props) => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const title = useFirestoreDocLiveQuery('links', 'share');
+export const PostModal = ({
+  data,
+  setModalVisible,
+  modalVisible,
+  User,
+}: Props) => {
   const [loading, setLoading] = useState(false);
   const imageRef = useRef();
-  const User = useUserStore((s) => s.user);
-  useEffect(
-    () =>
-      setModalVisible((prev) => {
-        if (prev) return prev;
-        return true;
-      }),
-    []
-  );
 
   const onShare = async () => {
     try {
@@ -45,7 +41,10 @@ export const PostModal = ({ data }: Props) => {
       const localUri = await captureRef(imageRef, {
         quality: 1,
       });
-      shareImageWithTitle(localUri, title?.data?.value);
+      shareImageWithTitle(
+        localUri,
+        'Hello, This Post is Generate by Octoria Application.'
+      );
       // handleWhatsappShare(localUri);
       setLoading(false);
     } catch (e) {
@@ -157,17 +156,17 @@ const Post = ({
   return (
     <View className="flex-1 overflow-hidden bg-white">
       <View className="elevation-4 absolute top-3 -right-10 z-50 scale-75 flex-row items-center rounded-full bg-white p-2 pr-10">
-        <Image
+        <FastImage
           source={require('../../../assets/logo.png')}
           style={{ width: 24, height: 24 }}
           resizeMode="contain"
         />
-        <Text className="ml-2 font-varela text-xs">IBAIS MEDIA</Text>
+        <Text className="ml-2 text-xs font-extrabold">IBAIS MEDIA</Text>
       </View>
       <View className="flex-1">
         <View className="h-5/6">
           {image ? (
-            <Image
+            <FastImage
               source={{ uri: image }}
               style={{ width: '100%', height: '100%' }}
               resizeMode="stretch"
@@ -200,7 +199,7 @@ const Post = ({
           />
           <View className="elevation-4 absolute -top-12 left-2 h-24 w-24 overflow-hidden rounded-full border-2 border-white">
             {photo ? (
-              <Image
+              <FastImage
                 source={{
                   uri: photo,
                 }}

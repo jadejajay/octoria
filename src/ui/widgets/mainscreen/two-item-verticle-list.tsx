@@ -11,6 +11,7 @@ type Props = {
   isLoading: boolean;
 };
 export const NewProductList = ({ data, isLoading }: Props) => {
+  console.log('new Product List loaded', Date.now());
   const ListComponent = React.useCallback(
     () => (
       <List

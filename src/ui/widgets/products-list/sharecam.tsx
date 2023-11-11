@@ -23,7 +23,7 @@ import { Gestures } from './simultaneous-gesture';
 
 // import Gestures from '../lib';
 
-export function ShareCam({ route }: any) {
+export const ShareCam = ({ route }: any) => {
   const { url } = route.params;
   const server = useLinks();
   const demoShare = 'Hello, This Post is Generate by Octoria Application.';
@@ -219,7 +219,7 @@ export function ShareCam({ route }: any) {
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
