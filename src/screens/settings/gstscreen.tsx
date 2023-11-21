@@ -6,16 +6,16 @@ import axios from 'axios';
 import * as React from 'react';
 import { Modal, StyleSheet, ToastAndroid } from 'react-native';
 
-import useFirestoreDocLiveQuery from '@/core/hooks/use-firestore-doc';
+import { useFirestoreDocLiveQuery } from '@/core';
 import {
   ActivityIndicator,
+  AnimatedButton,
   Input,
   ScrollView,
   Text,
   TouchableOpacity,
   View,
 } from '@/ui';
-import { AnimatedButton } from '@/ui/core/animated-button';
 
 type Props = {};
 export const GstView = ({}: Props) => {
@@ -29,19 +29,6 @@ export const GstView = ({}: Props) => {
   );
   const [loading, setLoading] = React.useState(false);
   const apiKey = useFirestoreDocLiveQuery('links', 'gstapi');
-
-  // const [apiKey, setApiKey] = React.useState(
-  //   'e494d334bcd83ed215f6b2398dfc2a4a'
-  // );
-
-  // React.useEffect(() => {
-  //   const fetchApi = async () => {
-  //     await axios.get(`${Env.API_URL}octoria/gst.php`).then((res) => {
-  //       setLoading(false);
-  //     });
-  //   };
-  //   fetchApi();
-  // }, []);
 
   const handleSearch = () => {
     setLoading(true);

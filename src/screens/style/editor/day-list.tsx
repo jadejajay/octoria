@@ -10,20 +10,27 @@ import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
-import { useEditorX } from '@/core';
-import { useFestivalStore } from '@/core/editorx/festival';
-import { usePostMainCategoryStore } from '@/core/editorx/post-main-category';
-import { usePostVideoStore } from '@/core/editorx/post-video';
-import { setItem } from '@/core/storage';
+import {
+  setItem,
+  useEditorX,
+  useFestivalStore,
+  usePostMainCategoryStore,
+  usePostVideoStore,
+} from '@/core';
 import {
   type FestivalType,
   type PostMainCategoryType,
   type PostVideoType,
   SUB_CATEGORY,
 } from '@/types';
-import { Image, Text, TouchableOpacity, View } from '@/ui';
-import { HorizontalList } from '@/ui/core/list/horizontal-list';
-import { Vertical2CompList } from '@/ui/core/list/vertical-2comp';
+import {
+  HorizontalList,
+  Image,
+  Text,
+  TouchableOpacity,
+  Vertical2CompList,
+  View,
+} from '@/ui';
 // import { addData } from '@/core/firebase-bulk';
 type Props = {};
 export const DayList = ({}: Props) => {
@@ -45,6 +52,7 @@ export const DayList = ({}: Props) => {
     );
     setCategoryCode(code);
     await setItem(SUB_CATEGORY, subCode);
+    //@ts-ignore
     navigation.navigate('ImageEditor');
   };
   const handleNav3 = async (code: number, subCode: number, image1: any) => {
@@ -57,6 +65,7 @@ export const DayList = ({}: Props) => {
     setCategoryCode(code);
     setbg(image1, 'photo');
     await setItem(SUB_CATEGORY, subCode);
+    //@ts-ignore
     navigation.navigate('ImageEditor');
   };
   const handleNav4 = async (code: number, subCode: number, video: any) => {
@@ -69,10 +78,12 @@ export const DayList = ({}: Props) => {
     setCategoryCode(code);
     setbg(video, 'video');
     await setItem(SUB_CATEGORY, subCode);
+    //@ts-ignore
     navigation.navigate('ImageEditor');
   };
   const handleNav2 = async () => {
     await setItem(SUB_CATEGORY, 1);
+    //@ts-ignore
     navigation.navigate('ImageEditor');
   };
   const CardComp = React.useCallback(

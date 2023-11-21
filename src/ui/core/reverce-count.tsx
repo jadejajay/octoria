@@ -6,7 +6,7 @@ interface Props {
   onPress: () => void;
 }
 
-const ReversibleCountdownButton: React.FC<Props> = ({ onPress }) => {
+export const ReversibleCountdownButton: React.FC<Props> = ({ onPress }) => {
   const [isDisabled, setIsDisabled] = useState(true); // Set to true initially
   const [countdown, setCountdown] = useState(60);
 
@@ -58,5 +58,3 @@ const ReversibleCountdownButton: React.FC<Props> = ({ onPress }) => {
     </TouchableOpacity>
   );
 };
-
-export default ReversibleCountdownButton;

@@ -2,8 +2,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 
 import { AddPost, Feed, Post } from '@/screens';
-import { PDFExample } from '@/screens/feed/pdfscreen';
-import { ShareCam } from '@/ui/widgets/products-list/sharecam';
+import { PDFExample } from '@/screens';
+import { ShareCam } from '@/ui';
 
 export type FeedStackParamList = {
   Feed: undefined;

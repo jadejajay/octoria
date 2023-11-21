@@ -12,7 +12,7 @@ import {
 // Utils
 import { angle, distance } from './utils/math.js';
 
-export default class Gestures extends Component {
+export class Gestures extends Component {
   static propTypes = {
     children: PropTypes.element,
     // Behavior

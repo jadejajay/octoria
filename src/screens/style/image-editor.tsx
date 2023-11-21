@@ -4,8 +4,6 @@ import { useObjectState } from '@uidotdev/usehooks';
 import { View } from '@/ui';
 
 import { Editorx } from './editor';
-// import { Editorx } from './editor';
-
 export const ImageEditor = () => {
   const [dim, setDim] = useObjectState<{ width: number; height: number }>({
     width: 0,

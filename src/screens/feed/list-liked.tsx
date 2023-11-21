@@ -1,8 +1,7 @@
 import * as React from 'react';
 
-import useFavorites from '@/core/hooks/use-favorite';
-import { EmptyList, List, View } from '@/ui';
-import { LikedCard } from '@/ui/widgets/liked/horizontal-card';
+import { useFavorites } from '@/core';
+import { EmptyList, LikedCard, List, View } from '@/ui';
 
 type Props = {};
 export const AddPost = ({}: Props) => {

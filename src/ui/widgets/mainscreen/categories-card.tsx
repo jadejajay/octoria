@@ -2,10 +2,9 @@ import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
-import { useSearchStore } from '@/core/mainscreen/search';
+import { useSearchStore } from '@/core';
 import type { MainCategory } from '@/types';
-import { Image, Text, View } from '@/ui';
-import { AnimatedButton } from '@/ui/core/animated-button';
+import { AnimatedButton, Image, Text, View } from '@/ui/core';
 
 type Props = {
   item: MainCategory;

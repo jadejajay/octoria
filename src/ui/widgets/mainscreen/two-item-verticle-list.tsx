@@ -1,9 +1,9 @@
 import * as React from 'react';
 
 import type { Product } from '@/types';
-// import { FlatList } from 'react-native';
-import { EmptyList, List } from '@/ui';
+import { EmptyList, List } from '@/ui/list';
 
+// import { FlatList } from 'react-native';
 import { ProductCardHorizontal } from './product-card-horizontal';
 
 type Props = {

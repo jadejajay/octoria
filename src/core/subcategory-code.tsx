@@ -1,4 +1,4 @@
-export const list_of_subcategory = [
+const _list_of_subcategory = [
   {
     name: 'Utrayan',
     code: 1,

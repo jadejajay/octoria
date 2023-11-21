@@ -1,6 +1,7 @@
 import * as React from 'react';
 
-import { ArrowRight, Text, TouchableOpacity, View } from '@/ui';
+import { Text, TouchableOpacity, View } from '@/ui/core';
+import { ArrowRight } from '@/ui/icons';
 
 type Props = {
   title: String;

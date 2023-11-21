@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Image, StyleSheet } from 'react-native';
 import Shimmer from 'react-native-shimmer';
 
-import { useUserStore } from '@/core/mainscreen/user';
-import { Text, View } from '@/ui';
+import { useUserStore } from '@/core';
+import { Text, View } from '@/ui/core';
 
 type Props = {};
 export const Greeting = ({}: Props) => {

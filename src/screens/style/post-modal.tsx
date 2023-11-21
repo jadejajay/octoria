@@ -7,7 +7,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import * as MediaLibrary from 'expo-media-library';
 import React, { useRef, useState } from 'react';
 import {
-  Image,
   Modal,
   Pressable,
   StyleSheet,

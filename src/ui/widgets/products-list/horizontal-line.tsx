@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 
-import { View } from '@/ui';
+import { View } from '@/ui/core';
 
 interface HorizontalLineProps {
   color?: string;
@@ -9,7 +9,7 @@ interface HorizontalLineProps {
   style?: string;
 }
 
-const HorizontalLine: React.FC<HorizontalLineProps> = ({
+export const HorizontalLine: React.FC<HorizontalLineProps> = ({
   color = 'black',
   thickness = 1,
   style = '',
@@ -30,5 +30,3 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 });
-
-export default HorizontalLine;

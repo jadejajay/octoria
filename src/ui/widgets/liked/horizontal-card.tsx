@@ -3,8 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { Image } from 'react-native';
 
-import { Button, Text, View } from '@/ui';
-import { AnimatedButton } from '@/ui/core/animated-button';
+import { AnimatedButton, Button, Text, View } from '@/ui/core';
 
 type Props = {
   item: any;

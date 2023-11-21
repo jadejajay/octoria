@@ -2,8 +2,10 @@
 import * as React from 'react';
 import * as Animated from 'react-native-animatable';
 
-import { Image, Text, View } from '@/ui';
-import { AnimatedButton } from '@/ui/core/animated-button';
+import { AnimatedButton } from './animated-button';
+import { Image } from './image';
+import { Text } from './text';
+import { View } from './view';
 
 type Props = {
   item: {

@@ -1,11 +1,8 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 
-import { Post, Style } from '@/screens';
-import { PDFExample } from '@/screens/feed/pdfscreen';
-import { WebViewScreen } from '@/screens/style/webview';
-import { ARView } from '@/ui/widgets/products-list/arview';
-import { ShareCam } from '@/ui/widgets/products-list/sharecam';
+import { PDFExample, Post, Style, WebViewScreen } from '@/screens';
+import { ShareCam } from '@/ui';
 
 export type HomeStackParamList = {
   Style: undefined;
@@ -32,7 +29,6 @@ export const HomeNavigator = () => {
         <Stack.Screen name="Post" component={Post} />
         <Stack.Screen name="WebView" component={WebViewScreen} />
         <Stack.Screen name="ShareCam" component={ShareCam} />
-        <Stack.Screen name="ARView" component={ARView} />
       </Stack.Group>
       <Stack.Screen name="Catalogue" component={PDFExample} />
     </Stack.Navigator>

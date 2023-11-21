@@ -167,7 +167,7 @@ const expandColor = (color) =>
     ? `#${color[1]}${color[1]}${color[2]}${color[2]}${color[3]}${color[3]}`
     : color;
 
-export default class ColorPicker extends Component {
+export class ColorPicker extends Component {
   // testData = {}
   // testView = {forceUpdate(){}}
   color = { h: 0, s: 0, v: 100 };

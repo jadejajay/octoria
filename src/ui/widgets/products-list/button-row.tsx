@@ -1,7 +1,6 @@
+import { ScrollView, Text } from '@/ui/core';
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
-
-import { ScrollView, Text } from '@/ui';
 
 interface ButtonRowProps {
   titles: string[];
@@ -9,7 +8,7 @@ interface ButtonRowProps {
   onButtonPress: (index: number, title: string) => void;
 }
 
-const ButtonRow: React.FC<ButtonRowProps> = ({
+export const ButtonRow: React.FC<ButtonRowProps> = ({
   titles,
   onButtonPress,
   title = '',
@@ -71,5 +70,3 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
-
-export default ButtonRow;

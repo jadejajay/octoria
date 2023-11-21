@@ -54,4 +54,4 @@ declare class ColorPicker extends React.Component<ColorPickerProps, any> {
 
 declare module 'react-native-wheel-color-picker-master' {}
 
-export default ColorPicker;
+export { ColorPicker };

@@ -5,7 +5,7 @@ import { Dimensions, StyleSheet, View } from 'react-native';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 import { isVideoURL } from '@/core';
-import { Image } from '@/ui';
+import { Image } from '@/ui/core';
 
 export const SLIDER_WIDTH = Dimensions.get('window').width;
 export const ITEM_WIDTH = Math.round(SLIDER_WIDTH);

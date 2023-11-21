@@ -3,20 +3,27 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Alert, BackHandler } from 'react-native';
 
-import { speak } from '@/core';
-import { getGreetingByTimezone } from '@/core/greet';
-import useFirestoreLiveQuery from '@/core/hooks/use-firestore';
-import { useMainCategories } from '@/core/mainscreen';
-import { useProductsStore } from '@/core/mainscreen/products';
-import { useSearchStore } from '@/core/mainscreen/search';
-import { useUserStore } from '@/core/mainscreen/user';
-import { FocusAwareStatusBar, ScrollView, View } from '@/ui';
-import { MainCarousel } from '@/ui/core/carousel';
-import { ChooseBrand } from '@/ui/widgets/mainscreen/categories-title';
-import { Greeting } from '@/ui/widgets/mainscreen/greet';
-import { CategoriesList } from '@/ui/widgets/mainscreen/horizontal-list';
-import { SearchBar } from '@/ui/widgets/mainscreen/search-bar';
-import { NewProductList } from '@/ui/widgets/mainscreen/two-item-verticle-list';
+import {
+  getGreetingByTimezone,
+  speak,
+  useFirestoreLiveQuery,
+  useMainCategories,
+  useProductsStore,
+  useSearchStore,
+  useUserStore,
+} from '@/core';
+import { useAssistance } from '@/core/hooks/use-assistance';
+import {
+  CategoriesList,
+  ChooseBrand,
+  FocusAwareStatusBar,
+  Greeting,
+  MainCarousel,
+  NewProductList,
+  ScrollView,
+  SearchBar,
+  View,
+} from '@/ui';
 
 import { PostCard } from './post-maker';
 import { PostModal } from './post-modal';
@@ -28,11 +35,11 @@ export const Style = () => {
   const { navigate } = useNavigation();
   const { MainCategoriesData, isLoading, subscribeToMainCategories } =
     useMainCategories();
-  // const User = useUserStore((s) => s.user.name);
   const User = useUserStore((s) => s.user);
   const setSearch = useSearchStore((s) => s.setSearch);
   const FestivalImage = useFirestoreLiveQuery('FestivalImage');
   const { productLoading, products } = useProductsStore();
+  const [assist, _] = useAssistance();
   const data = useCallback(
     () => products.filter((product) => product.featured),
     [products]
@@ -49,10 +56,12 @@ export const Style = () => {
   React.useEffect(() => {
     if (User.name) {
       const greet = getGreetingByTimezone();
+      console.log(assist, '<========assisatnce');
+
       // Subscribe to real-time updates
-      speak(`${greet} ${User.name}, welcome back`);
+      if (assist) speak(`${greet} ${User.name}, welcome back`);
     }
-  }, [User]);
+  }, [User, assist]);
   React.useEffect(() => {
     const unsubscribe = subscribeToMainCategories();
 
@@ -67,22 +76,6 @@ export const Style = () => {
 
     return () => backHandler.remove();
   });
-  // const ff = () => {
-  //   FFmpegKit.execute('-formats').then(async (session) => {
-  //     const returnCode = await session.getReturnCode();
-
-  //     if (ReturnCode.isSuccess(returnCode)) {
-  //       // SUCCESS
-  //       console.log('ffmpeg command run successful');
-  //     } else if (ReturnCode.isCancel(returnCode)) {
-  //       // CANCEL
-  //       console.log('ffmpeg command run cancelled');
-  //     } else {
-  //       // ERROR
-  //       console.log('ffmpeg command run failed');
-  //     }
-  //   });
-  // };
   const backAction = () => {
     Alert.alert('Exit App', 'Are you sure you want to exit?', [
       {
@@ -171,3 +164,7 @@ export const Style = () => {
     </>
   );
 };
+
+export * from './editor';
+export * from './image-editor';
+export * from './webview';

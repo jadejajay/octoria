@@ -25,13 +25,17 @@ import { showMessage } from 'react-native-flash-message';
 import ViewShot from 'react-native-view-shot';
 
 import type { Element } from '@/core';
-import { getImageBase64, shuffleArray, useEditorX } from '@/core';
-// import VideoCacheManager from '@/core/cache-util';
-import { EditingFeatures } from '@/core/editing-features.';
-import { useFestivalStore } from '@/core/editorx/festival';
-import { useFrameStore } from '@/core/editorx/frames';
-import { usePostVideoStore } from '@/core/editorx/post-video';
-import { getItem, setItem } from '@/core/storage';
+import {
+  EditingFeatures,
+  getImageBase64,
+  getItem,
+  setItem,
+  shuffleArray,
+  useEditorX,
+  useFestivalStore,
+  useFrameStore,
+  usePostVideoStore,
+} from '@/core';
 import {
   type BackgroundType,
   type EditingFeaturesType,
@@ -40,27 +44,35 @@ import {
   type PostVideoType,
   SUB_CATEGORY,
 } from '@/types';
-import { Image, Text, TouchableOpacity, View } from '@/ui';
-import { IconButton } from '@/ui/core/bounce';
-import { HorizontalList } from '@/ui/core/list/horizontal-list';
-import { SmallCard } from '@/ui/widgets/editorx/small-card';
-import { SmallCard2 } from '@/ui/widgets/editorx/small-card2';
+import {
+  HorizontalList,
+  IconButton,
+  Image,
+  SmallCard,
+  SmallCard2,
+  Text,
+  TouchableOpacity,
+  View,
+} from '@/ui';
 
-import { BackgroundWidget } from './background-widget';
-import { BackgroundVideosWidget } from './bg-videos';
-import Magic from './dnd';
-import { ElementsWidget } from './elements-widget';
-import { FrameWidget } from './frame-widget';
-import { ImageModal } from './image-modal';
-import { ImageWidget } from './image-widget';
-import { InfoWidget } from './info-widget';
-import { LogosWidget } from './logos-widget';
-import { ProductsWidget } from './products-widget';
-import { RenderWidget } from './render-widget';
-import { ShapesWidget } from './shape-widget';
-import { StickersWidget } from './stickers';
-import { TextModal } from './text-modal';
-import { TextWidget } from './text-widget';
+import {
+  BackgroundVideosWidget,
+  BackgroundWidget,
+  ElementsWidget,
+  FrameWidget,
+  ImageModal,
+  ImageWidget,
+  InfoWidget,
+  LogosWidget,
+  ProductsWidget,
+  RenderWidget,
+  ShapesWidget,
+  StickersWidget,
+  TextModal,
+  TextWidget,
+} from './widgets';
+import Magic from './widgets/dnd';
+
 type Props = {
   dim: {
     width: number;
@@ -489,7 +501,7 @@ export const Editorx = ({ dim }: Props) => {
         />
       </View>
     );
-  }, [backAction, captureView]);
+  }, [backAction, captureView, navigate]);
   // text and image modify widget
   const PostTextWidget = React.useCallback(() => {
     return (
@@ -933,3 +945,5 @@ const styles = StyleSheet.create({
     height: 80, //  Footer Height
   },
 });
+export * from './day-list';
+export * from './tutorials';

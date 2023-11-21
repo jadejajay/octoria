@@ -2,9 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet } from 'react-native';
 
 import type { Product } from '@/types';
-// import type { Post } from '@/api';
-import { Image, Text, View } from '@/ui';
-import { AnimatedButton } from '@/ui/core/animated-button';
+import { AnimatedButton, Image, Text, View } from '@/ui';
 
 type Props = { onPress: () => void; item: Product };
 
@@ -29,7 +27,6 @@ export const Card = ({ item, onPress }: Props) => {
       return true;
     };
     if (areAllValuesDefined()) setItemData(item);
-    console.log(item);
   }, [item]);
   return (
     <AnimatedButton key={`item-${item?.id}`} onClick={onPress}>

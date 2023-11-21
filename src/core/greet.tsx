@@ -16,8 +16,3 @@ export function getGreetingByTimezone() {
 
   return greeting;
 }
-
-// // Example usage
-// const timezone = 'America/New_York'; // Replace with the desired timezone
-// const greeting = getGreetingByTimezone(timezone);
-// console.log(`${greeting}, user!`);

@@ -1,13 +1,10 @@
-/* eslint-disable max-lines-per-function */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, { useEffect } from 'react';
 
-import { useProductsStore } from '@/core/mainscreen/products';
-import { useSearchStore } from '@/core/mainscreen/search';
+import { useProductsStore, useSearchStore } from '@/core';
 import type { Product } from '@/types';
-import { EmptyList, FocusAwareStatusBar, List, View } from '@/ui';
-import { Header } from '@/ui/widgets/products-list/header';
+import { EmptyList, FocusAwareStatusBar, Header, List, View } from '@/ui';
 
 import { Card } from './card';
 
@@ -68,7 +65,6 @@ export const Feed = () => {
         handle={handleSearch}
       />
       <List
-        key={77355}
         data={initialData}
         renderItem={renderItem}
         estimatedItemSize={60}

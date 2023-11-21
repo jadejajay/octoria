@@ -43,6 +43,7 @@
 // ---::..:    ..:--:...     ***+=-::..:--=+++++====-::....:-=+#%%#**=:     .:---------------
 // :::::-=.   ..::+=:...     =**+==-::.::---=====--::.....:-==+*#%#*+-.      .:--------------
 // ::..:-.   ...:-+=:...     :***+=--:::::-----:::::....::--=++*#%#+:.  .  .   ...:----------
+//                                 𝓙𝓪𝓭𝓮𝓳𝓪 𝓙𝓪𝔂𝓭𝓮𝓿𝓼𝓲𝓷𝓱
 import 'react-native-gesture-handler';
 
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
@@ -60,8 +61,6 @@ import { APIProvider } from '@/api';
 import { loadSelectedTheme } from '@/core';
 import { RootNavigator } from '@/navigation';
 
-import { preloadImages } from './ui';
-
 LogBox.ignoreLogs([
   "ViewPropTypes will be removed from React Native. Migrate to ViewPropTypes exported from 'deprecated-react-native-prop-types'.",
 ]);
@@ -74,11 +73,7 @@ LogBox.ignoreLogs([
 LogBox.ignoreLogs([
   "ViewPropTypes will be removed from React Native, along with all other PropTypes. We recommend that you migrate away from PropTypes and switch to a type system like TypeScript. If you need to continue using ViewPropTypes, migrate to the 'deprecated-react-native-prop-types' package.",
 ]);
-preloadImages([
-  {
-    uri: 'http://itekindia.com/octoria/logo_big.png',
-  },
-]);
+
 loadSelectedTheme();
 SplashScreen.preventAutoHideAsync();
 

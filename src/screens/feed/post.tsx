@@ -1,19 +1,19 @@
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 
-import { useProductsStore } from '@/core/mainscreen/products';
+import { useProductsStore } from '@/core';
 import type { RouteProp } from '@/navigation/types';
 import {
+  AbsoluteButton,
   ActivityIndicator,
+  CarouselCards,
   EmptyList,
   FocusAwareStatusBar,
+  ProductDetails,
   ScrollView,
   Text,
   View,
 } from '@/ui';
-import AbsoluteButton from '@/ui/core/absolute-button';
-import { CarouselCards } from '@/ui/widgets/products-list/product-carousel';
-import { ProductDetails } from '@/ui/widgets/products-list/product-details';
 
 export const Post = ({ route }: { route: RouteProp<'Post'> }) => {
   const navigation = useNavigation();

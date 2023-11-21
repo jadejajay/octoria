@@ -4,8 +4,7 @@ import { memo } from 'react';
 import { StyleSheet } from 'react-native';
 
 import type { Product } from '@/types';
-import { Image, Text, View } from '@/ui';
-import { AnimatedButton } from '@/ui/core/animated-button';
+import { AnimatedButton, Image, Text, View } from '@/ui/core';
 
 type Props = {
   item: Product;

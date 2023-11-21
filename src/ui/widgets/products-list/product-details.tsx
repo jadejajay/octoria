@@ -8,15 +8,17 @@ import * as React from 'react';
 import { ToastAndroid } from 'react-native';
 import { showMessage } from 'react-native-flash-message';
 
-import { getImageBase64, handleWhatsappShare } from '@/core';
-import useFavorites from '@/core/hooks/use-favorite';
-import useFirestoreDocLiveQuery from '@/core/hooks/use-firestore-doc';
+import {
+  getImageBase64,
+  handleWhatsappShare,
+  useFavorites,
+  useFirestoreDocLiveQuery,
+} from '@/core';
 import type { Product } from '@/types';
-// import { addToCart } from '@/core';
-import { Text, TouchableOpacity, View } from '@/ui';
+import { Text, TouchableOpacity, View } from '@/ui/core';
 
-import ButtonRow from './button-row';
-import HorizontalLine from './horizontal-line';
+import { ButtonRow } from './button-row';
+import { HorizontalLine } from './horizontal-line';
 
 export const ProductDetails = ({ item }: { item: Product }) => {
   const navigation = useNavigation();
@@ -94,30 +96,26 @@ export const ProductDetails = ({ item }: { item: Product }) => {
             </TouchableOpacity>
           )}
         </View>
-        <View
-          className="mt-6 flex-row items-center justify-around rounded-xl p-2"
-          style={{ backgroundColor: 'white', elevation: 8 }}
-        >
-          <TouchableOpacity
-            onPress={() =>
-              navigation.getParent().navigate('ARView', {
-                url: item.image3d as string,
-              })
-            }
-            className="flex-row items-center"
+        {item?.model ? (
+          <View
+            className="mt-6 flex-row items-center justify-around rounded-xl p-2"
+            style={{ backgroundColor: 'white', elevation: 8 }}
           >
-            <MaterialCommunityIcons name="rotate-3d" size={22} />
-            <View className="">
-              <Text className="px-2 font-varela text-sm">Try Now</Text>
-              {/* <Text
-                  className="px-2 font-varela leading-3 text-slate-400"
-                  style={{ fontSize: 8 }}
-                >
-                  With Your Own Background
-                </Text> */}
-            </View>
-          </TouchableOpacity>
-        </View>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.getParent()?.navigate('ARView', {
+                  url: item.model as string,
+                })
+              }
+              className="flex-row items-center"
+            >
+              <MaterialCommunityIcons name="rotate-3d" size={22} />
+              <View className="">
+                <Text className="px-2 font-varela text-sm">Try Now</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        ) : null}
       </View>
       {item?.material && (
         <View className="mt-4">

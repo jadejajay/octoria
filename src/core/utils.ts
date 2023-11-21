@@ -7,6 +7,7 @@ import { Linking, Platform, ToastAndroid } from 'react-native';
 import type { ShareSingleOptions, Social } from 'react-native-share';
 import Share from 'react-native-share';
 import type { StoreApi, UseBoundStore } from 'zustand';
+
 export function openLinkInBrowser(url: string) {
   Linking.canOpenURL(url).then((canOpen) => canOpen && Linking.openURL(url));
 }
@@ -27,27 +28,6 @@ export const createSelectors = <S extends UseBoundStore<StoreApi<object>>>(
   return store;
 };
 
-// export async function uploadImage(uri: RequestInfo, name: any) {
-//   if (user) {
-//     const response = await fetch(uri);
-//     const blob = await response.blob();
-
-//     const ref = storage().ref().child(`images/${user.uid}/avatar.png`);
-//     await ref.put(blob);
-
-//     let x = await ref.getDownloadURL();
-//     const update = {
-//       displayName: name,
-//       photoURL: x,
-//     };
-
-//     await user.updateProfile(update);
-//     return x;
-//   }
-//   if (!user) {
-//     return 'http://itekindia.com/sharva/Avatarbig.png';
-//   }
-// }
 export function isVideoURL(url: string): boolean {
   // Define an array of video file extensions you want to consider as videos
   const videoExtensions = [
@@ -315,6 +295,23 @@ export const handleWhatsappShare = async (
       //@ts-ignore
       whatsAppNumber: whatsAppNumber,
       appId: 'com.whatsapp',
+    };
+
+    await Share.shareSingle(options);
+  } catch (error) {
+    console.error(error);
+    ToastAndroid.show('Some Error', ToastAndroid.SHORT);
+  }
+};
+export const handleShare = async (fileUri: any, title: any) => {
+  try {
+    //@ts-ignore
+    const options: ShareSingleOptions = {
+      title: 'Share via WhatsApp',
+      message: title,
+      type: 'image/*',
+      social: Share.Social.WHATSAPP as Social,
+      url: fileUri,
     };
 
     await Share.shareSingle(options);

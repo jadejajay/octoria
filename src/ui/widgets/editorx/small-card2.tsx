@@ -2,8 +2,8 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
-import { Image, TouchableOpacity } from '@/ui';
-import { Shadow } from '@/ui/core/shadow';
+import { Image, TouchableOpacity } from '@/ui/core';
+import { Shadow } from '@/ui/shadow';
 
 type Props = {
   onClick?: () => void;

@@ -1,6 +1,6 @@
 import RNFetchBlob from 'react-native-blob-util';
 
-class VideoCacheManager {
+export class VideoCacheManager {
   private cacheDir: string;
 
   constructor() {
@@ -59,8 +59,6 @@ class VideoCacheManager {
     return segments[segments.length - 1];
   }
 }
-
-export default VideoCacheManager;
 
 // const cacheManager = new VideoCacheManager();
 

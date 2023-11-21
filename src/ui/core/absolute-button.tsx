@@ -1,7 +1,7 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 
-import { TouchableOpacity } from '@/ui';
+import { TouchableOpacity } from './touchable-opacity';
 
 interface AbsoluteButtonProps {
   iconName: keyof typeof Ionicons.glyphMap;
@@ -26,7 +26,7 @@ const getButtonPositionStyle = (position: string) => {
   }
 };
 
-const AbsoluteButton: React.FC<AbsoluteButtonProps> = ({
+export const AbsoluteButton: React.FC<AbsoluteButtonProps> = ({
   iconName,
   onPress,
   position = 'top-left',
@@ -42,5 +42,3 @@ const AbsoluteButton: React.FC<AbsoluteButtonProps> = ({
     </TouchableOpacity>
   );
 };
-
-export default AbsoluteButton;

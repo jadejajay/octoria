@@ -7,8 +7,7 @@ import type { ComponentType } from 'react';
 import * as React from 'react';
 import type { SvgProps } from 'react-native-svg';
 
-import { colors, Feed as FeedIcon, Home } from '@/ui';
-import Person from '@/ui/icons/person';
+import { colors, Feed as FeedIcon, Home, Person } from '@/ui';
 
 import { FeedNavigator } from './feed-navigator';
 import { HomeNavigator } from './home-navigator';
