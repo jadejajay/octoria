@@ -18,8 +18,8 @@ const DATA: EditorData = {
       name: 'user_photo',
       component: 'image',
       properties: {
-        height: 200,
-        width: 200,
+        height: 0,
+        width: 0,
         image: 'http://itekindia.com/chats/festival/40-Earth Day.png',
         viewProps: {
           style: {
@@ -41,13 +41,13 @@ const DATA: EditorData = {
       name: 'user_name',
       component: 'text',
       properties: {
-        height: 200,
-        width: 200,
+        height: 0,
+        width: 0,
         text: 'userName',
         textProps: {
           style: {
             color: 'white',
-            fontSize: 6,
+            fontSize: 20,
             textAlign: 'center',
           },
         },
@@ -64,13 +64,13 @@ const DATA: EditorData = {
       name: 'user_phone',
       component: 'text',
       properties: {
-        height: 200,
-        width: 200,
+        height: 0,
+        width: 0,
         text: 'usePhone',
         textProps: {
           style: {
             color: 'white',
-            fontSize: 6,
+            fontSize: 20,
             textAlign: 'center',
           },
         },
@@ -87,13 +87,13 @@ const DATA: EditorData = {
       name: 'user_email',
       component: 'text',
       properties: {
-        height: 200,
-        width: 200,
+        height: 0,
+        width: 0,
         text: 'userEmail',
         textProps: {
           style: {
             color: 'white',
-            fontSize: 6,
+            fontSize: 20,
             textAlign: 'center',
           },
         },
@@ -110,13 +110,13 @@ const DATA: EditorData = {
       name: 'user_website',
       component: 'text',
       properties: {
-        height: 200,
-        width: 200,
-        text: 'userWEbsite',
+        height: 0,
+        width: 0,
+        text: 'userWebsite',
         textProps: {
           style: {
             color: 'white',
-            fontSize: 6,
+            fontSize: 20,
             textAlign: 'center',
           },
         },
@@ -133,13 +133,13 @@ const DATA: EditorData = {
       name: 'user_address',
       component: 'text',
       properties: {
-        height: 200,
-        width: 200,
-        text: 'user addresssss',
+        height: 0,
+        width: 0,
+        text: 'user address',
         textProps: {
           style: {
             color: 'white',
-            fontSize: 6,
+            fontSize: 20,
             textAlign: 'center',
           },
         },
@@ -209,6 +209,7 @@ export interface EditorXState {
   selectedItem: number;
   categoryCode: number;
   activeWidget: string;
+  dwnVideo: string;
   past: any[];
   present: any | null;
   future: any[];
@@ -232,6 +233,7 @@ export interface EditorXState {
   setImageResizeMode: (newData: any) => void;
   setSelectedItem: (index: number) => void;
   setActiveWidget: (wdg: string) => void;
+  setDwnVideo: (url: string) => void;
   setBackground: (url: string, type: 'photo' | 'video') => void;
   setFrame: (url: string) => void;
   getData: (id: number) => Element;
@@ -257,6 +259,7 @@ const _useEditorX = create<EditorXState>((set, get) => ({
   selectedItem: -1,
   categoryCode: 1,
   activeWidget: 'Photos',
+  dwnVideo: '',
   past: [],
   present: null,
   future: [],
@@ -416,8 +419,6 @@ const _useEditorX = create<EditorXState>((set, get) => ({
             const index = state.editorData.elements.findIndex(
               (item) => item.id === id
             );
-            console.log(id, index, '<============from set produce');
-
             if (index > -1) {
               state.editorData.elements[index] = {
                 ...state.editorData.elements[index],
@@ -512,6 +513,14 @@ const _useEditorX = create<EditorXState>((set, get) => ({
     set(
       produce((state: EditorXState) => {
         state.activeWidget = wdg;
+        return state;
+      })
+    );
+  },
+  setDwnVideo: (url) => {
+    set(
+      produce((state: EditorXState) => {
+        state.dwnVideo = url;
         return state;
       })
     );
@@ -691,3 +700,13 @@ const _useEditorX = create<EditorXState>((set, get) => ({
 }));
 
 export const useEditorX = createSelectors(_useEditorX);
+export * from './elements';
+export * from './festival';
+export * from './frames';
+export * from './image-element';
+export * from './logos';
+export * from './post-main-category';
+export * from './post-video';
+export * from './render';
+export * from './shapes';
+export * from './stickers';

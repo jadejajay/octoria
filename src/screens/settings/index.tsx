@@ -1,43 +1,36 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable max-lines-per-function */
 import { Env } from '@env';
-// import { useColorScheme } from 'nativewind';
 import auth from '@react-native-firebase/auth';
 import { useNavigation } from '@react-navigation/native';
-// import jwtDecode from 'jwt-decode';
 import * as React from 'react';
-import { Image } from 'react-native';
+import { Switch } from 'react-native';
 
-import { openLinkInBrowser } from '@/core';
-import useFirestoreDocLiveQuery from '@/core/hooks/use-firestore-doc';
-// import { useAuth } from '@/core';
-import { Button, FocusAwareStatusBar, ScrollView, Text, View } from '@/ui';
-import { Github, Rate, Share, Support, Website } from '@/ui/icons';
-import QR from '@/ui/icons/qr';
-import colors from '@/ui/theme/colors';
+import { openLinkInBrowser, useFirestoreDocLiveQuery } from '@/core';
+import { useAssistance } from '@/core/hooks/use-assistance';
+import {
+  Button,
+  colors,
+  FocusAwareStatusBar,
+  Image,
+  ScrollView,
+  Text,
+  View,
+} from '@/ui';
+import { Github, QR, Rate, Share, Support, Website } from '@/ui/icons';
 
 import { Item } from './item';
 import { ItemsContainer } from './items-container';
-// import { ThemeItem } from './theme-item';
 export const Settings = () => {
   const { navigate } = useNavigation();
+  const [isEnabled, setIsEnable] = useAssistance();
   const user = auth().currentUser;
-  // const isFocused = useIsFocused();
   const { data } = useFirestoreDocLiveQuery('links', 'settings');
   const User = useFirestoreDocLiveQuery('Users', user?.uid as string);
-
-  // React.useEffect(() => {
-  //   user?.reload().then(() => {
-  //     setImage(user?.photoURL || '');
-  //     setName(user?.displayName || '');
-  //   });
-  // }, [isFocused]);
-
-  // const signOut = () => {
-  //   auth().signOut();
-  // };
-
   const iconColor = colors.neutral[400];
+  const signOut = () => {
+    auth().signOut();
+  };
   return (
     <>
       <FocusAwareStatusBar />
@@ -51,7 +44,7 @@ export const Settings = () => {
             >
               {User?.data?.photoUrl && (
                 <Image
-                  source={{ uri: User?.data?.photoUrl }}
+                  src={User?.data?.photoUrl}
                   style={{ flex: 1, borderRadius: 8 }}
                 />
               )}
@@ -90,20 +83,10 @@ export const Settings = () => {
           </View>
         </ItemsContainer>
         <View className="flex-1 px-4 pt-4">
-          {/* <Text variant="lg" className="font-bold">
-            {translate('settings.title')}
-          </Text> */}
-          {/* <ItemsContainer title="settings.generale">
-            <LanguageItem />
-             <ThemeItem /> 
-          </ItemsContainer> */}
-
           <ItemsContainer title="settings.utility">
             <Item
               text="settings.gst"
               onPress={() => {
-                //@ts-ignore
-                //09AAAAD2579G1ZP
                 navigate('Gst');
               }}
             />
@@ -115,6 +98,20 @@ export const Settings = () => {
                 navigate('ScanNGo');
               }}
             />
+            <View className="flex-row items-center justify-between px-4">
+              <Text variant="md" className="text-center font-varela">
+                Assistance
+              </Text>
+              <Switch
+                trackColor={{ false: '#0004', true: '#07ab86' }}
+                thumbColor="#fff"
+                ios_backgroundColor="#0005"
+                onValueChange={(value) => {
+                  setIsEnable(value);
+                }}
+                value={isEnabled}
+              />
+            </View>
           </ItemsContainer>
           <ItemsContainer title="settings.about">
             <Item text="settings.app_name" value={Env.NAME} />
@@ -173,14 +170,16 @@ export const Settings = () => {
               }}
             />
           </ItemsContainer>
-
-          {/* <View className="my-8">
+          <View className="my-8">
             <ItemsContainer>
               <Item text="settings.logout" onPress={signOut} />
             </ItemsContainer>
-          </View> */}
+          </View>
         </View>
       </ScrollView>
     </>
   );
 };
+
+export * from './gstscreen';
+export * from './scanandgo';

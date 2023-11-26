@@ -7,13 +7,13 @@ import React from 'react';
 import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 
-import useMainCarousel from '@/core/hooks/use-main-carousel';
+import { useMainCarousel } from '@/core';
 
 import { AnimatedButton } from './animated-button';
 
 const horizontalMargin = 4;
-export const SLIDER_WIDTH = Dimensions.get('window').width;
-export const ITEM_WIDTH = Math.round(SLIDER_WIDTH) + horizontalMargin * 2;
+const SLIDER_WIDTH = Dimensions.get('window').width;
+const ITEM_WIDTH = Math.round(SLIDER_WIDTH) + horizontalMargin * 2;
 type Props = {
   item: any;
   index: any;
@@ -51,6 +51,7 @@ export const MainCarousel = () => {
                 }}
                 shouldPlay
                 useNativeControls
+                isMuted
                 resizeMode={ResizeMode.COVER}
                 isLooping
               />

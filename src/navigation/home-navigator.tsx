@@ -1,10 +1,9 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 
-import { Post, Style } from '@/screens';
-import { PDFExample } from '@/screens/feed/pdfscreen';
-import { WebViewScreen } from '@/screens/style/webview';
-import { ShareCam } from '@/ui/widgets/products-list/sharecam';
+import { PDFExample, Post, Style, WebViewScreen } from '@/screens';
+import type { PostMainCategoryType } from '@/types';
+import { ShareCam } from '@/ui';
 
 export type HomeStackParamList = {
   Style: undefined;
@@ -12,11 +11,32 @@ export type HomeStackParamList = {
   WebView: { link: string };
   Catalogue: { url: string };
   ShareCam: { url: string };
+  ARView: { url: string };
+  App: undefined;
+  DayList: undefined;
+  DayList2: { postMainCategory: PostMainCategoryType };
+  Frames: undefined;
+  TextModal: undefined;
+  ChangeImageModal: undefined;
+  ImageEditor: undefined;
+  RenderWidget: undefined;
+  InfoWidget: undefined;
+  Tutorials: undefined;
+  Stickers: undefined;
+  BackgroundModal: undefined;
+  BackgroundVideosWidget: undefined;
+  ImageModal: undefined;
+  Shapes: undefined;
+  Products: undefined;
+  Logos: undefined;
+  Elements: undefined;
 };
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
 export const HomeNavigator = () => {
+  console.log('home navigator loaded', Date.now());
+
   return (
     <Stack.Navigator initialRouteName="Style" id="home-navigator">
       <Stack.Group

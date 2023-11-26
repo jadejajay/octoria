@@ -3,9 +3,9 @@ import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
 
-import { View } from '@/ui';
+import { View } from '@/ui/core';
 
-import { SearchBar } from './searchbar';
+import { SearchBar2 } from './searchbar';
 
 type Props = {
   globalSearch: string;
@@ -24,7 +24,7 @@ export const Header = ({ globalSearch, setGlobalSearch, handle }: Props) => {
         <MaterialIcons name="keyboard-arrow-left" size={28} />
       </TouchableOpacity>
       <View className="flex-1">
-        <SearchBar
+        <SearchBar2
           globalSearch={globalSearch}
           setGlobalSearch={setGlobalSearch}
           handle={handle}

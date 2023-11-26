@@ -1,9 +1,13 @@
 /* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
+import { StyleSheet } from 'react-native';
 import * as Animated from 'react-native-animatable';
 
-import { Image, Text, View } from '@/ui';
-import { AnimatedButton } from '@/ui/core/animated-button';
+import { WIDTH } from '../theme';
+import { AnimatedButton } from './animated-button';
+import { Image } from './image';
+import { Text } from './text';
+import { View } from './view';
 
 type Props = {
   item: {
@@ -15,7 +19,7 @@ type Props = {
 };
 export const RectCard = ({ item, onClick }: Props) => {
   return (
-    <View className="h-28 w-44">
+    <View style={styles.card}>
       <AnimatedButton onClick={onClick}>
         <View
           className="m-1 flex-1 flex-row items-center justify-between rounded-lg p-2 shadow-lg"
@@ -41,3 +45,13 @@ export const RectCard = ({ item, onClick }: Props) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  card: {
+    width: WIDTH / 2,
+    height: 120,
+    padding: 5,
+    borderRadius: 10,
+    overflow: 'hidden',
+  },
+});

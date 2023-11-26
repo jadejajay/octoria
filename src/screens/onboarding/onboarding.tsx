@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { speak } from '@/core';
-import { useIsFirstTime } from '@/core/hooks';
+import { speak, useIsFirstTime } from '@/core';
 import { Button, FocusAwareStatusBar, SafeAreaView, Text, View } from '@/ui';
 
 import { Cover } from './cover';

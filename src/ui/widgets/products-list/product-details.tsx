@@ -2,20 +2,23 @@
 /* eslint-disable max-lines-per-function */
 
 import { Entypo } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { ToastAndroid } from 'react-native';
 import { showMessage } from 'react-native-flash-message';
 
-import { getImageBase64, handleWhatsappShare } from '@/core';
-import useFavorites from '@/core/hooks/use-favorite';
-import useFirestoreDocLiveQuery from '@/core/hooks/use-firestore-doc';
+import {
+  getImageBase64,
+  handleWhatsappShare,
+  useFavorites,
+  useFirestoreDocLiveQuery,
+} from '@/core';
 import type { Product } from '@/types';
-// import { addToCart } from '@/core';
-import { Text, TouchableOpacity, View } from '@/ui';
+import { Text, TouchableOpacity, View } from '@/ui/core';
 
-import ButtonRow from './button-row';
-import HorizontalLine from './horizontal-line';
+import { ButtonRow } from './button-row';
+import { HorizontalLine } from './horizontal-line';
 
 export const ProductDetails = ({ item }: { item: Product }) => {
   const navigation = useNavigation();
@@ -39,7 +42,9 @@ export const ProductDetails = ({ item }: { item: Product }) => {
           ? ' and ' + Finishing + ' Finishing'
           : Finishing + ' Finishing'
         : ''
-    } from Octoria mobile application. octoria:///products/post/${item.id}`;
+    } from Octoria mobile application. https://octoriahardware.com/products/post/${
+      item.id
+    }`;
     try {
       const fileUrl = await getImageBase64(item?.images[0]);
       handleWhatsappShare(fileUrl, LINK, share?.data?.phone);
@@ -85,12 +90,32 @@ export const ProductDetails = ({ item }: { item: Product }) => {
                   className="px-2 font-varela leading-3 text-slate-400"
                   style={{ fontSize: 8 }}
                 >
-                  Use Your Own Background
+                  With Your Own Background
                 </Text>
               </View>
             </TouchableOpacity>
           )}
         </View>
+        {item?.model ? (
+          <View
+            className="mt-6 flex-row items-center justify-around rounded-xl p-2"
+            style={{ backgroundColor: 'white', elevation: 8 }}
+          >
+            <TouchableOpacity
+              onPress={() =>
+                navigation.getParent()?.navigate('ARView', {
+                  url: item.model as string,
+                })
+              }
+              className="flex-row items-center"
+            >
+              <MaterialCommunityIcons name="rotate-3d" size={22} />
+              <View className="">
+                <Text className="px-2 font-varela text-sm">Try Now</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        ) : null}
       </View>
       {item?.material && (
         <View className="mt-4">

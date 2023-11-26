@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
-import { Text, TouchableOpacity, View } from '@/ui';
+import { Text } from './text';
+import { TouchableOpacity } from './touchable-opacity';
+import { View } from './view';
 
 type Props = {
   icon: React.ReactNode; // You can use any icon library (e.g., FontAwesome, Ionicons)

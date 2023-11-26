@@ -2,7 +2,6 @@
 import type { ConfigContext, ExpoConfig } from '@expo/config';
 
 import { ClientEnv, Env } from './env';
-
 export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: Env.NAME,
@@ -70,17 +69,15 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
           {
             scheme: 'http',
             host: '*',
-            pathPrefix: '/editorx',
             mimeType: 'image/*',
           },
           {
             scheme: 'https',
             host: '*',
-            pathPrefix: '/editorx',
             mimeType: 'video/*',
           },
         ],
-        category: ['DEFAULT'],
+        category: ['DEFAULT', 'BROWSABLE'],
       },
       {
         action: 'VIEW',
@@ -88,8 +85,18 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         data: [
           {
             scheme: 'https',
-            host: 'octoriahardware.com',
-            mimeType: '*/*',
+            host: 'www.octoriahardware.com',
+          },
+        ],
+        category: ['DEFAULT', 'BROWSABLE'],
+      },
+      {
+        action: 'SEND',
+        autoVerify: true,
+        data: [
+          {
+            scheme: 'https',
+            host: 'www.octoriahardware.com',
           },
         ],
         category: ['DEFAULT', 'BROWSABLE'],
@@ -108,6 +115,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         './assets/fonts/Aquire.otf',
         './assets/fonts/Gobold-Regular.otf',
         './assets/fonts/MonumentExtended-Regular.otf',
+        './assets/fonts/SF-Pro-Rounded-Regular.ttf',
+        './assets/fonts/SF-ProSemibold.ttf',
         './assets/fonts/Poppins-Regular.ttf',
         './assets/fonts/Inter.ttf',
       ],

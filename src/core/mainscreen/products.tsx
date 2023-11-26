@@ -12,6 +12,6 @@ type ProductsStore = {
 
 export const useProductsStore = create<ProductsStore>((set) => ({
   products: [],
-  productLoading: false,
+  productLoading: true,
   setProducts: (data) => set((_) => ({ products: data })),
 }));

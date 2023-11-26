@@ -43,16 +43,18 @@
 // ---::..:    ..:--:...     ***+=-::..:--=+++++====-::....:-=+#%%#**=:     .:---------------
 // :::::-=.   ..::+=:...     =**+==-::.::---=====--::.....:-==+*#%#*+-.      .:--------------
 // ::..:-.   ...:-+=:...     :***+=--:::::-----:::::....::--=++*#%#+:.  .  .   ...:----------
+//                                 𝓙𝓪𝓭𝓮𝓳𝓪 𝓙𝓪𝔂𝓭𝓮𝓿𝓼𝓲𝓷𝓱
 import 'react-native-gesture-handler';
 
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import LogRocket from '@logrocket/react-native';
 import { firebase } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import { usePreventScreenCapture } from 'expo-screen-capture';
 import * as SplashScreen from 'expo-splash-screen';
-import React from 'react';
-import { StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { LogBox, StyleSheet } from 'react-native';
 import FlashMessage from 'react-native-flash-message';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
@@ -60,22 +62,34 @@ import { APIProvider } from '@/api';
 import { loadSelectedTheme } from '@/core';
 import { RootNavigator } from '@/navigation';
 
-import { preloadImages } from './ui';
-
-preloadImages([
-  {
-    uri: 'http://itekindia.com/octoria/logo_big.png',
-  },
+LogBox.ignoreLogs([
+  "ViewPropTypes will be removed from React Native. Migrate to ViewPropTypes exported from 'deprecated-react-native-prop-types'.",
 ]);
+LogBox.ignoreLogs([
+  '`new NativeEventEmitter()` was called with a non-null argument without the required `addListener` method.',
+]);
+LogBox.ignoreLogs([
+  '`new NativeEventEmitter()` was called with a non-null argument without the required `removeListeners` method.',
+]);
+LogBox.ignoreLogs([
+  "ViewPropTypes will be removed from React Native, along with all other PropTypes. We recommend that you migrate away from PropTypes and switch to a type system like TypeScript. If you need to continue using ViewPropTypes, migrate to the 'deprecated-react-native-prop-types' package.",
+]);
+
 loadSelectedTheme();
 SplashScreen.preventAutoHideAsync();
 
 const App = () => {
+  console.log('app started', Date.now());
+  useEffect(() => {
+    LogRocket.init('ekssod/demo');
+  }, []);
+
   usePreventScreenCapture();
   const auth = firebase.auth();
   auth.useEmulator('http://192.168.0.8:9099');
   firestore().useEmulator('192.168.0.8', 8080);
   storage().useEmulator('192.168.0.8', 9199);
+  console.log('Emulator started', Date.now());
   return (
     <GestureHandlerRootView style={styles.container}>
       <APIProvider>

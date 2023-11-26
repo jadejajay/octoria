@@ -2,7 +2,7 @@
 import * as React from 'react';
 import type { SvgProps } from 'react-native-svg';
 import Svg, { Rect } from 'react-native-svg';
-const QR = ({ color = '#000', ...props }: SvgProps) => (
+export const QR = ({ color = '#000', ...props }: SvgProps) => (
   <Svg
     fill="none"
     style={{ width: 24, height: 24 }}
@@ -46,4 +46,3 @@ const QR = ({ color = '#000', ...props }: SvgProps) => (
     <Rect width={3} height={3} x={13} y={19} fill={color} rx={0.5} />
   </Svg>
 );
-export default QR;

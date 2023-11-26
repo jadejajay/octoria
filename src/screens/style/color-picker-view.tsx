@@ -5,7 +5,7 @@ import { Modal, StyleSheet } from 'react-native';
 import { invertColor } from '@/core';
 import { Button, View } from '@/ui';
 
-import ColorPicker from './colorpicker';
+import { ColorPicker } from './colorpicker';
 
 interface Props {
   Color?: string;

@@ -2,9 +2,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
-import { Text, View } from '@/ui';
-
 import { AnimatedButton2 } from './animeted-button2';
+import { Text } from './text';
+import { View } from './view';
 
 type Props = {
   icon: any; // You can use any icon library (e.g., FontAwesome, Ionicons)

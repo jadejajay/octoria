@@ -1,11 +1,13 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 
-import { Settings } from '@/screens';
-import { SignUpForm } from '@/screens/login/signup';
-import { GstView } from '@/screens/settings/gstscreen';
-import { ScanNGo } from '@/screens/settings/scanandgo';
-import { WebViewScreen } from '@/screens/style/webview';
+import {
+  GstView,
+  ScanNGo,
+  Settings,
+  SignUpForm,
+  WebViewScreen,
+} from '@/screens';
 
 export type SettingStackParamList = {
   Settings: undefined;
@@ -18,6 +20,7 @@ export type SettingStackParamList = {
 const Stack = createNativeStackNavigator<SettingStackParamList>();
 
 export const SettingNavigator = () => {
+  console.log('setting navigator loaded', Date.now());
   return (
     <Stack.Navigator initialRouteName="Settings" id="setting-navigator">
       <Stack.Group

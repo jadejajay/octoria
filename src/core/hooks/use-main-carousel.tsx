@@ -1,7 +1,7 @@
 import firestore from '@react-native-firebase/firestore';
 import { useEffect, useState } from 'react';
 
-function useMainCarousel() {
+export function useMainCarousel() {
   const [MainCarouselData, setMainCarousel] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -25,5 +25,3 @@ function useMainCarousel() {
 
   return { MainCarouselData, isLoading };
 }
-
-export default useMainCarousel;

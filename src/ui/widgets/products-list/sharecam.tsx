@@ -12,18 +12,15 @@ import { ImageBackground } from 'react-native';
 // import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { captureRef } from 'react-native-view-shot';
 
-import { shareImageWithTitle } from '@/core';
-import { useImageStore } from '@/core/camshare';
-import { useLinks } from '@/core/mainscreen';
-// import { shareImageWithTitle } from '@/core';
-import { ActivityIndicator, Image, Text } from '@/ui';
-import AbsoluteButton from '@/ui/core/absolute-button';
+import { shareImageWithTitle, useImageStore, useLinks } from '@/core';
+import { AbsoluteButton, ActivityIndicator, Image, Text } from '@/ui/core';
 
+// import { shareImageWithTitle } from '@/core';
 import { Gestures } from './simultaneous-gesture';
 
 // import Gestures from '../lib';
 
-export function ShareCam({ route }: any) {
+export const ShareCam = ({ route }: any) => {
   const { url } = route.params;
   const server = useLinks();
   const demoShare = 'Hello, This Post is Generate by Octoria Application.';
@@ -85,6 +82,7 @@ export function ShareCam({ route }: any) {
         })
         .finally(() => setLoading(false));
     } catch (error) {
+      setLoading(false);
       ToastAndroid.show('download Failed !', ToastAndroid.SHORT);
     }
   }
@@ -100,6 +98,7 @@ export function ShareCam({ route }: any) {
         setImage(result.assets[0].uri);
       }
     } catch (error) {
+      setLoading(false);
       ToastAndroid.show('Something Unexpected Happen !', ToastAndroid.SHORT);
     }
   };
@@ -116,6 +115,7 @@ export function ShareCam({ route }: any) {
         })
         .finally(() => setLoading(false));
     } catch (e) {
+      setLoading(false);
       ToastAndroid.show('Sharing failed !', ToastAndroid.SHORT);
     }
   };
@@ -219,7 +219,7 @@ export function ShareCam({ route }: any) {
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {

@@ -74,3 +74,5 @@ export interface UserType {
   type: string;
   info: BusinessDataType;
 }
+export const ASSISTANCE = 'ASSISTANCE';
+export const POST_IMAGE = 'POST_IMAGE';

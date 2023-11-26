@@ -1,7 +1,7 @@
 import firestore from '@react-native-firebase/firestore'; // Import Firestore from your Firebase package
 import { useEffect, useState } from 'react';
 
-function useFirestoreDocLiveQuery(collectionName: string, id: string) {
+export function useFirestoreDocLiveQuery(collectionName: string, id: string) {
   const [data, setData] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -24,5 +24,3 @@ function useFirestoreDocLiveQuery(collectionName: string, id: string) {
 
   return { data, isLoading };
 }
-
-export default useFirestoreDocLiveQuery;

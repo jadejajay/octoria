@@ -4,8 +4,10 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 
-import { colors, Input, TouchableOpacity, View } from '@/ui';
-import { useSearchStore } from '@/core/mainscreen/search';
+import { useSearchStore } from '@/core';
+import { TouchableOpacity, View } from '@/ui/core';
+import { Input } from '@/ui/input';
+import colors from '@/ui/theme/colors';
 export const SearchBar = () => {
   const setSearch = useSearchStore((s) => s.setSearch);
   const [searchText, setSearchText] = useState('');

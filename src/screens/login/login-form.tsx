@@ -1,37 +1,24 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable max-lines-per-function */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
 import auth from '@react-native-firebase/auth';
 import React, { useState } from 'react';
 import { Image } from 'react-native';
 import { showMessage } from 'react-native-flash-message';
 import IntlPhoneField from 'react-native-intl-phone-field';
 
-// import SmsRetriever from 'react-native-sms-retriever';
-import { ActivityIndicator, Button, View } from '@/ui';
-import VerifCode from '@/ui/core/input/rnverifcode';
-import ReversibleCountdownButton from '@/ui/core/reverce-count';
+import {
+  ActivityIndicator,
+  Button,
+  ReversibleCountdownButton,
+  VerifCode,
+  View,
+} from '@/ui';
 export const LoginForm = () => {
-  // const inputRef = useRef<InputOutline>(null);
   const [confirm, setConfirm] = useState<any>();
   const [phoneNumber, setPhoneNumber] = useState<any>();
   const [error2, setError2] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // useEffect(() => {
-  //   onPhoneNumberPressed();
-  //   setIsLoading(false);
-  // }, []);
-
-  // const onPhoneNumberPressed = async () => {
-  //   try {
-  //     const phoneNumber2 = await SmsRetriever.requestPhoneNumber();
-  //     setPhoneNumber(phoneNumber2);
-  //   } catch (error) {
-  //     console.log(JSON.stringify(error));
-  //   }
-  // };
-  // Handle the button press
   async function signInWithPhoneNumber() {
     try {
       setIsLoading(true);
@@ -45,6 +32,7 @@ export const LoginForm = () => {
         duration: 2000,
       });
     } catch (error) {
+      setIsLoading(false);
       showMessage({
         icon: 'danger',
         message: `Invalid credentials,${error}`,
@@ -64,6 +52,7 @@ export const LoginForm = () => {
         duration: 1000,
       });
     } catch (error) {
+      setIsLoading(false);
       showMessage({
         icon: 'danger',
         message: `Invalid credentials,${error}`,

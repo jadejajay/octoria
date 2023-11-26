@@ -2,8 +2,8 @@ import * as React from 'react';
 import { Image, StyleSheet } from 'react-native';
 import Shimmer from 'react-native-shimmer';
 
-import { useUserStore } from '@/core/mainscreen/user';
-import { Text, View } from '@/ui';
+import { useUserStore } from '@/core';
+import { Text, View } from '@/ui/core';
 
 type Props = {};
 export const Greeting = ({}: Props) => {
@@ -11,11 +11,11 @@ export const Greeting = ({}: Props) => {
   return (
     <View className="flex-row items-center justify-between">
       <View className="flex-column justify-start pl-4 pt-4">
-        <Text variant="h3" className="font-varela font-bold" numberOfLines={1}>
+        <Text variant="h3" className="font-sfbold" numberOfLines={1}>
           Hello, {name ? name : 'Guest'}
         </Text>
         <View className="flex-row">
-          <Text variant="lg" className="font-varela text-slate-400">
+          <Text className="font-sfbold text-slate-400">
             Welcome to Octoria.
           </Text>
         </View>

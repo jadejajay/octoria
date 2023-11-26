@@ -4,7 +4,9 @@ import React, { useRef, useState } from 'react';
 import type { TextInput } from 'react-native';
 import { Modal } from 'react-native';
 
-import { ActivityIndicator, colors, Input, TouchableOpacity, View } from '@/ui';
+import { ActivityIndicator, TouchableOpacity, View } from '@/ui/core';
+import { Input } from '@/ui/input';
+import colors from '@/ui/theme/colors';
 
 type Props = {
   globalSearch: string;
@@ -12,7 +14,11 @@ type Props = {
   handle: () => void;
 };
 
-export const SearchBar = ({ globalSearch, setGlobalSearch, handle }: Props) => {
+export const SearchBar2 = ({
+  globalSearch,
+  setGlobalSearch,
+  handle,
+}: Props) => {
   const inputRef = useRef(
     null as unknown as {
       focus: () => void;

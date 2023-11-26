@@ -2,7 +2,7 @@
 import * as React from 'react';
 import type { SvgProps } from 'react-native-svg';
 import Svg, { Path } from 'react-native-svg';
-const Person = ({ color = '#000', ...props }: SvgProps) => (
+export const Person = ({ color = '#000', ...props }: SvgProps) => (
   <Svg
     style={{ height: 24, width: 24 }}
     viewBox="0 0 575.616 575.616"
@@ -15,4 +15,3 @@ const Person = ({ color = '#000', ...props }: SvgProps) => (
     />
   </Svg>
 );
-export default Person;
