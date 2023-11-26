@@ -4,9 +4,9 @@ import type { InputOutline } from 'react-native-input-outline';
 // import { TextInput as NTextInput } from 'react-native';
 import { InputOutline as NTextInput } from 'react-native-input-outline';
 
+import { View } from '../core/view';
 // import { isRTL } from '@/core';
 import colors from '../theme/colors';
-import { View } from '../core/view';
 
 const STextInput = styled(NTextInput);
 
@@ -46,7 +46,7 @@ export const Input2 = React.forwardRef<InputOutline, NInputProps>(
           testID="STextInput"
           ref={ref}
           placeholderTextColor={colors.neutral[400]}
-          className={`mt-0 border-[1px] ${borderColor} rounded-md  text-[16px] `}
+          className={`mt-0 border-[1px] ${borderColor} rounded-md text-[16px]`}
           onBlur={onBlur}
           onFocus={onFocus}
           {...inputProps}

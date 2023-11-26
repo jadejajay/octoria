@@ -5,24 +5,23 @@
  .  @::@*## +*  #=:%--.. .@ -@+#*     #= ##+@  .@-  @: :@ **--  @=#  .-** @.:% %#* %=:-@. 
  =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
                                                                                           
-*/
+ */
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
 import {
+  getItem,
   setItem,
   useEditorX,
   useFestivalStore,
   usePostMainCategoryStore,
   usePostVideoStore,
+  useSearchStore,
 } from '@/core';
-import {
-  type FestivalType,
-  type PostMainCategoryType,
-  type PostVideoType,
-  SUB_CATEGORY,
-} from '@/types';
+import { isDateInRange } from '@/core/date-util';
+import { codeToDate } from '@/core/subcategory-code';
+import { POST_IMAGE, type PostMainCategoryType, SUB_CATEGORY } from '@/types';
 import {
   HorizontalList,
   Image,
@@ -30,78 +29,94 @@ import {
   TouchableOpacity,
   Vertical2CompList,
   View,
+  WIDTH,
 } from '@/ui';
+
+import { PostCardHeader } from './components/postcard-header';
+import {
+  SmallPostImageCard,
+  SmallPostVideoCard,
+} from './components/small-card';
 // import { addData } from '@/core/firebase-bulk';
 type Props = {};
+const SNAP = WIDTH / 3 - 5;
 export const DayList = ({}: Props) => {
-  const image = '';
+  const [image, setImage] = React.useState('');
   const navigation = useNavigation();
   const categories = usePostMainCategoryStore((s) => s.postMainCategory);
   const setCategoryCode = useEditorX((s) => s.setCategoryCode);
+  const setFestival = useSearchStore((s) => s.setFestival);
   const setbg = useEditorX((s) => s.setBackground);
   const images = useFestivalStore((s) => s.festival);
   const videos = usePostVideoStore((s) => s.postVideos);
   React.useEffect(() => {
     // addData();
+    postImage();
   }, []);
-  const handleNav1 = async (code: number, subCode: number) => {
-    console.log(
-      '🚀 ~ file: day-list.tsx ~ line 52 ~ handleNav1 ~ subCode',
-      subCode,
-      code
-    );
-    setCategoryCode(code);
-    await setItem(SUB_CATEGORY, subCode);
-    //@ts-ignore
-    navigation.navigate('ImageEditor');
+  const postImage = async () => {
+    const url = (await getItem(POST_IMAGE)) as string;
+    if (url) setImage(url);
   };
   const handleNav3 = async (code: number, subCode: number, image1: any) => {
-    console.log(
-      '🚀 ~ file: day-list.tsx ~ line 52 ~ handleNav3 ~ subCode',
-      subCode,
-      code,
-      image1
-    );
     setCategoryCode(code);
     setbg(image1, 'photo');
     await setItem(SUB_CATEGORY, subCode);
-    //@ts-ignore
     navigation.navigate('ImageEditor');
   };
   const handleNav4 = async (code: number, subCode: number, video: any) => {
-    console.log(
-      '🚀 ~ file: day-list.tsx ~ line 52 ~ handleNav4 ~ subCode',
-      subCode,
-      code,
-      video
-    );
     setCategoryCode(code);
     setbg(video, 'video');
     await setItem(SUB_CATEGORY, subCode);
-    //@ts-ignore
     navigation.navigate('ImageEditor');
   };
+
   const handleNav2 = async () => {
     await setItem(SUB_CATEGORY, 1);
-    //@ts-ignore
     navigation.navigate('ImageEditor');
   };
+  const SmallImageCard = React.useCallback(
+    ({ item, index }: { item: any; index: number }) => {
+      return (
+        <SmallPostImageCard item={item} index={index} handleNav={handleNav3} />
+      );
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+  const SmallVideoCard = React.useCallback(
+    ({ item, index }: { item: any; index: number }) => {
+      return (
+        <SmallPostVideoCard item={item} index={index} handleNav={handleNav4} />
+      );
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
   const CardComp = React.useCallback(
     ({ item, index }: { item: PostMainCategoryType; index: number }) => {
-      const filtered = images.filter((img) => {
+      const filteredImages = images.filter((img) => {
         return img.categoryCode === item.code;
       });
+      const imagesInRange = filteredImages.filter((img) =>
+        isDateInRange(codeToDate(img.subCategory))
+      );
       const filteredVideos = videos.filter((img) => {
         return img.categoryCode === item.code;
       });
+      const videosInRange = filteredVideos.filter((img) =>
+        isDateInRange(codeToDate(img.subCategory))
+      );
       return (
         <>
           <TouchableOpacity
             key={`category-card-${index}`}
             style={styles.container2}
-            className="mt-4 h-28 overflow-hidden rounded-lg bg-green-400"
             activeOpacity={1}
-            onPress={() => handleNav1(item.code, item.subCode)}
+            onPress={() => {
+              setFestival('');
+              navigation.navigate('DayList2', { postMainCategory: item });
+            }}
+            className="mx-5 mt-4 h-32 overflow-hidden rounded-lg bg-green-400"
           >
             {item?.image && (
               <Image
@@ -112,34 +127,41 @@ export const DayList = ({}: Props) => {
               />
             )}
             <View className="absolute inset-0 items-center justify-center">
-              <Text className="font-kalam text-3xl leading-10 text-white">
+              <Text className="font-sfregular text-3xl leading-10 text-white">
                 {item.name}
               </Text>
             </View>
           </TouchableOpacity>
-          {filtered.length > 0 ? (
-            <View className="mt-4 h-28">
+          {imagesInRange.length > 0 ? (
+            <View className="my-4 h-44">
+              <PostCardHeader title={item.name} subtitle={'This Month'} />
+              <Text variant="sm" className="mx-5 text-left font-sfregular">
+                Images
+              </Text>
               <HorizontalList
                 key={`horizontal-list-${index}`}
-                Comp={SmallCard}
-                estimatedItemSize={100}
-                snapToInterval={120}
-                Header={CardCompHeader}
-                data={filtered}
+                Comp={SmallImageCard}
+                padding={7.5}
+                estimatedItemSize={SNAP}
+                snapToInterval={SNAP}
+                data={imagesInRange}
               />
             </View>
           ) : (
             <View />
           )}
-          {filteredVideos.length > 0 ? (
-            <View className="mt-4 h-28">
+          {videosInRange.length > 0 ? (
+            <View className="my-4 h-40">
+              <Text variant="sm" className="mx-5 text-left font-sfregular">
+                Videos
+              </Text>
               <HorizontalList
                 key={`horizontal-list-${index}`}
-                Comp={SmallCard2}
-                estimatedItemSize={100}
-                snapToInterval={120}
-                Header={CardCompHeader}
-                data={filteredVideos}
+                Comp={SmallVideoCard}
+                padding={7.5}
+                estimatedItemSize={SNAP}
+                snapToInterval={SNAP}
+                data={videosInRange}
               />
             </View>
           ) : (
@@ -156,15 +178,20 @@ export const DayList = ({}: Props) => {
       return (
         <View
           key={`category-card-header`}
-          className="mt-2 h-28 overflow-hidden rounded-lg bg-green-400"
+          className="mx-5 mt-2 h-28 overflow-hidden rounded-lg"
           style={styles.container2}
         >
           {image && (
             <Image
               src={image}
               // eslint-disable-next-line react-native/no-inline-styles
-              style={{ width: '100%', height: '100%' }}
-              resizeMode="cover"
+              style={{
+                width: '100%',
+                height: '100%',
+                opacity: 0.3,
+                transform: [{ rotate: '45deg' }, { scale: 1.7 }],
+              }}
+              resizeMode="contain"
             />
           )}
           <TouchableOpacity
@@ -172,7 +199,7 @@ export const DayList = ({}: Props) => {
             onPress={() => handleNav2()}
             activeOpacity={1}
           >
-            <Text className="font-kalam text-xl leading-10 text-green-400">
+            <Text className="font-sfbold text-xl leading-10 text-green-400">
               Continue Last Post 🚀
             </Text>
           </TouchableOpacity>
@@ -182,73 +209,11 @@ export const DayList = ({}: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [image]
   );
-  const SmallCard = React.useCallback(
-    ({ item, index }: { item: FestivalType; index: number }) => {
-      return (
-        <TouchableOpacity
-          key={`category-card-${index}`}
-          className="h-28 w-28 p-1"
-          activeOpacity={1}
-          onPress={() =>
-            handleNav3(item.categoryCode, item.subCategory, item.image)
-          }
-        >
-          <View
-            className="overflow-hidden rounded-lg"
-            style={styles.container2}
-          >
-            {item?.image && (
-              <Image
-                src={item.image}
-                // eslint-disable-next-line react-native/no-inline-styles
-                style={{ width: '100%', height: '100%' }}
-                resizeMode="cover"
-              />
-            )}
-          </View>
-        </TouchableOpacity>
-      );
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-  const SmallCard2 = React.useCallback(
-    ({ item, index }: { item: PostVideoType; index: number }) => {
-      return (
-        <TouchableOpacity
-          key={`category-card-${index}`}
-          className="h-28 w-28 p-1"
-          activeOpacity={1}
-          onPress={() =>
-            handleNav4(item.categoryCode, item.subCategory, item.video)
-          }
-        >
-          <View
-            className="overflow-hidden rounded-lg"
-            style={styles.container2}
-          >
-            {item?.video && (
-              <Image
-                src={item.thumbnail}
-                // eslint-disable-next-line react-native/no-inline-styles
-                style={{ width: '100%', height: '100%' }}
-                resizeMode="cover"
-              />
-            )}
-          </View>
-        </TouchableOpacity>
-      );
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
 
   return (
     <View className="flex-1">
       <Vertical2CompList
         Comp={CardComp}
-        // eslint-disable-next-line react-native/no-inline-styles
-        style={{ padding: 20 }}
         Header={CardCompHeader}
         data={categories}
         estimatedItemSize={300}

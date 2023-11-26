@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 
 import { PDFExample, Post, Style, WebViewScreen } from '@/screens';
+import type { PostMainCategoryType } from '@/types';
 import { ShareCam } from '@/ui';
 
 export type HomeStackParamList = {
@@ -11,6 +12,24 @@ export type HomeStackParamList = {
   Catalogue: { url: string };
   ShareCam: { url: string };
   ARView: { url: string };
+  App: undefined;
+  DayList: undefined;
+  DayList2: { postMainCategory: PostMainCategoryType };
+  Frames: undefined;
+  TextModal: undefined;
+  ChangeImageModal: undefined;
+  ImageEditor: undefined;
+  RenderWidget: undefined;
+  InfoWidget: undefined;
+  Tutorials: undefined;
+  Stickers: undefined;
+  BackgroundModal: undefined;
+  BackgroundVideosWidget: undefined;
+  ImageModal: undefined;
+  Shapes: undefined;
+  Products: undefined;
+  Logos: undefined;
+  Elements: undefined;
 };
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();

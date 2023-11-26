@@ -4,9 +4,15 @@ import React, { useEffect } from 'react';
 
 import { useProductsStore, useSearchStore } from '@/core';
 import type { Product } from '@/types';
-import { EmptyList, FocusAwareStatusBar, Header, List, View } from '@/ui';
-
-import { Card } from './card';
+import {
+  EmptyList,
+  FocusAwareStatusBar,
+  Header,
+  HEIGHT,
+  List,
+  View,
+} from '@/ui';
+import { Card } from '@/ui/widgets/mainscreen/card';
 
 export const Feed = () => {
   const search = useSearchStore((s) => s.text);
@@ -46,10 +52,11 @@ export const Feed = () => {
   const handleLoadMore = () => {};
 
   const renderItem = React.useCallback(
-    ({ item }: { item: Product }) => (
+    ({ item, index }: { item: Product; index: number }) => (
       <Card
         key={`card-${item.id}`}
         item={item}
+        index={index}
         onPress={() => navigate('Post', { id: item.id })}
       />
     ),
@@ -67,7 +74,7 @@ export const Feed = () => {
       <List
         data={initialData}
         renderItem={renderItem}
-        estimatedItemSize={60}
+        estimatedItemSize={HEIGHT / 2.2}
         ListEmptyComponent={<EmptyList isLoading={false} />}
         keyExtractor={(_, index) => `item-${index}`}
         numColumns={2}

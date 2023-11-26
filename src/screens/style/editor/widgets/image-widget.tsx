@@ -7,32 +7,29 @@
                                                                                           
 */
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 
 import { useEditorX } from '@/core';
 import { IconButton, IconButtonW, View } from '@/ui';
 
-import { ChangeImageModal } from './change-image';
-
 type Props3 = {
   handleRotationPress: (r: number) => void;
   handlePressMoveToCenter: () => void;
-  onPress: () => void;
   handlePressMoveToPosition: ({ x, y }: { x: number; y: number }) => void;
 };
 export const ImageWidget = ({
   handleRotationPress,
-  onPress,
   handlePressMoveToPosition,
   handlePressMoveToCenter,
 }: Props3) => {
   const isSpecial = useEditorX((s) => s.isSpecial);
   const [rotationDegree, setRotationDegree] = useState(90);
   const [rM, setRM] = useState('contain');
-  const [imageModalVisible, setImageModalVisible] = useState<boolean>(false);
   const [rC, setRC] = useState<boolean>(true);
   const setData = useEditorX((s) => s.setViewStyle);
   const state = useEditorX((s) => s.selectedItem);
+  const { navigate } = useNavigation();
 
   const setResizeMode = useEditorX((s) => s.setImageResizeMode);
   const rotateRight = () => {
@@ -68,19 +65,15 @@ export const ImageWidget = ({
 
   return (
     <View className="flex-row flex-wrap justify-around">
-      <ChangeImageModal
-        isVisible={imageModalVisible}
-        onClose={() => setImageModalVisible(false)}
-      />
       <IconButtonW
         icon={
           <MaterialCommunityIcons name="image-edit" size={24} color={'black'} />
         }
         onPress={() => {
           if (!isSpecial()) {
-            setImageModalVisible(true);
+            navigate('ChangeImageModal');
           } else {
-            onPress();
+            navigate('InfoWidget');
           }
         }}
         title="change image"

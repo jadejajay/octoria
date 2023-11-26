@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /*
      -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
     +* .##+ .@..*+ %+-:   *= -##-     :%  #*%  *++* +*.:@.:@--.-% -%.%*:: +* %%+.@ =%::*+ 
@@ -6,7 +7,7 @@
                                                                                           
 */
 import React from 'react';
-import { FlatList, Modal } from 'react-native';
+import { FlatList, Modal, StyleSheet } from 'react-native';
 
 import { useEditorX } from '@/core';
 import { Text, TouchableOpacity, View } from '@/ui';
@@ -32,7 +33,7 @@ export const FontWidget = ({ isVisible, onClose, state }: Props5) => {
   return (
     <Modal animationType="slide" visible={isVisible} onRequestClose={onClose}>
       <View className="flex-1 items-center justify-center p-5">
-        <Text className="font-aquire text-base">Select Font</Text>
+        <Text className="font-sfbold text-base">Select Font</Text>
         <FlatList
           data={fonts}
           keyExtractor={(item) => item}
@@ -41,8 +42,15 @@ export const FontWidget = ({ isVisible, onClose, state }: Props5) => {
             <TouchableOpacity
               onPress={() => handleFontPress(item)}
               className="m-1 rounded-lg border p-1"
+              style={styles.cardContainer}
             >
-              <Text style={{ fontFamily: item, fontSize: fontSize }}>
+              <Text
+                style={{
+                  fontFamily: item,
+                  fontSize: fontSize,
+                  alignSelf: 'center',
+                }}
+              >
                 {item}
               </Text>
             </TouchableOpacity>
@@ -60,6 +68,8 @@ const fonts = [
   'notoserif',
   'sans-serif',
   'Inter',
+  'SF-Pro-Rounded-Regular',
+  'SF-ProSemibold',
   'sans-serif-light',
   'Poppins-Regular',
   'sans-serif-thin',
@@ -72,3 +82,19 @@ const fonts = [
   'serif',
   'monospace',
 ];
+const styles = StyleSheet.create({
+  cardContainer: {
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    padding: 16,
+    margin: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+});

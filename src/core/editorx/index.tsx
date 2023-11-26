@@ -209,6 +209,7 @@ export interface EditorXState {
   selectedItem: number;
   categoryCode: number;
   activeWidget: string;
+  dwnVideo: string;
   past: any[];
   present: any | null;
   future: any[];
@@ -232,6 +233,7 @@ export interface EditorXState {
   setImageResizeMode: (newData: any) => void;
   setSelectedItem: (index: number) => void;
   setActiveWidget: (wdg: string) => void;
+  setDwnVideo: (url: string) => void;
   setBackground: (url: string, type: 'photo' | 'video') => void;
   setFrame: (url: string) => void;
   getData: (id: number) => Element;
@@ -257,6 +259,7 @@ const _useEditorX = create<EditorXState>((set, get) => ({
   selectedItem: -1,
   categoryCode: 1,
   activeWidget: 'Photos',
+  dwnVideo: '',
   past: [],
   present: null,
   future: [],
@@ -514,6 +517,14 @@ const _useEditorX = create<EditorXState>((set, get) => ({
       })
     );
   },
+  setDwnVideo: (url) => {
+    set(
+      produce((state: EditorXState) => {
+        state.dwnVideo = url;
+        return state;
+      })
+    );
+  },
   setBackground: (url, type) => {
     set(
       produce((state: EditorXState) => {
@@ -696,5 +707,6 @@ export * from './image-element';
 export * from './logos';
 export * from './post-main-category';
 export * from './post-video';
+export * from './render';
 export * from './shapes';
 export * from './stickers';

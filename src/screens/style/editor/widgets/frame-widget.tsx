@@ -6,26 +6,32 @@
                                                                                           
 */
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useCallback } from 'react';
-import { Modal, ToastAndroid } from 'react-native';
+import { ToastAndroid } from 'react-native';
 import { StyleSheet } from 'react-native';
 
 import { useEditorX, useFrameStore } from '@/core';
 import type { FrameType } from '@/types';
 import { Image, Text, TouchableOpacity, Vertical2CompList, View } from '@/ui';
-type Props5 = {
-  isVisible: boolean;
-  onClose: () => void;
-};
+
 const theme = '#07ab86';
-export const FrameWidget = ({ isVisible, onClose }: Props5) => {
+export const FrameWidget = () => {
   const { frames } = useFrameStore();
+  const { goBack } = useNavigation();
   const setBg = useEditorX((s) => s.setFrame);
 
   const CardComp = useCallback((item: any, index: number) => {
     return (
-      <Card item={item.item} index={index} setBg={setBg} onClose={onClose} />
+      <Card
+        item={item.item}
+        index={index}
+        setBg={setBg}
+        onClose={() => {
+          goBack();
+        }}
+      />
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -39,14 +45,14 @@ export const FrameWidget = ({ isVisible, onClose }: Props5) => {
       });
       if (!result.canceled) {
         setBg(result.assets[0].uri);
-        onClose();
+        goBack();
       }
     } catch (error) {
       ToastAndroid.show('Something Unexpected Happen !', ToastAndroid.SHORT);
     }
   };
   return (
-    <Modal animationType="slide" visible={isVisible} onRequestClose={onClose}>
+    <>
       <View className="h-40 flex-row justify-around">
         <TouchableOpacity
           className="m-4 flex-1 items-center justify-center"
@@ -64,7 +70,7 @@ export const FrameWidget = ({ isVisible, onClose }: Props5) => {
           estimatedItemSize={130}
         />
       </View>
-    </Modal>
+    </>
   );
 };
 

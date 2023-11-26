@@ -18,7 +18,6 @@ import {
   TouchableOpacity,
 } from '@/ui/core';
 import { View } from '@/ui/core';
-import { Platform } from 'react-native';
 type Props = {
   route: any;
 };
@@ -27,7 +26,7 @@ export const ARView = ({ route }: Props) => {
     ? `http://itekindia.com/octoria/xrservice/?model=${route.params?.model}`
     : 'http://itekindia.com/octoria/xrservice/?model=handle.glb';
   // const url = 'https://github.com/benwinding';
-  const share = 'Hello, This Post is Generate by Octoria Application.';
+  // const share = 'Hello, This Post is Generate by Octoria Application.';
   const imgRef = useRef(null);
   const webViewRef = useRef(null);
   const [loading, setLoading] = useState(false);
@@ -37,12 +36,12 @@ export const ARView = ({ route }: Props) => {
   const captureContent = () => {
     if (webViewRef.current !== null) {
       // Send a message to the injected script to capture the content
-      webViewRef.current.postMessage('captureContent');
+      webViewRef.current.postMessage('screenshot');
     }
   };
 
   const handleUrlWithImage = async (imgUrl: any) => {
-    console.log(imgUrl?.nativeEvent?.data);
+    // console.log(imgUrl?.nativeEvent?.data);
 
     try {
       setLoading(true);
@@ -53,7 +52,7 @@ export const ARView = ({ route }: Props) => {
       setLoading(false);
     } catch (e) {
       setLoading(false);
-      console.log(e);
+      // console.log(e);
       ToastAndroid.show('Sharing failed !', ToastAndroid.SHORT);
     }
   };
@@ -63,12 +62,12 @@ export const ARView = ({ route }: Props) => {
       <WebView
         originWhitelist={['*']}
         ref={webViewRef}
-        nativeConfig={{
-          props: {
-            webContentsDebuggingEnabled: true,
-            console: new MyLogger(),
-          },
-        }}
+        // nativeConfig={{
+        //   props: {
+        //     webContentsDebuggingEnabled: true,
+        //     console: new MyLogger(),
+        //   },
+        // }}
         // useWebView2
         // renderToHardwareTextureAndroid
         // mediaCapturePermissionGrantType="grant"
@@ -88,10 +87,10 @@ export const ARView = ({ route }: Props) => {
           uri: 'http://192.168.0.8:3000/octoria/xrservice',
         }}
         style={styles.container}
-        onError={(syntheticEvent) => {
-          const { nativeEvent } = syntheticEvent;
-          console.warn('WebView error: ', nativeEvent);
-        }}
+        // onError={(syntheticEvent) => {
+        //   const { nativeEvent } = syntheticEvent;
+        //   // console.warn('WebView error: ', nativeEvent);
+        // }}
       />
       <AbsoluteButton
         iconName="arrow-back"
@@ -117,16 +116,24 @@ export const ARView = ({ route }: Props) => {
       >
         <View
           style={{
-            flex: 1,
+            width: '100%',
+            height: '100%',
             justifyContent: 'center',
             alignItems: 'center',
-            borderWidth: 1,
           }}
         >
           <Text variant="sm" className="text-center">
             Share Your AR View
           </Text>
-          <ViewShot ref={imgRef} style={{ width: '90%', height: '70%' }}>
+          <ViewShot
+            ref={imgRef}
+            style={{
+              width: '90%',
+              height: '70%',
+              borderWidth: 3,
+              borderColor: 'white',
+            }}
+          >
             {imageData && (
               <Image
                 source={{ uri: `data:image;base64,${imageData}` }}
@@ -166,11 +173,11 @@ export const ARView = ({ route }: Props) => {
   );
 };
 
-class MyLogger {
-  log = (message) => {
-    console.log(message, '<==from webview'); // Print in RN logs for now...
-  };
-}
+// class MyLogger {
+//   log = (message) => {
+//     console.log(message, '<==from webview'); // Print in RN logs for now...
+//   };
+// }
 const styles = StyleSheet.create({
   container: {
     width: '100%',

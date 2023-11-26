@@ -48,19 +48,22 @@ export const PostCard = ({}: Props) => {
               duration={5000}
               style={styles.container}
             >
-              <Image
-                src="http://itekindia.com/chats/bgimages/imageedit.png"
-                style={styles.image}
-              />
-              <Image
-                src="http://itekindia.com/chats/bgimages/imageedit.png"
-                style={styles.image2}
-              />
+              {ImageComp(styles.image)}
+              {ImageComp(styles.image2)}
             </Animatable.View>
           </View>
         </View>
       </View>
     </TouchableOpacity>
+  );
+};
+
+const ImageComp = (style: any) => {
+  return (
+    <Image
+      src="http://itekindia.com/chats/bgimages/imageedit.webp"
+      style={style}
+    />
   );
 };
 

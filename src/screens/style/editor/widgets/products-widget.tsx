@@ -6,22 +6,21 @@
                                                                                           
 */
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useCallback } from 'react';
-import { Modal, ToastAndroid } from 'react-native';
+import { ToastAndroid } from 'react-native';
 import { StyleSheet } from 'react-native';
 
 import { extractImagesFromObjects, useEditorX, useProductsStore } from '@/core';
 import type { Product } from '@/types';
 import { Image, Text, TouchableOpacity, Vertical2CompList, View } from '@/ui';
-type Props9 = {
-  isVisible: boolean;
-  onClose: () => void;
-};
+
 const theme = '#07ab86';
-export const ProductsWidget = ({ isVisible, onClose }: Props9) => {
+export const ProductsWidget = () => {
   const { products } = useProductsStore();
   const productList = extractImagesFromObjects<Product>(products);
+  const { goBack } = useNavigation();
   const addElement = useEditorX((s) => s.addElement);
 
   const pickImage = async () => {
@@ -34,7 +33,7 @@ export const ProductsWidget = ({ isVisible, onClose }: Props9) => {
       });
       if (!result.canceled) {
         addElement(element(result.assets[0].uri));
-        onClose();
+        goBack();
       }
     } catch (error) {
       ToastAndroid.show('Something Unexpected Happen !', ToastAndroid.SHORT);
@@ -47,13 +46,15 @@ export const ProductsWidget = ({ isVisible, onClose }: Props9) => {
         item={item.item}
         index={index}
         setElement={addElement}
-        onClose={onClose}
+        onClose={() => {
+          goBack();
+        }}
       />
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <Modal animationType="slide" visible={isVisible} onRequestClose={onClose}>
+    <>
       <View className="h-40 flex-row justify-around">
         <TouchableOpacity
           className="m-4 flex-1 items-center justify-center"
@@ -72,7 +73,7 @@ export const ProductsWidget = ({ isVisible, onClose }: Props9) => {
           numColumn={3}
         />
       </View>
-    </Modal>
+    </>
   );
 };
 

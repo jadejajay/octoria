@@ -1,10 +1,10 @@
+import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 
 import type { Product } from '@/types';
 import { EmptyList, List } from '@/ui/list';
 
-// import { FlatList } from 'react-native';
-import { ProductCardHorizontal } from './product-card-horizontal';
+import { Card } from './card';
 
 type Props = {
   data: Product[];
@@ -12,13 +12,22 @@ type Props = {
 };
 export const NewProductList = ({ data, isLoading }: Props) => {
   console.log('new Product List loaded', Date.now());
+  const navigation = useNavigation();
   const ListComponent = React.useCallback(
     () => (
       <List
         key={7735}
         data={data}
         renderItem={({ item, index }) => (
-          <ProductCardHorizontal item={item} index={index} />
+          // <ProductCardHorizontal item={item} index={index} />
+          <Card
+            item={item}
+            index={index}
+            onPress={() => {
+              //@ts-ignore
+              navigation.navigate('Post', { id: item.id });
+            }}
+          />
         )}
         estimatedItemSize={200}
         ListEmptyComponent={<EmptyList isLoading={isLoading} />}

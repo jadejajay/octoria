@@ -5,21 +5,19 @@
  =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
                                                                                           
 */
+import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
-import { Modal } from 'react-native';
 import { StyleSheet } from 'react-native';
 
 import { useEditorX, useLogoStore } from '@/core';
 import type { LogosType } from '@/types';
 import { Image, TouchableOpacity, Vertical2CompList, View } from '@/ui';
-type Props9 = {
-  isVisible: boolean;
-  onClose: () => void;
-};
+
 const theme = '#07ab86';
-export const LogosWidget = ({ isVisible, onClose }: Props9) => {
+export const LogosWidget = () => {
   const { logos } = useLogoStore();
   const addElement = useEditorX((s) => s.addElement);
+  const { goBack } = useNavigation();
 
   const CardComp = useCallback((item: any, index: number) => {
     return (
@@ -27,22 +25,22 @@ export const LogosWidget = ({ isVisible, onClose }: Props9) => {
         item={item.item}
         index={index}
         setElement={addElement}
-        onClose={onClose}
+        onClose={() => {
+          goBack();
+        }}
       />
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <Modal animationType="slide" visible={isVisible} onRequestClose={onClose}>
-      <View className="flex-1">
-        <Vertical2CompList
-          Comp={CardComp}
-          data={logos}
-          estimatedItemSize={100}
-          numColumn={5}
-        />
-      </View>
-    </Modal>
+    <View className="flex-1">
+      <Vertical2CompList
+        Comp={CardComp}
+        data={logos}
+        estimatedItemSize={100}
+        numColumn={5}
+      />
+    </View>
   );
 };
 
@@ -56,8 +54,8 @@ const Card = ({ item, index, setElement, onClose }: Props) => {
   const element = {
     component: 'image',
     properties: {
-      height: 30,
-      width: 30,
+      height: 60,
+      width: 60,
       image: item.image,
       viewProps: {
         style: {

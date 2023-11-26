@@ -10,11 +10,27 @@ import React, { useEffect, useState } from 'react';
 import { useEditorX, useIsFirstTime, useIsSignUp, useUserStore } from '@/core';
 import {
   DayList,
+  DayList2,
   ImageEditor,
   Onboarding,
   SignUpForm,
   Tutorial,
 } from '@/screens';
+import {
+  BackgroundVideosWidget,
+  BackgroundWidget,
+  ChangeImageModal,
+  ElementsWidget,
+  FrameWidget,
+  ImageModal,
+  InfoWidget,
+  LogosWidget,
+  ProductsWidget,
+  RenderWidget,
+  ShapesWidget,
+  StickersWidget,
+  TextModal,
+} from '@/screens/style/editor/widgets';
 import type { UserType } from '@/types';
 import { ARView } from '@/ui';
 
@@ -23,8 +39,8 @@ import { loadDataFromFirestore } from './loads';
 import { NavigationContainer } from './navigation-container';
 import { TabNavigator } from './tab-navigator';
 
-const Stack = createNativeStackNavigator();
 const prefix = Linking.createURL('/');
+const Stack = createNativeStackNavigator();
 export const Root = () => {
   console.log('Root Stack Activated', Date.now());
   const [isFirstTime] = useIsFirstTime();
@@ -55,24 +71,16 @@ export const Root = () => {
         if (userDoc.exists) {
           const User = { id: userw?.uid, ...userDoc.data() } as UserType;
           setUserData(User);
-          const userName = User?.info?.name
-            ? User?.info?.name
-            : User?.business
-            ? User?.business
-            : '';
-          const userImage = User?.info?.photo
-            ? User?.info?.photo
-            : User?.photoUrl
-            ? User?.photoUrl
-            : '';
-          const userEmail = User?.info?.email
-            ? User?.info?.email
-            : User?.email
-            ? User?.email
-            : '';
-          const userPhone = User?.info?.phone ? User?.info?.phone : '';
-          const userWebsite = User?.info?.website ? User?.info?.website : '';
-          const userAddress = User?.info?.address ? User?.info?.address : '';
+          const userName = User?.info?.name || User?.business || 'Octoria';
+          const userImage =
+            User?.info?.photo ||
+            User?.photoUrl ||
+            'http://itekindia.com/chats/logos/Octoria%20Mark%20Png.webp';
+          const userEmail =
+            User?.info?.email || User?.email || 'abcd@gmail.com';
+          const userPhone = User?.info?.phone || '+91 12345678900';
+          const userWebsite = User?.info?.website || 'www.octoriahardware.com';
+          const userAddress = User?.info?.address || 'example address';
           setBusiness({
             name: userName,
             photo: userImage,
@@ -114,8 +122,31 @@ export const Root = () => {
               <>
                 <Stack.Screen name="App" component={TabNavigator} />
                 <Stack.Screen name="DayList" component={DayList} />
+                <Stack.Screen name="DayList2" component={DayList2} />
                 <Stack.Screen name="ImageEditor" component={ImageEditor} />
                 <Stack.Screen name="Tutorials" component={Tutorial} />
+                <Stack.Screen name="Stickers" component={StickersWidget} />
+                <Stack.Screen name="Shapes" component={ShapesWidget} />
+                <Stack.Screen name="Products" component={ProductsWidget} />
+                <Stack.Screen name="Logos" component={LogosWidget} />
+                <Stack.Screen
+                  name="ChangeImageModal"
+                  component={ChangeImageModal}
+                />
+                <Stack.Screen name="ImageModal" component={ImageModal} />
+                <Stack.Screen name="InfoWidget" component={InfoWidget} />
+                <Stack.Screen name="TextModal" component={TextModal} />
+                <Stack.Screen name="RenderWidget" component={RenderWidget} />
+                <Stack.Screen name="Elements" component={ElementsWidget} />
+                <Stack.Screen
+                  name="BackgroundVideosWidget"
+                  component={BackgroundVideosWidget}
+                />
+                <Stack.Screen name="Frames" component={FrameWidget} />
+                <Stack.Screen
+                  name="BackgroundModal"
+                  component={BackgroundWidget}
+                />
                 <Stack.Screen name="ARView" component={ARView} />
               </>
             ) : (

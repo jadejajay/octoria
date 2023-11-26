@@ -12,6 +12,8 @@ module.exports = {
         aquire: ['Aquire'],
         gobold: ['Gobold-Regular'],
         monumentextended: ['MonumentExtended-Regular'],
+        sfregular: ['SF-Pro-Rounded-Regular'],
+        sfbold: ['SF-ProSemibold'],
         poppins: ['Poppins-Regular'],
       },
       colors,

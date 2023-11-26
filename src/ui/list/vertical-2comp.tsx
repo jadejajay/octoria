@@ -7,6 +7,7 @@ type Props = {
   data: any;
   Comp: any;
   Header?: any;
+  StickyHeader?: any;
   style?: any;
   onEndReached?: () => void;
   snapToInterval?: number;
@@ -18,6 +19,7 @@ export const Vertical2CompList = ({
   Comp,
   style,
   Header,
+  StickyHeader,
   onEndReached,
   numColumn = 2,
   snapToInterval,
@@ -36,6 +38,7 @@ export const Vertical2CompList = ({
       estimatedItemSize={estimatedItemSize}
       ListEmptyComponent={<EmptyList isLoading={false} />}
       renderItem={Comp}
+      stickyHeaderIndices={StickyHeader ? [0] : undefined}
       ListHeaderComponent={Header}
       showsVerticalScrollIndicator={false}
       nestedScrollEnabled

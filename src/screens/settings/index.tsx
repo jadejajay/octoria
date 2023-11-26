@@ -28,6 +28,9 @@ export const Settings = () => {
   const { data } = useFirestoreDocLiveQuery('links', 'settings');
   const User = useFirestoreDocLiveQuery('Users', user?.uid as string);
   const iconColor = colors.neutral[400];
+  const signOut = () => {
+    auth().signOut();
+  };
   return (
     <>
       <FocusAwareStatusBar />
@@ -167,6 +170,11 @@ export const Settings = () => {
               }}
             />
           </ItemsContainer>
+          <View className="my-8">
+            <ItemsContainer>
+              <Item text="settings.logout" onPress={signOut} />
+            </ItemsContainer>
+          </View>
         </View>
       </ScrollView>
     </>

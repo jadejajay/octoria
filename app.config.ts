@@ -115,6 +115,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         './assets/fonts/Aquire.otf',
         './assets/fonts/Gobold-Regular.otf',
         './assets/fonts/MonumentExtended-Regular.otf',
+        './assets/fonts/SF-Pro-Rounded-Regular.ttf',
+        './assets/fonts/SF-ProSemibold.ttf',
         './assets/fonts/Poppins-Regular.ttf',
         './assets/fonts/Inter.ttf',
       ],

@@ -1,10 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
-import { FlatList } from 'react-native';
 
 import { useSearchStore } from '@/core';
 import type { MainCategory } from '@/types';
-import { RectCard, View } from '@/ui/core';
+import { RectCard } from '@/ui/core';
+import { List } from '@/ui/list';
+import { WIDTH } from '@/ui/theme';
 
 type Props = {
   data: MainCategory[];
@@ -12,29 +13,29 @@ type Props = {
 export const CategoriesList = ({ data }: Props) => {
   const { navigate } = useNavigation();
   const setSearch = useSearchStore((s) => s.setSearch);
-  const List = React.useCallback(() => {
+  const CList = React.useCallback(() => {
     return (
-      <FlatList
+      <List
         data={data}
         horizontal
+        estimatedItemSize={WIDTH / 2}
+        snapToInterval={WIDTH / 2}
         renderItem={({ item }) => {
           return (
-            <View className="ml-2">
-              <RectCard
-                item={{
-                  title: item.title,
-                  color: item?.color!,
-                  image: item.image,
-                }}
-                onClick={() => {
-                  setSearch(`${item.title}`);
-                  //@ts-ignore
-                  navigate('FeedNavigator', {
-                    screen: 'Feed',
-                  });
-                }}
-              />
-            </View>
+            <RectCard
+              item={{
+                title: item.title,
+                color: item?.color!,
+                image: item.image,
+              }}
+              onClick={() => {
+                setSearch(`${item.title}`);
+                //@ts-ignore
+                navigate('FeedNavigator', {
+                  screen: 'Feed',
+                });
+              }}
+            />
           );
         }}
         showsHorizontalScrollIndicator={false}
@@ -42,5 +43,5 @@ export const CategoriesList = ({ data }: Props) => {
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  return <>{List()}</>;
+  return <>{CList()}</>;
 };

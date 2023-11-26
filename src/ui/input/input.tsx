@@ -6,9 +6,9 @@ import { TextInput as NTextInput } from 'react-native';
 
 import { isRTL } from '@/core';
 
-import colors from '../theme/colors';
 import { Text } from '../core/text';
 import { View } from '../core/view';
+import colors from '../theme/colors';
 
 const STextInput = styled(NTextInput);
 

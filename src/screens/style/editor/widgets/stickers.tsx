@@ -5,43 +5,46 @@
  =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
                                                                                           
 */
+import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
-import { Modal } from 'react-native';
 import { StyleSheet } from 'react-native';
 
 import { useEditorX, useStickerStore } from '@/core';
 import type { StickerType } from '@/types';
-import { Image, TouchableOpacity, Vertical2CompList, View } from '@/ui';
-type Props10 = {
-  isVisible: boolean;
-  onClose: () => void;
-};
+import { Image, TouchableOpacity, Vertical2CompList, View, WIDTH } from '@/ui';
+
 const theme = '#07ab86';
-export const StickersWidget = ({ isVisible, onClose }: Props10) => {
+export const StickersWidget = () => {
   const addElement = useEditorX((s) => s.addElement);
+  const [state, setState] = React.useState(50);
+  const { goBack } = useNavigation();
   const { stickers } = useStickerStore();
+  const finalArray = stickers.slice(0, state);
   const CardComp = useCallback((item: any, index: number) => {
     return (
       <Card
         key={`sticker-${index}`}
         item={item.item}
         setElement={addElement}
-        onClose={onClose}
+        onClose={() => {
+          goBack();
+        }}
       />
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <Modal animationType="slide" visible={isVisible} onRequestClose={onClose}>
-      <View className="flex-1">
-        <Vertical2CompList
-          Comp={CardComp}
-          data={stickers}
-          estimatedItemSize={100}
-          numColumn={6}
-        />
-      </View>
-    </Modal>
+    <View className="flex-1">
+      <Vertical2CompList
+        Comp={CardComp}
+        data={finalArray}
+        estimatedItemSize={WIDTH / 6}
+        numColumn={6}
+        onEndReached={() => {
+          setState((s) => s + 50);
+        }}
+      />
+    </View>
   );
 };
 

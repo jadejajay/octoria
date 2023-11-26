@@ -4,7 +4,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import storage from '@react-native-firebase/storage';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useEffect, useState } from 'react';
@@ -14,6 +13,7 @@ import { showMessage } from 'react-native-flash-message';
 import * as z from 'zod';
 
 import { useIsSignUp } from '@/core';
+import { uploadImage } from '@/core/post-image';
 import {
   ActivityIndicator,
   Button,
@@ -89,35 +89,28 @@ export const SignUpForm = () => {
         setIsSignUp(false);
       }
       setIsLoading(false);
-    } catch (error) {}
+    } catch (error) {
+      setIsLoading(false);
+    }
   };
 
   const handleImage = async () => {
     // No permissions request is necessary for launching the image library
     setIsLoading(true);
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
     });
 
     if (!result.canceled) {
-      const x = await uploadImage(result.assets[0].uri.toString());
+      const x = await uploadImage(result.assets[0].uri.toString(), user);
       setImage(x as string);
       setIsLoading(false);
     }
+    setIsLoading(false);
   };
-  async function uploadImage(uri: string) {
-    if (user) {
-      const response = await fetch(uri);
-      const blob = await response.blob();
-      const ref = storage().ref().child(`images/${user.uid}/avatar.png`);
-      await ref.put(blob);
-      let x = await ref.getDownloadURL();
-      return x;
-    }
-  }
 
   const onSubmit = (data: FormType) => {
     if (!image2) {
@@ -151,7 +144,9 @@ export const SignUpForm = () => {
               type: 'danger',
             });
           });
-      } catch (error) {}
+      } catch (error) {
+        setIsLoading(false);
+      }
     }
   };
   return (
@@ -179,7 +174,7 @@ export const SignUpForm = () => {
             {image2 && (
               <Image
                 source={{ uri: image2 }}
-                style={{ width: 100, height: 100, borderRadius: 100 }}
+                style={{ width: 100, height: 100, borderRadius: 20 }}
               />
             )}
             {isLoading && (

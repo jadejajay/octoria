@@ -7,23 +7,22 @@
                                                                                           
 */
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useCallback } from 'react';
-import { Modal, ToastAndroid } from 'react-native';
+import { ToastAndroid } from 'react-native';
 import { StyleSheet } from 'react-native';
 
 import { useEditorX, useImageListStore } from '@/core';
 import type { ImageListType } from '@/types';
 import { Image, Text, TouchableOpacity, Vertical2CompList, View } from '@/ui';
-type Props7 = {
-  isVisible: boolean;
-  onClose: () => void;
-};
+
 const theme = '#07ab86';
-export const ChangeImageModal = ({ isVisible, onClose }: Props7) => {
+export const ChangeImageModal = () => {
   const { images } = useImageListStore();
   const setImage = useEditorX((s) => s.setImage);
   const state = useEditorX((s) => s.selectedItem);
+  const { goBack } = useNavigation();
 
   const CardComp = useCallback((item: any, index: number) => {
     return (
@@ -31,7 +30,9 @@ export const ChangeImageModal = ({ isVisible, onClose }: Props7) => {
         item={item.item}
         index={index}
         setImage={setImage}
-        onClose={onClose}
+        onClose={() => {
+          goBack();
+        }}
         state={state}
       />
     );
@@ -46,7 +47,7 @@ export const ChangeImageModal = ({ isVisible, onClose }: Props7) => {
       });
       if (!result.canceled) {
         setImage({ id: state, image: result.assets[0]?.uri });
-        onClose();
+        goBack();
       }
     } catch (error) {
       ToastAndroid.show('Something Unexpected Happen !', ToastAndroid.SHORT);
@@ -61,14 +62,14 @@ export const ChangeImageModal = ({ isVisible, onClose }: Props7) => {
       });
       if (!result.canceled) {
         setImage({ id: state, image: result.assets[0]?.uri });
-        onClose();
+        goBack();
       }
     } catch (error) {
       ToastAndroid.show('Something Unexpected Happen !', ToastAndroid.SHORT);
     }
   };
   return (
-    <Modal animationType="slide" visible={isVisible} onRequestClose={onClose}>
+    <>
       <View className="h-40 flex-row justify-around">
         <TouchableOpacity
           className="m-4 flex-1 items-center justify-center"
@@ -102,7 +103,7 @@ export const ChangeImageModal = ({ isVisible, onClose }: Props7) => {
           estimatedItemSize={130}
         />
       </View>
-    </Modal>
+    </>
   );
 };
 

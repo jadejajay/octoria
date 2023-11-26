@@ -54,5 +54,6 @@
   "[java]": {
     "editor.defaultFormatter": "redhat.java"
   },
-  "docify.commentService.docstringFormat": "JsDoc" // make sure to disable i18n-ally in your global setting and only enable it for such projects
+  "docify.commentService.docstringFormat": "JsDoc",
+  "codewindProfiling.showProfiling": false // make sure to disable i18n-ally in your global setting and only enable it for such projects
 }

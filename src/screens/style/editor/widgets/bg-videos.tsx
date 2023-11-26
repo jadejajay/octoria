@@ -7,27 +7,54 @@
                                                                                           
 */
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useCallback } from 'react';
-import { Modal, ToastAndroid } from 'react-native';
+import { ToastAndroid } from 'react-native';
 import { StyleSheet } from 'react-native';
+import * as Animated from 'react-native-animatable';
 
-import { useEditorX, usePostVideoStore } from '@/core';
+import { shuffleArray, useEditorX, usePostVideoStore } from '@/core';
+import { codeToSubcategory } from '@/core/subcategory-code';
 import { type PostVideoType } from '@/types';
-import { Image, Text, TouchableOpacity, Vertical2CompList, View } from '@/ui';
-type Props5 = {
-  isVisible: boolean;
-  onClose: () => void;
-};
+import {
+  Image,
+  Text,
+  TouchableOpacity,
+  Vertical2CompList,
+  View,
+  WIDTH,
+} from '@/ui';
 
 const theme = '#07ab86';
-export const BackgroundVideosWidget = ({ isVisible, onClose }: Props5) => {
+export const BackgroundVideosWidget = () => {
   const { postVideos } = usePostVideoStore();
+  const [state, setState] = React.useState(10);
   const setBg = useEditorX((s) => s.setBackground);
+  const categoryCode = useEditorX((s) => s.categoryCode);
+  const { goBack } = useNavigation();
+  const filteredImages = postVideos.filter((img) => {
+    if (categoryCode === 1) {
+      return true;
+    }
+    return img.categoryCode === categoryCode;
+  });
+  const semifinalArray = shuffleArray(filteredImages);
+  const finalArray =
+    semifinalArray.length > state
+      ? semifinalArray.slice(0, state)
+      : semifinalArray;
 
   const CardComp = useCallback((item: any, index: number) => {
     return (
-      <Card item={item.item} index={index} setBg={setBg} onClose={onClose} />
+      <Card
+        item={item.item}
+        index={index}
+        setBg={setBg}
+        onClose={() => {
+          goBack();
+        }}
+      />
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -42,7 +69,7 @@ export const BackgroundVideosWidget = ({ isVisible, onClose }: Props5) => {
       });
       if (!result.canceled) {
         setBg(result.assets[0].uri, 'video');
-        onClose();
+        goBack();
       }
     } catch (error) {
       ToastAndroid.show('Something Unexpected Happen !', ToastAndroid.SHORT);
@@ -59,7 +86,7 @@ export const BackgroundVideosWidget = ({ isVisible, onClose }: Props5) => {
       });
       if (!result.canceled) {
         setBg(result.assets[0].uri, 'video');
-        onClose();
+        goBack();
       }
     } catch (error) {
       ToastAndroid.show('Something Unexpected Happen !', ToastAndroid.SHORT);
@@ -67,7 +94,7 @@ export const BackgroundVideosWidget = ({ isVisible, onClose }: Props5) => {
   };
 
   return (
-    <Modal animationType="slide" visible={isVisible} onRequestClose={onClose}>
+    <>
       <View className="h-40 flex-row justify-around">
         <TouchableOpacity
           className="m-4 flex-1 items-center justify-center"
@@ -97,11 +124,14 @@ export const BackgroundVideosWidget = ({ isVisible, onClose }: Props5) => {
       <View className="flex-1">
         <Vertical2CompList
           Comp={CardComp}
-          data={postVideos}
+          data={finalArray}
           estimatedItemSize={130}
+          onEndReached={() => {
+            setState((s) => s + 10);
+          }}
         />
       </View>
-    </Modal>
+    </>
   );
 };
 
@@ -114,23 +144,33 @@ type Props = {
 const Card = ({ item, index, setBg, onClose }: Props) => {
   return (
     <View className="flex-1 p-2">
-      <TouchableOpacity
-        key={`festival-card-${index}`}
-        className="aspect-square w-full overflow-hidden rounded-lg bg-green-400"
-        activeOpacity={1}
-        onPress={() => {
-          setBg(item.video, 'video');
-          onClose();
-        }}
+      <Animated.View
+        key={index}
+        animation="zoomIn"
+        delay={((index % 10) + 1) * 400}
+        style={styles.image2}
       >
-        <Image src={item.thumbnail} style={styles.image} resizeMode="cover" />
-      </TouchableOpacity>
+        <TouchableOpacity
+          key={`festival-card-${index}`}
+          className="aspect-square w-full overflow-hidden rounded-lg bg-green-400"
+          activeOpacity={1}
+          onPress={() => {
+            setBg(item.video, 'video');
+            onClose();
+          }}
+        >
+          <Image src={item.thumbnail} style={styles.image} resizeMode="cover" />
+        </TouchableOpacity>
+        <Text variant="xs" className="text-center font-sfbold">
+          {codeToSubcategory(item.subCategory)}
+        </Text>
+      </Animated.View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  image: { width: '100%', height: '100%' },
+  image: { width: WIDTH / 2, height: WIDTH / 2 },
   image2: { width: '100%', height: '100%', opacity: 1 },
   color1: { color: theme },
 });

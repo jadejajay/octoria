@@ -9,6 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
 
@@ -22,29 +23,21 @@ import { FontWidget } from './font-picker';
 type Props = {
   handleRotationPress: (r: number) => void;
   handlePressMoveToCenter: () => void;
-  onPress: () => void;
   handlePressMoveToPosition: ({ x, y }: { x: number; y: number }) => void;
 };
 // eslint-disable-next-line max-lines-per-function
 export const TextWidget = ({
   handlePressMoveToCenter,
-  onPress,
   handlePressMoveToPosition,
   handleRotationPress,
 }: Props) => {
   const themecolor = 'black';
-  // color: 'green',
-  // fontSize: 20,
-  // fontWeight: 'bold',
-  // textAlign: 'center',
-  // textShadowColor: 'rgba(0, 0, 0, 0.75)',
-  // textShadowOffset: { width: -1, height: 1 },
-  // textShadowRadius: 10,
   const setData = useEditorX((s) => s.setTextStyle);
   const state = useEditorX((s) => s.selectedItem);
   const setText = useEditorX((s) => s.setText);
   const data = useEditorX((s) => s.editorData);
   const isSpecial = useEditorX((s) => s.isSpecial);
+  const { navigate } = useNavigation();
   const [colorModalVisible, setColorModalVisible] = useState<boolean>(false);
   const [textModalVisible, setTextModalVisible] = useState<boolean>(false);
   const [fontModalVisible, setfontModalVisible] = useState<boolean>(false);
@@ -117,7 +110,7 @@ export const TextWidget = ({
           if (!isSpecial()) {
             setTextModalVisible(true);
           } else {
-            onPress();
+            navigate('InfoWidget');
           }
         }}
         title="Edit"

@@ -1,9 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
-import { Image } from 'react-native';
 
-import { AnimatedButton, Button, Text, View } from '@/ui/core';
+import { AnimatedButton, Button, Image, Text, View } from '@/ui/core';
 
 type Props = {
   item: any;
@@ -27,17 +26,13 @@ export const LikedCard = ({ item, index, deleteFavorite }: Props) => {
           className="h-32 w-32 rounded-lg p-1"
           style={{ backgroundColor: 'white', elevation: 4 }}
         >
-          <Image
-            style={{ flex: 1, borderRadius: 6 }}
-            source={{ uri: item.image }}
-          />
+          <Image style={{ flex: 1, borderRadius: 6 }} src={item.image} />
         </View>
         <View className="pl-2">
-          <Text className="font-varela font-bold">{item.name}</Text>
+          <Text className="font-sfbold">{item.name}</Text>
           <Text numberOfLines={1}>{item.desc}</Text>
           <Button
             label="remove"
-            // className="bg-red-400"
             variant="secondary"
             onPress={() => {
               deleteFavorite(item.id);

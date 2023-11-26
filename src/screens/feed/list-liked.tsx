@@ -10,7 +10,6 @@ export const AddPost = ({}: Props) => {
   return (
     <View className="flex-1 p-2">
       <List
-        key={'8347439'}
         data={favorites}
         keyExtractor={(_, index) => index.toString()}
         estimatedItemSize={100}

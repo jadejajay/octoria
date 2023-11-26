@@ -87,7 +87,6 @@ const loadDataFromFirestore = async () => {
     }));
     useFestivalStore.setState({ festival: festival });
     console.log('festival ==========================\n', festival);
-
     console.log('festival loaded', Date.now());
     const PostVideosSnapshot = await firestore().collection('postVideos').get();
     const postVideos: PostVideoType[] = PostVideosSnapshot.docs.map((doc) => ({

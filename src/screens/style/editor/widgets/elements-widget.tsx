@@ -9,20 +9,17 @@
                                                                                           
 */
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { MasonryFlashList } from '@shopify/flash-list';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useCallback } from 'react';
-import { Modal, ToastAndroid } from 'react-native';
+import { ToastAndroid } from 'react-native';
 import { StyleSheet } from 'react-native';
 
 import { useEditorX, useElementsStore } from '@/core';
 import type { ElementsType } from '@/types';
 import { EmptyList, Image, Text, TouchableOpacity, View } from '@/ui';
 
-type Props9 = {
-  isVisible: boolean;
-  onClose: () => void;
-};
 type Props = {
   item: ElementsType;
   index: number;
@@ -33,9 +30,10 @@ type mesProp = {
   height: number;
 };
 const theme = '#07ab86';
-export const ElementsWidget = ({ isVisible, onClose }: Props9) => {
+export const ElementsWidget = () => {
   const { elements } = useElementsStore();
   const addElement = useEditorX((s) => s.addElement);
+  const { goBack } = useNavigation();
   const mes: mesProp[] = [];
 
   const pickImage = async () => {
@@ -49,7 +47,7 @@ export const ElementsWidget = ({ isVisible, onClose }: Props9) => {
         console.log(result);
 
         addElement(element(result.assets[0]?.uri, 150, 150));
-        onClose();
+        goBack();
       }
     } catch (error) {
       ToastAndroid.show('Something Unexpected Happen !', ToastAndroid.SHORT);
@@ -68,14 +66,14 @@ export const ElementsWidget = ({ isVisible, onClose }: Props9) => {
                 addElement(
                   element(item.image, mes[index]?.width, mes[index]?.height)
                 );
-                onClose();
+                goBack();
               } else {
                 addElement(element(item.image, mes[index]?.width, 150));
-                onClose();
+                goBack();
               }
             } else {
               addElement(element(item.image, 150, 150));
-              onClose();
+              goBack();
             }
           }}
           style={{ width: '100%', height: index % 2 === 0 ? 75 : 150 }}
@@ -98,7 +96,7 @@ export const ElementsWidget = ({ isVisible, onClose }: Props9) => {
   }, []);
 
   return (
-    <Modal animationType="slide" visible={isVisible} onRequestClose={onClose}>
+    <>
       <View className="h-40 flex-row justify-around">
         <TouchableOpacity
           className="m-4 flex-1 items-center justify-center"
@@ -132,7 +130,7 @@ export const ElementsWidget = ({ isVisible, onClose }: Props9) => {
           showsVerticalScrollIndicator={false}
         />
       </View>
-    </Modal>
+    </>
   );
 };
 

@@ -38,6 +38,7 @@ export const Style = () => {
   const User = useUserStore((s) => s.user);
   const setSearch = useSearchStore((s) => s.setSearch);
   const FestivalImage = useFirestoreLiveQuery('FestivalImage');
+
   const { productLoading, products } = useProductsStore();
   const [assist, _] = useAssistance();
   const data = useCallback(

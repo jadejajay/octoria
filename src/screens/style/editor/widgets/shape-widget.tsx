@@ -9,19 +9,17 @@
                                                                                           
 */
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { MasonryFlashList } from '@shopify/flash-list';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useCallback } from 'react';
-import { Modal, ToastAndroid } from 'react-native';
+import { ToastAndroid } from 'react-native';
 import { StyleSheet } from 'react-native';
 
 import { useEditorX, useShapesStore } from '@/core';
 import type { ShapesType } from '@/types';
 import { EmptyList, Image, Text, TouchableOpacity, View } from '@/ui';
-type Props7 = {
-  isVisible: boolean;
-  onClose: () => void;
-};
+
 type Props = {
   item: ShapesType;
   index: number;
@@ -32,9 +30,10 @@ type mesProp = {
   height: number;
 };
 const theme = '#07ab86';
-export const ShapesWidget = ({ isVisible, onClose }: Props7) => {
+export const ShapesWidget = () => {
   const { shapes } = useShapesStore();
   const addElement = useEditorX((s) => s.addElement);
+  const { goBack } = useNavigation();
   const mes: mesProp[] = [];
 
   const pickImage = async () => {
@@ -48,7 +47,7 @@ export const ShapesWidget = ({ isVisible, onClose }: Props7) => {
         console.log(result);
 
         addElement(element(result.assets[0]?.uri, 150, 150));
-        onClose();
+        goBack();
       }
     } catch (error) {
       ToastAndroid.show('Something Unexpected Happen !', ToastAndroid.SHORT);
@@ -67,14 +66,14 @@ export const ShapesWidget = ({ isVisible, onClose }: Props7) => {
                 addElement(
                   element(item.image, mes[index]?.width, mes[index]?.height)
                 );
-                onClose();
+                goBack();
               } else {
                 addElement(element(item.image, mes[index]?.width, 150));
-                onClose();
+                goBack();
               }
             } else {
               addElement(element(item.image, 150, 150));
-              onClose();
+              goBack();
             }
           }}
           style={{ width: '100%', height: index % 2 === 0 ? 75 : 150 }}
@@ -96,7 +95,7 @@ export const ShapesWidget = ({ isVisible, onClose }: Props7) => {
     );
   }, []);
   return (
-    <Modal animationType="slide" visible={isVisible} onRequestClose={onClose}>
+    <>
       <View className="h-40 flex-row justify-around">
         <TouchableOpacity
           className="m-4 flex-1 items-center justify-center"
@@ -130,7 +129,7 @@ export const ShapesWidget = ({ isVisible, onClose }: Props7) => {
           showsVerticalScrollIndicator={false}
         />
       </View>
-    </Modal>
+    </>
   );
 };
 

@@ -25,6 +25,7 @@ export const textVariants = {
   md: 'text-varela',
   sm: 'text-[14px] leading-[21px] text-varela',
   xs: 'text-[12px] leading-[18px] text-varela',
+  xxs: 'text-[8px] leading-[10px] text-varela',
   error: ' text-[12px] leading-[30px] text-danger-500',
 };
 
