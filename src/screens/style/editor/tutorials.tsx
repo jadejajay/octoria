@@ -29,7 +29,7 @@ export const Tutorial = ({}: Props) => {
         />
       </View>
       <View className="p-4">
-        <Text variant="xs" className="text-justify">
+        <Text variant="xs" className="text-justify font-sfregular">
           {info}
         </Text>
       </View>

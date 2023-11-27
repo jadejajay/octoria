@@ -128,3 +128,71 @@
           .:::::..........::--==+++=-.          
                                                 
                                                
+System:
+  OS: Windows 10 10.0.19045
+  CPU: (8) x64 Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz
+  Memory: 7.59 GB / 15.92 GB
+Binaries:
+  Node:
+    version: 18.16.1
+    path: C:\Program Files\nodejs\node.EXE
+  Yarn:
+    version: 1.22.19
+    path: C:\Program Files (x86)\Yarn\bin\yarn.CMD
+  npm:
+    version: 9.7.1
+    path: C:\Program Files\nodejs\npm.CMD
+  Watchman: Not Found
+SDKs:
+  Android SDK:
+    API Levels:
+      - "23"
+      - "28"
+      - "29"
+      - "30"
+      - "31"
+      - "32"
+      - "33"
+      - "33"
+      - "34"
+    Build Tools:
+      - 28.0.3
+      - 30.0.2
+      - 30.0.3
+      - 33.0.0
+      - 33.0.1
+      - 34.0.0
+    System Images:
+      - android-29 | Google Play Intel x86 Atom
+      - android-30 | Google APIs Intel x86 Atom
+      - android-33-ext4 | Google Play Intel x86_64 Atom
+      - android-33 | Google APIs ARM 64 v8a
+      - android-33 | Google Play Intel x86_64 Atom
+    Android NDK: Not Found
+  Windows SDK:
+    AllowDevelopmentWithoutDevLicense: Enabled
+IDEs:
+  Android Studio: AI-222.4459.24.2221.9862592
+  Visual Studio: Not Found
+Languages:
+  Java:
+    version: 11.0.18
+    path: C:\Program Files\Microsoft\jdk-11.0.18.10-hotspot\bin\javac.EXE
+  Ruby: Not Found
+npmPackages:
+  "@react-native-community/cli": Not Found
+  react:
+    installed: 18.2.0
+    wanted: 18.2.0
+  react-native:
+    installed: 0.72.6
+    wanted: 0.72.6
+  react-native-windows: Not Found
+npmGlobalPackages:
+  "*react-native*": Not Found
+Android:
+  hermesEnabled: true
+  newArchEnabled: false
+iOS:
+  hermesEnabled: Not found
+  newArchEnabled: Not found

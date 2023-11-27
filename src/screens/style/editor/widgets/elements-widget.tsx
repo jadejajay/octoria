@@ -108,7 +108,7 @@ export const ElementsWidget = () => {
             size={40}
             color={theme}
           />
-          <Text className="font-kalam text-lg">Select From Gallery</Text>
+          <Text className="font-sfbold text-lg">Select From Gallery</Text>
         </TouchableOpacity>
       </View>
       <View className="flex-1">
