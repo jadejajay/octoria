@@ -79,7 +79,7 @@ export const ImageModal = () => {
             size={40}
             color={theme}
           />
-          <Text className="font-sfbold text-lg">Click Picture</Text>
+          <Text className="font-sfbold text-lg" tx={'editor.click_picture'} />
         </TouchableOpacity>
         <TouchableOpacity
           className="m-4 flex-1 items-center justify-center"
@@ -91,7 +91,7 @@ export const ImageModal = () => {
             size={40}
             color={theme}
           />
-          <Text className="font-sfbold text-lg">Select From Gallery</Text>
+          <Text className="font-sfbold text-lg" tx={'editor.select_gallery'} />
         </TouchableOpacity>
       </View>
       <View className="flex-1">

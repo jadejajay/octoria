@@ -13,6 +13,5 @@ export * from './products-widget';
 export * from './render-widget';
 export * from './shape-widget';
 export * from './stickers';
-export * from './svg-magic';
 export * from './text-modal';
 export * from './text-widget';

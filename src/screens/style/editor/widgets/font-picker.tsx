@@ -33,7 +33,7 @@ export const FontWidget = ({ isVisible, onClose, state }: Props5) => {
   return (
     <Modal animationType="slide" visible={isVisible} onRequestClose={onClose}>
       <View className="flex-1 items-center justify-center p-5">
-        <Text className="font-sfbold text-base">Select Font</Text>
+        <Text className="font-sfbold text-base" tx={'editor.select_font'} />
         <FlatList
           data={fonts}
           keyExtractor={(item) => item}

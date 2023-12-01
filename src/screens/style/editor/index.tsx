@@ -7,8 +7,8 @@
  =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
                                                                                           
 */
+import { Env } from '@env';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
-import auth from '@react-native-firebase/auth';
 import { useNavigation } from '@react-navigation/native';
 import { ResizeMode, Video } from 'expo-av';
 import * as MediaLibrary from 'expo-media-library';
@@ -65,7 +65,6 @@ const resolution = 1024;
 //promise classes reference
 export const Editorx = ({ dim }: Props) => {
   // state management
-  const user = auth().currentUser;
   const [sFestivals, setSFestivals] = useState<any>([]);
   const [sPostVideos, setSPostVideos] = useState<any>([]);
   const editorData = useEditorX((state) => state.editorData);
@@ -76,11 +75,11 @@ export const Editorx = ({ dim }: Props) => {
   const setSelectedItem = useEditorX((state) => state.setSelectedItem);
   const setBg = useEditorX((s) => s.setBackground);
   const setFrm = useEditorX((s) => s.setFrame);
+  const saveFrame = useEditorX((s) => s.saveFrame);
   const setDataById = useEditorX((s) => s.setDataById);
   const toggleWidget = useEditorX((s) => s.setActiveWidget);
   const setRenderedAsset = useRenderStore((s) => s.setRenderedAsset);
   const setRenderedAssetData = useRenderStore((s) => s.setRenderedAssetData);
-  const setEditor = useEditorX((s) => s.setEditor);
   const [renderModalLoading, setRenderModalLoading] = useState(false);
 
   const images = useFestivalStore((s) => s.festival);
@@ -98,13 +97,12 @@ export const Editorx = ({ dim }: Props) => {
   React.useEffect(() => {
     loadSubCat();
   }, [loadSubCat]);
-  React.useEffect(() => {
-    setEditor(user?.uid);
-  }, [setEditor, user?.uid]);
 
   // data management
   const frames = useFrameStore((s) => s.frames);
   const sFrame = shuffleArray(frames);
+  // console.log('editorData.elements', editorData.elements);
+
   // component specific
   const { goBack, navigate } = useNavigation();
   const navigation = useNavigation();
@@ -122,7 +120,6 @@ export const Editorx = ({ dim }: Props) => {
     moveToPosition: ({ x, y }: { x: number; y: number }) => void;
   } | null>();
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
-  // const cacheManager = new VideoCacheManager();
   // modal specific
   React.useEffect(() => {
     handleEditorx();
@@ -265,7 +262,7 @@ export const Editorx = ({ dim }: Props) => {
         Header={() => (
           <SmallCard
             onClick={() => navigate('BackgroundModal')}
-            url="http://itekindia.com/chats/mainfestivalcategory/camera.gif"
+            url={Env.GIF_CAMERA}
           />
         )}
         snapToInterval={128}
@@ -294,7 +291,7 @@ export const Editorx = ({ dim }: Props) => {
         Header={() => (
           <SmallCard
             onClick={() => navigate('BackgroundVideosWidget')}
-            url="http://itekindia.com/chats/mainfestivalcategory/camera.gif"
+            url={Env.GIF_CAMERA}
           />
         )}
         snapToInterval={128}
@@ -318,17 +315,14 @@ export const Editorx = ({ dim }: Props) => {
                 setDataById(item.elements, item.mainWidth, dim.width);
               // setMagicController(!magicController);
             }}
-            // onLongPress={() => saveFrame(item.id, dim.width)}
+            onLongPress={() => saveFrame(item.id, dim.width)}
             url={item.image}
             // isSelected={FramePicker.imageUri === item.image} // #00f
           />
         )}
         // eslint-disable-next-line react/no-unstable-nested-components
         Header={() => (
-          <SmallCard
-            onClick={() => navigate('Frames')}
-            url="http://itekindia.com/chats/mainfestivalcategory/camera.gif"
-          />
+          <SmallCard onClick={() => navigate('Frames')} url={Env.GIF_CAMERA} />
         )}
         snapToInterval={128}
         estimatedItemSize={100}
@@ -347,7 +341,7 @@ export const Editorx = ({ dim }: Props) => {
             onPress={() => {
               goBack();
             }}
-            className="my-1 mx-2"
+            className="mx-2 my-1"
           />
           <Text variant="lg" className="font-sfbold opacity-25">
             EditorX
@@ -364,7 +358,7 @@ export const Editorx = ({ dim }: Props) => {
           onPress={() => {
             renderModalLoading ? null : captureView();
           }}
-          className="my-1 mx-2"
+          className="mx-2 my-1"
         />
       </View>
     );
@@ -411,7 +405,7 @@ export const Editorx = ({ dim }: Props) => {
               toggleWidgetModal(item.name);
             }
           }}
-          className="my-1 mx-2"
+          className="mx-2 my-1"
         />
       );
     },
@@ -455,31 +449,6 @@ export const Editorx = ({ dim }: Props) => {
     ),
     [dwnVideo]
   );
-  // magic component
-  const MagicComponent = React.useCallback(
-    (item: Element, index: number) => (
-      <Magic
-        key={`Magic_${index}`}
-        ref={selectedItem === index ? magicRef : null}
-        isFocused={selectedItem === index ? true : false}
-        index={index}
-        onClick={() => {
-          if (selectedItem === index) {
-            setSelectedItem(-1);
-            toggleWidgetModal('Photos');
-          } else {
-            setSelectedItem(index);
-            if (item.component === 'text') {
-              toggleWidgetModal('Text');
-            } else {
-              toggleWidgetModal('Image');
-            }
-          }
-        }}
-      />
-    ),
-    [selectedItem, setSelectedItem, toggleWidgetModal]
-  );
   // background post image and frame component
   const PostImageComponent = React.useCallback(
     () => (
@@ -519,6 +488,37 @@ export const Editorx = ({ dim }: Props) => {
     ),
     [dim.width, editorData.frame, setSelectedItem, toggleWidgetModal]
   );
+  const ListMagic = React.useCallback(() => {
+    return (
+      <>
+        {editorData.elements &&
+          editorData.elements.map((item: Element, index: number) => {
+            console.log('item==>???==>', item.name);
+            return (
+              <Magic
+                key={`Magic_${index}`}
+                ref={selectedItem === index ? magicRef : null}
+                isFocused={selectedItem === index ? true : false}
+                index={index}
+                onClick={() => {
+                  if (selectedItem === index) {
+                    setSelectedItem(-1);
+                    toggleWidgetModal('Photos');
+                  } else {
+                    setSelectedItem(index);
+                    if (item.component === 'text') {
+                      toggleWidgetModal('Text');
+                    } else {
+                      toggleWidgetModal('Image');
+                    }
+                  }
+                }}
+              />
+            );
+          })}
+      </>
+    );
+  }, [editorData.elements, selectedItem, setSelectedItem, toggleWidgetModal]);
   const handleRotationPress = (r: number) => {
     // rotateToDegree 90 to magicRef
     magicRef.current?.rotateToDegree(r);
@@ -572,13 +572,15 @@ export const Editorx = ({ dim }: Props) => {
             <PostImageComponent />
           )}
           {editorData.frame && <PostFrameComponent />}
-          {editorData.elements &&
+          {/* {editorData.elements &&
             editorData.elements.map((item: Element, index: number) => {
+              // console.log('item', index);
               return MagicComponent(item, index);
-            })}
-          <View className="absolute top-1/2 -right-3 z-50">
+            })} */}
+          {ListMagic()}
+          <View className="absolute -right-3 top-1/2 z-50">
             <FastImage
-              source={require('../../../../assets/215.png')}
+              source={require('assets/215.png')}
               style={{
                 width: 50,
                 height: 20,

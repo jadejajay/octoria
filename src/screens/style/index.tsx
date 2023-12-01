@@ -1,7 +1,9 @@
 /* eslint-disable max-lines-per-function */
+import { Stagger } from '@animatereactnative/stagger';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Alert, BackHandler } from 'react-native';
+import { BounceInUp } from 'react-native-reanimated';
 
 import {
   getGreetingByTimezone,
@@ -23,6 +25,7 @@ import {
   ScrollView,
   SearchBar,
   View,
+  WIDTH,
 } from '@/ui';
 
 import { PostCard } from './post-maker';
@@ -32,6 +35,7 @@ export const Style = () => {
   console.log('Style screen loaded', Date.now());
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [update, setUpdate] = useState(1);
   const { navigate } = useNavigation();
   const { MainCategoriesData, isLoading, subscribeToMainCategories } =
     useMainCategories();
@@ -42,7 +46,7 @@ export const Style = () => {
   const { productLoading, products } = useProductsStore();
   const [assist, _] = useAssistance();
   const data = useCallback(
-    () => products.filter((product) => product.featured),
+    () => products.filter((product) => product.featured).slice(0, 6),
     [products]
   );
   //use effects start//////////////////////////////
@@ -101,7 +105,7 @@ export const Style = () => {
           link={() => {
             setSearch('Hardware');
             //@ts-ignore
-            navigate('FeedNavigator', {
+            navigate('FeedStack', {
               screen: 'Feed',
             });
           }}
@@ -124,9 +128,7 @@ export const Style = () => {
   const FestivalImageModal = React.useCallback(() => {
     return (
       <>
-        {productLoading ? (
-          FestivalImage.isLoading ? null : null
-        ) : (
+        {productLoading ? null : FestivalImage.isLoading ? null : (
           <PostModal
             data={FestivalImage.data}
             modalVisible={modalVisible}
@@ -144,22 +146,37 @@ export const Style = () => {
       <ScrollView
         stickyHeaderIndices={[0]}
         showsVerticalScrollIndicator={false}
+        onScroll={(e) => {
+          if (e.nativeEvent.contentOffset.y < 0) {
+            setUpdate((prev) => prev + 1);
+          }
+        }}
         className="flex-1"
       >
         <View className="pt-4">
           <SearchBar />
         </View>
         {PostCategoryList()}
-        <View className="w-full">
-          {isLoading ? null : <CategoriesList data={MainCategoriesData} />}
-        </View>
-        {PostcardCategory()}
+        <Stagger
+          key={`stagger-view-${update}`}
+          stagger={50}
+          entering={() => BounceInUp}
+          duration={600}
+          exitDirection={-1}
+          style={{
+            width: WIDTH,
+          }}
+        >
+          <View className="w-full">
+            {isLoading ? null : <CategoriesList data={MainCategoriesData} />}
+          </View>
+          {PostcardCategory()}
+        </Stagger>
         <View className="h-full w-full">
           {data().length > 0 && (
             <NewProductList data={data()} isLoading={productLoading} />
           )}
         </View>
-
         {FestivalImageModal()}
       </ScrollView>
     </>

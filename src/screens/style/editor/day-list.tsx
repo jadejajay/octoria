@@ -37,7 +37,6 @@ import {
   SmallPostImageCard,
   SmallPostVideoCard,
 } from './components/small-card';
-// import { addData } from '@/core/firebase-bulk';
 type Props = {};
 const SNAP = WIDTH / 3 - 5;
 export const DayList = ({}: Props) => {
@@ -50,7 +49,6 @@ export const DayList = ({}: Props) => {
   const images = useFestivalStore((s) => s.festival);
   const videos = usePostVideoStore((s) => s.postVideos);
   React.useEffect(() => {
-    // addData();
     postImage();
   }, []);
   const postImage = async () => {
@@ -126,7 +124,7 @@ export const DayList = ({}: Props) => {
                 resizeMode="cover"
               />
             )}
-            <View className="absolute inset-0 items-center justify-center">
+            <View className="absolute h-full w-full items-center justify-center">
               <Text className="font-sfregular text-3xl leading-10 text-white">
                 {item.name}
               </Text>
@@ -195,13 +193,14 @@ export const DayList = ({}: Props) => {
             />
           )}
           <TouchableOpacity
-            className="absolute inset-0 items-center justify-center"
+            className="absolute h-full w-full items-center justify-center"
             onPress={() => handleNav2()}
             activeOpacity={1}
           >
-            <Text className="font-sfbold text-xl leading-10 text-green-400">
-              Continue Last Post 🚀
-            </Text>
+            <Text
+              className="font-sfbold text-xl leading-10 text-green-400"
+              tx={'editor.continue_last_post'}
+            />
           </TouchableOpacity>
         </View>
       );
@@ -214,7 +213,7 @@ export const DayList = ({}: Props) => {
     <View className="flex-1">
       <Vertical2CompList
         Comp={CardComp}
-        Header={CardCompHeader}
+        Header={image ? CardCompHeader : null}
         data={categories}
         estimatedItemSize={300}
         numColumn={1}

@@ -55,7 +55,7 @@ export const LoginForm = () => {
       setIsLoading(false);
       showMessage({
         icon: 'danger',
-        message: `Invalid credentials,${error}`,
+        message: `Invalid credentials`,
         duration: 2000,
       });
     }
@@ -64,13 +64,13 @@ export const LoginForm = () => {
     return (
       <View className="flex-1 p-4">
         {isLoading && (
-          <View className="absolute inset-0 z-50 items-center justify-center">
+          <View className="absolute z-50 h-full w-full items-center justify-center">
             <ActivityIndicator color={'black'} size="large" />
           </View>
         )}
         <View className="mt-20 items-center justify-center">
           <Image
-            source={require('../../../assets/logo_big.png')}
+            source={require('assets/logo_big.png')}
             style={{ width: 100, height: 100 }}
           />
         </View>
@@ -100,13 +100,13 @@ export const LoginForm = () => {
   return (
     <View className="flex-1 p-4">
       {isLoading && (
-        <View className="absolute inset-0 z-50 items-center justify-center">
+        <View className="absolute z-50 h-full w-full items-center justify-center">
           <ActivityIndicator color={'black'} size="large" />
         </View>
       )}
       <View className="mt-20 items-center  justify-center">
         <Image
-          source={require('../../../assets/logo_big.png')}
+          source={require('assets/logo_big.png')}
           style={{ width: 100, height: 100 }}
         />
       </View>

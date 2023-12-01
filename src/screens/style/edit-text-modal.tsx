@@ -49,18 +49,6 @@ export const EditTextModal = ({
             onChangeText={(text2) => setText(text2)}
             onContentSizeChange={(e) => console.log(e.nativeEvent.contentSize)}
           />
-          {/* <Slider
-            vertical={true}
-            value={fontSize}
-            tapToSeek={true}
-            maximumValue={30}
-            minimumValue={10}
-            style={styles.slider}
-            onValueChange={setFontSize}
-            minimumTrackTintColor="#0f0"
-            maximumTrackTintColor="#000000"
-            thumbTintColor="transparent"
-          /> */}
           <Text
             variant="sm"
             className="rounded-full bg-black p-4 text-center font-varela text-white"

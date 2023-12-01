@@ -1,20 +1,64 @@
 {
+  "editor": {
+    "capture": "Capture",
+    "click_change_image": "Click To Change Image",
+    "click_picture": "Click Picture",
+    "click_video": "Click Video",
+    "continue_last_post": "Continue Last Post 🚀",
+    "download": "Download",
+    "images": "Images",
+    "save": "Save",
+    "select_font": "Select Font",
+    "select_frame": "Select Frame",
+    "select_gallery": "Select From Gallery",
+    "select_product": "Select Product",
+    "share": "Share",
+    "share_facebook": "Share on Facebook",
+    "share_instagram": "Share on Instagram",
+    "share_telegram": "Share on Telegram",
+    "share_whatsapp": "Share on Whatsapp",
+    "update": "Update",
+    "videos": "Videos"
+  },
+  "list": {
+    "no_data": "Sorry! No data found"
+  },
+  "mainscreen": {
+    "create_post": "Create a Social Media Post with Fast & Easy Post Maker",
+    "welcome": "Welcome to Octoria."
+  },
   "onboarding": {
     "message": "Welcome to obytes app site"
+  },
+  "product": {
+    "add": "Add to Favorite",
+    "background": "With Your Own Background",
+    "catalogue": "Catalogue",
+    "enquiry": "Enquiry Now",
+    "remove": "Remove From Favorite",
+    "try_now": "Try Now"
+  },
+  "scanqr": {
+    "open_link": "Open/Copy Link",
+    "scan_again": "Click To Scan Again"
   },
   "settings": {
     "about": "About",
     "app_name": "App Name",
     "arabic": "Arabic",
     "english": "English",
+    "gallery": "Gallery",
+    "feedback": "Feedback",
     "generale": "General",
     "github": "Github",
+    "gst": "GST Number Information",
     "language": "Language",
     "links": "Links",
     "logout": "Logout",
     "more": "More",
     "privacy": "Privacy Policy",
     "rate": "Rate",
+    "scanqr": "ScanQR",
     "share": "Share",
     "support": "Support",
     "support_us": "Support Us",
@@ -26,11 +70,12 @@
       "title": "Theme"
     },
     "title": "Settings",
-    "version": "Version",
-    "website": "Website",
     "utility": "Utilities",
-    "scanqr": "ScanQR",
-    "gst": "GST Number Information"
+    "version": "Version",
+    "website": "Website"
   },
-  "welcome": "Welcome to obytes app site"
+  "signup": {
+    "click_to_upload": "Click to upload image"
+  },
+  "welcome": "Welcome to octoria app"
 }

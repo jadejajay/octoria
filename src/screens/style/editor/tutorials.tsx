@@ -1,3 +1,4 @@
+import { Env } from '@env';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { ResizeMode, Video } from 'expo-av';
@@ -21,7 +22,7 @@ export const Tutorial = ({}: Props) => {
       </View>
       <View className="h-48 items-center justify-center">
         <Video
-          source={{ uri: 'http://itekindia.com/intro.mp4' }}
+          source={{ uri: Env.INTRO_VIDEO }}
           style={styles.video}
           useNativeControls
           resizeMode={ResizeMode.STRETCH}
@@ -38,7 +39,7 @@ export const Tutorial = ({}: Props) => {
           Designed & Developed By
         </Text>
         <FastImage
-          source={require('../../../../assets/ibais.png')}
+          source={require('assets/ibais.png')}
           style={styles.image}
           resizeMode="contain"
           tintColor={'black'}

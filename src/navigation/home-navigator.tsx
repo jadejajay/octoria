@@ -11,12 +11,14 @@ export type HomeStackParamList = {
   WebView: { link: string };
   Catalogue: { url: string };
   ShareCam: { url: string };
-  ARView: { url: string };
+  ImageViewer: { url: string };
+  ARView: { model: string };
   App: undefined;
   DayList: undefined;
   DayList2: { postMainCategory: PostMainCategoryType };
   Frames: undefined;
   TextModal: undefined;
+  Gallery: undefined;
   ChangeImageModal: undefined;
   ImageEditor: undefined;
   RenderWidget: undefined;

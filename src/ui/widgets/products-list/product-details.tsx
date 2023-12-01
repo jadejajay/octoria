@@ -14,6 +14,7 @@ import {
   useFavorites,
   useFirestoreDocLiveQuery,
 } from '@/core';
+import { enquiryPost } from '@/core/share-strings';
 import type { Product } from '@/types';
 import { Text, TouchableOpacity, View } from '@/ui/core';
 
@@ -34,17 +35,12 @@ export const ProductDetails = ({ item }: { item: Product }) => {
     setFinishing(item2);
   };
   const handleEnquiry = async () => {
-    const LINK = `Hello, I have an inquiry for Octoria Product ${item.name} ${
-      Size ? ' with' : Finishing ? ' with' : ''
-    } ${Size ? Size + ' Size' : ''} ${
-      Finishing
-        ? Size
-          ? ' and ' + Finishing + ' Finishing'
-          : Finishing + ' Finishing'
-        : ''
-    } from Octoria mobile application. https://octoriahardware.com/products/post/${
-      item.id
-    }`;
+    const LINK = enquiryPost({
+      name: item.name,
+      id: item.id,
+      size: Size,
+      finishing: Finishing,
+    });
     try {
       const fileUrl = await getImageBase64(item?.images[0]);
       handleWhatsappShare(fileUrl, LINK, share?.data?.phone);
@@ -56,7 +52,7 @@ export const ProductDetails = ({ item }: { item: Product }) => {
 
   return (
     <View className="px-2">
-      <View className="w-full ">
+      <View className="w-full">
         <View
           className="mt-6 flex-row items-center justify-around rounded-xl p-2"
           style={{ backgroundColor: 'white', elevation: 8 }}
@@ -71,7 +67,10 @@ export const ProductDetails = ({ item }: { item: Product }) => {
               className="flex-row items-center"
             >
               <Entypo name="info-with-circle" size={18} />
-              <Text className="px-2 font-varela text-sm">Catalogue</Text>
+              <Text
+                className="px-2 font-sfbold text-sm"
+                tx={'product.catalogue'}
+              />
             </TouchableOpacity>
           )}
           {item?.image3d && (
@@ -85,13 +84,15 @@ export const ProductDetails = ({ item }: { item: Product }) => {
             >
               <Entypo name="camera" size={22} />
               <View className="">
-                <Text className="px-2 font-varela text-sm">Try Now</Text>
+                <Text
+                  className="px-2 font-sfbold text-sm"
+                  tx={'product.try_now'}
+                />
                 <Text
                   className="px-2 font-varela leading-3 text-slate-400"
                   style={{ fontSize: 8 }}
-                >
-                  With Your Own Background
-                </Text>
+                  tx={'product.background'}
+                />
               </View>
             </TouchableOpacity>
           )}
@@ -104,14 +105,17 @@ export const ProductDetails = ({ item }: { item: Product }) => {
             <TouchableOpacity
               onPress={() =>
                 navigation.getParent()?.navigate('ARView', {
-                  url: item.model as string,
+                  model: item.model as string,
                 })
               }
               className="flex-row items-center"
             >
               <MaterialCommunityIcons name="rotate-3d" size={22} />
               <View className="">
-                <Text className="px-2 font-varela text-sm">Try Now</Text>
+                <Text
+                  className="px-2 font-sfbold text-sm"
+                  tx={'product.try_now'}
+                />
               </View>
             </TouchableOpacity>
           </View>
@@ -158,9 +162,8 @@ export const ProductDetails = ({ item }: { item: Product }) => {
           <Text
             className="px-2 font-varela text-xl  text-black"
             numberOfLines={1}
-          >
-            Remove From Favorite
-          </Text>
+            tx={'product.remove'}
+          />
         </TouchableOpacity>
       ) : (
         <TouchableOpacity
@@ -179,9 +182,8 @@ export const ProductDetails = ({ item }: { item: Product }) => {
           <Text
             className="px-2 font-varela text-xl text-black"
             numberOfLines={1}
-          >
-            Add to Favorite
-          </Text>
+            tx={'product.add'}
+          />
         </TouchableOpacity>
       )}
       <TouchableOpacity
@@ -193,9 +195,8 @@ export const ProductDetails = ({ item }: { item: Product }) => {
         <Text
           className="px-2 font-varela text-xl  text-white  dark:text-black"
           numberOfLines={1}
-        >
-          Enquiry Now
-        </Text>
+          tx={'product.enquiry'}
+        />
       </TouchableOpacity>
     </View>
   );

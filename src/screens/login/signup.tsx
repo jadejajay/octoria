@@ -13,7 +13,7 @@ import { showMessage } from 'react-native-flash-message';
 import * as z from 'zod';
 
 import { useIsSignUp } from '@/core';
-import { uploadImage } from '@/core/post-image';
+import { uploadImage } from '@/core/upload-image';
 import {
   ActivityIndicator,
   Button,
@@ -152,7 +152,7 @@ export const SignUpForm = () => {
   return (
     <View className="flex-1">
       <Image
-        source={require('../../../assets/bg-signup.png')}
+        source={require('assets/bg-signup.png')}
         style={{
           position: 'absolute',
           top: 0,
@@ -164,11 +164,11 @@ export const SignUpForm = () => {
       />
       <ScrollView className="flex-1 p-4">
         <TouchableOpacity
-          className="mt-20 mb-8 items-center justify-center"
+          className="mb-8 mt-20 items-center justify-center"
           onPress={handleImage}
         >
           <ImageBackground
-            source={require('../../../assets/bg-img.png')}
+            source={require('assets/bg-img.png')}
             style={{ width: 100, height: 100 }}
           >
             {image2 && (
@@ -178,14 +178,16 @@ export const SignUpForm = () => {
               />
             )}
             {isLoading && (
-              <View className="absolute inset-0 items-center justify-center">
+              <View className="absolute h-full w-full items-center justify-center">
                 <ActivityIndicator color={'black'} size="large" />
               </View>
             )}
           </ImageBackground>
-          <Text variant="xs" className="text-slate-400">
-            click to upload image
-          </Text>
+          <Text
+            variant="xs"
+            className="text-slate-400"
+            tx={'signup.click_to_upload'}
+          />
         </TouchableOpacity>
         <ControlledInput
           //@ts-ignore

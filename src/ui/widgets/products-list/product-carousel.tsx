@@ -7,7 +7,7 @@ import Carousel, { Pagination } from 'react-native-snap-carousel';
 import { isVideoURL } from '@/core';
 import { Image } from '@/ui/core';
 
-export const SLIDER_WIDTH = Dimensions.get('window').width;
+export const SLIDER_WIDTH = Math.round(Dimensions.get('window').width);
 export const ITEM_WIDTH = Math.round(SLIDER_WIDTH);
 
 const CarouselCardItem = ({ item, index }: any) => {

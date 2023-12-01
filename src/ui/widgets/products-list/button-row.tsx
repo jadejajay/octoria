@@ -1,6 +1,7 @@
-import { ScrollView, Text } from '@/ui/core';
 import React, { useState } from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
+
+import { ScrollView, Text } from '@/ui/core';
 
 interface ButtonRowProps {
   titles: string[];
@@ -22,7 +23,7 @@ export const ButtonRow: React.FC<ButtonRowProps> = ({
 
   return (
     <>
-      <Text variant="lg" className="pl-2 font-varela font-bold">
+      <Text variant="lg" className="pl-2 font-sfbold font-bold">
         {title}
       </Text>
       <ScrollView

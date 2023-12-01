@@ -15,9 +15,10 @@ export const Greeting = ({}: Props) => {
           Hello, {name ? name : 'Guest'}
         </Text>
         <View className="flex-row">
-          <Text className="font-sfbold text-slate-400">
-            Welcome to Octoria.
-          </Text>
+          <Text
+            className="font-sfbold text-slate-400"
+            tx={'mainscreen.welcome'}
+          />
         </View>
       </View>
       <View className="pr-4">

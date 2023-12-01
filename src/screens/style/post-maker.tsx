@@ -1,3 +1,4 @@
+import { Env } from '@env';
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
@@ -21,9 +22,7 @@ export const PostCard = ({}: Props) => {
   return (
     <TouchableOpacity
       onPress={() => {
-        getParent()?.getParent()?.navigate('DayList', {
-          url: 'https://picsum.photos/200/200',
-        });
+        getParent()?.getParent()?.navigate('DayList');
       }}
       activeOpacity={1}
       className="mx-2 mb-4 h-40"
@@ -36,9 +35,11 @@ export const PostCard = ({}: Props) => {
       <View className="absolute inset-y-0 justify-end p-4">
         <View className="h-3/4 flex-row">
           <View className="w-2/3 justify-center">
-            <Text variant="md" className="font-varela text-white">
-              Create a Social Media Post with Fast & Easy Post Maker
-            </Text>
+            <Text
+              variant="md"
+              className="font-varela text-white"
+              tx={'mainscreen.create_post'}
+            />
           </View>
           <View className="w-1/3 justify-end">
             <Animatable.View
@@ -59,12 +60,7 @@ export const PostCard = ({}: Props) => {
 };
 
 const ImageComp = (style: any) => {
-  return (
-    <Image
-      src="http://itekindia.com/chats/bgimages/imageedit.webp"
-      style={style}
-    />
-  );
+  return <Image src={Env.POST_DEMO} style={style} />;
 };
 
 const styles = StyleSheet.create({

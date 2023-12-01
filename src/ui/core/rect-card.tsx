@@ -22,22 +22,19 @@ export const RectCard = ({ item, onClick }: Props) => {
     <View style={styles.card}>
       <AnimatedButton onClick={onClick}>
         <View
-          className="m-1 flex-1 flex-row items-center justify-between rounded-lg p-2 shadow-lg"
+          className="m-1 flex-1 flex-row items-center justify-between rounded-lg shadow-lg"
           style={{ backgroundColor: item.color, elevation: 4 }}
         >
-          <View className="absolute inset-0 overflow-hidden rounded-lg">
-            <Animated.View animation="bounceIn">
+          <View className="absolute h-full w-full overflow-hidden rounded-lg">
+            <Animated.View animation="bounceIn" style={styles.container}>
               <Image
                 src={item.image}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                }}
-                resizeMode="cover"
+                resizeMode="stretch"
+                className="h-full w-full rounded-lg"
               />
             </Animated.View>
           </View>
-          <Text className="w-1/2 self-start font-gobold text-xs text-white">
+          <Text className="self-start p-1.5 font-gobold text-xs text-white">
             {item.title}
           </Text>
         </View>
@@ -53,5 +50,9 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 10,
     overflow: 'hidden',
+  },
+  container: {
+    width: '100%',
+    height: '100%',
   },
 });

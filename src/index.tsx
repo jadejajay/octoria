@@ -47,13 +47,12 @@
 import 'react-native-gesture-handler';
 
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import LogRocket from '@logrocket/react-native';
 import { firebase } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import { usePreventScreenCapture } from 'expo-screen-capture';
 import * as SplashScreen from 'expo-splash-screen';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { LogBox, StyleSheet } from 'react-native';
 import FlashMessage from 'react-native-flash-message';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -80,10 +79,6 @@ SplashScreen.preventAutoHideAsync();
 
 const App = () => {
   console.log('app started', Date.now());
-  useEffect(() => {
-    LogRocket.init('ekssod/demo');
-  }, []);
-
   usePreventScreenCapture();
   const auth = firebase.auth();
   auth.useEmulator('http://192.168.0.8:9099');

@@ -34,12 +34,6 @@ export const Input2 = React.forwardRef<InputOutline, NInputProps>(
       ? 'border-charcoal-700'
       : 'border-neutral-400';
 
-    // const bgColor = isDark
-    //   ? 'bg-charcoal-800'
-    //   : error
-    //   ? 'bg-danger-50'
-    //   : 'bg-neutral-200';
-    // const textDirection = isRTL ? 'text-right' : 'text-left';
     return (
       <View className="mb-4">
         <STextInput
@@ -50,26 +44,8 @@ export const Input2 = React.forwardRef<InputOutline, NInputProps>(
           onBlur={onBlur}
           onFocus={onFocus}
           {...inputProps}
-          // style={StyleSheet.flatten([
-          //   { writingDirection: isRTL ? 'rtl' : 'ltr' },
-          // ])}
         />
       </View>
     );
   }
 );
-// {/* {error && <Text variant="error">{error}</Text>} */}
-//  {/* {label && (
-//           <Text
-//             variant="md"
-//             className={
-//               error
-//                 ? 'text-danger-600'
-//                 : isDark
-//                 ? 'text-charcoal-100'
-//                 : 'text-black'
-//             }
-//           >
-//             {label}
-//           </Text> */}
-//         {/* )} */}

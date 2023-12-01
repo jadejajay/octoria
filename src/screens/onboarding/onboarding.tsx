@@ -10,7 +10,7 @@ export const Onboarding = () => {
     speak('hello sir, octoria mobile application me aapka swagat he');
   }, []);
   return (
-    <View className="flex h-full items-center  justify-center">
+    <View className="flex h-full items-center justify-center">
       <FocusAwareStatusBar />
       <View className="w-full flex-1">
         <Cover />

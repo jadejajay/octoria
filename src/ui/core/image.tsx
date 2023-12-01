@@ -1,3 +1,4 @@
+import { styled } from 'nativewind';
 import React from 'react';
 import type { FastImageProps } from 'react-native-fast-image';
 import FastImage from 'react-native-fast-image';
@@ -6,10 +7,18 @@ export type ImgProps = FastImageProps & {
   src?: string | undefined;
   style?: object;
   resizeMode?: 'cover' | 'contain' | 'stretch' | 'center';
+  className?: string;
   placeholder?: string;
 };
+const SFastImage = styled(FastImage);
 
-export const Image = ({ style, resizeMode, src, ...props }: ImgProps) => {
+export const Image = ({
+  style,
+  resizeMode,
+  src,
+  className = '',
+  ...props
+}: ImgProps) => {
   let RM;
   switch (resizeMode) {
     case 'cover':
@@ -29,7 +38,13 @@ export const Image = ({ style, resizeMode, src, ...props }: ImgProps) => {
       break;
   }
   return (
-    <FastImage style={style} {...props} source={{ uri: src }} resizeMode={RM} />
+    <SFastImage
+      style={style}
+      className={className}
+      source={{ uri: src }}
+      resizeMode={RM}
+      {...props}
+    />
   );
 };
 

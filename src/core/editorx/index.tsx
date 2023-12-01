@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import firestore from '@react-native-firebase/firestore';
 import { produce } from 'immer';
+import lodash from 'lodash';
 import { showMessage } from 'react-native-flash-message';
 import { create } from 'zustand';
 
@@ -20,7 +21,7 @@ const DATA: EditorData = {
       properties: {
         height: 0,
         width: 0,
-        image: 'http://itekindia.com/chats/festival/40-Earth Day.png',
+        image: '',
         viewProps: {
           style: {
             overflow: 'hidden',
@@ -43,12 +44,11 @@ const DATA: EditorData = {
       properties: {
         height: 0,
         width: 0,
-        text: 'userName',
+        text: 'octoria',
         textProps: {
           style: {
             color: 'white',
             fontSize: 20,
-            textAlign: 'center',
           },
         },
         offset: {
@@ -66,12 +66,11 @@ const DATA: EditorData = {
       properties: {
         height: 0,
         width: 0,
-        text: 'usePhone',
+        text: '+91 1234567890',
         textProps: {
           style: {
             color: 'white',
             fontSize: 20,
-            textAlign: 'center',
           },
         },
         offset: {
@@ -89,12 +88,11 @@ const DATA: EditorData = {
       properties: {
         height: 0,
         width: 0,
-        text: 'userEmail',
+        text: 'abcd@gmail.com',
         textProps: {
           style: {
             color: 'white',
             fontSize: 20,
-            textAlign: 'center',
           },
         },
         offset: {
@@ -112,12 +110,11 @@ const DATA: EditorData = {
       properties: {
         height: 0,
         width: 0,
-        text: 'userWebsite',
+        text: 'www.abc.com',
         textProps: {
           style: {
             color: 'white',
             fontSize: 20,
-            textAlign: 'center',
           },
         },
         offset: {
@@ -135,12 +132,11 @@ const DATA: EditorData = {
       properties: {
         height: 0,
         width: 0,
-        text: 'user address',
+        text: 'Ground Floor, 123, XYZ city, India',
         textProps: {
           style: {
             color: 'white',
             fontSize: 20,
-            textAlign: 'center',
           },
         },
         offset: {
@@ -295,6 +291,7 @@ const _useEditorX = create<EditorXState>((set, get) => ({
     }
   },
   setEditor: async (id) => {
+    console.log('set editor called<=====================');
     const Data: string = await getItem(EDITORX_DATA);
     const newData: EditorData = JSON.parse(Data);
     if (newData?.bgType) {
@@ -320,6 +317,7 @@ const _useEditorX = create<EditorXState>((set, get) => ({
     }
   },
   setData: (newData) => {
+    console.log('set data called<=====================');
     set(
       produce((state: EditorXState) => {
         const index = newData.id;
@@ -336,10 +334,16 @@ const _useEditorX = create<EditorXState>((set, get) => ({
           // state.future = [];
           // state.canUndo = true;
           // state.canRedo = false;
-          state.editorData.elements[index].properties = {
-            ...state.editorData.elements[index].properties,
-            ...newData.props,
-          };
+          // const mergedObject = _.merge({}, obj1, obj2);
+          // state.editorData.elements[index].properties = {
+          //   ...state.editorData.elements[index].properties,
+          //   ...newData.props,
+          // };
+          state.editorData.elements[index].properties = lodash.merge(
+            {},
+            state.editorData.elements[index].properties,
+            newData.props
+          );
         }
         return state;
       })
@@ -502,12 +506,29 @@ const _useEditorX = create<EditorXState>((set, get) => ({
     );
   },
   setSelectedItem: (index) => {
-    set(
-      produce((state: EditorXState) => {
-        state.selectedItem = index;
-        return state;
-      })
-    );
+    if (index === -1) {
+      set(
+        produce((state: EditorXState) => {
+          state.selectedItem = index;
+          return state;
+        })
+      );
+    } else {
+      set(
+        produce((state: EditorXState) => {
+          state.editorData.elements.push(state.editorData.elements[index]);
+          return state;
+        })
+      );
+      set(
+        produce((state: EditorXState) => {
+          state.editorData.elements[index].properties.height = 0;
+          state.editorData.elements[index].properties.width = 0;
+          state.selectedItem = state.editorData.elements.length - 1;
+          return state;
+        })
+      );
+    }
   },
   setActiveWidget: (wdg) => {
     set(

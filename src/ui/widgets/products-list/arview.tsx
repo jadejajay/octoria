@@ -1,16 +1,19 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable react-native/no-inline-styles */
+import { Env } from '@env';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import * as MediaLibrary from 'expo-media-library';
 import React, { useRef, useState } from 'react';
 import { Modal } from 'react-native';
 import { ToastAndroid } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { Image } from 'react-native';
 import FastImage from 'react-native-fast-image';
-import ViewShot from 'react-native-view-shot';
+import ViewShot, { captureRef } from 'react-native-view-shot';
 import { WebView } from 'react-native-webview';
 
+import { handleShare, saveToGallery } from '@/core';
 import {
   AbsoluteButton,
   ActivityIndicator,
@@ -23,10 +26,9 @@ type Props = {
 };
 export const ARView = ({ route }: Props) => {
   const url = route.params?.model
-    ? `http://itekindia.com/octoria/xrservice/?model=${route.params?.model}`
-    : 'http://itekindia.com/octoria/xrservice/?model=handle.glb';
-  // const url = 'https://github.com/benwinding';
-  // const share = 'Hello, This Post is Generate by Octoria Application.';
+    ? `${Env.XRSERVICE_API}?model=${route.params?.model}`
+    : `${Env.XRSERVICE_FALLBACK}`;
+  const share = 'Hello, This Image is Generate by Octoria Application.';
   const imgRef = useRef(null);
   const webViewRef = useRef(null);
   const [loading, setLoading] = useState(false);
@@ -36,24 +38,68 @@ export const ARView = ({ route }: Props) => {
   const captureContent = () => {
     if (webViewRef.current !== null) {
       // Send a message to the injected script to capture the content
+      //@ts-ignore
       webViewRef.current.postMessage('screenshot');
     }
   };
+  const mediaLib = async (localUri: string) => {
+    const { status } = await MediaLibrary.requestPermissionsAsync();
+    if (status === 'granted') {
+      // You have permission to write to the storage here
+      // MediaLibrary.saveToLibraryAsync(localUri);
+      await saveToGallery(localUri);
+      ToastAndroid.show('Photo Saved to Gallery !', ToastAndroid.SHORT);
+      setLoading(false);
+    } else {
+      ToastAndroid.show(
+        'Permission denied go to setting and give permission !',
+        ToastAndroid.SHORT
+      );
+      setLoading(false);
+      // Handle the case where permission is denied
+    }
+  };
+
+  const handleShareButton = async () => {
+    try {
+      setLoading(true);
+      const _localUri = await captureRef(imgRef, {
+        quality: 1,
+      })
+        .then((localUri) => {
+          handleShare(localUri, share);
+        })
+        .finally(() => setLoading(false));
+    } catch (e) {
+      setLoading(false);
+      ToastAndroid.show('Sharing failed !', ToastAndroid.SHORT);
+    }
+  };
+  async function handleDownload() {
+    try {
+      setLoading(true);
+      const _localUri = await captureRef(imgRef, {
+        quality: 1,
+      })
+        .then((localUri) => {
+          mediaLib(localUri);
+        })
+        .finally(() => setLoading(false));
+    } catch (error) {
+      setLoading(false);
+      ToastAndroid.show('download Failed !', ToastAndroid.SHORT);
+    }
+  }
 
   const handleUrlWithImage = async (imgUrl: any) => {
-    // console.log(imgUrl?.nativeEvent?.data);
-
     try {
       setLoading(true);
       setImageData(imgUrl?.nativeEvent?.data);
       setOpenShare(true);
-
-      // handleShare(imgUrl?.nativeEvent?.data, share);
       setLoading(false);
     } catch (e) {
       setLoading(false);
-      // console.log(e);
-      ToastAndroid.show('Sharing failed !', ToastAndroid.SHORT);
+      ToastAndroid.show('Capturing failed !', ToastAndroid.SHORT);
     }
   };
 
@@ -62,35 +108,11 @@ export const ARView = ({ route }: Props) => {
       <WebView
         originWhitelist={['*']}
         ref={webViewRef}
-        // nativeConfig={{
-        //   props: {
-        //     webContentsDebuggingEnabled: true,
-        //     console: new MyLogger(),
-        //   },
-        // }}
-        // useWebView2
-        // renderToHardwareTextureAndroid
-        // mediaCapturePermissionGrantType="grant"
-        // geolocationEnabled={true}
-        // mixedContentMode="always"
-        // mediaPlaybackRequiresUserAction={false}
-        // domStorageEnabled={true}
-        // allowFileAccess={true}
-        // allowUniversalAccessFromFileURLs={true}
-        // allowFileAccessFromFileURLs={true}
-        // thirdPartyCookiesEnabled={true}
-        // javaScriptEnabled={true}
-        // bounces={false}
         onMessage={(result) => handleUrlWithImage(result)}
-        // onNavigationStateChange={}
         source={{
-          uri: 'http://192.168.0.8:3000/octoria/xrservice',
+          uri: url,
         }}
         style={styles.container}
-        // onError={(syntheticEvent) => {
-        //   const { nativeEvent } = syntheticEvent;
-        //   // console.warn('WebView error: ', nativeEvent);
-        // }}
       />
       <AbsoluteButton
         iconName="arrow-back"
@@ -118,20 +140,17 @@ export const ARView = ({ route }: Props) => {
           style={{
             width: '100%',
             height: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
+            paddingTop: 50,
+            backgroundColor: 'white',
           }}
         >
-          <Text variant="sm" className="text-center">
-            Share Your AR View
-          </Text>
           <ViewShot
             ref={imgRef}
             style={{
-              width: '90%',
+              width: '100%',
               height: '70%',
-              borderWidth: 3,
               borderColor: 'white',
+              overflow: 'hidden',
             }}
           >
             {imageData && (
@@ -142,12 +161,37 @@ export const ARView = ({ route }: Props) => {
             )}
             <View style={styles.abs}>
               <FastImage
-                source={require('../../../../assets/logo_big.png')}
+                source={require('assets/logo_big.png')}
                 style={styles.image}
                 resizeMode="contain"
               />
             </View>
           </ViewShot>
+          <View
+            style={{
+              position: 'absolute',
+              width: '100%',
+              bottom: 50,
+              flexDirection: 'row',
+              justifyContent: 'space-around',
+            }}
+          >
+            <TouchableOpacity onPress={handleDownload} style={styles.buttonKey}>
+              <MaterialIcons name="save-alt" size={30} color={'black'} />
+              <Text
+                variant="xs"
+                className="font-sfbold"
+                tx={'editor.download'}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={handleShareButton}
+              style={styles.buttonKey}
+            >
+              <MaterialIcons name="share" size={30} color={'black'} />
+              <Text variant="xs" className="font-sfbold" tx={'editor.share'} />
+            </TouchableOpacity>
+          </View>
         </View>
       </Modal>
       <View
@@ -163,10 +207,12 @@ export const ARView = ({ route }: Props) => {
           onPress={captureContent}
           style={{ flexDirection: 'column', alignItems: 'center' }}
         >
-          <MaterialIcons name="share" size={30} color={'white'} />
-          <Text variant="xs" className="font-aquire text-white">
-            Share
-          </Text>
+          <MaterialIcons name="camera-alt" size={30} color={'white'} />
+          <Text
+            variant="xs"
+            className="font-sfbold text-white"
+            tx={'editor.capture'}
+          />
         </TouchableOpacity>
       </View>
     </View>
@@ -196,9 +242,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   image: {
-    width: 400,
-    height: 400,
-    opacity: 0.3,
+    width: 350,
+    height: 350,
+    opacity: 0.2,
   },
   absContainer: {
     position: 'absolute',
@@ -215,10 +261,23 @@ const styles = StyleSheet.create({
     bottom: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'transparent',
   },
   button: {
     flex: 1,
+  },
+  buttonKey: {
+    flexDirection: 'column',
+    backgroundColor: 'white',
+    alignItems: 'center',
+    borderWidth: 1,
+    paddingHorizontal: 30,
+    borderColor: 'black',
+    borderRadius: 10,
+    shadowColor: 'black',
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 2,
+    elevation: 4,
   },
   text: {
     fontSize: 20,

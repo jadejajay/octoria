@@ -39,6 +39,8 @@
     "octoriahardware",
     "ramda",
     "scanqr",
+    "sfbold",
+    "sfregular",
     "tappable",
     "Varela",
     "verticle"
@@ -55,5 +57,5 @@
     "editor.defaultFormatter": "redhat.java"
   },
   "docify.commentService.docstringFormat": "JsDoc",
-  "codewindProfiling.showProfiling": false // make sure to disable i18n-ally in your global setting and only enable it for such projects
+  "codewindProfiling.showProfiling": true // make sure to disable i18n-ally in your global setting and only enable it for such projects
 }

@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable react-hooks/exhaustive-deps */
+import { Env } from '@env';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -11,7 +12,9 @@ import { useEditorX, useIsFirstTime, useIsSignUp, useUserStore } from '@/core';
 import {
   DayList,
   DayList2,
+  Gallery,
   ImageEditor,
+  ImageViewer,
   Onboarding,
   SignUpForm,
   Tutorial,
@@ -73,9 +76,7 @@ export const Root = () => {
           setUserData(User);
           const userName = User?.info?.name || User?.business || 'Octoria';
           const userImage =
-            User?.info?.photo ||
-            User?.photoUrl ||
-            'http://itekindia.com/chats/logos/Octoria%20Mark%20Png.webp';
+            User?.info?.photo || User?.photoUrl || Env.USERPHOTO_URL;
           const userEmail =
             User?.info?.email || User?.email || 'abcd@gmail.com';
           const userPhone = User?.info?.phone || '+91 12345678900';
@@ -136,6 +137,8 @@ export const Root = () => {
                 <Stack.Screen name="ImageModal" component={ImageModal} />
                 <Stack.Screen name="InfoWidget" component={InfoWidget} />
                 <Stack.Screen name="TextModal" component={TextModal} />
+                <Stack.Screen name="Gallery" component={Gallery} />
+                <Stack.Screen name="ImageViewer" component={ImageViewer} />
                 <Stack.Screen name="RenderWidget" component={RenderWidget} />
                 <Stack.Screen name="Elements" component={ElementsWidget} />
                 <Stack.Screen

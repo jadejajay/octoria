@@ -7,15 +7,14 @@
  =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
                                                                                           
 */
+import { Env } from '@env';
 import { ResizeMode, Video } from 'expo-av';
-import * as MediaLibrary from 'expo-media-library';
 import {
   FFmpegKit,
   FFmpegKitConfig,
   ReturnCode,
 } from 'ffmpeg-kit-react-native';
 import React from 'react';
-import { ToastAndroid } from 'react-native';
 import RNFetchBlob from 'react-native-blob-util';
 import { showMessage } from 'react-native-flash-message';
 
@@ -25,10 +24,11 @@ import {
   handleInstagramShare,
   handleTelegramShare,
   handleWhatsappShare2,
+  saveToGallery,
   useEditorX,
   useRenderStore,
 } from '@/core';
-// import { handleWhatsappShare } from '@/core';
+import { sharePost } from '@/core/share-strings';
 import {
   ActivityIndicator,
   Image,
@@ -138,84 +138,25 @@ export const RenderWidget = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
-
-  const saveToGallery = async () => {
-    if (renderedAsset) {
-      const albumName = await MediaLibrary.getAlbumAsync('Octoria');
-      if (albumName) {
-        const asset = await MediaLibrary.createAssetAsync(renderedAsset);
-        const album = await MediaLibrary.addAssetsToAlbumAsync(
-          asset,
-          albumName.id,
-          true
-        );
-        if (album) {
-          ToastAndroid.show(
-            `Post saved successfully to Octoria album in your gallery.`,
-            ToastAndroid.LONG
-          );
-        } else {
-          ToastAndroid.show(
-            `Error Creating assets give permissions`,
-            ToastAndroid.LONG
-          );
-        }
-      } else {
-        const asset = await MediaLibrary.createAssetAsync(renderedAsset);
-        const album = await MediaLibrary.createAlbumAsync(
-          'Octoria',
-          asset,
-          true
-        );
-        if (album) {
-          ToastAndroid.show(
-            `Post saved successfully to Octoria album in your gallery.`,
-            ToastAndroid.LONG
-          );
-        } else {
-          ToastAndroid.show(
-            `Error Creating assets give permissions`,
-            ToastAndroid.LONG
-          );
-        }
-      }
-    }
-  };
   const TYPE = type === 'photo' ? 'image/png' : 'video/mp4';
   const handleWP = async () => {
     if (renderedAssetData) {
-      handleWhatsappShare2(
-        renderedAssetData,
-        'Hi, This Post is generated using Octoria Post maker application',
-        TYPE
-      );
+      handleWhatsappShare2(renderedAssetData, sharePost({ type: type }), TYPE);
     }
   };
   const handleIG = async () => {
     if (renderedAssetData) {
-      handleInstagramShare(
-        renderedAssetData,
-        'Hi, This Post is generated using Octoria Post maker application',
-        TYPE
-      );
+      handleInstagramShare(renderedAssetData, sharePost({ type: type }), TYPE);
     }
   };
   const handleFB = async () => {
     if (renderedAssetData) {
-      handleFacebookShare(
-        renderedAssetData,
-        'Hi, This Post is generated using Octoria Post maker application',
-        TYPE
-      );
+      handleFacebookShare(renderedAssetData, sharePost({ type: type }), TYPE);
     }
   };
   const handleTG = async () => {
     if (renderedAssetData) {
-      handleTelegramShare(
-        renderedAssetData,
-        'Hi, This Post is generated using Octoria Post maker application',
-        TYPE
-      );
+      handleTelegramShare(renderedAssetData, sharePost({ type: type }), TYPE);
     }
   };
   return (
@@ -239,7 +180,7 @@ export const RenderWidget = () => {
       )}
       <View
         className="overflow-hidden"
-        style={{ width: '100%', aspectRatio: 1 }}
+        style={{ width: '100%', aspectRatio: 1, marginTop: 60 }}
       >
         {type === 'video' && renderedAsset ? (
           <Video
@@ -275,15 +216,15 @@ export const RenderWidget = () => {
           onPress={handleWP}
         >
           <Image
-            src={
-              'http://itekindia.com/chats/bgimages/whatsapp-1623579_1280.webp'
-            }
+            src={Env.SHARE_WHATSAPP}
             style={{ width: 50, height: 50 }}
             resizeMode="contain"
           />
-          <Text variant="sm" className="ml-4 font-varela text-xl">
-            Share on Whatsapp
-          </Text>
+          <Text
+            variant="sm"
+            className="ml-4 font-varela text-xl"
+            tx={'editor.share_whatsapp'}
+          />
         </TouchableOpacity>
         <TouchableOpacity
           className="m-2 w-full flex-row items-center"
@@ -291,13 +232,14 @@ export const RenderWidget = () => {
           onPress={handleIG}
         >
           <Image
-            src={
-              'http://itekindia.com/chats/bgimages/instagram-1675670_1280.webp'
-            }
+            src={Env.SHARE_INSTAGRAM}
             style={{ width: 50, height: 50 }}
             resizeMode="contain"
           />
-          <Text className="ml-4 font-varela text-xl">Share on Instagram</Text>
+          <Text
+            className="ml-4 font-varela text-xl"
+            tx={'editor.share_instagram'}
+          />
         </TouchableOpacity>
         <TouchableOpacity
           className="m-2 w-full flex-row items-center"
@@ -305,13 +247,14 @@ export const RenderWidget = () => {
           onPress={handleFB}
         >
           <Image
-            src={
-              'http://itekindia.com/chats/bgimages/3D_Square_with_Facebook_Logo.webp'
-            }
+            src={Env.SHARE_FACEBOOK}
             style={{ width: 50, height: 50 }}
             resizeMode="cover"
           />
-          <Text className="ml-4 font-varela text-xl">Share on Instagram</Text>
+          <Text
+            className="ml-4 font-varela text-xl"
+            tx={'editor.share_facebook'}
+          />
         </TouchableOpacity>
         <TouchableOpacity
           className="m-2 w-full flex-row items-center"
@@ -319,23 +262,22 @@ export const RenderWidget = () => {
           onPress={handleTG}
         >
           <Image
-            src={
-              'http://itekindia.com/chats/bgimages/realistic_3d_square_with_telegram_logo.webp'
-            }
+            src={Env.SHARE_TELEGRAM}
             style={{ width: 50, height: 50 }}
             resizeMode="cover"
           />
-          <Text className="ml-4 font-varela text-xl">Share on Instagram</Text>
+          <Text
+            className="ml-4 font-varela text-xl"
+            tx={'editor.share_telegram'}
+          />
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={saveToGallery}
+          onPress={() => saveToGallery(renderedAsset)}
           className="h-16 w-full"
           activeOpacity={1}
         >
           <Image
-            src={
-              'http://itekindia.com/chats/bgimages/download-155424_1280.webp'
-            }
+            src={Env.SHARE_DOWNLOAD}
             style={{ width: '100%', height: '100%' }}
             resizeMode="cover"
           />

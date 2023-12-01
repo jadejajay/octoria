@@ -38,15 +38,15 @@ type Props = {
 };
 const Magic = (props: Props, ref: ForwardedRef<any>) => {
   const [index, setIndex] = useState<number>(props.index);
+  // console.log('index', index);
+
   const isFocused = props.isFocused;
   const deleteElement = useEditorX((s) => s.deleteElement);
   const copyElement = useEditorX((s) => s.copyElement);
+  const elements = useEditorX((s) => s.editorData.elements);
   const setData = useEditorX((s) => s.setData);
   const data = useEditorX((s) => s.editorData.elements[index]?.properties);
   const dataId = useEditorX((s) => s.editorData.elements[index]?.id);
-  const sscale = useEditorX(
-    (s) => s.editorData.elements[index]?.properties.scale
-  );
   const sFrame = useEditorX((s) => s.editorData.frame);
   const soffset = useEditorX(
     (s) => s.editorData.elements[index]?.properties?.offset
@@ -60,31 +60,33 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
   const srotation = useEditorX(
     (s) => s.editorData.elements[index]?.properties?.rotation
   );
+  const sFontSize = useEditorX(
+    (s) => s.editorData.elements[index]?.properties?.textProps?.style?.fontSize
+  );
   const offset = useSharedValue(soffset);
   const start = useSharedValue(soffset);
-  const scale = useSharedValue(sscale);
   const width = useSharedValue(swidth);
   const savedWidth = useSharedValue(swidth);
   const savedHeight = useSharedValue(sheight);
   const height = useSharedValue(sheight);
-  const savedScale = useSharedValue(sscale);
   const rotation = useSharedValue(srotation);
   const savedRotation = useSharedValue(srotation);
-  // const [isDragging, setIsDragging] = useState(false);
+  const fontSize = useSharedValue(sFontSize);
+  const savedFontSize = useSharedValue(sFontSize);
 
   useEffect(() => {
     offset.value = withTiming(soffset, { duration: 0 });
     start.value = withTiming(soffset, { duration: 0 });
-    scale.value = withTiming(sscale, { duration: 0 });
-    savedScale.value = withTiming(sscale, { duration: 0 });
     width.value = withTiming(swidth, { duration: 0 });
     savedWidth.value = withTiming(swidth, { duration: 0 });
     height.value = withTiming(sheight, { duration: 0 });
     savedHeight.value = withTiming(sheight, { duration: 0 });
     rotation.value = withTiming(srotation, { duration: 0 });
     savedRotation.value = withTiming(srotation, { duration: 0 });
+    fontSize.value = withTiming(sFontSize, { duration: 0 });
+    savedFontSize.value = withTiming(sFontSize, { duration: 0 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sFrame]);
+  }, [sFrame, elements]);
 
   useEffect(() => {
     setIndex(props.index);
@@ -92,8 +94,8 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
-      width: width.value * scale.value,
-      height: height.value * scale.value,
+      width: width.value,
+      height: height.value,
       transform: [
         { translateX: offset.value.x },
         { translateY: offset.value.y },
@@ -118,12 +120,14 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
     setData({ id: props.index, props: { offset: { x: x, y: y } } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const logger = useCallback((item: any) => {
+    console.log('LOGGER ==> ', item);
+  }, []);
   const getState = useCallback(
     () => ({
       index: index,
       offset: offset.value,
       start: start.value,
-      scale: scale.value,
       width: width.value,
       height: height.value,
       rotation: rotation.value,
@@ -131,7 +135,6 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
-
   useImperativeHandle(
     ref,
     () => ({
@@ -144,7 +147,6 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
   );
   const dragGesture = Gesture.Pan()
     .averageTouches(true)
-
     .onUpdate((e) => {
       if (isFocused) {
         offset.value = {
@@ -163,19 +165,31 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
           id: props.index,
           props: { offset: { x: offset.value.x, y: offset.value.y } },
         });
+        runOnJS(logger)('drag end');
       }
     });
   const zoomGesture = Gesture.Pinch()
-
     .onUpdate((event) => {
       if (isFocused) {
-        scale.value = savedScale.value * event.scale;
+        height.value = savedHeight.value * event.scale;
+        width.value = savedWidth.value * event.scale;
+        fontSize.value = height.value * 0.67 - 5;
       }
     })
     .onEnd(() => {
       if (isFocused) {
-        savedScale.value = scale.value;
-        runOnJS(setData)({ id: props.index, props: { scale: scale.value } });
+        savedHeight.value = height.value;
+        savedWidth.value = width.value;
+        savedFontSize.value = fontSize.value;
+        runOnJS(setData)({
+          id: props.index,
+          props: {
+            width: width.value,
+            height: height.value,
+            textProps: { style: { fontSize: fontSize.value } },
+          },
+        });
+        runOnJS(logger)('zoom end');
       }
     });
   const rotateGesture = Gesture.Rotation()
@@ -191,9 +205,9 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
           id: props.index,
           props: { rotation: rotation.value },
         });
+        runOnJS(logger)('rotate end');
       }
     });
-
   const composed = Gesture.Simultaneous(
     dragGesture,
     Gesture.Simultaneous(zoomGesture, rotateGesture)
@@ -201,20 +215,28 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
   const haptic = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
-  const pan2 = Gesture.Pan()
-    .averageTouches(true)
-    .onBegin(() => runOnJS(haptic)())
-    .onUpdate((e) => {
-      const angle = -savedRotation.value * (Math.PI / 180); // Convert degrees to radians
-      const cos = Math.cos(angle);
-      const sin = Math.sin(angle);
-
-      height.value += e.y * cos - e.x * sin;
-    })
-    .onEnd((_) => {
-      savedHeight.value = height.value;
-      runOnJS(setData)({ id: props.index, props: { height: height.value } });
-    });
+  // const pan2 = Gesture.Pan()
+  //   .averageTouches(true)
+  //   .onBegin(() => runOnJS(haptic)())
+  //   .onUpdate((e) => {
+  //     const angle = -savedRotation.value * (Math.PI / 180); // Convert degrees to radians
+  //     const cos = Math.cos(angle);
+  //     const sin = Math.sin(angle);
+  //     height.value += e.y * cos - e.x * sin;
+  //     fontSize.value = height.value * 0.67 - 5;
+  //   })
+  //   .onEnd((_) => {
+  //     savedHeight.value = height.value;
+  //     savedFontSize.value = fontSize.value;
+  //     runOnJS(setData)({
+  //       id: props.index,
+  //       props: {
+  //         height: height.value,
+  //         textProps: { style: { fontSize: fontSize.value } },
+  //       },
+  //     });
+  //     runOnJS(logger)('height scale end');
+  //   });
   const pan3 = Gesture.Pan()
     .averageTouches(true)
     .onBegin(() => {
@@ -226,28 +248,36 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
       const sin = Math.sin(angle);
       width.value += e.x * cos + e.y * sin;
       height.value += e.y * cos - e.x * sin;
+      fontSize.value = height.value * 0.67 - 5;
     })
     .onEnd((_) => {
       savedHeight.value = height.value;
       savedWidth.value = width.value;
+      savedFontSize.value = fontSize.value;
       runOnJS(setData)({
         id: props.index,
-        props: { height: height.value, width: width.value },
+        props: {
+          height: height.value,
+          width: width.value,
+          textProps: { style: { fontSize: fontSize.value } },
+        },
       });
+      runOnJS(logger)('corner scale end');
     });
-  const pan4 = Gesture.Pan()
-    .averageTouches(true)
-    .onBegin(() => runOnJS(haptic)())
-    .onUpdate((e) => {
-      const angle = -savedRotation.value * (Math.PI / 180); // Convert degrees to radians
-      const cos = Math.cos(angle);
-      const sin = Math.sin(angle);
-      width.value += e.x * cos + e.y * sin;
-    })
-    .onEnd((_) => {
-      savedWidth.value = width.value;
-      runOnJS(setData)({ id: props.index, props: { width: width.value } });
-    });
+  // const pan4 = Gesture.Pan()
+  //   .averageTouches(true)
+  //   .onBegin(() => runOnJS(haptic)())
+  //   .onUpdate((e) => {
+  //     const angle = -savedRotation.value * (Math.PI / 180); // Convert degrees to radians
+  //     const cos = Math.cos(angle);
+  //     const sin = Math.sin(angle);
+  //     width.value += e.x * cos + e.y * sin;
+  //   })
+  //   .onEnd((_) => {
+  //     savedWidth.value = width.value;
+  //     runOnJS(setData)({ id: props.index, props: { width: width.value } });
+  //     runOnJS(logger)('width scale end');
+  //   });
   return (
     <>
       {isFocused && (
@@ -282,7 +312,7 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
               color="black"
             />
           </View>
-          <GestureDetector gesture={pan2}>
+          {/* <GestureDetector gesture={pan2}>
             <Animated.View
               key={`dnd-shadow-tool-button3-${index}`}
               style={[styles.bottomTip]}
@@ -305,10 +335,9 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
                 color="#0284c7"
               />
             </Animated.View>
-          </GestureDetector>
+          </GestureDetector> */}
         </Animated.View>
       )}
-
       <GestureDetector key={`composed-${index}`} gesture={composed}>
         <Animated.View
           key={`dnd-view-animated-${index}`}
@@ -328,9 +357,9 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
               />
             </>
           )}
-
           <ITWidget
             id={dataId}
+            fontSize={fontSize}
             key={`ITWidget-gesture-${index}`}
             data={data}
             index={props.index}
@@ -346,16 +375,12 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     padding: 4,
-    borderColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   container2: {
     padding: 4,
     position: 'absolute',
     alignItems: 'center',
     borderColor: '#fff',
-
     justifyContent: 'center',
     backgroundColor: 'transparent',
   },

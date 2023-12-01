@@ -147,9 +147,11 @@ export const DayList2 = ({ route }: Props) => {
               />
               {imagesWithSameSubcategory.length > 0 && (
                 <>
-                  <Text variant="sm" className="mx-5 text-left font-sfregular">
-                    Images
-                  </Text>
+                  <Text
+                    variant="sm"
+                    className="mx-5 text-left font-sfregular"
+                    tx={'editor.images'}
+                  />
                   <HorizontalList
                     key={`horizontal-list-${index}`}
                     Comp={SmallImageCard}
@@ -162,9 +164,11 @@ export const DayList2 = ({ route }: Props) => {
               )}
               {videosWithSameSubcategory.length > 0 && (
                 <>
-                  <Text variant="sm" className="mx-5 text-left font-sfregular">
-                    Videos
-                  </Text>
+                  <Text
+                    variant="sm"
+                    className="mx-5 text-left font-sfregular"
+                    tx={'editor.videos'}
+                  />
                   <HorizontalList
                     key={`horizontal-list-${index}`}
                     Comp={SmallVideoCard}

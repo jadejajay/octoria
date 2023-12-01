@@ -6,7 +6,7 @@ import { Text } from './text';
 import { View } from './view';
 
 type Props = {
-  icon: React.ReactNode; // You can use any icon library (e.g., FontAwesome, Ionicons)
+  icon: React.ReactNode;
   badgeValue?: string | number;
   onPress: () => void;
   className?: string;

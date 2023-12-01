@@ -16,7 +16,8 @@ import {
 import FastImage from 'react-native-fast-image';
 import { captureRef } from 'react-native-view-shot';
 
-import { shareImageWithTitle } from '@/core';
+import { saveToGallery, shareImageWithTitle } from '@/core';
+import { sharePost } from '@/core/share-strings';
 import { ActivityIndicator, Text, TouchableOpacity, View } from '@/ui';
 
 type Props = {
@@ -40,11 +41,7 @@ export const PostModal = ({
       const localUri = await captureRef(imageRef, {
         quality: 1,
       });
-      shareImageWithTitle(
-        localUri,
-        'Hello, This Post is Generate by Octoria Application.'
-      );
-      // handleWhatsappShare(localUri);
+      shareImageWithTitle(localUri, sharePost({ type: 'Post' }));
       setLoading(false);
     } catch (e) {
       console.log(e);
@@ -60,15 +57,14 @@ export const PostModal = ({
       });
       const { status } = await MediaLibrary.requestPermissionsAsync();
       if (status === 'granted') {
-        // You have permission to write to the storage here
-        await MediaLibrary.saveToLibraryAsync(localUri);
+        // await MediaLibrary.saveToLibraryAsync(localUri);
+        await saveToGallery(localUri);
         ToastAndroid.show('Photo Saved to Gallery !', ToastAndroid.SHORT);
       } else {
         ToastAndroid.show(
           'Permission denied go to setting and give permission !',
           ToastAndroid.SHORT
         );
-        // Handle the case where permission is denied
       }
 
       setLoading(false);
@@ -88,12 +84,12 @@ export const PostModal = ({
       }}
     >
       {loading && (
-        <View className="absolute inset-0 z-50 items-center justify-center">
+        <View className="absolute z-50 h-full w-full items-center justify-center">
           <ActivityIndicator color={'black'} size="large" />
         </View>
       )}
-      <View className="absolute inset-0 items-center justify-center">
-        <ActivityIndicator color={'black'} size="large" />
+      <View className="absolute h-full w-full items-center justify-center">
+        <ActivityIndicator color={'red'} size="large" />
       </View>
       {modalVisible && (
         <View style={styles.centeredView}>
@@ -156,7 +152,7 @@ const Post = ({
 
   return (
     <View className="flex-1 overflow-hidden bg-white">
-      <View className="elevation-4 absolute top-3 -right-10 z-50 scale-75 flex-row items-center rounded-full bg-white p-2 pr-10">
+      <View className="elevation-4 absolute -right-10 top-3 z-50 scale-75 flex-row items-center rounded-full bg-white p-2 pr-10">
         <FastImage
           source={require('assets/logo.png')}
           style={{ width: 24, height: 24 }}
@@ -212,7 +208,7 @@ const Post = ({
               />
             ) : null}
           </View>
-          <View className="elevation-4 absolute left-36 top-1 right-0 grow overflow-hidden">
+          <View className="elevation-4 absolute left-36 right-0 top-1 grow overflow-hidden">
             <Text className="self-start font-sfregular text-base text-white">
               {name ? name : 'Guest'}
             </Text>

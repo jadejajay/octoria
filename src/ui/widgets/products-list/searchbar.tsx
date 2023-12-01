@@ -26,20 +26,8 @@ export const SearchBar2 = ({
   );
 
   const [isLoading, _setIsLoading] = useState(false);
-
-  // const handleSearch = () => {
-  //   // Perform search logic here
-  //   // Set isLoading to true while fetching search results
-  //   setIsLoading(true);
-  //   handle();
-  //   // Simulate API call or any asynchronous operation
-  //   // Set search results and isLoading to false
-  //   setIsLoading(false);
-  // };
-
   const handleClearSearch = () => {
     inputRef.current?.focus();
-    // Clear search text and search results
     setGlobalSearch('');
   };
 

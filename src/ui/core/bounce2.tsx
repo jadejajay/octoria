@@ -13,6 +13,7 @@ type Props = {
   className?: string;
   active: boolean;
   title?: string;
+  size?: number;
   anim?: string;
 };
 export const IconButton2 = ({
@@ -22,6 +23,7 @@ export const IconButton2 = ({
   className,
   title,
   active,
+  size = 24,
   anim = 'bounceIn',
 }: Props) => {
   const [isToggled, setIsToggled] = React.useState(active);
@@ -36,7 +38,7 @@ export const IconButton2 = ({
       <View style={styles.container} className={className}>
         <MaterialCommunityIcons
           name={icon}
-          size={24}
+          size={size}
           color={isToggled ? themecolor : themecolor2}
         />
         {badgeValue && (

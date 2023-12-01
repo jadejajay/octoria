@@ -12,8 +12,6 @@ import {
   TextInput,
   View,
 } from 'react-native';
-// import { showMessage } from 'react-native-flash-message';
-// import SmsRetriever from 'react-native-sms-retriever';
 
 const INPUTS_WIDTH = 300;
 const DEFAULT_LENGTH = 6;

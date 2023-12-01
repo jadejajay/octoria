@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, { useEffect } from 'react';
@@ -18,6 +19,7 @@ export const Feed = () => {
   const search = useSearchStore((s) => s.text);
   const [globalSearch, setGlobalSearch] = React.useState<string>('');
   const [initialData, setInitialData] = React.useState<any[]>([]);
+  const [update, setUpdate] = React.useState(1);
   const { products } = useProductsStore();
 
   const { navigate } = useNavigation();
@@ -72,12 +74,18 @@ export const Feed = () => {
         handle={handleSearch}
       />
       <List
-        data={initialData}
+        key={`list-${update}`}
+        data={initialData.slice(0, 30)}
         renderItem={renderItem}
         estimatedItemSize={HEIGHT / 2.2}
         ListEmptyComponent={<EmptyList isLoading={false} />}
         keyExtractor={(_, index) => `item-${index}`}
         numColumns={2}
+        onScroll={(e) => {
+          if (e.nativeEvent.contentOffset.y < 0) {
+            setUpdate((prev) => prev + 1);
+          }
+        }}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.1}
       />

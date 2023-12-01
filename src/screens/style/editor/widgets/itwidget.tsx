@@ -10,23 +10,30 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { TouchableOpacity } from 'react-native';
-import Animated, { ZoomIn } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, ZoomIn } from 'react-native-reanimated';
 
 import { useEditorX } from '@/core';
-import { Image, Text, View } from '@/ui';
+import { Image, View } from '@/ui';
 
 type Props = {
   data: any;
   id: any;
   index: number;
   onClick?: () => void;
+  fontSize: any;
 };
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
-export const ITWidget = ({ data, id, index, onClick }: Props) => {
+export const ITWidget = ({ data, id, index, onClick, fontSize }: Props) => {
   const userInfo = useEditorX((s) => s.businessData);
   const [animationKey, setAnimationKey] = useState<number>(0);
   const [img, setImg] = useState('');
   const [txt, setTxt] = useState('');
+  const animatedFontSize = useAnimatedStyle(() => {
+    return {
+      fontSize: fontSize.value,
+      lineHeight: fontSize.value,
+    };
+  });
   React.useEffect(() => {
     switch (id) {
       case 'user_name':
@@ -69,17 +76,19 @@ export const ITWidget = ({ data, id, index, onClick }: Props) => {
   ]);
 
   const handlePress = () => {
-    // Increment the key to trigger a re-render and restart the animation
     setAnimationKey(animationKey + 1);
     onClick?.();
   };
   return (
     <View
       key={`anim_button_${index}`}
-      style={{
-        width: '100%',
-        height: '100%',
-      }}
+      style={[
+        {
+          width: '100%',
+          height: '100%',
+        },
+        data?.viewProps?.style,
+      ]}
     >
       <AnimatedTouchable
         key={`ITWidget-${animationKey}-${index}`}
@@ -88,7 +97,6 @@ export const ITWidget = ({ data, id, index, onClick }: Props) => {
         entering={ZoomIn}
         useNativeDriver={true}
         duration={800}
-        style={{ flex: 1 }}
         {...data?.viewProps}
       >
         {img && (
@@ -96,21 +104,19 @@ export const ITWidget = ({ data, id, index, onClick }: Props) => {
             key={`image_${index}`}
             src={img}
             style={{ width: '100%', height: '100%' }}
-            resizeMode={data?.resizeMode ? data?.resizeMode : 'cover'}
+            resizeMode={data?.resizeMode || 'cover'}
           />
         )}
         {txt && (
-          <View
-            key={`animated-view-text_${index}`}
-            className="h-full w-full items-center justify-center"
-          >
-            <Text
+          <View key={`animated-view-text_${index}`} className="h-full w-full">
+            <Animated.Text
               key={`itwidget-text_${index}`}
               onPress={handlePress}
               {...data?.textProps}
+              style={[animatedFontSize, data?.textProps?.style]}
             >
               {txt}
-            </Text>
+            </Animated.Text>
           </View>
         )}
       </AnimatedTouchable>

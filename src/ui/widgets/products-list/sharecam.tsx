@@ -9,25 +9,25 @@ import { useEffect, useRef, useState } from 'react';
 import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { ToastAndroid } from 'react-native';
 import { ImageBackground } from 'react-native';
-// import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { captureRef } from 'react-native-view-shot';
+import FastImage from 'react-native-fast-image';
+import ViewShot, { captureRef } from 'react-native-view-shot';
 
-import { shareImageWithTitle, useImageStore, useLinks } from '@/core';
+import { handleShare, saveToGallery, useImageStore, useLinks } from '@/core';
 import { AbsoluteButton, ActivityIndicator, Image, Text } from '@/ui/core';
 
-// import { shareImageWithTitle } from '@/core';
 import { Gestures } from './simultaneous-gesture';
-
-// import Gestures from '../lib';
 
 export const ShareCam = ({ route }: any) => {
   const { url } = route.params;
   const server = useLinks();
   const demoShare = 'Hello, This Post is Generate by Octoria Application.';
   const { image, setImage } = useImageStore();
-  const imgRef = useRef();
+  const imgRef = useRef(null);
+  const imgRefMain = useRef(null);
   const [loading, setLoading] = useState(false);
   const [share, setShare] = useState(demoShare);
+  const [imageData, setImageData] = useState<string>('');
+  const [openShare, setOpenShare] = useState(false);
   const { goBack } = useNavigation();
   useEffect(() => {
     setLoading(true);
@@ -49,7 +49,8 @@ export const ShareCam = ({ route }: any) => {
     const { status } = await MediaLibrary.requestPermissionsAsync();
     if (status === 'granted') {
       // You have permission to write to the storage here
-      MediaLibrary.saveToLibraryAsync(localUri);
+      // MediaLibrary.saveToLibraryAsync(localUri);
+      await saveToGallery(localUri);
       ToastAndroid.show('Photo Saved to Gallery !', ToastAndroid.SHORT);
       setLoading(false);
     } else {
@@ -58,20 +59,73 @@ export const ShareCam = ({ route }: any) => {
         ToastAndroid.SHORT
       );
       setLoading(false);
-      // Handle the case where permission is denied
     }
   };
-  function delayedPromise(): Promise<void> {
-    setLoading(true);
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 400);
-    });
-  }
 
+  const pickImage = async () => {
+    try {
+      let result = await ImagePicker.launchCameraAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [3, 4],
+        quality: 1,
+      });
+      if (!result.canceled) {
+        setImage(result.assets[0].uri);
+      }
+    } catch (error) {
+      setLoading(false);
+      ToastAndroid.show('Something Unexpected Happen !', ToastAndroid.SHORT);
+    }
+  };
+  const uploadImage = async () => {
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [3, 4],
+        quality: 1,
+      });
+      if (!result.canceled) {
+        setImage(result.assets[0].uri);
+      }
+    } catch (error) {
+      setLoading(false);
+      ToastAndroid.show('Something Unexpected Happen !', ToastAndroid.SHORT);
+    }
+  };
+  const handleShareButton = async () => {
+    try {
+      setLoading(true);
+      const _localUri = await captureRef(imgRef, {
+        quality: 1,
+      })
+        .then((localUri) => {
+          handleShare(localUri, share);
+        })
+        .finally(() => setLoading(false));
+    } catch (e) {
+      setLoading(false);
+      ToastAndroid.show('Sharing failed !', ToastAndroid.SHORT);
+    }
+  };
+  const handleCapture = async () => {
+    try {
+      setLoading(true);
+      const _localUri = await captureRef(imgRefMain, {
+        quality: 1,
+      })
+        .then((localUri) => {
+          setImageData(localUri);
+          setOpenShare(true);
+        })
+        .finally(() => setLoading(false));
+    } catch (e) {
+      setLoading(false);
+      ToastAndroid.show('Capturing failed !', ToastAndroid.SHORT);
+    }
+  };
   async function handleDownload() {
-    const _ = await delayedPromise();
     try {
       setLoading(true);
       const _localUri = await captureRef(imgRef, {
@@ -86,39 +140,6 @@ export const ShareCam = ({ route }: any) => {
       ToastAndroid.show('download Failed !', ToastAndroid.SHORT);
     }
   }
-  const pickImage = async () => {
-    try {
-      let result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [3, 4],
-        quality: 1,
-      });
-      if (!result.canceled) {
-        setImage(result.assets[0].uri);
-      }
-    } catch (error) {
-      setLoading(false);
-      ToastAndroid.show('Something Unexpected Happen !', ToastAndroid.SHORT);
-    }
-  };
-
-  const handleShare = async () => {
-    const _ = await delayedPromise();
-    try {
-      setLoading(true);
-      const _localUri = await captureRef(imgRef, {
-        quality: 1,
-      })
-        .then((localUri) => {
-          shareImageWithTitle(localUri, share);
-        })
-        .finally(() => setLoading(false));
-    } catch (e) {
-      setLoading(false);
-      ToastAndroid.show('Sharing failed !', ToastAndroid.SHORT);
-    }
-  };
 
   return (
     <View style={styles.container}>
@@ -127,14 +148,13 @@ export const ShareCam = ({ route }: any) => {
           style={styles.camera}
           source={{ uri: image }}
           resizeMode="cover"
-          //@ts-ignore
-          ref={imgRef}
+          ref={imgRefMain}
         >
           <View style={styles.buttonContainer}>
             <Gestures
               comp={
-                <Image
-                  src={url}
+                <FastImage
+                  source={{ uri: url }}
                   style={{
                     width: 400,
                     height: 400,
@@ -144,26 +164,6 @@ export const ShareCam = ({ route }: any) => {
               }
             />
           </View>
-          {loading && (
-            <View
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                justifyContent: 'center',
-                alignItems: 'center',
-                backgroundColor: 'transparent',
-              }}
-            >
-              <Image
-                src={'http://itekindia.com/octoria/logo_big.png'}
-                style={styles.image}
-                resizeMode="contain"
-              />
-            </View>
-          )}
         </ImageBackground>
         <AbsoluteButton
           iconName="arrow-back"
@@ -179,6 +179,82 @@ export const ShareCam = ({ route }: any) => {
             <ActivityIndicator size="large" />
           </View>
         </Modal>
+        <Modal
+          visible={openShare}
+          onRequestClose={() => {
+            setOpenShare(false);
+          }}
+          style={{ flex: 1 }}
+          transparent={true}
+        >
+          <View
+            style={{
+              width: '100%',
+              height: '100%',
+              paddingTop: 50,
+              backgroundColor: 'white',
+            }}
+          >
+            <ViewShot
+              ref={imgRef}
+              style={{
+                width: '100%',
+                height: '70%',
+                borderColor: 'white',
+                overflow: 'hidden',
+                backgroundColor: 'red',
+              }}
+            >
+              {imageData && (
+                <Image
+                  source={{ uri: imageData }}
+                  style={{ width: '100%', height: '100%' }}
+                  resizeMode="cover"
+                />
+              )}
+              <View style={styles.abs}>
+                <FastImage
+                  source={require('assets/logo_big.png')}
+                  style={styles.image}
+                  resizeMode="contain"
+                />
+              </View>
+            </ViewShot>
+            <View
+              style={{
+                position: 'absolute',
+                width: '100%',
+                bottom: 50,
+
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+              }}
+            >
+              <TouchableOpacity
+                onPress={handleDownload}
+                style={styles.buttonKey}
+              >
+                <MaterialIcons name="save-alt" size={30} color={'black'} />
+                <Text
+                  variant="xs"
+                  className="font-sfbold"
+                  tx={'editor.download'}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleShareButton}
+                style={styles.buttonKey}
+              >
+                <MaterialIcons name="share" size={30} color={'black'} />
+                <Text
+                  variant="xs"
+                  className="font-sfbold"
+                  tx={'editor.share'}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
         <View
           style={{
             position: 'absolute',
@@ -189,30 +265,34 @@ export const ShareCam = ({ route }: any) => {
           }}
         >
           <TouchableOpacity
-            onPress={handleShare}
-            style={{ flexDirection: 'column', alignItems: 'center' }}
-          >
-            <MaterialIcons name="share" size={30} color={'white'} />
-            <Text variant="xs" className="font-aquire text-white">
-              Share
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
             onPress={pickImage}
             style={{ flexDirection: 'column', alignItems: 'center' }}
           >
-            <MaterialIcons name="camera-enhance" size={30} color={'white'} />
-            <Text variant="xs" className="font-aquire text-white">
-              Camera
+            <MaterialIcons
+              name="photo-camera-front"
+              size={30}
+              color={'white'}
+            />
+            <Text variant="xxs" className="font-sfregular text-white">
+              Upload From Camera
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={handleDownload}
+            onPress={handleCapture}
             style={{ flexDirection: 'column', alignItems: 'center' }}
           >
-            <MaterialIcons name="cloud-download" size={30} color={'white'} />
-            <Text variant="xs" className="font-aquire text-white">
-              Download
+            <MaterialIcons name="camera-enhance" size={30} color={'white'} />
+            <Text variant="xxs" className="font-sfregular text-white">
+              Capture
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={uploadImage}
+            style={{ flexDirection: 'column', alignItems: 'center' }}
+          >
+            <MaterialIcons name="photo-camera-back" size={30} color={'white'} />
+            <Text variant="xxs" className="font-sfregular text-white">
+              Upload From Gallery
             </Text>
           </TouchableOpacity>
         </View>
@@ -238,9 +318,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   image: {
-    width: 400,
-    height: 400,
-    opacity: 0.3,
+    width: '70%',
+    height: '70%',
+    opacity: 0.45,
   },
   absContainer: {
     position: 'absolute',
@@ -249,8 +329,31 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
+  abs: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   button: {
     flex: 1,
+  },
+  buttonKey: {
+    flexDirection: 'column',
+    backgroundColor: 'white',
+    alignItems: 'center',
+    borderWidth: 1,
+    paddingHorizontal: 30,
+    borderColor: 'black',
+    borderRadius: 10,
+    shadowColor: 'black',
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 2,
+    elevation: 4,
   },
   text: {
     fontSize: 20,

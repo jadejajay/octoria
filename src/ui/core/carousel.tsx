@@ -1,9 +1,8 @@
-/* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable max-lines-per-function */
 /* eslint-disable react-native/no-inline-styles */
 import { useNavigation } from '@react-navigation/native';
 import { ResizeMode, Video } from 'expo-av';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 
@@ -24,92 +23,81 @@ export const MainCarousel = () => {
   const { MainCarouselData, isLoading } = useMainCarousel();
   const isCarousel = React.useRef(null);
 
+  const CarouselCardItem = useCallback(
+    ({ item, index }: Props) => {
+      return (
+        <AnimatedButton
+          onClick={() => {
+            item.link
+              ? navigate('WebView', {
+                  link: item.link,
+                })
+              : {};
+          }}
+        >
+          <View style={styles1.container} key={index}>
+            {item.image && (
+              <Image source={{ uri: item.image }} style={styles1.image} />
+            )}
+            {item.video && (
+              <>
+                <Video
+                  style={{ flex: 1, borderRadius: 14 }}
+                  source={{
+                    uri: item.video,
+                  }}
+                  shouldPlay
+                  useNativeControls
+                  isMuted
+                  resizeMode={ResizeMode.COVER}
+                  isLooping
+                />
+              </>
+            )}
+          </View>
+        </AnimatedButton>
+      );
+    },
+    [navigate]
+  );
   if (isLoading) {
     return null;
   }
-  const CarouselCardItem = ({ item, index }: Props) => {
-    return (
-      <AnimatedButton
-        onClick={() => {
-          item.link
-            ? navigate('WebView', {
-                link: item.link,
-              })
-            : {};
-        }}
-      >
-        <View style={styles1.container} key={index}>
-          {item.image && (
-            <Image source={{ uri: item.image }} style={styles1.image} />
-          )}
-          {item.video && (
-            <>
-              <Video
-                style={{ flex: 1 }}
-                source={{
-                  uri: item.video,
-                }}
-                shouldPlay
-                useNativeControls
-                isMuted
-                resizeMode={ResizeMode.COVER}
-                isLooping
-              />
-            </>
-          )}
-        </View>
-      </AnimatedButton>
-    );
-  };
 
   return (
     <View
       style={{
         width: '100%',
+        height: 220,
       }}
     >
       <Carousel
-        alwaysBounceHorizontal={false}
         activeAnimationType="spring"
         activeSlideOffset={0}
-        // activeSlideAlignment="center"
         aria-expanded={true}
         autoplay={true}
         autoplayDelay={200}
         autoplayInterval={5000}
         automaticallyAdjustContentInsets={true}
-        // bounces={false}
-        // bouncesZoom={false}
         callbackOffsetMargin={0}
         centerContent={true}
-        // contentInset= { top: 0, left: 20, bottom: 0, right: 20 }
         contentInsetAdjustmentBehavior="automatic"
         contentOffset={{ x: 0, y: 0 }}
         data={MainCarouselData}
-        // directionalLockEnabled={true}
         enableMomentum={true}
-        // enableSnap={true}
-        // fadingEdgeLength= 10
-        // hasParallaxImages={true}
-        // hitSlop= { top: 20, bottom: 20, left: 20, right: 20 }
         inactiveSlideOpacity={0.7}
         inactiveSlideScale={0.9}
-        // inactiveSlideShift= 20
         itemHeight={200}
-        itemWidth={ITEM_WIDTH * 0.86}
-        layout="default"
-        // layoutCardOffset={100}
-        legacyImplementation={true}
+        itemWidth={Math.round(ITEM_WIDTH * 0.86)}
+        legacyImplementation={false}
         loop={true}
-        loopClonesPerSide={5}
+        loopClonesPerSide={1}
         nestedScrollEnabled={true}
-        overScrollMode="auto"
-        // pinchGestureEnabled={true}
+        overScrollMode="always"
         ref={isCarousel}
         renderItem={CarouselCardItem}
         sliderHeight={200}
-        sliderWidth={SLIDER_WIDTH}
-        useScrollView={true}
+        sliderWidth={Math.round(SLIDER_WIDTH)}
       />
     </View>
   );
@@ -119,11 +107,15 @@ const styles1 = StyleSheet.create({
   container: {
     borderRadius: 14,
     backgroundColor: 'white',
-    elevation: 4,
+    elevation: 8,
     width: ITEM_WIDTH * 0.88,
     height: 200,
     marginHorizontal: -horizontalMargin,
     overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
   },
   image: {
     width: '100%',

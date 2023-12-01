@@ -60,7 +60,7 @@ export const FrameWidget = () => {
           activeOpacity={1}
         >
           <MaterialCommunityIcons name="camera-gopro" size={40} color={theme} />
-          <Text className="font-sfbold text-lg">Select Picture</Text>
+          <Text className="font-sfbold text-lg" tx={'editor.select_frame'} />
         </TouchableOpacity>
       </View>
       <View className="flex-1">

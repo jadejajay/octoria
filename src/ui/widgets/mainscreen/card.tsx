@@ -22,10 +22,14 @@ export const Card = ({ item, onPress, index }: Props) => {
               resizeMode="cover"
             />
           </View>
-          <Text variant="sm" className="font-bold text-slate-500">
+          <Text variant="sm" className="font-sfbold text-slate-500">
             {item?.name}
           </Text>
-          <Text variant="sm" numberOfLines={2} className=" text-slate-500">
+          <Text
+            variant="sm"
+            numberOfLines={2}
+            className="font-semibold text-slate-500"
+          >
             {item?.description}
           </Text>
         </View>

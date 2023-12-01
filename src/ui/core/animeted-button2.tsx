@@ -27,7 +27,7 @@ export const AnimatedButton2: React.FC<BounceInWrapperProps> = ({
       <Animatable.View
         animation={anim}
         duration={duration} // Adjust the duration as needed
-        // useNativeDriver={true} // Important for certain animations
+        useNativeDriver={true} // Important for certain animations
         key={animationKey} // Change the key to re-render on each press
       >
         {children}

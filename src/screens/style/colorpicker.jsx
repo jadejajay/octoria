@@ -1,5 +1,4 @@
 //@ts-nocheck
-// @flow
 
 import React from 'react';
 const { Component } = React;
@@ -168,8 +167,6 @@ const expandColor = (color) =>
     : color;
 
 export class ColorPicker extends Component {
-  // testData = {}
-  // testView = {forceUpdate(){}}
   color = { h: 0, s: 0, v: 100 };
   slideX = new Animated.Value(0);
   slideY = new Animated.Value(0);
@@ -904,8 +901,7 @@ export class ColorPicker extends Component {
                 <View style={[ss.wheelWrap]}>
                   <Image
                     style={ss.wheelImg}
-                    source={require(//
-                    '../../../assets/material/color-wheel.png')}
+                    source={require('assets/material/color-wheel.png')}
                   />
                   <Animated.View
                     style={[

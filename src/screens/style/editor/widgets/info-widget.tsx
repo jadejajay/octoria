@@ -183,9 +183,11 @@ export const InfoWidget = () => {
               <Image src={data.photo} style={{ width: wh, height: wh }} />
             )}
           </View>
-          <Text className="text-center" style={{ fontSize: 6 }}>
-            Click To Change Image
-          </Text>
+          <Text
+            className="text-center"
+            style={{ fontSize: 6 }}
+            tx={'editor.click_change_image'}
+          />
         </TouchableOpacity>
         <Controller
           name="name"
@@ -279,11 +281,8 @@ export const InfoWidget = () => {
             className="rounded-lg border bg-white shadow-xl"
             onPress={handleSubmit(onSubmit)}
           >
-            <Text variant="xl" className="text-center">
-              Update
-            </Text>
+            <Text variant="xl" className="text-center" tx={'editor.update'} />
           </TouchableOpacity>
-          {/* <Button title="Submit" onPress={handleSubmit(onSubmit)} /> */}
         </View>
       </View>
     </ScrollView>
