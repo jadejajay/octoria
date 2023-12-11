@@ -14,8 +14,12 @@ import { ToastAndroid } from 'react-native';
 import { StyleSheet } from 'react-native';
 import * as Animated from 'react-native-animatable';
 
-import { shuffleArray, useEditorX, usePostVideoStore } from '@/core';
-import { codeToSubcategory } from '@/core/subcategory-code';
+import {
+  shuffleArray,
+  useEditorX,
+  usePostVideoStore,
+  useSubCategoryStore,
+} from '@/core';
 import { type PostVideoType } from '@/types';
 import {
   Image,
@@ -142,6 +146,7 @@ type Props = {
   onClose: () => void;
 };
 const Card = ({ item, index, setBg, onClose }: Props) => {
+  const codeToSubcategory = useSubCategoryStore((s) => s.codeToSubcategory);
   return (
     <View className="flex-1 p-2">
       <Animated.View

@@ -16,7 +16,8 @@ import React, { useCallback } from 'react';
 import { ToastAndroid } from 'react-native';
 import { StyleSheet } from 'react-native';
 
-import { useEditorX, useShapesStore } from '@/core';
+import { useEditorX } from '@/core';
+import { FirestoreData } from '@/core/fire-util';
 import type { ShapesType } from '@/types';
 import { EmptyList, Image, Text, TouchableOpacity, View } from '@/ui';
 
@@ -31,10 +32,28 @@ type mesProp = {
 };
 const theme = '#07ab86';
 export const ShapesWidget = () => {
-  const { shapes } = useShapesStore();
+  const shapesHandler = new FirestoreData<ShapesType>('shapes');
+  const [shapes, setShapes] = React.useState<ShapesType[] | []>([]);
   const addElement = useEditorX((s) => s.addElement);
   const { goBack } = useNavigation();
   const mes: mesProp[] = [];
+
+  const getShapes = useCallback(async () => {
+    const data = await shapesHandler.getData(20);
+    if (data) setShapes(data);
+  }, []);
+  React.useEffect(() => {
+    getShapes();
+  }, []);
+  const handleEndReached = useCallback(async () => {
+    console.log('handleEndReached');
+    const data = await shapesHandler.loadMore(20);
+    if (data)
+      setShapes((p) => {
+        if (p) return [...p, ...data];
+        return data;
+      });
+  }, []);
 
   const pickImage = async () => {
     try {
@@ -113,19 +132,18 @@ export const ShapesWidget = () => {
       <View className="flex-1">
         <MasonryFlashList
           data={shapes}
+          onEndReached={handleEndReached}
+          onEndReachedThreshold={0.3}
           numColumns={2}
           getColumnFlex={(_, index) => {
             return index === 0 ? 2 : 1;
           }}
-          //  onEndReached={onEndReached}
           keyExtractor={(_, index) => {
             return index.toString();
           }}
-          //  snapToInterval={snapToInterval}
           estimatedItemSize={100}
           ListEmptyComponent={<EmptyList isLoading={false} />}
           renderItem={Card}
-          //  ListHeaderComponent={Header}
           showsVerticalScrollIndicator={false}
         />
       </View>

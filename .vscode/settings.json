@@ -57,5 +57,10 @@
     "editor.defaultFormatter": "redhat.java"
   },
   "docify.commentService.docstringFormat": "JsDoc",
-  "codewindProfiling.showProfiling": true // make sure to disable i18n-ally in your global setting and only enable it for such projects
+  "codewindProfiling.showProfiling": true,
+  "[cpp]": {
+    "editor.defaultFormatter": "ms-vscode.cpptools"
+  },
+  "C_Cpp.errorSquiggles": "enabled",
+  "C_Cpp.default.compilerPath": "c:\\Program Files (x86)\\Microsoft Visual Studio\\2022\\BuildTools\\VC\\Tools\\Llvm\\x64\\bin\\clang-tidy.exe" // make sure to disable i18n-ally in your global setting and only enable it for such projects
 }

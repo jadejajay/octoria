@@ -14,8 +14,13 @@ import { ToastAndroid } from 'react-native';
 import { StyleSheet } from 'react-native';
 import * as Animated from 'react-native-animatable';
 
-import { setItem, shuffleArray, useEditorX, useFestivalStore } from '@/core';
-import { codeToSubcategory } from '@/core/subcategory-code';
+import {
+  setItem,
+  shuffleArray,
+  useEditorX,
+  useFestivalStore,
+  useSubCategoryStore,
+} from '@/core';
 import { type FestivalType, SUB_CATEGORY } from '@/types';
 import {
   Image,
@@ -140,6 +145,7 @@ type Props = {
   onClose: () => void;
 };
 const Card = ({ item, index, setBg, onClose }: Props) => {
+  const codeToSubcategory = useSubCategoryStore((s) => s.codeToSubcategory);
   return (
     <View className="flex-1 p-2">
       <Animated.View
@@ -158,7 +164,13 @@ const Card = ({ item, index, setBg, onClose }: Props) => {
             onClose();
           }}
         >
-          <Image src={item.image} style={styles.image} resizeMode="cover" />
+          {item?.thumbnail ? (
+            <Image
+              src={item.thumbnail}
+              style={styles.image}
+              resizeMode="cover"
+            />
+          ) : null}
         </TouchableOpacity>
         <Text variant="xs" className="text-center font-sfbold">
           {codeToSubcategory(item.subCategory)}

@@ -58,7 +58,7 @@ export const Post = ({ route }: { route: RouteProp<'Post'> }) => {
           }}
         >
           <View className="mt-4 w-full">
-            <CarouselCards item={data.images} />
+            <CarouselCards images={data.images} />
           </View>
           <View className="px-1">
             <Text variant="h2">{data.name}</Text>

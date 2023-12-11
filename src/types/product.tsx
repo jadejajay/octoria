@@ -3,6 +3,7 @@ export type Product = {
   images: string[];
   catalogue?: string;
   image3d?: string;
+  thumbnail?: string;
   model?: string;
   name: string;
   price?: string;

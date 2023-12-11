@@ -1,4 +1,8 @@
+//@ts-nocheck
 import firestore from '@react-native-firebase/firestore';
+
+// import { generateRandomFestivalPost } from './array-utils';
+// import { postVideosList, postVideoThumbnails } from './data/post-video';
 // export const addRandomData = async (num: any, database: any) => {
 //   for (let i = 0; i < num; i++) {
 //     try {
@@ -69,22 +73,39 @@ import firestore from '@react-native-firebase/firestore';
 //   }
 // };
 // http://itekindia.com/octoria/models/getmodel.php?file=handle.glb
+
+// export const addData = async () => {
+//   // const result = generateRandomFestivalPost(festivalImages, festivalTags);
+//   try {
+//     const collection = firestore().collection('postImages');
+//     for (let i = 0; i < list_of_subcategory.length; i++) {
+//       try {
+//         await collection.add(list_of_subcategory[i]);
+//         console.log(`Added document ${i}`);
+//       } catch (error) {
+//         console.error(`Error adding document ${i}:`, error);
+//       }
+//     }
+//     console.log(`added document`);
+//   } catch (error) {
+//     console.error(`Error adding document :`, error);
+//   }
+// };
 export const addData = async () => {
-  try {
-    const collection = firestore().collection('postImages');
-    for (let i = 0; i < posts.length; i++) {
-      try {
-        await collection.add(posts[i]);
-        console.log(`Added document ${i}`);
-      } catch (error) {
-        console.error(`Error adding document ${i}:`, error);
-      }
-    }
-    console.log(`added document`);
-  } catch (error) {
-    console.error(`Error adding document :`, error);
+  const batch = firestore().batch();
+  for (let i = 0; i < MainCarousel.length; i++) {
+    // const result = generateRandomFestivalPost(
+    //   postVideosList,
+    //   postVideoThumbnails
+    // );
+    const ref = firestore().collection('MainCarousel2').doc();
+    batch.set(ref, MainCarousel[i]);
+    console.log(`Added document ${i}`);
   }
+  batch.commit();
+  console.log(`added document`);
 };
+
 // export const updateData = async () => {
 //   let list: any = [];
 //   try {
@@ -115,12 +136,20 @@ export const addData = async () => {
 //     console.error(`Error adding document :`, error);
 //   }
 // };
-const posts = [
+const MainCarousel = [
   {
-    categoryCode: 2,
-    id: '0Fjx4wdkOYHDyGZ0uK9c',
-    image: 'http://itekindia.com/chats/festival/25-Pongal.webp',
-    subCategory: 25,
-    tags: 'Pongal, festival, 14 january, indian festival',
+    image: 'http://itekindia.com/octoria/products-image/towerbolt.webp',
+  },
+  {
+    image: 'http://itekindia.com/octoria/products-image/towerbolt.webp',
+  },
+  {
+    image: 'http://itekindia.com/octoria/products-image/towerbolt.webp',
+  },
+  {
+    image: 'http://itekindia.com/octoria/products-image/towerbolt.webp',
+  },
+  {
+    image: 'http://itekindia.com/octoria/products-image/towerbolt.webp',
   },
 ];

@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  octoria:
+    image: octoria
+    build:
+      context: .
+      dockerfile: ./Dockerfile

@@ -38,12 +38,9 @@ type Props = {
 };
 const Magic = (props: Props, ref: ForwardedRef<any>) => {
   const [index, setIndex] = useState<number>(props.index);
-  // console.log('index', index);
-
   const isFocused = props.isFocused;
   const deleteElement = useEditorX((s) => s.deleteElement);
   const copyElement = useEditorX((s) => s.copyElement);
-  const elements = useEditorX((s) => s.editorData.elements);
   const setData = useEditorX((s) => s.setData);
   const data = useEditorX((s) => s.editorData.elements[index]?.properties);
   const dataId = useEditorX((s) => s.editorData.elements[index]?.id);
@@ -86,7 +83,7 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
     fontSize.value = withTiming(sFontSize, { duration: 0 });
     savedFontSize.value = withTiming(sFontSize, { duration: 0 });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sFrame, elements]);
+  }, [sFrame]);
 
   useEffect(() => {
     setIndex(props.index);
@@ -116,34 +113,21 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const moveToPosition = useCallback(({ x, y }: { x: number; y: number }) => {
-    offset.value = withTiming({ x: offset.value.x + x, y: offset.value.y + y });
+    offset.value = withTiming(
+      { x: offset.value.x + x, y: offset.value.y + y },
+      { duration: 100 }
+    );
     setData({ id: props.index, props: { offset: { x: x, y: y } } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const logger = useCallback((item: any) => {
-    console.log('LOGGER ==> ', item);
-  }, []);
-  const getState = useCallback(
-    () => ({
-      index: index,
-      offset: offset.value,
-      start: start.value,
-      width: width.value,
-      height: height.value,
-      rotation: rotation.value,
-    }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
   useImperativeHandle(
     ref,
     () => ({
       rotateToDegree,
       moveToCenter,
-      getState,
       moveToPosition,
     }),
-    [rotateToDegree, moveToCenter, getState, moveToPosition]
+    [rotateToDegree, moveToCenter, moveToPosition]
   );
   const dragGesture = Gesture.Pan()
     .averageTouches(true)
@@ -165,7 +149,6 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
           id: props.index,
           props: { offset: { x: offset.value.x, y: offset.value.y } },
         });
-        runOnJS(logger)('drag end');
       }
     });
   const zoomGesture = Gesture.Pinch()
@@ -189,7 +172,6 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
             textProps: { style: { fontSize: fontSize.value } },
           },
         });
-        runOnJS(logger)('zoom end');
       }
     });
   const rotateGesture = Gesture.Rotation()
@@ -205,7 +187,6 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
           id: props.index,
           props: { rotation: rotation.value },
         });
-        runOnJS(logger)('rotate end');
       }
     });
   const composed = Gesture.Simultaneous(
@@ -215,28 +196,6 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
   const haptic = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
   };
-  // const pan2 = Gesture.Pan()
-  //   .averageTouches(true)
-  //   .onBegin(() => runOnJS(haptic)())
-  //   .onUpdate((e) => {
-  //     const angle = -savedRotation.value * (Math.PI / 180); // Convert degrees to radians
-  //     const cos = Math.cos(angle);
-  //     const sin = Math.sin(angle);
-  //     height.value += e.y * cos - e.x * sin;
-  //     fontSize.value = height.value * 0.67 - 5;
-  //   })
-  //   .onEnd((_) => {
-  //     savedHeight.value = height.value;
-  //     savedFontSize.value = fontSize.value;
-  //     runOnJS(setData)({
-  //       id: props.index,
-  //       props: {
-  //         height: height.value,
-  //         textProps: { style: { fontSize: fontSize.value } },
-  //       },
-  //     });
-  //     runOnJS(logger)('height scale end');
-  //   });
   const pan3 = Gesture.Pan()
     .averageTouches(true)
     .onBegin(() => {
@@ -262,36 +221,16 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
           textProps: { style: { fontSize: fontSize.value } },
         },
       });
-      runOnJS(logger)('corner scale end');
     });
-  // const pan4 = Gesture.Pan()
-  //   .averageTouches(true)
-  //   .onBegin(() => runOnJS(haptic)())
-  //   .onUpdate((e) => {
-  //     const angle = -savedRotation.value * (Math.PI / 180); // Convert degrees to radians
-  //     const cos = Math.cos(angle);
-  //     const sin = Math.sin(angle);
-  //     width.value += e.x * cos + e.y * sin;
-  //   })
-  //   .onEnd((_) => {
-  //     savedWidth.value = width.value;
-  //     runOnJS(setData)({ id: props.index, props: { width: width.value } });
-  //     runOnJS(logger)('width scale end');
-  //   });
   return (
     <>
       {isFocused && (
-        <Animated.View
-          key={`tool-${index}`}
-          style={[animatedStyles, styles.container2]}
-        >
+        <Animated.View style={[animatedStyles, styles.container2]}>
           <View
-            key={`dnd-shadow-tool-${index}`}
             className="absolute -top-10 right-1 z-50 w-16 flex-row items-center justify-between rounded-full bg-white p-1"
             style={[styles.shadow]}
           >
             <MaterialCommunityIcons
-              key={`dnd-shadow-tool-button1-${index}`}
               onPress={() => {
                 copyElement(props.index);
               }}
@@ -300,7 +239,6 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
               color="black"
             />
             <MaterialCommunityIcons
-              key={`dnd-shadow-tool-button2-${index}`}
               onPress={() => {
                 width.value = withTiming(0, { duration: 0 });
                 height.value = withTiming(0, { duration: 0 });
@@ -312,55 +250,21 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
               color="black"
             />
           </View>
-          {/* <GestureDetector gesture={pan2}>
-            <Animated.View
-              key={`dnd-shadow-tool-button3-${index}`}
-              style={[styles.bottomTip]}
-            >
-              <MaterialCommunityIcons
-                name="drag-horizontal"
-                size={16}
-                color="#0284c7"
-              />
-            </Animated.View>
-          </GestureDetector>
-          <GestureDetector gesture={pan4}>
-            <Animated.View
-              key={`dnd-shadow-tool-button4-${index}`}
-              style={[styles.rightTip]}
-            >
-              <MaterialCommunityIcons
-                name="drag-vertical"
-                size={16}
-                color="#0284c7"
-              />
-            </Animated.View>
-          </GestureDetector> */}
         </Animated.View>
       )}
-      <GestureDetector key={`composed-${index}`} gesture={composed}>
-        <Animated.View
-          key={`dnd-view-animated-${index}`}
-          style={[animatedStyles, styles.container]}
-        >
+      <GestureDetector gesture={composed}>
+        <Animated.View style={[animatedStyles, styles.container]}>
           {isFocused && (
             <>
-              <GestureDetector key={`border-gesture-${index}`} gesture={pan3}>
-                <Animated.View
-                  key={`dnd-view2-animated-${index}`}
-                  style={[styles.bottomRightTip]}
-                />
+              <GestureDetector gesture={pan3}>
+                <Animated.View style={[styles.bottomRightTip]} />
               </GestureDetector>
-              <View
-                key={`dnd-view3-animated-${index}`}
-                style={styles.boundary}
-              />
+              <View style={styles.boundary} />
             </>
           )}
           <ITWidget
             id={dataId}
             fontSize={fontSize}
-            key={`ITWidget-gesture-${index}`}
             data={data}
             index={props.index}
             onClick={props.onClick}
@@ -375,6 +279,7 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     padding: 4,
+    backgroundColor: 'transparent',
   },
   container2: {
     padding: 4,

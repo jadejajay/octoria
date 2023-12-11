@@ -114,5 +114,194 @@
     "prefix": "navigate",
     "body": ["const { navigate } = useNavigation();", ""],
     "description": "navigate"
+  },
+  "useState": {
+    "prefix": "useState",
+    "body": ["const [${1:text}, set${1:Text}] = useState('');"],
+    "description": "use state react hook"
+  },
+  "useEffect": {
+    "prefix": "useEffect",
+    "body": ["useEffect(() => {", "  $1", "}, [$2]);"],
+    "description": "use effect react hook"
+  },
+  "useMemo": {
+    "prefix": "useMemo",
+    "body": ["const ${1:variable} = useMemo(() => {", "  $2", "}, [$3]);"],
+    "description": "use memo react hook"
+  },
+  "useCallback": {
+    "prefix": "useCallback",
+    "body": ["const ${1:variable} = useCallback(() => {", "  $2", "}, [$3]);"],
+    "description": "use callback react hook"
+  },
+  "useRef": {
+    "prefix": "useRef",
+    "body": ["const ${1:variable} = useRef();"],
+    "description": "use ref react hook"
+  },
+  "useContext": {
+    "prefix": "useContext",
+    "body": ["const ${1:variable} = useContext(${2:Context});"],
+    "description": "use context react hook"
+  },
+  "useReducer": {
+    "prefix": "useReducer",
+    "body": [
+      "const [state, dispatch] = useReducer(${1:reducer}, ${2:initialState});"
+    ],
+    "description": "use reducer react hook"
+  },
+  "useImperativeHandle": {
+    "prefix": "useImperativeHandle",
+    "body": ["useImperativeHandle(${1:ref}, () => ({", "  $2", "}), [$3]);"],
+    "description": "use imperative handle react hook"
+  },
+  "useLayoutEffect": {
+    "prefix": "useLayoutEffect",
+    "body": ["useLayoutEffect(() => {", "  $1", "}, [$2]);"],
+    "description": "use layout effect react hook"
+  },
+  "useDebugValue": {
+    "prefix": "useDebugValue",
+    "body": ["useDebugValue(${1:value});"],
+    "description": "use debug value react hook"
+  },
+  "useQueryClient": {
+    "prefix": "useQueryClient",
+    "body": ["const queryClient = useQueryClient();"],
+    "description": "use query client react hook"
+  },
+  "useInfiniteQuery": {
+    "prefix": "useInfiniteQuery",
+    "body": [
+      "const { data, error, fetchNextPage, hasNextPage, isFetching, isFetchingNextPage, status } = useInfiniteQuery('$1', ({ pageParam = 0 }) => {",
+      "  return client.get(`$2?page=${pageParam}`).then((response) => response.data);",
+      "}, {",
+      "  getNextPageParam: (lastPage) => lastPage.nextPageParam,",
+      "});"
+    ],
+    "description": "use infinite query react hook"
+  },
+  "useMutation": {
+    "prefix": "useMutation",
+    "body": [
+      "const { mutate, data, error, isLoading, isSuccess } = useMutation('$1', (variables) => {",
+      "  return client({",
+      "    url: '$2',",
+      "    method: 'POST',",
+      "    data: variables,",
+      "  }).then((response) => response.data);",
+      "});"
+    ],
+    "description": "use mutation react hook"
+  },
+  "useQuery": {
+    "prefix": "useQuery",
+    "body": [
+      "const { data, error, isLoading, isSuccess } = useQuery('$1', () => {",
+      "  return client.get('$2').then((response) => response.data);",
+      "});"
+    ],
+    "description": "use query react hook"
+  },
+  "useQuery with variables": {
+    "prefix": "useQueryv",
+    "body": [
+      "const { data, error, isLoading, isSuccess } = useQuery('$1', () => {",
+      "  return client.get(`$2/${$3}`).then((response) => response.data);",
+      "});"
+    ],
+    "description": "use query react hook with variables"
+  },
+  "useQuery with variables and params": {
+    "prefix": "useQueryvp",
+    "body": [
+      "const { data, error, isLoading, isSuccess } = useQuery('$1', () => {",
+      "  return client.get(`$2/${$3}`, { params: { $4 } }).then((response) => response.data);",
+      "});"
+    ],
+    "description": "use query react hook with variables and params"
+  },
+  "useQuery with params": {
+    "prefix": "useQueryp",
+    "body": [
+      "const { data, error, isLoading, isSuccess } = useQuery('$1', () => {",
+      "  return client.get('$2', { params: { $3 } }).then((response) => response.data);",
+      "});"
+    ],
+    "description": "use query react hook with params"
+  },
+  "useQuery with params and variables": {
+    "prefix": "useQuerypv",
+    "body": [
+      "const { data, error, isLoading, isSuccess } = useQuery('$1', () => {",
+      "  return client.get(`$2/${$3}`, { params: { $4 } }).then((response) => response.data);",
+      "});"
+    ],
+    "description": "use query react hook with params and variables"
+  },
+  "useQuery with params and variables and headers": {
+    "prefix": "useQuerypvh",
+    "body": [
+      "const { data, error, isLoading, isSuccess } = useQuery('$1', () => {",
+      "  return client.get(`$2/${$3}`, { params: { $4 }, headers: { $5 } }).then((response) => response.data);",
+      "});"
+    ],
+    "description": "use query react hook with params and variables and headers"
+  },
+  "useQuery with params and headers": {
+    "prefix": "useQueryph",
+    "body": [
+      "const { data, error, isLoading, isSuccess } = useQuery('$1', () => {",
+      "  return client.get('$2', { params: { $3 }, headers: { $4 } }).then((response) => response.data);",
+      "});"
+    ],
+    "description": "use query react hook with params and headers"
+  },
+  "useQuery with headers": {
+    "prefix": "useQueryh",
+    "body": [
+      "const { data, error, isLoading, isSuccess } = useQuery('$1', () => {",
+      "  return client.get('$2', { headers: { $3 } }).then((response) => response.data);",
+      "});"
+    ],
+    "description": "use query react hook with headers"
+  },
+  "useQuery with variables and headers": {
+    "prefix": "useQueryvh",
+    "body": [
+      "const { data, error, isLoading, isSuccess } = useQuery('$1', () => {",
+      "  return client.get(`$2/${$3}`, { headers: { $4 } }).then((response) => response.data);",
+      "});"
+    ],
+    "description": "use query react hook with variables and headers"
+  },
+  "useQuery with variables and params and headers": {
+    "prefix": "useQueryvph",
+    "body": [
+      "const { data, error, isLoading, isSuccess } = useQuery('$1', () => {",
+      "  return client.get(`$2/${$3}`, { params: { $4 }, headers: { $5 } }).then((response) => response.data);",
+      "});"
+    ],
+    "description": "use query react hook with variables and params and headers"
+  },
+  "handle": {
+    "prefix": "handle",
+    "body": [
+      "  const ${1:handle} = (${2:\\{\\}:\\{\\}) => {",
+      "      ${3:console.log(\"hello\")}",
+      "  };"
+    ],
+    "description": "handle"
+  },
+  "useQuery with variables and params and headers and method": {
+    "prefix": "useQueryvphm",
+    "body": [
+      "const { data, error, isLoading, isSuccess } = useQuery('$1', () => {",
+      "  return client.$6(`$2/${$3}`, { params: { $4 }, headers: { $5 } }).then((response) => response.data);",
+      "});"
+    ],
+    "description": "use query react hook with variables and params and headers and method"
   }
 }

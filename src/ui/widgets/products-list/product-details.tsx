@@ -45,7 +45,6 @@ export const ProductDetails = ({ item }: { item: Product }) => {
       const fileUrl = await getImageBase64(item?.images[0]);
       handleWhatsappShare(fileUrl, LINK, share?.data?.phone);
     } catch (error) {
-      console.error(error);
       ToastAndroid.show('Some Error', ToastAndroid.SHORT);
     }
   };

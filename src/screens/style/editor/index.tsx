@@ -75,7 +75,7 @@ export const Editorx = ({ dim }: Props) => {
   const setSelectedItem = useEditorX((state) => state.setSelectedItem);
   const setBg = useEditorX((s) => s.setBackground);
   const setFrm = useEditorX((s) => s.setFrame);
-  const saveFrame = useEditorX((s) => s.saveFrame);
+  const _saveFrame = useEditorX((s) => s.saveFrame);
   const setDataById = useEditorX((s) => s.setDataById);
   const toggleWidget = useEditorX((s) => s.setActiveWidget);
   const setRenderedAsset = useRenderStore((s) => s.setRenderedAsset);
@@ -116,7 +116,7 @@ export const Editorx = ({ dim }: Props) => {
   const magicRef = useRef<{
     rotateToDegree: (arg0: number) => void;
     moveToCenter: () => void;
-    getState: () => any;
+    changeFontSize: (size: number) => void;
     moveToPosition: ({ x, y }: { x: number; y: number }) => void;
   } | null>();
   const [permissionResponse, requestPermission] = MediaLibrary.usePermissions();
@@ -313,9 +313,8 @@ export const Editorx = ({ dim }: Props) => {
               setFrm(item.image);
               if (item.mainWidth)
                 setDataById(item.elements, item.mainWidth, dim.width);
-              // setMagicController(!magicController);
             }}
-            onLongPress={() => saveFrame(item.id, dim.width)}
+            // onLongPress={() => _saveFrame(item.id, dim.width)}
             url={item.image}
             // isSelected={FramePicker.imageUri === item.image} // #00f
           />
@@ -334,33 +333,40 @@ export const Editorx = ({ dim }: Props) => {
   // header widget
   const PostHeaderWidget = React.useCallback(() => {
     return (
-      <View id="header" style={styles.header}>
-        <View className="flex-row items-baseline">
+      <>
+        <View id="header" style={styles.header}>
+          <View className="flex-row items-baseline">
+            <IconButton
+              icon={<Feather name="arrow-left" color={'#07ab86'} size={24} />}
+              onPress={() => {
+                goBack();
+              }}
+              className="mx-2 my-1"
+            />
+            <Text variant="lg" className="font-sfbold opacity-25">
+              EditorX
+            </Text>
+            <MaterialCommunityIcons
+              name="information-outline"
+              size={16}
+              onPress={() => navigate('Tutorials')}
+              style={{ marginLeft: 6 }}
+            />
+          </View>
           <IconButton
-            icon={<Feather name="arrow-left" color={'#07ab86'} size={24} />}
+            icon={<Feather name="upload" color={'#07ab86'} size={24} />}
             onPress={() => {
-              goBack();
+              renderModalLoading ? null : captureView();
             }}
             className="mx-2 my-1"
           />
-          <Text variant="lg" className="font-sfbold opacity-25">
-            EditorX
-          </Text>
-          <MaterialCommunityIcons
-            name="information-outline"
-            size={16}
-            onPress={() => navigate('Tutorials')}
-            style={{ marginLeft: 6 }}
-          />
         </View>
-        <IconButton
-          icon={<Feather name="upload" color={'#07ab86'} size={24} />}
-          onPress={() => {
-            renderModalLoading ? null : captureView();
-          }}
-          className="mx-2 my-1"
-        />
-      </View>
+        {/* <View style={[styles.header, { height: 20 }]}>
+          <Text variant="xxs" className="text-center">
+            {editorData.bgType === 'video' ? 'Video' : 'Photo'}
+          </Text>
+        </View> */}
+      </>
     );
   }, [captureView, goBack, navigate, renderModalLoading]);
   // text and image modify widget
@@ -370,6 +376,7 @@ export const Editorx = ({ dim }: Props) => {
         handlePressMoveToPosition={handlePressMoveToPosition}
         handleRotationPress={handleRotationPress}
         handlePressMoveToCenter={handlePressMoveToCenter}
+        handleFontSize={handleFontSize}
       />
     );
   }, []);
@@ -493,27 +500,29 @@ export const Editorx = ({ dim }: Props) => {
       <>
         {editorData.elements &&
           editorData.elements.map((item: Element, index: number) => {
-            console.log('item==>???==>', item.name);
+            // console.log('item==>???==>', item.name);
             return (
-              <Magic
-                key={`Magic_${index}`}
-                ref={selectedItem === index ? magicRef : null}
-                isFocused={selectedItem === index ? true : false}
-                index={index}
-                onClick={() => {
-                  if (selectedItem === index) {
-                    setSelectedItem(-1);
-                    toggleWidgetModal('Photos');
-                  } else {
-                    setSelectedItem(index);
-                    if (item.component === 'text') {
-                      toggleWidgetModal('Text');
+              <View key={`magic-${index}`}>
+                <Magic
+                  // key={`Magic_${index}__${editorData.elements.length}_${editorData.frame}`}
+                  ref={selectedItem === index ? magicRef : null}
+                  isFocused={selectedItem === index ? true : false}
+                  index={index}
+                  onClick={() => {
+                    if (selectedItem === index) {
+                      setSelectedItem(-1);
+                      toggleWidgetModal('Photos');
                     } else {
-                      toggleWidgetModal('Image');
+                      setSelectedItem(index);
+                      if (item.component === 'text') {
+                        toggleWidgetModal('Text');
+                      } else {
+                        toggleWidgetModal('Image');
+                      }
                     }
-                  }
-                }}
-              />
+                  }}
+                />
+              </View>
             );
           })}
       </>
@@ -530,6 +539,10 @@ export const Editorx = ({ dim }: Props) => {
   const handlePressMoveToPosition = ({ x, y }: { x: number; y: number }) => {
     // rotateToDegree 90 to magicRef
     magicRef.current?.moveToPosition({ x, y });
+  };
+  const handleFontSize = (size: number) => {
+    // rotateToDegree 90 to magicRef
+    magicRef.current?.changeFontSize(size);
   };
   return (
     <View className="flex-1">

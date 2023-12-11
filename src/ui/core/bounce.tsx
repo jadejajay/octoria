@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
-import { AnimatedButton2 } from './animeted-button2';
 import { Text } from './text';
+import { TouchableOpacity } from './touchable-opacity';
 import { View } from './view';
 
 type Props = {
@@ -11,7 +11,6 @@ type Props = {
   onPress: () => void;
   className?: string;
   title?: string;
-  anim?: string;
 };
 export const IconButton = ({
   icon,
@@ -19,10 +18,9 @@ export const IconButton = ({
   onPress,
   className,
   title,
-  anim = 'bounceIn',
 }: Props) => {
   return (
-    <AnimatedButton2 onClick={onPress} anim={anim}>
+    <TouchableOpacity activeOpacity={1} onPress={onPress}>
       <View style={styles.container} className={className}>
         {icon}
         {badgeValue && (
@@ -32,7 +30,7 @@ export const IconButton = ({
         )}
       </View>
       <Text style={styles.titleText}>{title}</Text>
-    </AnimatedButton2>
+    </TouchableOpacity>
   );
 };
 

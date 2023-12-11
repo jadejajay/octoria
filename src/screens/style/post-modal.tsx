@@ -170,7 +170,7 @@ const Post = ({
             />
           ) : (
             <View className="flex-1 items-center justify-center">
-              <Text>NO Image Available</Text>
+              <Text>All Izz Well🤗</Text>
             </View>
           )}
         </View>

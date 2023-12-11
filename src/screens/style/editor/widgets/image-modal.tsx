@@ -13,15 +13,37 @@ import React, { useCallback } from 'react';
 import { ToastAndroid } from 'react-native';
 import { StyleSheet } from 'react-native';
 
-import { useEditorX, useImageListStore } from '@/core';
+import { useEditorX } from '@/core';
+import { FirestoreData } from '@/core/fire-util';
 import type { ImageListType } from '@/types';
 import { Image, Text, TouchableOpacity, Vertical2CompList, View } from '@/ui';
 
 const theme = '#07ab86';
 export const ImageModal = () => {
-  const { images } = useImageListStore();
+  const imagesHandler = new FirestoreData<ImageListType>('imagesElement');
+  const [images, setImages] = React.useState<ImageListType[] | []>([]);
   const addElement = useEditorX((s) => s.addElement);
   const { goBack } = useNavigation();
+
+  const getImages = useCallback(async () => {
+    const data = await imagesHandler.getData(20);
+    if (data) setImages(data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  React.useEffect(() => {
+    getImages();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const handleEndReached = useCallback(async () => {
+    console.log('handleEndReached');
+    const data = await imagesHandler.loadMore(20);
+    if (data)
+      setImages((p) => {
+        if (p) return [...p, ...data];
+        return data;
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const CardComp = useCallback((item: any, index: number) => {
     return (
@@ -97,6 +119,7 @@ export const ImageModal = () => {
       <View className="flex-1">
         <Vertical2CompList
           Comp={CardComp}
+          onEndReached={handleEndReached}
           data={images}
           estimatedItemSize={130}
         />

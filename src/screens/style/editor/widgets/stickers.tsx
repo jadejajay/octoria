@@ -9,17 +9,40 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 
-import { useEditorX, useStickerStore } from '@/core';
+import { useEditorX } from '@/core';
+import { FirestoreData } from '@/core/fire-util';
 import type { StickerType } from '@/types';
 import { Image, TouchableOpacity, Vertical2CompList, View, WIDTH } from '@/ui';
 
 const theme = '#07ab86';
 export const StickersWidget = () => {
   const addElement = useEditorX((s) => s.addElement);
-  const [state, setState] = React.useState(50);
   const { goBack } = useNavigation();
-  const { stickers } = useStickerStore();
-  const finalArray = stickers.slice(0, state);
+  const elementsHandler = new FirestoreData<StickerType>('stickers');
+  const [stickers, setStickers] = React.useState<
+    StickerType[] | undefined | null
+  >([]);
+  console.log('stickers', stickers);
+
+  const getStickers = useCallback(async () => {
+    const data = await elementsHandler.getData(30);
+    if (data) setStickers(data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  React.useEffect(() => {
+    getStickers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const handleEndReached = useCallback(async () => {
+    console.log('handleEndReached');
+    const data = await elementsHandler.loadMore(30);
+    if (data)
+      setStickers((p) => {
+        if (p) return [...p, ...data];
+        return data;
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const CardComp = useCallback((item: any, index: number) => {
     return (
       <Card
@@ -37,12 +60,10 @@ export const StickersWidget = () => {
     <View className="flex-1">
       <Vertical2CompList
         Comp={CardComp}
-        data={finalArray}
+        data={stickers}
         estimatedItemSize={WIDTH / 6}
         numColumn={6}
-        onEndReached={() => {
-          setState((s) => s + 50);
-        }}
+        onEndReached={handleEndReached}
       />
     </View>
   );

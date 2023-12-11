@@ -9,7 +9,6 @@ import {
   getGreetingByTimezone,
   speak,
   useFirestoreLiveQuery,
-  useMainCategories,
   useProductsStore,
   useSearchStore,
   useUserStore,
@@ -37,8 +36,10 @@ export const Style = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [update, setUpdate] = useState(1);
   const { navigate } = useNavigation();
-  const { MainCategoriesData, isLoading, subscribeToMainCategories } =
-    useMainCategories();
+
+  const MainCategories = useFirestoreLiveQuery('MainCategory');
+  console.log(MainCategories, '<=====MainCategories');
+
   const User = useUserStore((s) => s.user);
   const setSearch = useSearchStore((s) => s.setSearch);
   const FestivalImage = useFirestoreLiveQuery('FestivalImage');
@@ -66,11 +67,6 @@ export const Style = () => {
       // Subscribe to real-time updates
       if (assist) speak(`${greet} ${User.name}, welcome back`);
     }
-  }, [User, assist]);
-  React.useEffect(() => {
-    const unsubscribe = subscribeToMainCategories();
-
-    return () => unsubscribe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useFocusEffect(() => {
@@ -105,7 +101,7 @@ export const Style = () => {
           link={() => {
             setSearch('Hardware');
             //@ts-ignore
-            navigate('FeedStack', {
+            navigate('FeedNavigator', {
               screen: 'Feed',
             });
           }}
@@ -119,7 +115,7 @@ export const Style = () => {
       <>
         <Greeting />
         <View className="py-2 pt-4 ">
-          <MainCarousel />
+          <MainCarousel name={'MainCarousel'} />
         </View>
         <ChooseBrand title={'Categories'} />
       </>
@@ -168,7 +164,9 @@ export const Style = () => {
           }}
         >
           <View className="w-full">
-            {isLoading ? null : <CategoriesList data={MainCategoriesData} />}
+            {MainCategories.isLoading ? null : (
+              <CategoriesList data={MainCategories.data} />
+            )}
           </View>
           {PostcardCategory()}
         </Stagger>

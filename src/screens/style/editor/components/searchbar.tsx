@@ -10,7 +10,6 @@ import colors from '@/ui/theme/colors';
 export const FestivalSearchBar = () => {
   const setSearch = useSearchStore((s) => s.setFestival);
   const [searchText, setSearchText] = useState('');
-  // const [isLoading, setIsLoading] = useState(false);
   const placeholderArray = [
     'Diwali',
     'Holi',
@@ -56,7 +55,7 @@ export const FestivalSearchBar = () => {
         placeholder={searchPlaceholder}
         onChangeText={(text) => setSearchText(text)}
         value={searchText}
-        className="h-12 rounded-xl pr-12 pl-3"
+        className="h-12 rounded-xl pl-3 pr-12"
         style={{ elevation: 10, borderRadius: 8 }}
         onEndEditing={handleSearch}
       />

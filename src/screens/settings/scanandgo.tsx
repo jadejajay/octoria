@@ -51,7 +51,7 @@ export const ScanNGo = () => {
   }
   if (hasPermission === false) {
     return (
-      <View className="items-center justify-center">
+      <View className="flex-1 items-center justify-center">
         <Text variant="lg" className="text-red-600">
           No access to camera
         </Text>

@@ -6,19 +6,17 @@
  =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
                                                                                           
 */
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { FlatList, Modal, StyleSheet } from 'react-native';
+import { FlatList, StyleSheet } from 'react-native';
 
 import { useEditorX } from '@/core';
 import { Text, TouchableOpacity, View } from '@/ui';
 
-type Props5 = {
-  isVisible: boolean;
-  state: any;
-  onClose: () => void;
-};
-export const FontWidget = ({ isVisible, onClose, state }: Props5) => {
+export const FontWidget = () => {
+  const state = useEditorX((s) => s.selectedItem);
   const setData = useEditorX((s) => s.setTextStyle);
+  const { goBack } = useNavigation();
   const fontSize = 18;
   const handleFontPress = (font: string) => {
     setData({
@@ -27,37 +25,38 @@ export const FontWidget = ({ isVisible, onClose, state }: Props5) => {
         fontFamily: font,
       },
     });
-    onClose();
+    goBack();
   };
-
   return (
-    <Modal animationType="slide" visible={isVisible} onRequestClose={onClose}>
-      <View className="flex-1 items-center justify-center p-5">
-        <Text className="font-sfbold text-base" tx={'editor.select_font'} />
-        <FlatList
-          data={fonts}
-          keyExtractor={(item) => item}
-          showsVerticalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() => handleFontPress(item)}
-              className="m-1 rounded-lg border p-1"
-              style={styles.cardContainer}
+    <View className="flex-1 p-5">
+      <Text
+        variant="lg"
+        className="p-2 text-start font-sfbold"
+        tx={'editor.select_font'}
+      />
+      <FlatList
+        data={fonts}
+        keyExtractor={(item) => item}
+        showsVerticalScrollIndicator={false}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            onPress={() => handleFontPress(item)}
+            className="m-1 rounded-lg border p-1"
+            style={styles.cardContainer}
+          >
+            <Text
+              style={{
+                fontFamily: item,
+                fontSize: fontSize,
+                alignSelf: 'center',
+              }}
             >
-              <Text
-                style={{
-                  fontFamily: item,
-                  fontSize: fontSize,
-                  alignSelf: 'center',
-                }}
-              >
-                {item}
-              </Text>
-            </TouchableOpacity>
-          )}
-        />
-      </View>
-    </Modal>
+              {item}
+            </Text>
+          </TouchableOpacity>
+        )}
+      />
+    </View>
   );
 };
 

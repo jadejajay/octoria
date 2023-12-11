@@ -60,7 +60,6 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { APIProvider } from '@/api';
 import { loadSelectedTheme } from '@/core';
 import { RootNavigator } from '@/navigation';
-
 LogBox.ignoreLogs([
   "ViewPropTypes will be removed from React Native. Migrate to ViewPropTypes exported from 'deprecated-react-native-prop-types'.",
 ]);

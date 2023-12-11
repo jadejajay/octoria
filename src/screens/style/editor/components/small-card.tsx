@@ -2,7 +2,7 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import * as Animated from 'react-native-animatable';
 
-import { codeToSubcategory } from '@/core/subcategory-code';
+import { useSubCategoryStore } from '@/core';
 import type { FestivalType, PostVideoType } from '@/types';
 import { Image, Text, TouchableOpacity, View, WIDTH } from '@/ui';
 
@@ -12,6 +12,7 @@ type Props = {
   handleNav: (code: number, subCode: number, image1: any) => void;
 };
 export const SmallPostImageCard = ({ item, index, handleNav }: Props) => {
+  const codeToSubcategory = useSubCategoryStore((s) => s.codeToSubcategory);
   return (
     <TouchableOpacity
       key={`category-card-${index}`}
@@ -30,9 +31,9 @@ export const SmallPostImageCard = ({ item, index, handleNav }: Props) => {
           className="overflow-hidden rounded-lg"
           style={[styles.container2, styles.imageCard]}
         >
-          {item?.image && (
+          {item?.thumbnail && (
             <Image
-              src={item.image}
+              src={item.thumbnail}
               // eslint-disable-next-line react-native/no-inline-styles
               style={{ width: '100%', height: '100%' }}
               resizeMode="cover"
@@ -60,6 +61,7 @@ export const SmallPostVideoCard = ({
   index: number;
   handleNav: (code: number, subCode: number, image1: any) => void;
 }) => {
+  const codeToSubcategory = useSubCategoryStore((s) => s.codeToSubcategory);
   return (
     <TouchableOpacity
       key={`category-card-${index}`}

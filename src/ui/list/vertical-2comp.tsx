@@ -30,6 +30,7 @@ export const Vertical2CompList = ({
       data={data}
       contentContainerStyle={style}
       numColumns={numColumn}
+      onEndReachedThreshold={0.3}
       onEndReached={onEndReached}
       keyExtractor={(_, index) => {
         return index.toString();

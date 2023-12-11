@@ -21,7 +21,7 @@ import {
   View,
   WIDTH,
 } from '@/ui';
-import { Github, QR, Rate, Share, Support, Website } from '@/ui/icons';
+import { QR, Rate, Share, Support, Website } from '@/ui/icons';
 
 import { Item } from './item';
 import { ItemsContainer } from './items-container';
@@ -49,7 +49,7 @@ export const Settings = () => {
         }}
       >
         <Stagger
-          key={`stagger-${update}`}
+          key={`stagger-${update}-${user?.displayName}`}
           stagger={50}
           duration={300}
           exitDirection={-1}
@@ -60,7 +60,7 @@ export const Settings = () => {
           }}
         >
           <ItemsContainer>
-            <View className=" flex-row p-2 pt-16 ">
+            <View className="flex-row p-2 pt-16">
               <View
                 className="h-32 w-32 rounded-xl p-1"
                 style={{ backgroundColor: 'white', elevation: 4 }}
@@ -105,7 +105,7 @@ export const Settings = () => {
               </View>
             </View>
           </ItemsContainer>
-          <View className="flex-1 px-4 pt-4">
+          <View className="h-full w-full px-4 pt-4">
             <ItemsContainer title="settings.utility">
               <Item
                 text="settings.gallery"
@@ -195,13 +195,6 @@ export const Settings = () => {
                 text="settings.terms"
                 onPress={() => {
                   data?.terms ? openLinkInBrowser(data?.terms) : {};
-                }}
-              />
-              <Item
-                text="settings.github"
-                icon={<Github color={iconColor} />}
-                onPress={() => {
-                  data?.github ? openLinkInBrowser(data?.github) : {};
                 }}
               />
               <Item

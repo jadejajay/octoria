@@ -1,4 +1,3 @@
-// useLogoStore
 import { create } from 'zustand';
 
 import type { PostMainCategoryType } from '@/types';

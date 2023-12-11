@@ -2,8 +2,8 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
-import { AnimatedButton2 } from './animeted-button2';
 import { Text } from './text';
+import { TouchableOpacity } from './touchable-opacity';
 import { View } from './view';
 
 type Props = {
@@ -14,7 +14,6 @@ type Props = {
   active: boolean;
   title?: string;
   size?: number;
-  anim?: string;
 };
 export const IconButton2 = ({
   icon,
@@ -24,7 +23,6 @@ export const IconButton2 = ({
   title,
   active,
   size = 24,
-  anim = 'bounceIn',
 }: Props) => {
   const [isToggled, setIsToggled] = React.useState(active);
   const themecolor2 = 'black';
@@ -34,7 +32,7 @@ export const IconButton2 = ({
     onPress();
   };
   return (
-    <AnimatedButton2 onClick={toggleButton} anim={anim}>
+    <TouchableOpacity onPress={toggleButton}>
       <View style={styles.container} className={className}>
         <MaterialCommunityIcons
           name={icon}
@@ -48,7 +46,7 @@ export const IconButton2 = ({
         )}
       </View>
       <Text style={styles.titleText}>{title}</Text>
-    </AnimatedButton2>
+    </TouchableOpacity>
   );
 };
 

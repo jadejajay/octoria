@@ -373,6 +373,9 @@ const _useEditorX = create<EditorXState>((set, get) => ({
     return false;
   },
   setDataById: (elements, mainWidth, currentWidth) => {
+    console.log('set data by id called<=====================');
+    console.log('mainWidth', mainWidth);
+    console.log('currentWidth', currentWidth);
     if (elements) {
       const property2: Element[] = elements.map((element: Element, _) => {
         return {
@@ -514,17 +517,23 @@ const _useEditorX = create<EditorXState>((set, get) => ({
         })
       );
     } else {
+      // set(
+      //   produce((state: EditorXState) => {
+      //     state.editorData.elements.push(state.editorData.elements[index]);
+      //     return state;
+      //   })
+      // );
+      // set(
+      //   produce((state: EditorXState) => {
+      //     state.editorData.elements[index].properties.height = 0;
+      //     state.editorData.elements[index].properties.width = 0;
+      //     state.selectedItem = state.editorData.elements.length - 1;
+      //     return state;
+      //   })
+      // );
       set(
         produce((state: EditorXState) => {
-          state.editorData.elements.push(state.editorData.elements[index]);
-          return state;
-        })
-      );
-      set(
-        produce((state: EditorXState) => {
-          state.editorData.elements[index].properties.height = 0;
-          state.editorData.elements[index].properties.width = 0;
-          state.selectedItem = state.editorData.elements.length - 1;
+          state.selectedItem = index;
           return state;
         })
       );
@@ -721,13 +730,9 @@ const _useEditorX = create<EditorXState>((set, get) => ({
 }));
 
 export const useEditorX = createSelectors(_useEditorX);
-export * from './elements';
 export * from './festival';
 export * from './frames';
-export * from './image-element';
-export * from './logos';
 export * from './post-main-category';
 export * from './post-video';
 export * from './render';
-export * from './shapes';
-export * from './stickers';
+export * from './sub-category';

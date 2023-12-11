@@ -18,13 +18,16 @@ import {
   usePostMainCategoryStore,
   usePostVideoStore,
   useSearchStore,
+  useSubCategoryStore,
 } from '@/core';
 import { isDateInRange } from '@/core/date-util';
-import { codeToDate } from '@/core/subcategory-code';
 import { POST_IMAGE, type PostMainCategoryType, SUB_CATEGORY } from '@/types';
 import {
+  HEIGHT,
   HorizontalList,
   Image,
+  MainCarousel,
+  ScrollView,
   Text,
   TouchableOpacity,
   Vertical2CompList,
@@ -37,6 +40,7 @@ import {
   SmallPostImageCard,
   SmallPostVideoCard,
 } from './components/small-card';
+// import { addData } from '@/core/firebase-bulk';
 type Props = {};
 const SNAP = WIDTH / 3 - 5;
 export const DayList = ({}: Props) => {
@@ -45,11 +49,13 @@ export const DayList = ({}: Props) => {
   const categories = usePostMainCategoryStore((s) => s.postMainCategory);
   const setCategoryCode = useEditorX((s) => s.setCategoryCode);
   const setFestival = useSearchStore((s) => s.setFestival);
+  const codeToDate = useSubCategoryStore((s) => s.codeToDate);
   const setbg = useEditorX((s) => s.setBackground);
   const images = useFestivalStore((s) => s.festival);
   const videos = usePostVideoStore((s) => s.postVideos);
   React.useEffect(() => {
     postImage();
+    // addData();
   }, []);
   const postImage = async () => {
     const url = (await getItem(POST_IMAGE)) as string;
@@ -93,13 +99,13 @@ export const DayList = ({}: Props) => {
   const CardComp = React.useCallback(
     ({ item, index }: { item: PostMainCategoryType; index: number }) => {
       const filteredImages = images.filter((img) => {
-        return img.categoryCode === item.code;
+        return img?.categoryCode === item.code;
       });
       const imagesInRange = filteredImages.filter((img) =>
         isDateInRange(codeToDate(img.subCategory))
       );
       const filteredVideos = videos.filter((img) => {
-        return img.categoryCode === item.code;
+        return img?.categoryCode === item.code;
       });
       const videosInRange = filteredVideos.filter((img) =>
         isDateInRange(codeToDate(img.subCategory))
@@ -114,7 +120,7 @@ export const DayList = ({}: Props) => {
               setFestival('');
               navigation.navigate('DayList2', { postMainCategory: item });
             }}
-            className="mx-5 mt-4 h-32 overflow-hidden rounded-lg bg-green-400"
+            className="mt-4 h-32 overflow-hidden rounded-lg bg-green-400"
           >
             {item?.image && (
               <Image
@@ -142,7 +148,7 @@ export const DayList = ({}: Props) => {
                 padding={7.5}
                 estimatedItemSize={SNAP}
                 snapToInterval={SNAP}
-                data={imagesInRange}
+                data={imagesInRange.slice(0, 10)}
               />
             </View>
           ) : (
@@ -159,7 +165,7 @@ export const DayList = ({}: Props) => {
                 padding={7.5}
                 estimatedItemSize={SNAP}
                 snapToInterval={SNAP}
-                data={videosInRange}
+                data={videosInRange.slice(0, 10)}
               />
             </View>
           ) : (
@@ -176,7 +182,7 @@ export const DayList = ({}: Props) => {
       return (
         <View
           key={`category-card-header`}
-          className="mx-5 mt-2 h-28 overflow-hidden rounded-lg"
+          className="mt-2 h-28 overflow-hidden rounded-lg"
           style={styles.container2}
         >
           {image && (
@@ -208,17 +214,29 @@ export const DayList = ({}: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [image]
   );
+  const PostCategoryList = React.useCallback(() => {
+    return (
+      <>
+        <View className="py-2 pt-4 ">
+          <MainCarousel name={'MainCarousel2'} />
+        </View>
+      </>
+    );
+  }, []);
 
   return (
-    <View className="flex-1">
-      <Vertical2CompList
-        Comp={CardComp}
-        Header={image ? CardCompHeader : null}
-        data={categories}
-        estimatedItemSize={300}
-        numColumn={1}
-      />
-    </View>
+    <ScrollView className="flex-1">
+      <View className="h-60 w-full">{PostCategoryList()}</View>
+      <View style={styles.cStyle}>
+        <Vertical2CompList
+          Comp={CardComp}
+          Header={image ? CardCompHeader : null}
+          data={categories}
+          estimatedItemSize={300}
+          numColumn={1}
+        />
+      </View>
+    </ScrollView>
   );
 };
 //https://firebasestorage.googleapis.com/v0/b/speedy-league-335221.appspot.com/o/app_assets%2Findependent-day.jpg?alt=media&token=08bb9d54-bca7-4a2e-b2dc-a1cfe8d390a4
@@ -234,6 +252,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 4,
+  },
+  cStyle: {
+    width: WIDTH,
+    height: HEIGHT * 4 - 80,
   },
 });
 // Abs => Abstract 1

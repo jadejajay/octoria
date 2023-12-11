@@ -24,12 +24,12 @@ export const TextAlignRow: React.FC<ButtonRowProps> = ({
 
   return (
     <>
-      <Text variant="md" className="pl-2 font-sfbold">
+      <Text key={`text-align`} variant="md" className="pl-2 font-sfbold">
         {title}
       </Text>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {titles.map((title2, index) => (
-          <View className="flex-column">
+          <View key={`align-${index}`} className="flex-column">
             <TouchableOpacity
               key={`alignment-${index}`}
               style={[

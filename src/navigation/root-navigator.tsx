@@ -24,6 +24,7 @@ import {
   BackgroundWidget,
   ChangeImageModal,
   ElementsWidget,
+  FontWidget,
   FrameWidget,
   ImageModal,
   InfoWidget,
@@ -36,6 +37,7 @@ import {
 } from '@/screens/style/editor/widgets';
 import type { UserType } from '@/types';
 import { ARView } from '@/ui';
+import ColorWidget from '@/ui/widgets/editorx/color-picker';
 
 import { AuthNavigator } from './auth-navigator';
 import { loadDataFromFirestore } from './loads';
@@ -55,8 +57,8 @@ export const Root = () => {
   const [user, setUser] = useState<any>();
 
   const hideSplash = React.useCallback(async () => {
+    await loadDataFromFirestore();
     await SplashScreen.hideAsync();
-    loadDataFromFirestore();
   }, []);
   useEffect(() => {
     if (initializing) {
@@ -126,29 +128,48 @@ export const Root = () => {
                 <Stack.Screen name="DayList2" component={DayList2} />
                 <Stack.Screen name="ImageEditor" component={ImageEditor} />
                 <Stack.Screen name="Tutorials" component={Tutorial} />
-                <Stack.Screen name="Stickers" component={StickersWidget} />
-                <Stack.Screen name="Shapes" component={ShapesWidget} />
-                <Stack.Screen name="Products" component={ProductsWidget} />
-                <Stack.Screen name="Logos" component={LogosWidget} />
-                <Stack.Screen
-                  name="ChangeImageModal"
-                  component={ChangeImageModal}
-                />
-                <Stack.Screen name="ImageModal" component={ImageModal} />
-                <Stack.Screen name="InfoWidget" component={InfoWidget} />
-                <Stack.Screen name="TextModal" component={TextModal} />
+                <Stack.Group
+                  screenOptions={{
+                    presentation: 'modal',
+                    headerShown: false,
+                    gestureEnabled: false,
+                    animation: 'slide_from_bottom',
+                    animationDuration: 300,
+                  }}
+                >
+                  <Stack.Screen name="Stickers" component={StickersWidget} />
+                  <Stack.Screen name="Shapes" component={ShapesWidget} />
+                  <Stack.Screen name="Products" component={ProductsWidget} />
+                  <Stack.Screen name="Logos" component={LogosWidget} />
+                  <Stack.Screen
+                    name="ChangeImageModal"
+                    component={ChangeImageModal}
+                  />
+                  <Stack.Screen name="ImageModal" component={ImageModal} />
+                  <Stack.Screen name="InfoWidget" component={InfoWidget} />
+                  <Stack.Screen name="TextModal" component={TextModal} />
+                  <Stack.Screen name="ColorWidget" component={ColorWidget} />
+                  <Stack.Screen name="FontWidget" component={FontWidget} />
+                  <Stack.Screen
+                    name="BackgroundVideosWidget"
+                    component={BackgroundVideosWidget}
+                  />
+                  <Stack.Screen
+                    name="BackgroundModal"
+                    component={BackgroundWidget}
+                  />
+                  <Stack.Screen name="Frames" component={FrameWidget} />
+                  <Stack.Screen name="RenderWidget" component={RenderWidget} />
+                  <Stack.Screen name="Elements" component={ElementsWidget} />
+                </Stack.Group>
                 <Stack.Screen name="Gallery" component={Gallery} />
-                <Stack.Screen name="ImageViewer" component={ImageViewer} />
-                <Stack.Screen name="RenderWidget" component={RenderWidget} />
-                <Stack.Screen name="Elements" component={ElementsWidget} />
                 <Stack.Screen
-                  name="BackgroundVideosWidget"
-                  component={BackgroundVideosWidget}
-                />
-                <Stack.Screen name="Frames" component={FrameWidget} />
-                <Stack.Screen
-                  name="BackgroundModal"
-                  component={BackgroundWidget}
+                  options={{
+                    presentation: 'card',
+                    animation: 'slide_from_right',
+                  }}
+                  name="ImageViewer"
+                  component={ImageViewer}
                 />
                 <Stack.Screen name="ARView" component={ARView} />
               </>

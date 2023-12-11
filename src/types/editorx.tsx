@@ -17,9 +17,16 @@ export type BackgroundType = {
 export type FestivalType = {
   id: string;
   image: string;
+  thumbnail?: string;
   categoryCode: number;
   subCategory: number;
-  tags: string;
+  tags?: string;
+};
+export type SubCategoryType = {
+  id: string;
+  name: string;
+  code: number;
+  date: string;
 };
 export type ElementsType = {
   id: string;
@@ -54,7 +61,7 @@ export type PostVideoType = {
   thumbnail: string;
   categoryCode: number;
   subCategory: number;
-  tags: string;
+  tags?: string;
 };
 export type resolutionParams = {
   width: number;

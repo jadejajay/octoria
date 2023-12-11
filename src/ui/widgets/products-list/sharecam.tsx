@@ -12,14 +12,19 @@ import { ImageBackground } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import ViewShot, { captureRef } from 'react-native-view-shot';
 
-import { handleShare, saveToGallery, useImageStore, useLinks } from '@/core';
+import {
+  handleShare,
+  saveToGallery,
+  useFirestoreLiveQuery,
+  useImageStore,
+} from '@/core';
 import { AbsoluteButton, ActivityIndicator, Image, Text } from '@/ui/core';
 
 import { Gestures } from './simultaneous-gesture';
 
 export const ShareCam = ({ route }: any) => {
   const { url } = route.params;
-  const server = useLinks();
+  const server = useFirestoreLiveQuery('links');
   const demoShare = 'Hello, This Post is Generate by Octoria Application.';
   const { image, setImage } = useImageStore();
   const imgRef = useRef(null);
@@ -31,9 +36,9 @@ export const ShareCam = ({ route }: any) => {
   const { goBack } = useNavigation();
   useEffect(() => {
     setLoading(true);
-    const shareLink = server.LinksData.find((item) => item.id === 'share');
-    const backgroundLink = server.LinksData.find(
-      (item) => item.id === 'background'
+    const shareLink = server.data.find((item: any) => item.id === 'share');
+    const backgroundLink = server.data.find(
+      (item: any) => item.id === 'background'
     );
     if (shareLink) {
       setShare(shareLink.value!);
@@ -43,7 +48,7 @@ export const ShareCam = ({ route }: any) => {
     }
     setLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [server.isLoading]);
+  }, [server.data]);
 
   const mediaLib = async (localUri: string) => {
     const { status } = await MediaLibrary.requestPermissionsAsync();

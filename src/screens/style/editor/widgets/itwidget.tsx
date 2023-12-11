@@ -25,6 +25,7 @@ type Props = {
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 export const ITWidget = ({ data, id, index, onClick, fontSize }: Props) => {
   const userInfo = useEditorX((s) => s.businessData);
+  const frame = useEditorX((s) => s.editorData.frame);
   const [animationKey, setAnimationKey] = useState<number>(0);
   const [img, setImg] = useState('');
   const [txt, setTxt] = useState('');
@@ -34,6 +35,8 @@ export const ITWidget = ({ data, id, index, onClick, fontSize }: Props) => {
       lineHeight: fontSize.value,
     };
   });
+  console.log('ITWidget', data);
+
   React.useEffect(() => {
     switch (id) {
       case 'user_name':
@@ -81,7 +84,6 @@ export const ITWidget = ({ data, id, index, onClick, fontSize }: Props) => {
   };
   return (
     <View
-      key={`anim_button_${index}`}
       style={[
         {
           width: '100%',
@@ -91,7 +93,8 @@ export const ITWidget = ({ data, id, index, onClick, fontSize }: Props) => {
       ]}
     >
       <AnimatedTouchable
-        key={`ITWidget-${animationKey}-${index}`}
+        // key={`${animationKey}-it`}
+        key={`ITWidget-${animationKey}-${index}-${txt}-${img}-${frame}--${data?.resizeMode}-${data?.text}-${userInfo.name}-${userInfo.photo}-${userInfo.email}-${userInfo.phone}-${userInfo.website}-${userInfo.address}`}
         activeOpacity={1}
         onPress={handlePress}
         entering={ZoomIn}
@@ -101,16 +104,15 @@ export const ITWidget = ({ data, id, index, onClick, fontSize }: Props) => {
       >
         {img && (
           <Image
-            key={`image_${index}`}
             src={img}
             style={{ width: '100%', height: '100%' }}
             resizeMode={data?.resizeMode || 'cover'}
           />
         )}
         {txt && (
-          <View key={`animated-view-text_${index}`} className="h-full w-full">
+          <View className="h-full w-full">
             <Animated.Text
-              key={`itwidget-text_${index}`}
+              useNativeDriver={true}
               onPress={handlePress}
               {...data?.textProps}
               style={[animatedFontSize, data?.textProps?.style]}

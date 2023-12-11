@@ -26,8 +26,10 @@ type Props = {
 };
 export const ARView = ({ route }: Props) => {
   const url = route.params?.model
-    ? `${Env.XRSERVICE_API}?model=${route.params?.model}`
+    ? `${route.params?.model}`
     : `${Env.XRSERVICE_FALLBACK}`;
+  console.log('url', url);
+
   const share = 'Hello, This Image is Generate by Octoria Application.';
   const imgRef = useRef(null);
   const webViewRef = useRef(null);

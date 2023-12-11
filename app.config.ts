@@ -20,12 +20,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   },
   updates: {
     url: 'https://u.expo.dev/c7642e3d-4e71-4000-83da-ef31f330ec8d',
-    fallbackToCacheTimeout: 0,
   },
   assetBundlePatterns: ['**/*'],
   ios: {
     supportsTablet: true,
     bundleIdentifier: Env.BUNDLE_ID,
+    googleServicesFile: 'GoogleService-Info.plist',
   },
 
   android: {

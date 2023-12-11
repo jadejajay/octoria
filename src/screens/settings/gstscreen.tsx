@@ -264,9 +264,9 @@ const InfoCard = ({ title, data }: { title: string; data: any }) => {
   return (
     <AnimatedButton onClick={() => handleClip()}>
       <View style={styles.cardContainer}>
-        <Text className="font-varela text-base text-stone-900">{title}</Text>
+        <Text className="font-sfbold text-base text-stone-900">{title}</Text>
         {typeof data === 'string' ? (
-          <Text className="font-varela text-base text-green-600">
+          <Text className="font-sfregular text-base text-green-600">
             {data ?? '-'}
           </Text>
         ) : (

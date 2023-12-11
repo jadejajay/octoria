@@ -1,20 +1,27 @@
 /* eslint-disable react-native/no-inline-styles */
+import { useNavigation } from '@react-navigation/native';
 import { ResizeMode, Video } from 'expo-av';
 import React from 'react';
 import { Dimensions, StyleSheet, View } from 'react-native';
 import Carousel, { Pagination } from 'react-native-snap-carousel';
 
 import { isVideoURL } from '@/core';
-import { Image } from '@/ui/core';
+import { Image, TouchableOpacity } from '@/ui/core';
 
 export const SLIDER_WIDTH = Math.round(Dimensions.get('window').width);
 export const ITEM_WIDTH = Math.round(SLIDER_WIDTH);
 
-const CarouselCardItem = ({ item, index }: any) => {
+const CarouselCardItem = ({ item, index, onPress }: any) => {
   const isVideo = isVideoURL(item);
-
   return (
-    <View style={styles1.container} key={index}>
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={() => {
+        if (!isVideo) onPress();
+      }}
+      style={styles1.container}
+      key={index}
+    >
       {isVideo ? (
         <Video
           style={{ flex: 1 }}
@@ -29,7 +36,7 @@ const CarouselCardItem = ({ item, index }: any) => {
       ) : (
         <Image src={item} style={styles1.image} resizeMode="contain" />
       )}
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -47,10 +54,9 @@ const styles1 = StyleSheet.create({
   },
 });
 
-export const CarouselCards = ({ item }: any) => {
-  console.log(item);
-
-  const [index, setIndex] = React.useState(0);
+export const CarouselCards = ({ images }: any) => {
+  const { navigate } = useNavigation();
+  const [index3, setIndex] = React.useState(0);
   const isCarousel = React.useRef(null);
 
   return (
@@ -60,16 +66,25 @@ export const CarouselCards = ({ item }: any) => {
         loop
         layoutCardOffset={9}
         ref={isCarousel}
-        data={item}
-        renderItem={CarouselCardItem}
+        data={images}
+        renderItem={({ item, index }: { item: any; index: number }) => {
+          return (
+            <CarouselCardItem
+              key={`carousel-card-item-${index}`}
+              item={item}
+              index={index}
+              onPress={() => navigate('ImageViewer', { url: item })}
+            />
+          );
+        }}
         sliderWidth={SLIDER_WIDTH}
         itemWidth={ITEM_WIDTH}
         onSnapToItem={(index2) => setIndex(index2)}
         useScrollView={true}
       />
       <Pagination
-        dotsLength={item.length}
-        activeDotIndex={index}
+        dotsLength={images.length}
+        activeDotIndex={index3}
         //@ts-ignore
         carouselRef={isCarousel}
         dotStyle={{

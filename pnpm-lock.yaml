@@ -245,6 +245,9 @@ dependencies:
   react-query-kit:
     specifier: ^1.4.6
     version: 1.5.2(@tanstack/react-query@4.36.1)
+  reanimated-color-picker:
+    specifier: ^2.4.1
+    version: 2.4.1(expo@49.0.21)(react-native-gesture-handler@2.12.1)(react-native-reanimated@3.3.0)(react-native@0.72.6)(react@18.2.0)
   xtend:
     specifier: ^4.0.2
     version: 4.0.2
@@ -11969,6 +11972,25 @@ packages:
 
   /readline@1.3.0:
     resolution: {integrity: sha512-k2d6ACCkiNYz222Fs/iNze30rRJ1iIicW7JuX/7/cozvih6YCkFZH+J6mAFDVgv0dRBaAyr4jDqC95R2y4IADg==}
+
+  /reanimated-color-picker@2.4.1(expo@49.0.21)(react-native-gesture-handler@2.12.1)(react-native-reanimated@3.3.0)(react-native@0.72.6)(react@18.2.0):
+    resolution: {integrity: sha512-BM5uV8QHRMc4e6YWyCOtMNcGN0QMdnpjfV3Cv7CikHksIflJoqnRtT2hGcKp8MNmpc8nKGQhvCeHj5iSYsiC7A==}
+    peerDependencies:
+      expo: '>=44.0.0'
+      react: '*'
+      react-native: '*'
+      react-native-gesture-handler: '>=2.0.0'
+      react-native-reanimated: ^2.0.0 || ^3.0.0
+    peerDependenciesMeta:
+      expo:
+        optional: true
+    dependencies:
+      expo: 49.0.21(@babel/core@7.23.5)
+      react: 18.2.0
+      react-native: 0.72.6(@babel/core@7.23.5)(@babel/preset-env@7.23.5)(react@18.2.0)
+      react-native-gesture-handler: 2.12.1(react-native@0.72.6)(react@18.2.0)
+      react-native-reanimated: 3.3.0(@babel/core@7.23.5)(@babel/plugin-proposal-nullish-coalescing-operator@7.18.6)(@babel/plugin-proposal-optional-chaining@7.21.0)(@babel/plugin-transform-arrow-functions@7.23.3)(@babel/plugin-transform-shorthand-properties@7.23.3)(@babel/plugin-transform-template-literals@7.23.3)(react-native@0.72.6)(react@18.2.0)
+    dev: false
 
   /recast@0.21.5:
     resolution: {integrity: sha512-hjMmLaUXAm1hIuTqOdeYObMslq/q+Xff6QE3Y2P+uoHAg2nmVlLBps2hzh1UJDdMtDTMXOFewK6ky51JQIeECg==}

@@ -8,14 +8,18 @@ import { View } from './view';
 type Props = {
   icon: React.ReactNode; // You can use any icon library (e.g., FontAwesome, Ionicons)
   badgeValue?: string | number;
-  onPress: () => void;
+  onPress?: () => void;
+  onPressIn?: () => void;
+  onPressOut?: () => void;
   className?: string;
   title?: string;
 };
 export const IconButtonW = ({
   icon,
   badgeValue,
-  onPress,
+  onPress = () => {},
+  onPressIn = () => {},
+  onPressOut = () => {},
   className,
   title,
 }: Props) => {
@@ -24,6 +28,8 @@ export const IconButtonW = ({
       <View>
         <TouchableOpacity
           onPress={onPress}
+          onPressIn={onPressIn}
+          onPressOut={onPressOut}
           activeOpacity={1}
           style={styles.container}
           className={className}

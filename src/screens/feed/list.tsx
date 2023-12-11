@@ -20,6 +20,7 @@ export const Feed = () => {
   const [globalSearch, setGlobalSearch] = React.useState<string>('');
   const [initialData, setInitialData] = React.useState<any[]>([]);
   const [update, setUpdate] = React.useState(1);
+  const [limit, setLimit] = React.useState(20);
   const { products } = useProductsStore();
 
   const { navigate } = useNavigation();
@@ -46,12 +47,13 @@ export const Feed = () => {
   }, [globalSearch, isFocused]);
 
   const handleSearch = () => {
-    // setCurrentPage(1);
     setInitialData([]);
     filterProductsBySearchWord(globalSearch);
   };
 
-  const handleLoadMore = () => {};
+  const handleLoadMore = () => {
+    setLimit((prev) => prev + 20);
+  };
 
   const renderItem = React.useCallback(
     ({ item, index }: { item: Product; index: number }) => (
@@ -75,7 +77,7 @@ export const Feed = () => {
       />
       <List
         key={`list-${update}`}
-        data={initialData.slice(0, 30)}
+        data={initialData.slice(0, limit)}
         renderItem={renderItem}
         estimatedItemSize={HEIGHT / 2.2}
         ListEmptyComponent={<EmptyList isLoading={false} />}

@@ -4,28 +4,20 @@
 import firestore from '@react-native-firebase/firestore';
 
 import {
-  useElementsStore,
   useFestivalStore,
   useFrameStore,
-  useImageListStore,
-  useLogoStore,
   usePostMainCategoryStore,
   usePostVideoStore,
   useProductsStore,
-  useShapesStore,
-  useStickerStore,
 } from '@/core';
+import { useSubCategoryStore } from '@/core/editorx/sub-category';
 import type {
-  ElementsType,
   FestivalType,
   FrameType,
-  ImageListType,
-  LogosType,
   PostMainCategoryType,
   PostVideoType,
   Product,
-  ShapesType,
-  StickerType,
+  SubCategoryType,
 } from '@/types';
 
 const loadDataFromFirestore = async () => {
@@ -55,6 +47,25 @@ const loadDataFromFirestore = async () => {
     console.log('products==========================\n', product);
 
     console.log('products loaded', Date.now());
+    const SubCategoryStoreSnapshot = await firestore()
+      .collection('SubCategory')
+      .orderBy('code')
+      .get();
+    const SubCategoryStoreSnapshotList: SubCategoryType[] =
+      SubCategoryStoreSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        name: doc.data()?.name,
+        code: doc.data()?.code,
+        date: doc.data()?.date,
+      }));
+    useSubCategoryStore.setState({
+      SubCategory: SubCategoryStoreSnapshotList,
+    });
+    console.log(
+      'post main category ========================\n',
+      SubCategoryStoreSnapshotList
+    );
+    console.log('SubCategoryStore loaded', Date.now());
     const PostMainCategorySnapshot = await firestore()
       .collection('postMainCategory')
       .orderBy('code')
@@ -71,7 +82,7 @@ const loadDataFromFirestore = async () => {
       postMainCategory: postMainCategorySnapshotList,
     });
     console.log(
-      'post main category ==========================\n',
+      'post main category ========================\n',
       postMainCategorySnapshotList
     );
     console.log('post main category loaded', Date.now());
@@ -81,6 +92,7 @@ const loadDataFromFirestore = async () => {
     const festival: FestivalType[] = FestivalSnapshot.docs.map((doc) => ({
       id: doc.id,
       image: doc.data()?.image,
+      thumbnail: doc.data()?.thumbnail,
       categoryCode: doc.data()?.categoryCode,
       subCategory: doc.data()?.subCategory,
       tags: doc.data()?.tags,
@@ -111,51 +123,6 @@ const loadDataFromFirestore = async () => {
     useFrameStore.setState({ frames: frame });
     console.log('frames ==========================\n', frame);
     console.log('frames loaded', Date.now());
-    // stickers lower priority to load
-    const StickersSnapshot = await firestore().collection('stickers').get();
-    const sticker: StickerType[] = StickersSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      image: doc.data()?.image,
-    }));
-    useStickerStore.setState({ stickers: sticker });
-    console.log('stickers ==========================\n', sticker);
-    console.log('stickers loaded', Date.now());
-    // elements lower priority to load
-    const ElementsSnapshot = await firestore().collection('elements').get();
-    const element: ElementsType[] = ElementsSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      image: doc.data()?.image,
-    }));
-    useElementsStore.setState({ elements: element });
-    console.log('elements ==========================\n', element);
-    console.log('elements loaded', Date.now());
-    // shapes lower priority to load
-    const ShapesSnapshot = await firestore().collection('shapes').get();
-    const shape: ShapesType[] = ShapesSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      image: doc.data()?.image,
-    }));
-    useShapesStore.setState({ shapes: shape });
-    console.log('shapes ==========================\n', shape);
-    console.log('shapes loaded', Date.now());
-    // logos lower priority to load
-    const LogosSnapshot = await firestore().collection('logosList').get();
-    const logo: LogosType[] = LogosSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      image: doc.data()?.image,
-    }));
-    useLogoStore.setState({ logos: logo });
-    console.log('logos ==========================\n', logo);
-    console.log('logos loaded', Date.now());
-    // image elements lower priority to load
-    const ImagesSnapshot = await firestore().collection('imagesElement').get();
-    const imageList: ImageListType[] = ImagesSnapshot.docs.map((doc) => ({
-      id: doc.id,
-      image: doc.data()?.image,
-    }));
-    useImageListStore.setState({ images: imageList });
-    console.log('images ==========================\n', imageList);
-    console.log('images loaded', Date.now());
   } catch (error) {
     console.error('Error loading data from Firestore:', error);
   }

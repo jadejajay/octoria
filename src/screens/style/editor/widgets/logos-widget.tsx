@@ -9,15 +9,37 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 
-import { useEditorX, useLogoStore } from '@/core';
+import { useEditorX } from '@/core';
+import { FirestoreData } from '@/core/fire-util';
 import type { LogosType } from '@/types';
 import { Image, TouchableOpacity, Vertical2CompList, View } from '@/ui';
 
 const theme = '#07ab86';
 export const LogosWidget = () => {
-  const { logos } = useLogoStore();
+  const imagesHandler = new FirestoreData<LogosType>('logosList');
+  const [logos, setLogos] = React.useState<LogosType[] | []>([]);
   const addElement = useEditorX((s) => s.addElement);
   const { goBack } = useNavigation();
+
+  const getLogos = useCallback(async () => {
+    const data = await imagesHandler.getData(20);
+    if (data) setLogos(data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  React.useEffect(() => {
+    getLogos();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const handleEndReached = useCallback(async () => {
+    console.log('handleEndReached');
+    const data = await imagesHandler.loadMore(20);
+    if (data)
+      setLogos((p) => {
+        if (p) return [...p, ...data];
+        return data;
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const CardComp = useCallback((item: any, index: number) => {
     return (
@@ -37,6 +59,7 @@ export const LogosWidget = () => {
       <Vertical2CompList
         Comp={CardComp}
         data={logos}
+        onEndReached={handleEndReached}
         estimatedItemSize={100}
         numColumn={5}
       />

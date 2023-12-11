@@ -12,11 +12,12 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { MasonryFlashList } from '@shopify/flash-list';
 import * as ImagePicker from 'expo-image-picker';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { ToastAndroid } from 'react-native';
 import { StyleSheet } from 'react-native';
 
-import { useEditorX, useElementsStore } from '@/core';
+import { useEditorX } from '@/core';
+import { FirestoreData } from '@/core/fire-util';
 import type { ElementsType } from '@/types';
 import { EmptyList, Image, Text, TouchableOpacity, View } from '@/ui';
 
@@ -31,10 +32,28 @@ type mesProp = {
 };
 const theme = '#07ab86';
 export const ElementsWidget = () => {
-  const { elements } = useElementsStore();
+  const elementsHandler = new FirestoreData<ElementsType>('elements');
+  const [elements, setElements] = React.useState<
+    ElementsType[] | undefined | null
+  >([]);
   const addElement = useEditorX((s) => s.addElement);
   const { goBack } = useNavigation();
   const mes: mesProp[] = [];
+  const getElements = useCallback(async () => {
+    const data = await elementsHandler.getData(20);
+    if (data) setElements(data);
+  }, []);
+  useEffect(() => {
+    getElements();
+  }, []);
+  const handleEndReached = useCallback(async () => {
+    const data = await elementsHandler.loadMore(20);
+    if (data)
+      setElements((p) => {
+        if (p) return [...p, ...data];
+        return data;
+      });
+  }, []);
 
   const pickImage = async () => {
     try {
@@ -114,8 +133,9 @@ export const ElementsWidget = () => {
       <View className="flex-1">
         <MasonryFlashList
           data={elements}
+          onEndReachedThreshold={0.3}
+          onEndReached={handleEndReached}
           numColumns={3}
-          //  onEndReached={onEndReached}
           getColumnFlex={(_, index) => {
             return index === 0 ? 2 : 1;
           }}

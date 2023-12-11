@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 /*
      -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
     +* .##+ .@..*+ %+-:   *= -##-     :%  #*%  *++* +*.:@.:@--.-% -%.%*:: +* %%+.@ =%::*+ 
@@ -54,6 +55,21 @@ export const FrameWidget = () => {
   return (
     <>
       <View className="h-40 flex-row justify-around">
+        <TouchableOpacity
+          className="m-4 flex-1 items-center justify-center"
+          onPress={() => {
+            setBg('');
+            goBack();
+          }}
+          activeOpacity={1}
+        >
+          <MaterialCommunityIcons
+            name="square-off-outline"
+            size={40}
+            color={theme}
+          />
+          <Text className="font-sfbold text-lg" tx={'editor.remove_frame'} />
+        </TouchableOpacity>
         <TouchableOpacity
           className="m-4 flex-1 items-center justify-center"
           onPress={pickImage}

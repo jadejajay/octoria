@@ -6,7 +6,7 @@ import React, { useCallback } from 'react';
 import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 
-import { useMainCarousel } from '@/core';
+import { useFirestoreLiveQuery } from '@/core';
 
 import { AnimatedButton } from './animated-button';
 
@@ -18,9 +18,10 @@ type Props = {
   index: any;
 };
 
-export const MainCarousel = () => {
+export const MainCarousel = ({ name }: { name: string }) => {
   const { navigate } = useNavigation();
-  const { MainCarouselData, isLoading } = useMainCarousel();
+  const { data, isLoading } = useFirestoreLiveQuery(name);
+  const filteredData = data?.filter((item: any) => item?.image || item?.video);
   const isCarousel = React.useRef(null);
 
   const CarouselCardItem = useCallback(
@@ -36,10 +37,10 @@ export const MainCarousel = () => {
           }}
         >
           <View style={styles1.container} key={index}>
-            {item.image && (
+            {item?.image && (
               <Image source={{ uri: item.image }} style={styles1.image} />
             )}
-            {item.video && (
+            {item?.video && (
               <>
                 <Video
                   style={{ flex: 1, borderRadius: 14 }}
@@ -83,7 +84,7 @@ export const MainCarousel = () => {
         centerContent={true}
         contentInsetAdjustmentBehavior="automatic"
         contentOffset={{ x: 0, y: 0 }}
-        data={MainCarouselData}
+        data={filteredData}
         enableMomentum={true}
         inactiveSlideOpacity={0.7}
         inactiveSlideScale={0.9}

@@ -16,14 +16,13 @@ import React, { useState } from 'react';
 import { useEditorX } from '@/core';
 import { IconButton, IconButton2, IconButtonW, View, WIDTH } from '@/ui';
 
-import { ColorPickerModal } from '../../color-picker-view';
 import { EditTextModal } from '../../edit-text-modal';
-import { FontWidget } from './font-picker';
 
 type Props = {
   handleRotationPress: (r: number) => void;
   handlePressMoveToCenter: () => void;
   handlePressMoveToPosition: ({ x, y }: { x: number; y: number }) => void;
+  handleFontSize: (size: number) => void;
 };
 export const TextWidget = ({
   handlePressMoveToCenter,
@@ -38,12 +37,10 @@ export const TextWidget = ({
   const data = useEditorX((s) => s.editorData);
   const isSpecial = useEditorX((s) => s.isSpecial);
   const { navigate } = useNavigation();
-  const [colorModalVisible, setColorModalVisible] = useState<boolean>(false);
   const [textModalVisible, setTextModalVisible] = useState<boolean>(false);
-  const [fontModalVisible, setfontModalVisible] = useState<boolean>(false);
   const [update, _setUpdate] = useState(1);
   const [rotationDegree, setRotationDegree] = useState(90);
-  const Color = data.elements[state]?.properties?.textProps?.style?.color;
+
   const Bold = data.elements[state]?.properties?.textProps?.style?.fontWeight;
   const Italic = data.elements[state]?.properties?.textProps?.style?.fontStyle;
   const Underline =
@@ -131,24 +128,6 @@ export const TextWidget = ({
       }}
     >
       <View className="flex-row flex-wrap justify-between">
-        <ColorPickerModal
-          onPress={(color) => {
-            setData({
-              id: state,
-              props: {
-                color: color,
-              },
-            });
-          }}
-          Color={Color}
-          isModalVisible={colorModalVisible}
-          SetModalVisible={setColorModalVisible}
-        />
-        <FontWidget
-          isVisible={fontModalVisible}
-          state={state}
-          onClose={() => setfontModalVisible(false)}
-        />
         <EditTextModal
           text={data.elements[state]?.properties?.text!}
           setText={(text) => {
@@ -163,7 +142,7 @@ export const TextWidget = ({
         <IconButtonW
           icon={<Ionicons name="eyedrop" size={20} color={themecolor} />}
           onPress={() => {
-            setColorModalVisible(true);
+            navigate('ColorWidget');
           }}
           title="Color"
           className="my-1"
@@ -189,7 +168,7 @@ export const TextWidget = ({
             />
           }
           onPress={() => {
-            setfontModalVisible(true);
+            navigate('FontWidget');
           }}
           title="Fonts"
           className="my-1"
@@ -321,7 +300,7 @@ export const TextWidget = ({
             />
           }
           onPress={() => {
-            handlePressMoveToPosition({ x: -5, y: 0 });
+            handlePressMoveToPosition({ x: -3, y: 0 });
           }}
           title="Move Left"
           className="my-1"
@@ -335,7 +314,7 @@ export const TextWidget = ({
             />
           }
           onPress={() => {
-            handlePressMoveToPosition({ x: 5, y: 0 });
+            handlePressMoveToPosition({ x: 3, y: 0 });
           }}
           title="Move Right"
           className="my-1"
@@ -349,7 +328,7 @@ export const TextWidget = ({
             />
           }
           onPress={() => {
-            handlePressMoveToPosition({ x: 0, y: -5 });
+            handlePressMoveToPosition({ x: 0, y: -3 });
           }}
           title="Move Up"
           className="my-1"
@@ -363,7 +342,7 @@ export const TextWidget = ({
             />
           }
           onPress={() => {
-            handlePressMoveToPosition({ x: 0, y: 5 });
+            handlePressMoveToPosition({ x: 0, y: 3 });
           }}
           title="Move Down"
           className="my-1"

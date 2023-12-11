@@ -10,12 +10,8 @@ import {
   useFestivalStore,
   usePostVideoStore,
   useSearchStore,
+  useSubCategoryStore,
 } from '@/core';
-import {
-  codeToDateFormated,
-  codeToSubcategory,
-  list_of_subcategory,
-} from '@/core/subcategory-code';
 import type {
   FestivalType,
   PostMainCategoryType,
@@ -41,11 +37,14 @@ export const DayList2 = ({ route }: Props) => {
   const images = useFestivalStore((s) => s.festival);
   const videos = usePostVideoStore((s) => s.postVideos);
   const searchText = useSearchStore((s) => s.festival);
+  const list_of_subcategory = useSubCategoryStore((s) => s.SubCategory);
+  const codeToSubcategory = useSubCategoryStore((s) => s.codeToSubcategory);
+  const codeToDateFormated = useSubCategoryStore((s) => s.codeToDateFormated);
   const filteredImages = images.filter((img) => {
-    return img.categoryCode === postMainCategory.code;
+    return img?.categoryCode === postMainCategory.code;
   });
   const filteredVideos = videos.filter((img) => {
-    return img.categoryCode === postMainCategory.code;
+    return img?.categoryCode === postMainCategory.code;
   });
   const combinedData = filteredImages.map((festival) => ({
     ...festival,
@@ -74,8 +73,20 @@ export const DayList2 = ({ route }: Props) => {
   });
   //@ts-ignore
   const semiFinalArray = sortedFestivals.concat(sortedFestivals2);
+  const uniqueCategoryCodesSet = new Set<number>();
+  const newArray: FestivalType[] = semiFinalArray.reduce((result, obj) => {
+    // Check if the categoryCode is not in the Set
+    if (!uniqueCategoryCodesSet.has(obj?.subCategory)) {
+      // Add the object to the result array
+      //@ts-ignore
+      result.push(obj);
+      // Add the categoryCode to the Set to mark it as seen
+      uniqueCategoryCodesSet.add(obj?.subCategory);
+    }
+    return result;
+  }, []);
   function fuzzySearch(query: string): FestivalType[] {
-    return semiFinalArray.filter((festival) => {
+    return newArray.filter((festival) => {
       if (festival?.tags === undefined) return null;
       const fieldValue = festival?.tags.toLowerCase();
       const lowercasedQuery = query.toLowerCase();
@@ -85,8 +96,6 @@ export const DayList2 = ({ route }: Props) => {
   }
   // match date and tags field with search text and return filtered array
   const finalArray = fuzzySearch(searchText);
-  console.log(finalArray, 'finalArray');
-
   const navigation = useNavigation();
   const setCategoryCode = useEditorX((s) => s.setCategoryCode);
   const setbg = useEditorX((s) => s.setBackground);
@@ -196,7 +205,7 @@ export const DayList2 = ({ route }: Props) => {
       <Vertical2CompList
         style={styles.cStyle}
         Comp={PostListCard}
-        data={finalArray.slice(0, 15)}
+        data={finalArray.slice(0, 4)}
         estimatedItemSize={400}
         numColumn={1}
       />

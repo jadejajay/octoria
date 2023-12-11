@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { StyleSheet } from 'react-native';
@@ -8,7 +9,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
-import { Image } from '@/ui';
+import { Image, Text } from '@/ui';
 export function ImageViewer({ route }: { route: any }) {
   const { url } = route.params;
   const offset = useSharedValue({ x: 0, y: 0 });
@@ -62,23 +63,31 @@ export function ImageViewer({ route }: { route: any }) {
   );
 
   return (
-    <GestureDetector gesture={composed}>
-      <Animated.View style={styles.container}>
-        <Animated.View style={[animatedStyles]}>
-          <Image
-            src={url}
-            style={{ width: '100%', height: '100%' }}
-            resizeMode="contain"
-          />
+    <>
+      <Text
+        variant="xs"
+        className="absolute h-5/6 w-5/6 bg-red-300 text-center"
+      >
+        Pinch to zoom, Rotate to rotate, Drag to move
+      </Text>
+      <GestureDetector gesture={composed}>
+        <Animated.View style={styles.container}>
+          <Animated.View style={[animatedStyles]}>
+            <Image
+              src={url}
+              style={{ width: '100%', height: '100%' }}
+              resizeMode="contain"
+            />
+          </Animated.View>
         </Animated.View>
-      </Animated.View>
-    </GestureDetector>
+      </GestureDetector>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'black',
+    backgroundColor: 'white',
   },
 });

@@ -25,7 +25,7 @@ export const PostCardHeader = ({ title, subtitle }: Props) => {
       </Text>
       <Text
         variant="sm"
-        className="rounded-md bg-red-500 py-1 px-2 text-center font-sfregular text-white"
+        className="rounded-md bg-red-500 px-2 py-1 text-center font-sfregular text-white"
       >
         {subtitle}
       </Text>

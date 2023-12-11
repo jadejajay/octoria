@@ -84,12 +84,12 @@ export const TabNavigator = () => {
         tabBarInactiveTintColor:
           colorScheme === 'dark' ? colors.charcoal[400] : colors.neutral[400],
         tabBarIcon: ({ color }) => <BarIcon name={route.name} color={color} />,
+        lazy: true,
       })}
     >
       <Tab.Group
         screenOptions={{
           headerShown: false,
-          lazy: true,
         }}
       >
         {tabs.map(({ name, component, label }) => {
