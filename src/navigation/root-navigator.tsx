@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-/* eslint-disable react-hooks/exhaustive-deps */
 import { Env } from '@env';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -36,8 +35,7 @@ import {
   TextModal,
 } from '@/screens/style/editor/widgets';
 import type { UserType } from '@/types';
-import { ARView } from '@/ui';
-import ColorWidget from '@/ui/widgets/editorx/color-picker';
+import { ARView, ColorWidget } from '@/ui';
 
 import { AuthNavigator } from './auth-navigator';
 import { loadDataFromFirestore } from './loads';
@@ -47,7 +45,7 @@ import { TabNavigator } from './tab-navigator';
 const prefix = Linking.createURL('/');
 const Stack = createNativeStackNavigator();
 export const Root = () => {
-  console.log('Root Stack Activated', Date.now());
+  // console.log('Root Stack Activated', Date.now());
   const [isFirstTime] = useIsFirstTime();
   const [isSignUp, setIsSignUp] = useIsSignUp();
   const [initializing, setInitializing] = useState(true);
@@ -94,7 +92,7 @@ export const Root = () => {
           });
           const isUserSignedUp = !!User?.email;
           setIsSignUp(isUserSignedUp);
-          console.log('user loaded', Date.now());
+          // console.log('user loaded', Date.now());
         } else {
           setIsSignUp(false);
         }
@@ -105,7 +103,15 @@ export const Root = () => {
 
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber;
-  }, [initializing]);
+  }, [
+    hideSplash,
+    initializing,
+    isFirstTime,
+    setBusiness,
+    setEditor,
+    setIsSignUp,
+    setUserData,
+  ]);
 
   return (
     <Stack.Navigator
@@ -161,8 +167,8 @@ export const Root = () => {
                   <Stack.Screen name="Frames" component={FrameWidget} />
                   <Stack.Screen name="RenderWidget" component={RenderWidget} />
                   <Stack.Screen name="Elements" component={ElementsWidget} />
+                  <Stack.Screen name="Gallery" component={Gallery} />
                 </Stack.Group>
-                <Stack.Screen name="Gallery" component={Gallery} />
                 <Stack.Screen
                   options={{
                     presentation: 'card',

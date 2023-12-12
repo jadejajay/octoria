@@ -47,7 +47,7 @@ export const EditTextModal = ({
             autoComplete={'username-new'}
             clearButtonMode={'unless-editing'}
             onChangeText={(text2) => setText(text2)}
-            onContentSizeChange={(e) => console.log(e.nativeEvent.contentSize)}
+            // onContentSizeChange={(e) => console.log(e.nativeEvent.contentSize)}
           />
           <Text
             variant="sm"

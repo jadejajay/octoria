@@ -132,7 +132,7 @@ export const DayList2 = ({ route }: Props) => {
   );
   const PostListCard = React.useCallback(
     ({ index, item }: { index: number; item: FestivalType }) => {
-      console.log(item, 'item');
+      // console.log(item, 'item');
 
       const imagesWithSameSubcategory = filteredImages.filter(
         (img) => img.subCategory === item.subCategory

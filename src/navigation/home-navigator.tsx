@@ -39,7 +39,7 @@ export type HomeStackParamList = {
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
 export const HomeNavigator = () => {
-  console.log('home navigator loaded', Date.now());
+  // console.log('home navigator loaded', Date.now());
 
   return (
     <Stack.Navigator initialRouteName="Style" id="home-navigator">

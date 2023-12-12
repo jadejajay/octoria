@@ -16,12 +16,13 @@ export type FeedStackParamList = {
 const Stack = createNativeStackNavigator<FeedStackParamList>();
 
 export const FeedNavigator = () => {
-  console.log('feed navigator loaded', Date.now());
+  // console.log('feed navigator loaded', Date.now());
   return (
     <Stack.Navigator initialRouteName="Feed" id="feed-navigator">
       <Stack.Group
         screenOptions={{
           headerShown: false,
+          animation: 'simple_push',
         }}
       >
         <Stack.Screen name="Feed" component={Feed} />

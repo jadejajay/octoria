@@ -8,6 +8,7 @@ import { BounceInUp } from 'react-native-reanimated';
 import {
   getGreetingByTimezone,
   speak,
+  translate,
   useFirestoreLiveQuery,
   useProductsStore,
   useSearchStore,
@@ -31,14 +32,14 @@ import { PostCard } from './post-maker';
 import { PostModal } from './post-modal';
 
 export const Style = () => {
-  console.log('Style screen loaded', Date.now());
+  // console.log('Style screen loaded', Date.now());
 
   const [modalVisible, setModalVisible] = useState(false);
   const [update, setUpdate] = useState(1);
   const { navigate } = useNavigation();
 
   const MainCategories = useFirestoreLiveQuery('MainCategory');
-  console.log(MainCategories, '<=====MainCategories');
+  // console.log(MainCategories, '<=====MainCategories');
 
   const User = useUserStore((s) => s.user);
   const setSearch = useSearchStore((s) => s.setSearch);
@@ -62,13 +63,14 @@ export const Style = () => {
   React.useEffect(() => {
     if (User.name) {
       const greet = getGreetingByTimezone();
-      console.log(assist, '<========assisatnce');
+      const hello = translate('mainscreen.hello');
+      const vars = `${hello} ${User.name}. ${greet}`;
 
       // Subscribe to real-time updates
-      if (assist) speak(`${greet} ${User.name}, welcome back`);
+      if (assist) speak('assistance.welcome_back', vars);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [User.name, assist]);
+
   useFocusEffect(() => {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
@@ -96,8 +98,8 @@ export const Style = () => {
       <>
         <PostCard />
         <ChooseBrand
-          title={'New Arrivals'}
-          subtitle={'Our Newly Arrived Products'}
+          title={'mainscreen.new_prod'}
+          subtitle={'mainscreen.subtitle_new_prod'}
           link={() => {
             setSearch('Hardware');
             //@ts-ignore
@@ -117,7 +119,7 @@ export const Style = () => {
         <View className="py-2 pt-4 ">
           <MainCarousel name={'MainCarousel'} />
         </View>
-        <ChooseBrand title={'Categories'} />
+        <ChooseBrand title={'mainscreen.categories'} />
       </>
     );
   }, []);

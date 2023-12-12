@@ -5,7 +5,7 @@ import { ErrorFallback } from './error-fallback';
 
 const myErrorHandler = (error: Error) => {
   console.log(error);
-  //   captureException(error);
+  // captureException(error);
 };
 
 export const ErrorHandler = ({ children }: { children: React.ReactNode }) => (

@@ -20,17 +20,27 @@
     "share_telegram": "Share on Telegram",
     "share_whatsapp": "Share on Whatsapp",
     "update": "Update",
-    "videos": "Videos"
+    "videos": "Videos",
+    "updating_frame": "Updating Data...",
+    "frame_updated": "Frame Updated.",
+    "error_frame": "Error Updating Frame.",
+    "fail_image": "Failed to generate image.",
+    "fail_video": "Failed to Load Video."
   },
   "list": {
     "no_data": "Sorry! No data found"
   },
   "mainscreen": {
     "create_post": "Create a Social Media Post with Fast & Easy Post Maker",
-    "welcome": "Welcome to Octoria."
+    "welcome": "Welcome to Octoria.",
+    "new_prod": "New Arrivals",
+    "see_all": "See All",
+    "subtitle_new_prod": "Our Newly Arrived Products.",
+    "categories": "Categories",
+    "hello": "Hello"
   },
   "onboarding": {
-    "message": "Welcome to obytes app site"
+    "message": "Welcome to Octoria app site"
   },
   "product": {
     "add": "Add to Favorite",
@@ -38,7 +48,9 @@
     "catalogue": "Catalogue",
     "enquiry": "Enquiry Now",
     "remove": "Remove From Favorite",
-    "try_now": "Try Now"
+    "try_now": "Try Now",
+    "removed": "removed from favorite.",
+    "added": "Added to Favorite."
   },
   "scanqr": {
     "open_link": "Open/Copy Link",
@@ -74,10 +86,45 @@
     "title": "Settings",
     "utility": "Utilities",
     "version": "Version",
-    "website": "Website"
+    "website": "Website",
+    "gujrati": "Gujrati",
+    "chinese": "chinese",
+    "tamil": "Tamil",
+    "hindi": "Hindi",
+    "edit": "Edit"
   },
   "signup": {
-    "click_to_upload": "Click to upload image"
+    "click_to_upload": "Click to upload image",
+    "add_photo": "Add your Photo to continue",
+    "profile_updated": "Profile updated successfully.",
+    "error_profile": "Error updating profile."
   },
-  "welcome": "Welcome to octoria app"
+  "login": {
+    "otp_sent": "Otp send to phone number successfully",
+    "otp_failed": "Invalid OTP or OTP expired",
+    "network_error": "Network error",
+    "login_success": "Login successful"
+  },
+  "welcome": "Welcome to octoria app",
+  "info": {
+    "error_data": "Error Updating Data."
+  },
+  "render": {
+    "succ_video": "Video generated successfully.",
+    "proc_canceled": "Failed to generate Video. Process Canceled.",
+    "failed_video": "Failed to generate Video. Internal Error.",
+    "failed_gen_video": "Failed to generate Video."
+  },
+  "gallery": {
+    "gallery": "Gallery"
+  },
+  "assistance": {
+    "welcome_back": "welcome back.",
+    "morning": "Good morning.",
+    "afternoon": "Good afternoon.",
+    "evening": "Good evening."
+  },
+  "setting": {
+    "assistance": "Assistance"
+  }
 }

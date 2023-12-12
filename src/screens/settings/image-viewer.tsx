@@ -1,4 +1,3 @@
-/* eslint-disable max-lines-per-function */
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import { StyleSheet } from 'react-native';
@@ -9,7 +8,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
-import { Image, Text } from '@/ui';
+import { Image } from '@/ui';
 export function ImageViewer({ route }: { route: any }) {
   const { url } = route.params;
   const offset = useSharedValue({ x: 0, y: 0 });
@@ -64,12 +63,6 @@ export function ImageViewer({ route }: { route: any }) {
 
   return (
     <>
-      <Text
-        variant="xs"
-        className="absolute h-5/6 w-5/6 bg-red-300 text-center"
-      >
-        Pinch to zoom, Rotate to rotate, Drag to move
-      </Text>
       <GestureDetector gesture={composed}>
         <Animated.View style={styles.container}>
           <Animated.View style={[animatedStyles]}>

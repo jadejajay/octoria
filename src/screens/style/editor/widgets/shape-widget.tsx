@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable max-lines-per-function */
 /*
      -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
@@ -32,28 +30,31 @@ type mesProp = {
 };
 const theme = '#07ab86';
 export const ShapesWidget = () => {
-  const shapesHandler = new FirestoreData<ShapesType>('shapes');
+  const shapesHandler = React.useMemo(
+    () => new FirestoreData<ShapesType>('shapes'),
+    []
+  );
   const [shapes, setShapes] = React.useState<ShapesType[] | []>([]);
   const addElement = useEditorX((s) => s.addElement);
   const { goBack } = useNavigation();
-  const mes: mesProp[] = [];
+  const mes: mesProp[] = React.useMemo(() => [], []);
 
   const getShapes = useCallback(async () => {
     const data = await shapesHandler.getData(20);
     if (data) setShapes(data);
-  }, []);
+  }, [shapesHandler]);
   React.useEffect(() => {
     getShapes();
-  }, []);
+  }, [getShapes]);
   const handleEndReached = useCallback(async () => {
-    console.log('handleEndReached');
+    // console.log('handleEndReached');
     const data = await shapesHandler.loadMore(20);
     if (data)
       setShapes((p) => {
         if (p) return [...p, ...data];
         return data;
       });
-  }, []);
+  }, [shapesHandler]);
 
   const pickImage = async () => {
     try {
@@ -63,7 +64,7 @@ export const ShapesWidget = () => {
         quality: 1,
       });
       if (!result.canceled) {
-        console.log(result);
+        // console.log(result);
 
         addElement(element(result.assets[0]?.uri, 150, 150));
         goBack();
@@ -73,46 +74,52 @@ export const ShapesWidget = () => {
     }
   };
 
-  const Card = useCallback(({ item, index }: Props) => {
-    return (
-      <View className="max-h-40 w-full p-2">
-        <TouchableOpacity
-          className="overflow-hidden rounded-lg"
-          activeOpacity={1}
-          onPress={() => {
-            if (mes[index]?.width) {
-              if (mes[index]?.height) {
-                addElement(
-                  element(item.image, mes[index]?.width, mes[index]?.height)
-                );
-                goBack();
+  const Card = useCallback(
+    ({ item, index }: Props) => {
+      return (
+        <View className="max-h-40 w-full p-2">
+          <TouchableOpacity
+            className="overflow-hidden rounded-lg"
+            activeOpacity={1}
+            onPress={() => {
+              if (mes[index]?.width) {
+                if (mes[index]?.height) {
+                  addElement(
+                    element(item.image, mes[index]?.width, mes[index]?.height)
+                  );
+                  goBack();
+                } else {
+                  addElement(element(item.image, mes[index]?.width, 150));
+                  goBack();
+                }
               } else {
-                addElement(element(item.image, mes[index]?.width, 150));
+                addElement(element(item.image, 150, 150));
                 goBack();
               }
-            } else {
-              addElement(element(item.image, 150, 150));
-              goBack();
-            }
-          }}
-          style={{ width: '100%', height: index % 2 === 0 ? 75 : 150 }}
-        >
-          <Image
-            src={item.image}
-            style={styles.image}
-            resizeMode="contain"
-            onLoad={(e) => {
-              mes.push({
-                id: index,
-                width: e.nativeEvent.width,
-                height: e.nativeEvent.height,
-              });
             }}
-          />
-        </TouchableOpacity>
-      </View>
-    );
-  }, []);
+            style={[
+              styles.fullWidth,
+              index % 2 === 0 ? styles.height75 : styles.height150,
+            ]}
+          >
+            <Image
+              src={item.image}
+              style={styles.image}
+              resizeMode="contain"
+              onLoad={(e) => {
+                mes.push({
+                  id: index,
+                  width: e.nativeEvent.width,
+                  height: e.nativeEvent.height,
+                });
+              }}
+            />
+          </TouchableOpacity>
+        </View>
+      );
+    },
+    [addElement, goBack, mes]
+  );
   return (
     <>
       <View className="h-40 flex-row justify-around">
@@ -153,6 +160,9 @@ export const ShapesWidget = () => {
 
 const styles = StyleSheet.create({
   image: { width: '100%', height: '100%' },
+  fullWidth: { width: '100%' },
+  height75: { height: 75 },
+  height150: { height: 150 },
 });
 const element = (image: string, width: number, height: number) => ({
   component: 'image',

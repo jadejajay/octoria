@@ -50,19 +50,21 @@ export const BackgroundWidget = () => {
   const setBg = useEditorX((s) => s.setBackground);
   const { goBack } = useNavigation();
 
-  const CardComp = useCallback((item: any, index: number) => {
-    return (
-      <Card
-        item={item.item}
-        index={index}
-        setBg={setBg}
-        onClose={() => {
-          goBack();
-        }}
-      />
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const CardComp = useCallback(
+    (item: any, index: number) => {
+      return (
+        <Card
+          item={item.item}
+          index={index}
+          setBg={setBg}
+          onClose={() => {
+            goBack();
+          }}
+        />
+      );
+    },
+    [goBack, setBg]
+  );
   const captureImage = async () => {
     try {
       let result = await ImagePicker.launchCameraAsync({

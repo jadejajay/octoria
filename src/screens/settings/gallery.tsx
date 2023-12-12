@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import { useNavigation } from '@react-navigation/native';
 import * as MediaLibrary from 'expo-media-library';
 import * as React from 'react';
@@ -7,7 +6,7 @@ import { Image, List, Text, TouchableOpacity, View, WIDTH } from '@/ui';
 
 type Props = {};
 export const Gallery = ({}: Props) => {
-  const [images, setImages] = React.useState<any>([]);
+  const [images, setImages] = React.useState<MediaLibrary.Asset[]>([]);
   const { navigate } = useNavigation();
   React.useEffect(() => {
     (async () => {
@@ -23,9 +22,11 @@ export const Gallery = ({}: Props) => {
   }, []);
   return (
     <View className="flex-1">
-      <Text variant="h3" className="self-center font-sfbold">
-        Gallery
-      </Text>
+      <Text
+        variant="h3"
+        className="self-center font-sfbold"
+        tx="gallery.gallery"
+      />
       <List
         data={images}
         renderItem={({ item, index }) => (
@@ -33,7 +34,6 @@ export const Gallery = ({}: Props) => {
             key={`image-${index}`}
             item={item}
             onPress={() => {
-              //@ts-ignore
               navigate('ImageViewer', { url: item?.uri });
             }}
           />
@@ -53,11 +53,7 @@ const ImageComp = ({ item, onPress }: { item: any; onPress: () => void }) => {
       onPress={onPress}
       className="aspect-square w-full border border-slate-300"
     >
-      <Image
-        src={item.uri}
-        style={{ width: '100%', height: '100%' }}
-        resizeMode="stretch"
-      />
+      <Image src={item.uri} className="h-full w-full" resizeMode="stretch" />
     </TouchableOpacity>
   );
 };

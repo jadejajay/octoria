@@ -2,152 +2,155 @@
 import firestore from '@react-native-firebase/firestore';
 import { produce } from 'immer';
 import lodash from 'lodash';
-import { showMessage } from 'react-native-flash-message';
 import { create } from 'zustand';
 
 import { EDITORX_DATA } from '@/types';
+import { showErrorMessage, showSuccessMessage } from '@/ui';
 
 import { getItem } from '../storage';
 import { createSelectors, newValue } from '../utils';
+
+const elements: Element[] = [
+  {
+    id: 'user_photo',
+    name: 'user_photo',
+    component: 'image',
+    properties: {
+      height: 0,
+      width: 0,
+      image: '',
+      viewProps: {
+        style: {
+          overflow: 'hidden',
+          borderRadius: 0,
+        },
+      },
+      resizeMode: 'stretch',
+      offset: {
+        x: 0,
+        y: 0,
+      },
+      scale: 1,
+      rotation: 0,
+    },
+  },
+  {
+    id: 'user_name',
+    name: 'user_name',
+    component: 'text',
+    properties: {
+      height: 0,
+      width: 0,
+      text: 'octoria',
+      textProps: {
+        style: {
+          color: 'white',
+          fontSize: 20,
+        },
+      },
+      offset: {
+        x: 0,
+        y: 0,
+      },
+      scale: 1,
+      rotation: 0,
+    },
+  },
+  {
+    id: 'user_phone',
+    name: 'user_phone',
+    component: 'text',
+    properties: {
+      height: 0,
+      width: 0,
+      text: '+91 1234567890',
+      textProps: {
+        style: {
+          color: 'white',
+          fontSize: 20,
+        },
+      },
+      offset: {
+        x: 0,
+        y: 0,
+      },
+      scale: 1,
+      rotation: 0,
+    },
+  },
+  {
+    id: 'user_email',
+    name: 'user_email',
+    component: 'text',
+    properties: {
+      height: 0,
+      width: 0,
+      text: 'abcd@gmail.com',
+      textProps: {
+        style: {
+          color: 'white',
+          fontSize: 20,
+        },
+      },
+      offset: {
+        x: 0,
+        y: 0,
+      },
+      scale: 1,
+      rotation: 0,
+    },
+  },
+  {
+    id: 'user_website',
+    name: 'user_website',
+    component: 'text',
+    properties: {
+      height: 0,
+      width: 0,
+      text: 'www.abc.com',
+      textProps: {
+        style: {
+          color: 'white',
+          fontSize: 20,
+        },
+      },
+      offset: {
+        x: 0,
+        y: 0,
+      },
+      scale: 1,
+      rotation: 0,
+    },
+  },
+  {
+    id: 'user_address',
+    name: 'user_address',
+    component: 'text',
+    properties: {
+      height: 0,
+      width: 0,
+      text: 'Ground Floor, 123, XYZ city, India',
+      textProps: {
+        style: {
+          color: 'white',
+          fontSize: 20,
+        },
+      },
+      offset: {
+        x: 0,
+        y: 0,
+      },
+      scale: 1,
+      rotation: 0,
+    },
+  },
+];
+
 const DATA: EditorData = {
   backgroundPost: '',
   bgType: 'photo',
   frame: '',
-  elements: [
-    {
-      id: 'user_photo',
-      name: 'user_photo',
-      component: 'image',
-      properties: {
-        height: 0,
-        width: 0,
-        image: '',
-        viewProps: {
-          style: {
-            overflow: 'hidden',
-            borderRadius: 0,
-          },
-        },
-        resizeMode: 'stretch',
-        offset: {
-          x: 0,
-          y: 0,
-        },
-        scale: 1,
-        rotation: 0,
-      },
-    },
-    {
-      id: 'user_name',
-      name: 'user_name',
-      component: 'text',
-      properties: {
-        height: 0,
-        width: 0,
-        text: 'octoria',
-        textProps: {
-          style: {
-            color: 'white',
-            fontSize: 20,
-          },
-        },
-        offset: {
-          x: 0,
-          y: 0,
-        },
-        scale: 1,
-        rotation: 0,
-      },
-    },
-    {
-      id: 'user_phone',
-      name: 'user_phone',
-      component: 'text',
-      properties: {
-        height: 0,
-        width: 0,
-        text: '+91 1234567890',
-        textProps: {
-          style: {
-            color: 'white',
-            fontSize: 20,
-          },
-        },
-        offset: {
-          x: 0,
-          y: 0,
-        },
-        scale: 1,
-        rotation: 0,
-      },
-    },
-    {
-      id: 'user_email',
-      name: 'user_email',
-      component: 'text',
-      properties: {
-        height: 0,
-        width: 0,
-        text: 'abcd@gmail.com',
-        textProps: {
-          style: {
-            color: 'white',
-            fontSize: 20,
-          },
-        },
-        offset: {
-          x: 0,
-          y: 0,
-        },
-        scale: 1,
-        rotation: 0,
-      },
-    },
-    {
-      id: 'user_website',
-      name: 'user_website',
-      component: 'text',
-      properties: {
-        height: 0,
-        width: 0,
-        text: 'www.abc.com',
-        textProps: {
-          style: {
-            color: 'white',
-            fontSize: 20,
-          },
-        },
-        offset: {
-          x: 0,
-          y: 0,
-        },
-        scale: 1,
-        rotation: 0,
-      },
-    },
-    {
-      id: 'user_address',
-      name: 'user_address',
-      component: 'text',
-      properties: {
-        height: 0,
-        width: 0,
-        text: 'Ground Floor, 123, XYZ city, India',
-        textProps: {
-          style: {
-            color: 'white',
-            fontSize: 20,
-          },
-        },
-        offset: {
-          x: 0,
-          y: 0,
-        },
-        scale: 1,
-        rotation: 0,
-      },
-    },
-  ],
+  elements: elements,
 };
 
 export interface ElementProperties {
@@ -262,36 +265,24 @@ const _useEditorX = create<EditorXState>((set, get) => ({
   canUndo: false,
   canRedo: false,
   saveFrame: async (id, width) => {
-    const elements = get().editorData.elements;
+    const elements2 = get().editorData.elements;
     try {
       if (id) {
-        showMessage({
-          type: 'success',
-          message: 'Updating Data...',
-          duration: 4000,
-        });
+        showSuccessMessage('editor.updating_frame');
         await firestore().collection('frames').doc(id).set(
-          { elements: elements, mainWidth: width },
+          { elements: elements2, mainWidth: width },
           {
             merge: true,
           }
         );
-        showMessage({
-          type: 'success',
-          message: 'Updated Data.',
-          duration: 4000,
-        });
+        showSuccessMessage('editor.frame_updated');
       }
     } catch (error) {
-      showMessage({
-        type: 'danger',
-        message: 'Error Updating Data.',
-        duration: 4000,
-      });
+      showErrorMessage('editor.error_frame');
     }
   },
   setEditor: async (id) => {
-    console.log('set editor called<=====================');
+    // console.log('set editor called<=====================');
     const Data: string = await getItem(EDITORX_DATA);
     const newData: EditorData = JSON.parse(Data);
     if (newData?.bgType) {
@@ -317,7 +308,7 @@ const _useEditorX = create<EditorXState>((set, get) => ({
     }
   },
   setData: (newData) => {
-    console.log('set data called<=====================');
+    // console.log('set data called<=====================');
     set(
       produce((state: EditorXState) => {
         const index = newData.id;
@@ -372,12 +363,9 @@ const _useEditorX = create<EditorXState>((set, get) => ({
     }
     return false;
   },
-  setDataById: (elements, mainWidth, currentWidth) => {
-    console.log('set data by id called<=====================');
-    console.log('mainWidth', mainWidth);
-    console.log('currentWidth', currentWidth);
-    if (elements) {
-      const property2: Element[] = elements.map((element: Element, _) => {
+  setDataById: (elements2, mainWidth, currentWidth) => {
+    if (elements2) {
+      const property2: Element[] = elements2.map((element: Element, _) => {
         return {
           component: element.component,
           id: element.id,
@@ -421,18 +409,7 @@ const _useEditorX = create<EditorXState>((set, get) => ({
       });
       set(
         produce((state: EditorXState) => {
-          elements.map((element: Element, _) => {
-            const id = element.id;
-            const index = state.editorData.elements.findIndex(
-              (item) => item.id === id
-            );
-            if (index > -1) {
-              state.editorData.elements[index] = {
-                ...state.editorData.elements[index],
-                ...property2[index],
-              };
-            }
-          });
+          lodash.merge(state.editorData.elements, property2);
           return state;
         })
       );

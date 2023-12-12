@@ -12,11 +12,18 @@ export const Greeting = ({}: Props) => {
     <View className="flex-row items-center justify-between">
       <View className="flex-column justify-start pl-4 pt-4">
         <Text variant="h3" className="font-sfbold" numberOfLines={1}>
-          Hello, {name ? name : 'Guest'}
+          <Text
+            variant="h3"
+            className="font-sfbold"
+            numberOfLines={1}
+            tx={'mainscreen.hello'}
+          />
+          , {name ? name : 'Guest'}
         </Text>
-        <View className="flex-row">
+        <View className="max-w-[300px] flex-row">
           <Text
             className="font-sfbold text-slate-400"
+            numberOfLines={1}
             tx={'mainscreen.welcome'}
           />
         </View>

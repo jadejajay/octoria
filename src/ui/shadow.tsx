@@ -1,4 +1,3 @@
-import { useColorScheme } from 'nativewind/dist/use-color-scheme';
 import * as React from 'react';
 import type { ViewProps } from 'react-native';
 import { StyleSheet } from 'react-native';
@@ -11,32 +10,17 @@ interface Props extends ViewProps {
   className?: string;
 }
 export const Shadow = (Props: Props) => {
-  const { colorScheme } = useColorScheme();
   return (
-    <View
-      style={[
-        colorScheme === 'dark' ? styles.container : styles.container2,
-        Props.style,
-      ]}
-      className={Props.className}
-    >
+    <View style={[styles.container2, Props.style]} className={Props.className}>
       {Props.children}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    shadowColor: '#fff',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
   container2: {
+    backgroundColor: '#fff',
+    padding: 3,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,

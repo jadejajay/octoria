@@ -12,7 +12,7 @@ export function useFirestoreLiveQuery(collectionName: string) {
     // Subscribe to real-time updates
     const unsubscribe = collectionRef.onSnapshot((querySnapshot) => {
       const updatedData: any = [];
-      querySnapshot.forEach((doc) => {
+      querySnapshot?.forEach((doc) => {
         // Extract the document data along with its ID
         const docData = doc.data();
         const docWithId = { id: doc.id, ...docData };

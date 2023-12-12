@@ -1,16 +1,32 @@
 import storage from '@react-native-firebase/storage';
 import * as MediaLibrary from 'expo-media-library';
 import { ToastAndroid } from 'react-native';
+
+import { ImageProcessor } from './image-filter';
 export async function uploadImage(uri: string, user: any) {
   let x = '';
   if (user) {
-    const response = await fetch(uri);
-    const blob = await response.blob();
-    const ref = storage().ref().child(`images/${user.uid}/avatar.png`);
-    await ref.put(blob);
-    x = await ref.getDownloadURL();
+    const imageProcessor = new ImageProcessor();
+    imageProcessor
+      .resize(uri)
+      .then(async (resizedImage) => {
+        console.log('resizedImage', resizedImage);
+        if (resizedImage?.uri) {
+          const response = await fetch(resizedImage.uri);
+          const blob = await response.blob();
+          const ref = storage().ref().child(`images/${user.uid}/avatar.png`);
+          await ref.put(blob);
+          x = await ref.getDownloadURL();
+        }
+      })
+      .catch((error) => {
+        if (__DEV__) {
+          console.log(error);
+        }
+      });
     return x;
   }
+  return x;
 }
 export const saveToGallery = async (renderedAsset: any) => {
   if (renderedAsset) {

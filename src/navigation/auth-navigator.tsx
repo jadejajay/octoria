@@ -10,7 +10,7 @@ export type AuthStackParamList = {
 const Stack = createNativeStackNavigator<AuthStackParamList>();
 
 export const AuthNavigator = () => {
-  console.log('auth navigator loaded', Date.now());
+  // console.log('auth navigator loaded', Date.now());
   return (
     <Stack.Navigator>
       <Stack.Screen

@@ -71,7 +71,7 @@ const BarIcon = ({ color, name, ...reset }: BarIconType) => {
 };
 
 export const TabNavigator = () => {
-  console.log('Tab navigator started', Date.now());
+  // console.log('Tab navigator started', Date.now());
 
   const { colorScheme } = useColorScheme();
   return (

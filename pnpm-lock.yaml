@@ -11,6 +11,9 @@ dependencies:
   '@bacons/link-assets':
     specifier: ^1.1.0
     version: 1.1.0
+  '@bam.tech/react-native-image-resizer':
+    specifier: ^3.0.7
+    version: 3.0.7(react-native@0.72.6)(react@18.2.0)
   '@gorhom/bottom-sheet':
     specifier: ^4
     version: 4.5.1(@types/react@18.2.39)(react-native-gesture-handler@2.12.1)(react-native-reanimated@3.3.0)(react-native@0.72.6)(react@18.2.0)
@@ -1808,6 +1811,17 @@ packages:
     resolution: {integrity: sha512-prDE88rp3on2gL/L5pQmlgHMrPj5kMHN62zE3ty9pSA1xKeW3uj7PBl4Pn9tG/OVOIKYgdW7gQreZ9pUHDi7lA==}
     dependencies:
       mime: 3.0.0
+    dev: false
+
+  /@bam.tech/react-native-image-resizer@3.0.7(react-native@0.72.6)(react@18.2.0):
+    resolution: {integrity: sha512-TRYfjuaEOQjrGkj9736kW5A3xgyuVD5B2HlhPHvgVn0nM4zjPDLbjTqjId15hQCBNK6Udapcgvfb8lWlwcr7Gw==}
+    engines: {node: '>= 16.0.0'}
+    peerDependencies:
+      react: '*'
+      react-native: '*'
+    dependencies:
+      react: 18.2.0
+      react-native: 0.72.6(@babel/core@7.23.5)(@babel/preset-env@7.23.5)(react@18.2.0)
     dev: false
 
   /@bcoe/v8-coverage@0.2.3:

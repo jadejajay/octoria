@@ -6,8 +6,9 @@ import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Camera } from 'expo-camera';
 import React, { useEffect, useState } from 'react';
-import { Linking, StyleSheet, ToastAndroid, Vibration } from 'react-native';
+import { StyleSheet, ToastAndroid, Vibration } from 'react-native';
 
+import { openLinkInBrowser } from '@/core';
 import { Text, TouchableOpacity, View } from '@/ui';
 export const ScanNGo = () => {
   const navigation = useNavigation();
@@ -17,15 +18,9 @@ export const ScanNGo = () => {
   const [Data, setData] = useState('');
   const handleOpenURL = async (url: string) => {
     try {
-      const supported = await Linking.canOpenURL(url);
       Clipboard.setString(url);
-      ToastAndroid.show(
-        'Content Copied To Clipboard: ' + url,
-        ToastAndroid.SHORT
-      );
-      if (supported) {
-        await Linking.openURL(url);
-      }
+      ToastAndroid.show('Content Copied To Clipboard.', ToastAndroid.SHORT);
+      openLinkInBrowser(url);
     } catch (error) {
       console.error('Error opening URL:', error);
     }
@@ -104,8 +99,8 @@ export const ScanNGo = () => {
               <Ionicons name="scan-outline" size={340} color="white" />
             </View>
             <View className="absolute z-10 flex-1 items-center justify-end">
-              <Text className="font-varela text-sm text-white">powered by</Text>
-              <Text className="font-varela text-xl text-white">
+              <Text className="font-serif text-sm text-white">powered by</Text>
+              <Text className="font-sfbold text-xl text-white">
                 IBAIS MEDIA
               </Text>
             </View>
@@ -120,7 +115,8 @@ export const ScanNGo = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: '100%',
+    height: '100%',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',

@@ -9,7 +9,6 @@ import * as ImagePicker from 'expo-image-picker';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Image, ImageBackground } from 'react-native';
-import { showMessage } from 'react-native-flash-message';
 import * as z from 'zod';
 
 import { useIsSignUp } from '@/core';
@@ -20,6 +19,8 @@ import {
   ControlledInput,
   ControlledSelect,
   ScrollView,
+  showErrorMessage,
+  showSuccessMessage,
   Text,
   TouchableOpacity,
   View,
@@ -114,10 +115,7 @@ export const SignUpForm = () => {
 
   const onSubmit = (data: FormType) => {
     if (!image2) {
-      showMessage({
-        message: 'Add your Photo to continue',
-        type: 'danger',
-      });
+      showErrorMessage('signup.add_photo');
     } else {
       try {
         firestore()
@@ -131,18 +129,12 @@ export const SignUpForm = () => {
             photoUrl: image2,
           })
           .then(() => {
-            showMessage({
-              message: 'Profile updated successfully',
-              type: 'success',
-            });
+            showSuccessMessage('signup.profile_updated');
             if (canGoBack()) goBack();
             setIsSignUp(true);
           })
           .catch(() => {
-            showMessage({
-              message: 'Error updating profile',
-              type: 'danger',
-            });
+            showErrorMessage('signup.error_profile');
           });
       } catch (error) {
         setIsLoading(false);

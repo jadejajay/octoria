@@ -14,13 +14,13 @@ export function useFavorites() {
       .where('userId', '==', userId)
       .onSnapshot((querySnapshot) => {
         const updatedFavorites: any = [];
-        querySnapshot.forEach((doc) => {
+        querySnapshot?.forEach((doc) => {
           const favoriteData = doc.data();
           updatedFavorites.push({ id: doc.id, ...favoriteData });
         });
 
         setFavorites(updatedFavorites);
-        console.log('Favorites updated: ', updatedFavorites);
+        // console.log('Favorites updated: ', updatedFavorites);
 
         setIsLoading(false);
       });

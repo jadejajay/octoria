@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable max-lines-per-function */
 /*
      -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
@@ -45,6 +44,7 @@ import {
   HorizontalList,
   IconButton,
   Image,
+  showErrorMessage,
   SmallCard,
   SmallCard2,
   Text,
@@ -134,7 +134,7 @@ export const Editorx = ({ dim }: Props) => {
 
   React.useEffect(() => {
     const blurListener = navigation.addListener('blur', () => {
-      console.log('Screen is blurred');
+      // console.log('Screen is blurred');
       videoRef.current?.pauseAsync();
       const list_without_empty = editorData.elements.filter(
         (item: Element) => item.properties.width !== 0
@@ -147,7 +147,7 @@ export const Editorx = ({ dim }: Props) => {
       // Your code when the screen is blurred
     });
     const focusListener = navigation.addListener('focus', () => {
-      console.log('Screen is Focused');
+      // console.log('Screen is Focused');
       loadSubCat();
       videoRef.current?.playAsync();
       // Your code when the screen is blurred
@@ -165,6 +165,7 @@ export const Editorx = ({ dim }: Props) => {
       if (!x.granted) {
         showMessage({
           type: 'danger',
+          icon: 'danger',
           message:
             'Give Permissions to Access Editor. Click Here to Give Permissions.',
           duration: 4000,
@@ -205,12 +206,12 @@ export const Editorx = ({ dim }: Props) => {
     [navigate, toggleWidget]
   );
   const captureView = React.useCallback(async () => {
-    console.log('capture called');
+    // console.log('capture called');
     setSelectedItem(-1);
     toggleWidgetModal('Photos');
     setRenderModalLoading(true);
     try {
-      console.log('photo rendered');
+      // console.log('photo rendered');
       //@ts-ignore
       const _result = await viewShotRef.current.capture().then(
         (uri: string) => {
@@ -223,21 +224,19 @@ export const Editorx = ({ dim }: Props) => {
           navigate('RenderWidget');
         },
         (error: any) => {
-          showMessage({
-            type: 'danger',
-            message: `Failed to generate image ${error}`,
-            duration: 2000,
-          });
+          if (__DEV__) {
+            console.log('Oops, snapshot failed', error);
+          }
+          showErrorMessage('editor.fail_image');
         }
       );
       setRenderModalLoading(false);
     } catch (error) {
       setRenderModalLoading(false);
-      showMessage({
-        type: 'danger',
-        message: `Failed to generate image ${error}`,
-        duration: 2000,
-      });
+      if (__DEV__) {
+        console.log('Oops, snapshot failed', error);
+      }
+      showErrorMessage('editor.fail_image');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -350,7 +349,7 @@ export const Editorx = ({ dim }: Props) => {
               name="information-outline"
               size={16}
               onPress={() => navigate('Tutorials')}
-              style={{ marginLeft: 6 }}
+              style={styles.left6}
             />
           </View>
           <IconButton
@@ -435,16 +434,15 @@ export const Editorx = ({ dim }: Props) => {
       <Video
         //@ts-ignore
         ref={videoRef}
-        style={{ width: '100%', height: '100%' }}
+        style={styles.fullVideo}
         source={{
           uri: dwnVideo,
         }}
         onError={(error) => {
-          showMessage({
-            type: 'danger',
-            message: `Failed to Load Video ${error}`,
-            duration: 2000,
-          });
+          if (__DEV__) {
+            console.log('video error', error);
+          }
+          showErrorMessage('editor.fail_video');
         }}
         isMuted={false}
         shouldPlay={true}
@@ -469,7 +467,7 @@ export const Editorx = ({ dim }: Props) => {
       >
         <Image
           style={[styles.background, { width: dim.width, height: dim.width }]}
-          resizeMode="cover"
+          resizeMode="stretch"
           src={editorData.backgroundPost}
         />
       </TouchableOpacity>
@@ -557,9 +555,7 @@ export const Editorx = ({ dim }: Props) => {
       >
         {editorData.bgType === 'video' && (
           <TouchableOpacity
-            style={[
-              { width: dim.width, height: dim.width, position: 'absolute' },
-            ]}
+            style={[styles.background, { width: dim.width, height: dim.width }]}
             activeOpacity={1}
             onPress={() => {
               setSelectedItem(-1);
@@ -594,18 +590,14 @@ export const Editorx = ({ dim }: Props) => {
           <View className="absolute -right-3 top-1/2 z-50">
             <FastImage
               source={require('assets/215.png')}
-              style={{
-                width: 50,
-                height: 20,
-                transform: [{ rotate: '-90deg' }],
-              }}
+              style={styles.octoria}
               resizeMode="contain"
             />
           </View>
         </ViewShot>
       </TouchableOpacity>
       <View style={styles.widget}>
-        <View className="overflow-hidden" style={{ height: 140 }}>
+        <View className="overflow-hidden" style={styles.footerHeight}>
           {widget === ('Photos' as 'Photos') && PostBackgroundList()}
           {widget === ('Videos' as 'Videos') && PostVideoList()}
           {widget === ('Frames' as 'Frames') && PostFrameList()}
@@ -614,13 +606,7 @@ export const Editorx = ({ dim }: Props) => {
         </View>
       </View>
       <View id="footer" style={styles.footer}>
-        <View
-          style={{
-            height: 60,
-            width: '100%',
-            overflow: 'hidden',
-          }}
-        >
+        <View style={styles.footerChild}>
           <EditingFeatureWidget />
         </View>
       </View>
@@ -659,15 +645,35 @@ const styles = StyleSheet.create({
   background: {
     position: 'absolute',
   },
+  left6: {
+    marginLeft: 6,
+  },
   widget: {
     flexDirection: 'row',
     alignItems: 'center',
     height: 160, //  Widget Height
   },
+  fullVideo: {
+    width: '100%',
+    height: '100%',
+  },
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
     height: 80, //  Footer Height
+  },
+  footerChild: {
+    height: 60,
+    width: '100%',
+    overflow: 'hidden',
+  },
+  footerHeight: {
+    height: 140, //  Footer Height
+  },
+  octoria: {
+    width: 50,
+    height: 20,
+    transform: [{ rotate: '-90deg' }],
   },
 });
 export * from './day-list';

@@ -77,13 +77,13 @@ loadSelectedTheme();
 SplashScreen.preventAutoHideAsync();
 
 const App = () => {
-  console.log('app started', Date.now());
+  // console.log('app started', Date.now());
   usePreventScreenCapture();
   const auth = firebase.auth();
   auth.useEmulator('http://192.168.0.8:9099');
   firestore().useEmulator('192.168.0.8', 8080);
   storage().useEmulator('192.168.0.8', 9199);
-  console.log('Emulator started', Date.now());
+  // console.log('Emulator started', Date.now());
   return (
     <GestureHandlerRootView style={styles.container}>
       <APIProvider>

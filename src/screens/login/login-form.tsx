@@ -1,15 +1,15 @@
-/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable max-lines-per-function */
 import auth from '@react-native-firebase/auth';
 import React, { useState } from 'react';
-import { Image } from 'react-native';
-import { showMessage } from 'react-native-flash-message';
 import IntlPhoneField from 'react-native-intl-phone-field';
 
 import {
   ActivityIndicator,
   Button,
+  NoData,
   ReversibleCountdownButton,
+  showErrorMessage,
+  showSuccessMessage,
   VerifCode,
   View,
 } from '@/ui';
@@ -26,18 +26,10 @@ export const LoginForm = () => {
 
       setConfirm(confirmation);
       setIsLoading(false);
-      showMessage({
-        icon: 'success',
-        message: `Otp send to phone number successfully`,
-        duration: 2000,
-      });
+      showSuccessMessage('login.otp_sent');
     } catch (error) {
       setIsLoading(false);
-      showMessage({
-        icon: 'danger',
-        message: `Invalid credentials,${error}`,
-        duration: 2000,
-      });
+      showErrorMessage('login.network_error');
     }
   }
   async function onOtpConfirm(code: any) {
@@ -46,18 +38,10 @@ export const LoginForm = () => {
       await confirm.confirm(code);
       setIsLoading(false);
 
-      showMessage({
-        icon: 'success',
-        message: 'Login Successful',
-        duration: 1000,
-      });
+      showSuccessMessage('login.login_success');
     } catch (error) {
       setIsLoading(false);
-      showMessage({
-        icon: 'danger',
-        message: `Invalid credentials`,
-        duration: 2000,
-      });
+      showErrorMessage('login.otp_failed');
     }
   }
   if (!confirm) {
@@ -69,10 +53,7 @@ export const LoginForm = () => {
           </View>
         )}
         <View className="mt-20 items-center justify-center">
-          <Image
-            source={require('assets/logo_big.png')}
-            style={{ width: 100, height: 100 }}
-          />
+          <NoData width={100} height={100} />
         </View>
         <View className="mt-20 items-center justify-center">
           {isLoading ? null : (
@@ -105,10 +86,7 @@ export const LoginForm = () => {
         </View>
       )}
       <View className="mt-20 items-center  justify-center">
-        <Image
-          source={require('assets/logo_big.png')}
-          style={{ width: 100, height: 100 }}
-        />
+        <NoData width={100} height={100} />
       </View>
       <View className="mt-20 items-center justify-center">
         <VerifCode onFulfill={(code) => onOtpConfirm(code)} />

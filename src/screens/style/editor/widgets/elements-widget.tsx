@@ -1,6 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable max-lines-per-function */
-/* eslint-disable react-native/no-inline-styles */
 /*
      -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
     +* .##+ .@..*+ %+-:   *= -##-     :%  #*%  *++* +*.:@.:@--.-% -%.%*:: +* %%+.@ =%::*+ 
@@ -32,20 +30,23 @@ type mesProp = {
 };
 const theme = '#07ab86';
 export const ElementsWidget = () => {
-  const elementsHandler = new FirestoreData<ElementsType>('elements');
+  const elementsHandler = React.useMemo(
+    () => new FirestoreData<ElementsType>('elements'),
+    []
+  );
   const [elements, setElements] = React.useState<
     ElementsType[] | undefined | null
   >([]);
   const addElement = useEditorX((s) => s.addElement);
   const { goBack } = useNavigation();
-  const mes: mesProp[] = [];
+  const mes: mesProp[] = React.useMemo(() => [], []);
   const getElements = useCallback(async () => {
     const data = await elementsHandler.getData(20);
     if (data) setElements(data);
-  }, []);
+  }, [elementsHandler]);
   useEffect(() => {
     getElements();
-  }, []);
+  }, [getElements]);
   const handleEndReached = useCallback(async () => {
     const data = await elementsHandler.loadMore(20);
     if (data)
@@ -53,7 +54,7 @@ export const ElementsWidget = () => {
         if (p) return [...p, ...data];
         return data;
       });
-  }, []);
+  }, [elementsHandler]);
 
   const pickImage = async () => {
     try {
@@ -63,7 +64,7 @@ export const ElementsWidget = () => {
         quality: 1,
       });
       if (!result.canceled) {
-        console.log(result);
+        // console.log(result);
 
         addElement(element(result.assets[0]?.uri, 150, 150));
         goBack();
@@ -73,46 +74,52 @@ export const ElementsWidget = () => {
     }
   };
 
-  const Card = useCallback(({ item, index }: Props) => {
-    return (
-      <View className="max-h-40 w-full p-2">
-        <TouchableOpacity
-          className="overflow-hidden rounded-lg"
-          activeOpacity={1}
-          onPress={() => {
-            if (mes[index]?.width) {
-              if (mes[index]?.height) {
-                addElement(
-                  element(item.image, mes[index]?.width, mes[index]?.height)
-                );
-                goBack();
+  const Card = useCallback(
+    ({ item, index }: Props) => {
+      return (
+        <View className="max-h-40 w-full p-2">
+          <TouchableOpacity
+            className="overflow-hidden rounded-lg"
+            activeOpacity={1}
+            onPress={() => {
+              if (mes[index]?.width) {
+                if (mes[index]?.height) {
+                  addElement(
+                    element(item.image, mes[index]?.width, mes[index]?.height)
+                  );
+                  goBack();
+                } else {
+                  addElement(element(item.image, mes[index]?.width, 150));
+                  goBack();
+                }
               } else {
-                addElement(element(item.image, mes[index]?.width, 150));
+                addElement(element(item.image, 150, 150));
                 goBack();
               }
-            } else {
-              addElement(element(item.image, 150, 150));
-              goBack();
-            }
-          }}
-          style={{ width: '100%', height: index % 2 === 0 ? 75 : 150 }}
-        >
-          <Image
-            src={item.image}
-            style={styles.image}
-            resizeMode="contain"
-            onLoad={(e) => {
-              mes.push({
-                id: index,
-                width: e.nativeEvent.width,
-                height: e.nativeEvent.height,
-              });
             }}
-          />
-        </TouchableOpacity>
-      </View>
-    );
-  }, []);
+            style={[
+              styles.fullWidth,
+              index % 2 === 0 ? styles.height75 : styles.height150,
+            ]}
+          >
+            <Image
+              src={item.image}
+              style={styles.image}
+              resizeMode="contain"
+              onLoad={(e) => {
+                mes.push({
+                  id: index,
+                  width: e.nativeEvent.width,
+                  height: e.nativeEvent.height,
+                });
+              }}
+            />
+          </TouchableOpacity>
+        </View>
+      );
+    },
+    [addElement, goBack, mes]
+  );
 
   return (
     <>
@@ -156,6 +163,9 @@ export const ElementsWidget = () => {
 
 export const styles = StyleSheet.create({
   image: { width: '100%', height: '100%' },
+  fullWidth: { width: '100%' },
+  height75: { height: 75 },
+  height150: { height: 150 },
 });
 const element = (image: string, width: number, height: number) => ({
   component: 'image',

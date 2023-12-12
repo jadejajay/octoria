@@ -3,15 +3,16 @@
 import { useNavigation } from '@react-navigation/native';
 import { ResizeMode, Video } from 'expo-av';
 import React, { useCallback } from 'react';
-import { Dimensions, Image, StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, View } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 
 import { useFirestoreLiveQuery } from '@/core';
 
+import { WIDTH } from '../theme';
 import { AnimatedButton } from './animated-button';
 
 const horizontalMargin = 4;
-const SLIDER_WIDTH = Dimensions.get('window').width;
+const SLIDER_WIDTH = WIDTH;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH) + horizontalMargin * 2;
 type Props = {
   item: any;

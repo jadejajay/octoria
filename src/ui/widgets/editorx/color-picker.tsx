@@ -19,7 +19,7 @@ import ColorPicker, {
 import { useEditorX } from '@/core';
 import { ScrollView, TouchableOpacity } from '@/ui/core';
 
-export default function ColorWidget() {
+export function ColorWidget() {
   const pickerRef = useRef<ColorPickerRef>(null);
   // const [showInput, setShowInput] = React.useState(false);
   // const data = useEditorX((s) => s.editorData);

@@ -44,7 +44,7 @@ export const PostModal = ({
       shareImageWithTitle(localUri, sharePost({ type: 'Post' }));
       setLoading(false);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       setLoading(false);
     }
   };
@@ -69,7 +69,7 @@ export const PostModal = ({
 
       setLoading(false);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       ToastAndroid.show('Permission denied !', ToastAndroid.SHORT);
       setLoading(false);
     }

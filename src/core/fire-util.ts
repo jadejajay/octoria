@@ -43,9 +43,9 @@ export class FirestoreData<T> {
   }
 
   async loadMore(limit: number): Promise<T[] | []> {
-    console.log('last visible', this.lastVisible);
+    // console.log('last visible', this.lastVisible);
     if (!this.lastVisible) {
-      console.log('No more data to load');
+      // console.log('No more data to load');
       return [];
     }
     const snapshot = await firestore()

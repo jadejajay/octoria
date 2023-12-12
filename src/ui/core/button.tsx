@@ -1,6 +1,8 @@
 import React from 'react';
 import type { TouchableOpacityProps } from 'react-native';
 
+import type { TxKeyPath } from '@/core';
+
 import { ActivityIndicator } from './activity-indicator';
 import { Text } from './text';
 import { TouchableOpacity } from './touchable-opacity';
@@ -41,7 +43,7 @@ export const buttonVariants: BVariant = {
 
 interface Props extends TouchableOpacityProps {
   variant?: VariantName;
-  label?: string;
+  label?: TxKeyPath;
   loading?: boolean;
   textColor?: string;
 }
@@ -79,9 +81,8 @@ export const Button = ({
            ${buttonVariants[variant].label}
           `}
           style={{ color: textColor }}
-        >
-          {label}
-        </Text>
+          tx={label}
+        />
       )}
     </TouchableOpacity>
   );

@@ -20,12 +20,15 @@ export type SettingStackParamList = {
 const Stack = createNativeStackNavigator<SettingStackParamList>();
 
 export const SettingNavigator = () => {
-  console.log('setting navigator loaded', Date.now());
+  // console.log('setting navigator loaded', Date.now());
   return (
     <Stack.Navigator initialRouteName="Settings" id="setting-navigator">
       <Stack.Group
         screenOptions={{
           headerShown: false,
+          presentation: 'modal',
+          animation: 'slide_from_right',
+          animationDuration: 300,
         }}
       >
         <Stack.Screen name="Settings" component={Settings} />

@@ -4,14 +4,14 @@ import * as React from 'react';
 import type { Product } from '@/types';
 import { EmptyList, List } from '@/ui/list';
 
-import { Card } from './card';
+import { PostListCard } from './card';
 
 type Props = {
   data: Product[];
   isLoading: boolean;
 };
 export const NewProductList = ({ data, isLoading }: Props) => {
-  console.log('new Product List loaded', Date.now());
+  // console.log('new Product List loaded', Date.now());
   const navigation = useNavigation();
   const ListComponent = React.useCallback(
     () => (
@@ -20,7 +20,7 @@ export const NewProductList = ({ data, isLoading }: Props) => {
         data={data}
         renderItem={({ item, index }) => (
           // <ProductCardHorizontal item={item} index={index} />
-          <Card
+          <PostListCard
             item={item}
             index={index}
             onPress={() => {

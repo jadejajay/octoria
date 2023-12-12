@@ -25,6 +25,7 @@ import { QR, Rate, Share, Support, Website } from '@/ui/icons';
 
 import { Item } from './item';
 import { ItemsContainer } from './items-container';
+import { LanguageItem } from './language-item';
 export const Settings = () => {
   const { navigate } = useNavigation();
   const [update, setUpdate] = React.useState(1);
@@ -39,9 +40,9 @@ export const Settings = () => {
   return (
     <>
       <FocusAwareStatusBar />
-
       <ScrollView
         showsVerticalScrollIndicator={false}
+        style={{ flex: 1 }}
         onScroll={(e) => {
           if (e.nativeEvent.contentOffset.y < 0) {
             setUpdate((prev) => prev + 1);
@@ -95,7 +96,7 @@ export const Settings = () => {
                   {User?.data?.business}
                 </Text>
                 <Button
-                  label="Edit"
+                  label="settings.edit"
                   variant="outline"
                   onPress={() => {
                     //@ts-ignore
@@ -127,10 +128,13 @@ export const Settings = () => {
                   navigate('ScanNGo');
                 }}
               />
+              <LanguageItem />
               <View className="flex-row items-center justify-between px-4">
-                <Text variant="md" className="text-center font-varela">
-                  Assistance
-                </Text>
+                <Text
+                  variant="md"
+                  className="text-center font-varela"
+                  tx={'setting.assistance'}
+                />
                 <Switch
                   trackColor={{ false: '#0004', true: '#07ab86' }}
                   thumbColor="#fff"
@@ -146,7 +150,6 @@ export const Settings = () => {
               <Item text="settings.app_name" value={Env.NAME} />
               <Item text="settings.version" value={Env.VERSION} />
             </ItemsContainer>
-
             <ItemsContainer title="settings.support_us">
               <Item
                 text="settings.share"
@@ -183,7 +186,6 @@ export const Settings = () => {
                 }}
               />
             </ItemsContainer>
-
             <ItemsContainer title="settings.links">
               <Item
                 text="settings.privacy"
@@ -204,12 +206,9 @@ export const Settings = () => {
                   data?.website ? openLinkInBrowser(data?.website) : {};
                 }}
               />
+              <Item text="settings.logout" onPress={signOut} />
             </ItemsContainer>
-            <View className="my-8">
-              <ItemsContainer>
-                <Item text="settings.logout" onPress={signOut} />
-              </ItemsContainer>
-            </View>
+            <View className="mx-16 my-8 border-b-2 border-slate-200" />
           </View>
         </Stagger>
       </ScrollView>

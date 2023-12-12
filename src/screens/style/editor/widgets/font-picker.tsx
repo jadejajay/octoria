@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 /*
      -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
     +* .##+ .@..*+ %+-:   *= -##-     :%  #*%  *++* +*.:@.:@--.-% -%.%*:: +* %%+.@ =%::*+ 
@@ -45,11 +44,13 @@ export const FontWidget = () => {
             style={styles.cardContainer}
           >
             <Text
-              style={{
-                fontFamily: item,
-                fontSize: fontSize,
-                alignSelf: 'center',
-              }}
+              style={[
+                {
+                  fontFamily: item,
+                  fontSize: fontSize,
+                },
+                styles.selfCenter,
+              ]}
             >
               {item}
             </Text>
@@ -95,5 +96,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
+  },
+  selfCenter: {
+    alignSelf: 'center',
   },
 });

@@ -6,7 +6,6 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { ToastAndroid } from 'react-native';
-import { showMessage } from 'react-native-flash-message';
 
 import {
   getImageBase64,
@@ -17,6 +16,7 @@ import {
 import { enquiryPost } from '@/core/share-strings';
 import type { Product } from '@/types';
 import { Text, TouchableOpacity, View } from '@/ui/core';
+import { showSuccessMessage } from '@/ui/utils';
 
 import { ButtonRow } from './button-row';
 import { HorizontalLine } from './horizontal-line';
@@ -149,11 +149,7 @@ export const ProductDetails = ({ item }: { item: Product }) => {
           className="m-2 flex-row items-center justify-center rounded-lg py-3"
           style={{ backgroundColor: 'white', elevation: 8 }}
           onPress={() => {
-            showMessage({
-              message: 'removed from favorite',
-              type: 'success',
-              icon: 'success',
-            });
+            showSuccessMessage('product.removed');
             deleteFavorite(item.id);
           }}
         >
@@ -169,11 +165,7 @@ export const ProductDetails = ({ item }: { item: Product }) => {
           className="m-2 flex-row items-center justify-center rounded-lg py-3"
           style={{ backgroundColor: 'white', elevation: 4 }}
           onPress={() => {
-            showMessage({
-              message: 'Added to cart',
-              type: 'success',
-              icon: 'success',
-            });
+            showSuccessMessage('product.added');
             addFavorite(item.id, item.name, item.category, item.images[0]);
           }}
         >

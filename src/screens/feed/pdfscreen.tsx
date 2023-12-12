@@ -1,7 +1,10 @@
 import React from 'react';
 import { Linking } from 'react-native';
-import { Dimensions, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Pdf from 'react-native-pdf';
+
+import { HEIGHT, WIDTH } from '@/ui';
+import { openLinkInBrowser } from '@/core';
 
 export const PDFExample = ({ route }: { route: any }) => {
   const { url } = route.params;
@@ -16,11 +19,8 @@ export const PDFExample = ({ route }: { route: any }) => {
       <Pdf
         trustAllCerts={false}
         source={source}
-        onError={(error) => {
-          console.log(error);
-        }}
         onPressLink={(uri) => {
-          Linking.openURL(uri);
+          openLinkInBrowser(uri);
         }}
         style={styles.pdf}
       />
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   },
   pdf: {
     flex: 1,
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
+    width: WIDTH,
+    height: HEIGHT,
   },
 });

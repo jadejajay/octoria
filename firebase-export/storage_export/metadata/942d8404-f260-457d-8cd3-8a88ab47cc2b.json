@@ -6,7 +6,9 @@
   "contentType": "image/jpeg",
   "storageClass": "STANDARD",
   "contentDisposition": "inline",
-  "downloadTokens": ["b7ed6584-e60d-4e08-b80c-ab037a3b636e"],
+  "downloadTokens": [
+    "b7ed6584-e60d-4e08-b80c-ab037a3b636e"
+  ],
   "etag": "k55FGk35tEq7SYWlkt0nGlKCvjY",
   "customMetadata": {},
   "timeCreated": "2023-12-09T13:35:20.724Z",

@@ -22,7 +22,7 @@ export const StickersWidget = () => {
   const [stickers, setStickers] = React.useState<
     StickerType[] | undefined | null
   >([]);
-  console.log('stickers', stickers);
+  // console.log('stickers', stickers);
 
   const getStickers = useCallback(async () => {
     const data = await elementsHandler.getData(30);
@@ -34,7 +34,7 @@ export const StickersWidget = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const handleEndReached = useCallback(async () => {
-    console.log('handleEndReached');
+    // console.log('handleEndReached');
     const data = await elementsHandler.loadMore(30);
     if (data)
       setStickers((p) => {

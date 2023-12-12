@@ -16,12 +16,19 @@ import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { showMessage } from 'react-native-flash-message';
 import * as z from 'zod';
 
 import type { BusinessDataType } from '@/core';
 import { useEditorX } from '@/core';
-import { Image, Input, ScrollView, Text, TouchableOpacity, View } from '@/ui';
+import {
+  Image,
+  Input,
+  ScrollView,
+  showErrorMessage,
+  Text,
+  TouchableOpacity,
+  View,
+} from '@/ui';
 
 const schema = z.object({
   name: z.string().max(200),
@@ -61,7 +68,7 @@ export const InfoWidget = () => {
     // Subscribe to real-time updates
     const unsubscribe = collectionRef.onSnapshot((querySnapshot) => {
       const user: any = querySnapshot?.data();
-      console.log(user?.business);
+      // console.log(user?.business);
 
       const info: any = querySnapshot.get('info');
       if (info) {
@@ -159,11 +166,7 @@ export const InfoWidget = () => {
         );
       }
     } catch (error) {
-      showMessage({
-        type: 'danger',
-        message: 'Error Updating Data.',
-        duration: 4000,
-      });
+      showErrorMessage('info.error_data');
     }
   };
   const onSubmit = (data2: FormType) => {

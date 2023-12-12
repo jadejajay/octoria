@@ -6,7 +6,7 @@ import type { Product } from '@/types';
 import { AnimatedButton, Image, Text, View } from '@/ui/core';
 type Props = { onPress: () => void; item: Product; index: number };
 
-export const Card = ({ item, onPress, index }: Props) => {
+export const PostListCard = ({ item, onPress, index }: Props) => {
   return (
     <AnimatedButton key={`item-${item?.id}`} onClick={onPress}>
       <Animated.View key={`zoomIn-${index}`} animation="zoomIn">

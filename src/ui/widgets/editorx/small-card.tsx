@@ -30,7 +30,7 @@ export const SmallCard = ({
           styles.container,
           isSelected ? { backgroundColor: '#86fbea' } : {},
         ]}
-        className="justify-center rounded  bg-white"
+        className="justify-center rounded bg-white"
       >
         <Image
           key={index}
@@ -52,5 +52,17 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
+    borderRadius: 3,
+  },
+  shadow: {
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -2,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
+    elevation: 4,
   },
 });

@@ -35,7 +35,7 @@ export const ImageModal = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const handleEndReached = useCallback(async () => {
-    console.log('handleEndReached');
+    // console.log('handleEndReached');
     const data = await imagesHandler.loadMore(20);
     if (data)
       setImages((p) => {

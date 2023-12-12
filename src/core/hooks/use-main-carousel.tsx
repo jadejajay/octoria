@@ -10,7 +10,7 @@
 //       .collection('MainCarousel')
 //       .onSnapshot((querySnapshot) => {
 //         const updatedMainCarousel: any = [];
-//         querySnapshot.forEach((doc) => {
+//         querySnapshot?.forEach((doc) => {
 //           const favoriteData = doc.data();
 //           // Filter documents based on userId
 //           updatedMainCarousel.push({ id: doc.id, ...favoriteData });

@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable max-lines-per-function */
 /*
      -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
@@ -8,6 +7,8 @@
                                                                                           
 */
 import { Env } from '@env';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 import { ResizeMode, Video } from 'expo-av';
 import {
   FFmpegKit,
@@ -15,8 +16,8 @@ import {
   ReturnCode,
 } from 'ffmpeg-kit-react-native';
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import RNFetchBlob from 'react-native-blob-util';
-import { showMessage } from 'react-native-flash-message';
 
 import {
   getImageBase64,
@@ -33,9 +34,12 @@ import {
   ActivityIndicator,
   Image,
   ScrollView,
+  showErrorMessage,
+  showSuccessMessage,
   Text,
   TouchableOpacity,
   View,
+  WIDTH,
 } from '@/ui';
 
 const resolution = 1024;
@@ -48,6 +52,7 @@ export const RenderWidget = () => {
   const setRenderedAssetData = useRenderStore((s) => s.setRenderedAssetData);
   const [progress, setProgress] = React.useState(0);
   const [isLoading, setRenderModalLoading] = React.useState(false);
+  const { goBack } = useNavigation();
   const dirs = RNFetchBlob.fs.dirs.DocumentDir;
   React.useEffect(() => {
     captureView();
@@ -56,20 +61,27 @@ export const RenderWidget = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const [progress2, _setProgress2] = React.useState(3);
+  React.useEffect(() => {
+    if (renderedAsset) {
+      console.log('renderedAsset', renderedAsset);
+    }
+  }, [renderedAsset, progress2]);
 
   const captureView = React.useCallback(async () => {
-    console.log('capture called');
     if (type === 'photo') {
     } else {
       try {
-        console.log('tried to render video');
         if (dwnVideo) {
-          console.log('dwn load video available');
           setRenderedAsset('');
           setRenderModalLoading(true);
           let totalFrames = 0;
           FFmpegKitConfig.enableLogCallback((log) => {
             const message = log.getMessage();
+            if (__DEV__) {
+              console.log('message', message);
+            }
+
             if (message.startsWith('frame=')) {
               // This log message contains progress information
               const progressMatch = /frame=(\s*\d+)\s+fps=/.exec(
@@ -103,37 +115,21 @@ export const RenderWidget = () => {
               getImageBase64(`file://${out}`).then((base64: string) => {
                 setRenderedAssetData(base64);
               });
-              showMessage({
-                type: 'success',
-                icon: 'success',
-                message: `Video generated successfully`,
-                duration: 2000,
-              });
+              showSuccessMessage('render.succ_video');
             } else if (ReturnCode.isCancel(returnCode)) {
-              showMessage({
-                type: 'danger',
-                message: `Failed to generate Video. Process Canceled`,
-                duration: 2000,
-              });
+              showErrorMessage('render.proc_canceled');
             } else {
-              showMessage({
-                type: 'danger',
-                message: `Failed to generate Video. Internal Error`,
-                duration: 2000,
-              });
+              showErrorMessage('render.failed_video');
             }
             setRenderModalLoading(false);
           });
         }
       } catch (error) {
-        console.log(error, 'error occured idiota');
-
+        if (__DEV__) {
+          console.log(error);
+        }
         setRenderModalLoading(false);
-        showMessage({
-          type: 'danger',
-          message: `Failed to generate Video ${error}`,
-          duration: 2000,
-        });
+        showErrorMessage('render.failed_gen_video');
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -161,11 +157,18 @@ export const RenderWidget = () => {
   };
   return (
     <ScrollView>
+      <View className="h-8 pl-2">
+        <MaterialCommunityIcons
+          name="arrow-left-bold"
+          size={24}
+          onPress={() => goBack()}
+        />
+      </View>
       {isLoading && (
         <View className="absolute z-50 h-full w-full flex-col items-center justify-start">
           <View className="mt-40 h-20 w-full flex-col items-center justify-between">
             <ActivityIndicator size={50} />
-            <Text className="font-varela text-lg">
+            <Text className="font-sfbold text-lg">
               Generating Your {type === 'video' ? 'Video' : 'Image'}
               {progress % 2 === 0
                 ? progress % 3 === 0
@@ -180,11 +183,11 @@ export const RenderWidget = () => {
       )}
       <View
         className="overflow-hidden"
-        style={{ width: '100%', aspectRatio: 1, marginTop: 60 }}
+        style={[styles.mainPhoto, styles.shadow]}
       >
         {type === 'video' && renderedAsset ? (
           <Video
-            style={{ flex: 1 }}
+            style={styles.video}
             source={{
               uri: renderedAsset,
             }}
@@ -198,87 +201,86 @@ export const RenderWidget = () => {
         ) : (
           type === 'photo' &&
           renderedAsset && (
-            <Image
-              src={renderedAsset}
-              style={{
-                width: '100%',
-                height: '100%',
-              }}
-              resizeMode="contain"
-            />
+            <View style={styles.video}>
+              <Image
+                src={renderedAsset}
+                className="h-full w-full rounded-xl"
+                resizeMode="contain"
+              />
+            </View>
           )
         )}
       </View>
       <View className="flex-column w-full justify-around p-4">
         <TouchableOpacity
-          className="m-2 w-full flex-row items-center"
+          style={[styles.shadow, styles.button]}
           activeOpacity={1}
           onPress={handleWP}
         >
           <Image
             src={Env.SHARE_WHATSAPP}
-            style={{ width: 50, height: 50 }}
+            className="h-12 w-12"
             resizeMode="contain"
           />
           <Text
             variant="sm"
-            className="ml-4 font-varela text-xl"
+            className="ml-4 font-sfbold text-xl"
             tx={'editor.share_whatsapp'}
           />
         </TouchableOpacity>
         <TouchableOpacity
-          className="m-2 w-full flex-row items-center"
+          style={[styles.shadow, styles.button]}
           activeOpacity={1}
           onPress={handleIG}
         >
           <Image
             src={Env.SHARE_INSTAGRAM}
-            style={{ width: 50, height: 50 }}
+            className="h-12 w-12"
             resizeMode="contain"
           />
           <Text
-            className="ml-4 font-varela text-xl"
+            className="ml-4 font-sfbold text-xl"
             tx={'editor.share_instagram'}
           />
         </TouchableOpacity>
         <TouchableOpacity
-          className="m-2 w-full flex-row items-center"
+          style={[styles.shadow, styles.button]}
           activeOpacity={1}
           onPress={handleFB}
         >
           <Image
             src={Env.SHARE_FACEBOOK}
-            style={{ width: 50, height: 50 }}
+            className="h-12 w-12"
             resizeMode="cover"
           />
           <Text
-            className="ml-4 font-varela text-xl"
+            className="ml-4 font-sfbold text-xl"
             tx={'editor.share_facebook'}
           />
         </TouchableOpacity>
         <TouchableOpacity
-          className="m-2 w-full flex-row items-center"
+          style={[styles.shadow, styles.button]}
           activeOpacity={1}
           onPress={handleTG}
         >
           <Image
             src={Env.SHARE_TELEGRAM}
-            style={{ width: 50, height: 50 }}
+            className="h-12 w-12"
             resizeMode="cover"
           />
           <Text
-            className="ml-4 font-varela text-xl"
+            className="ml-4 font-sfbold text-xl"
             tx={'editor.share_telegram'}
           />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => saveToGallery(renderedAsset)}
-          className="h-16 w-full"
+          style={[styles.shadow, styles.button]}
           activeOpacity={1}
         >
           <Image
             src={Env.SHARE_DOWNLOAD}
-            style={{ width: '100%', height: '100%' }}
+            className="h-full w-full"
             resizeMode="cover"
           />
         </TouchableOpacity>
@@ -286,3 +288,46 @@ export const RenderWidget = () => {
     </ScrollView>
   );
 };
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#000',
+  },
+  image: {
+    width: 50,
+    height: 50,
+  },
+  video: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 20,
+  },
+  button: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 80,
+    padding: 10,
+  },
+  shadow: {
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -5,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 10,
+    elevation: 10,
+  },
+  mainPhoto: {
+    width: WIDTH - 20,
+    aspectRatio: 1,
+    marginTop: 30,
+    margin: 10,
+    borderWidth: 5,
+    borderRadius: 20,
+    borderColor: '#fff',
+    overflow: 'hidden',
+  },
+});

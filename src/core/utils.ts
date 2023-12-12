@@ -1,4 +1,3 @@
-/* eslint-disable no-bitwise */
 // import storage from '@react-native-firebase/storage';
 import * as MediaLibrary from 'expo-media-library';
 import * as Sharing from 'expo-sharing';
@@ -7,6 +6,9 @@ import { Linking, Platform, ToastAndroid } from 'react-native';
 import type { ShareSingleOptions, Social } from 'react-native-share';
 import Share from 'react-native-share';
 import type { StoreApi, UseBoundStore } from 'zustand';
+
+import type { TxKeyPath } from './i18n';
+import { getLanguage, translate } from './i18n';
 
 export function openLinkInBrowser(url: string) {
   Linking.canOpenURL(url).then((canOpen) => canOpen && Linking.openURL(url));
@@ -95,21 +97,6 @@ export function identifyContentType(
   return 'unknown';
 }
 
-export function capitalizeWords(str: string) {
-  // Split the string into an array of words
-  const words = str.split(' ');
-
-  // Capitalize the first letter of each word
-  const capitalizedWords = words.map((word: string) => {
-    return word.charAt(0).toUpperCase() + word.slice(1);
-  });
-
-  // Join the words back into a new string
-  const capitalizedString = capitalizedWords.join(' ');
-
-  return capitalizedString;
-}
-
 export function calculatePercentage(
   oldValue: number,
   newValue: number
@@ -135,99 +122,26 @@ export const shareImageWithTitle = async (fileUri: any, title: any) => {
 };
 
 const speechOptions = {
-  language: 'hi-IN', // Set the desired language code (e.g., 'en', 'es', 'fr')
-  identifier: 'hi-in-x-hia-local', // Set the voice identifier
+  language: getLanguage() || 'en', // Set the desired language code (e.g., 'en', 'es', 'fr')
   pitch: 1.0, // Set the speech pitch (0.5 to 2.0, where 1.0 is normal)
   rate: 0.8, // Set the speech rate (0.1 to 2.0, where 1.0 is normal)
   volume: 1, // Set the speech volume (0.0 to 1.0, where 1.0 is maximum volume)
   phoneme: Platform.OS === 'ios' ? 'x-sampa' : 'ipa', // Use 'x-sampa' for iOS and 'ipa' for Android
 };
-export async function speak(text: string) {
-  const thingToSay = text;
-  Speech.speak(thingToSay, speechOptions);
-}
-
-export function invertColor(hexColor: string) {
-  // Remove the '#' if it's included
-  hexColor = hexColor.replace(/^#/, '');
-
-  // Convert the hex color to RGB
-  const r = parseInt(hexColor.slice(0, 2), 16);
-  const g = parseInt(hexColor.slice(2, 4), 16);
-  const b = parseInt(hexColor.slice(4, 6), 16);
-
-  // Invert the RGB values
-  const invertedR = 255 - r;
-  const invertedG = 255 - g;
-  const invertedB = 255 - b;
-
-  // Convert the inverted RGB values back to hexadecimal
-  const invertedHexColor = `#${(
-    (invertedR << 16) |
-    (invertedG << 8) |
-    invertedB
-  )
-    .toString(16)
-    .padStart(6, '0')}`;
-
-  return invertedHexColor;
-}
-
-export function generateRandomCharmColor() {
-  // Define the hue range for charm colors (e.g., 0 to 360 for the full range)
-  const minHue = 60; // Adjust these values as needed
-  const maxHue = 240;
-
-  // Generate a random hue within the specified range
-  const hue = Math.floor(Math.random() * (maxHue - minHue + 1)) + minHue;
-
-  // Set saturation and value to create a more pastel color
-  const saturation = Math.floor(Math.random() * (80 - 40 + 1)) + 40; // Adjust these values as needed
-  const value = Math.floor(Math.random() * (80 - 40 + 1)) + 40;
-
-  // Alpha value
-  const alpha = 88;
-
-  // Convert HSV to RGB
-  const chroma = (1 - Math.abs(2 * value - 1)) * saturation;
-  const huePrime = hue / 60;
-  const x = chroma * (1 - Math.abs((huePrime % 2) - 1));
-  const m = value - chroma / 2;
-
-  let r, g, b;
-
-  if (huePrime >= 0 && huePrime < 1) {
-    r = chroma;
-    g = x;
-    b = 0;
-  } else if (huePrime >= 1 && huePrime < 2) {
-    r = x;
-    g = chroma;
-    b = 0;
-  } else if (huePrime >= 2 && huePrime < 3) {
-    r = 0;
-    g = chroma;
-    b = x;
-  } else if (huePrime >= 3 && huePrime < 4) {
-    r = 0;
-    g = x;
-    b = chroma;
-  } else if (huePrime >= 4 && huePrime < 5) {
-    r = x;
-    g = 0;
-    b = chroma;
+export async function speak(text: TxKeyPath, vars?: string) {
+  console.log(speechOptions.language);
+  if (vars) {
+    const thingToSay2 = translate(text) as string;
+    const thingToSay = `${vars} ${thingToSay2}`;
+    console.log(thingToSay);
+    Speech.speak(thingToSay, speechOptions);
+    return;
   } else {
-    r = chroma;
-    g = 0;
-    b = x;
+    const thingToSay = translate(text);
+    Speech.speak(thingToSay, speechOptions);
   }
-
-  r = Math.floor((r + m) * 255);
-  g = Math.floor((g + m) * 255);
-  b = Math.floor((b + m) * 255);
-
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
+
 export function generateRandomCharmColor2() {
   const isPrimaryColor = (color: any) => {
     const primaryColors = [
@@ -257,12 +171,12 @@ export function generateRandomCharmColor2() {
 export function extractImagesFromObjects<T>(objectList: T[]): string[] {
   const extractedImages: string[] = [];
 
-  objectList.forEach((obj: any) => {
+  objectList?.forEach((obj: any) => {
     const { images } = obj as { images: string[] };
 
     if (images && images.length > 0) {
       // Iterate through the images in the imageList
-      images.forEach((image) => {
+      images?.forEach((image) => {
         // Do something with the image (e.g., push it to the extractedImages array)
         if (!isVideoURL(image)) extractedImages.push(image);
       });
@@ -343,7 +257,7 @@ export const handleWhatsappShare2 = async (
       //@ts-ignore
       appId: 'com.whatsapp',
     };
-    console.log('whatsapp share called');
+    // console.log('whatsapp share called');
 
     await Share.shareSingle(options);
   } catch (error) {
@@ -372,7 +286,7 @@ export const handleInstagramShare = async (
       // url: 'http://itekindia.com/dashboard/bronco.jpg', //'data:image/png;base64,<imageInBase64>',
       social: Share.Social.INSTAGRAM as Social,
     };
-    console.log('instagram share called');
+    // console.log('instagram share called');
 
     await Share.shareSingle(options);
   } catch (error) {
@@ -401,7 +315,7 @@ export const handleTelegramShare = async (
       // url: 'http://itekindia.com/dashboard/bronco.jpg', //'data:image/png;base64,<imageInBase64>',
       social: Share.Social.TELEGRAM as Social,
     };
-    console.log('telegram share called');
+    // console.log('telegram share called');
 
     await Share.shareSingle(options);
   } catch (error) {
@@ -430,7 +344,7 @@ export const handleFacebookShare = async (
       // url: 'http://itekindia.com/dashboard/bronco.jpg', //'data:image/png;base64,<imageInBase64>',
       social: Share.Social.FACEBOOK as Social,
     };
-    console.log('facebook share called');
+    // console.log('facebook share called');
 
     await Share.shareSingle(options);
   } catch (error) {
@@ -478,7 +392,7 @@ export const saveToGallery = async (res: string) => {
 };
 
 export function getImageBase64(url: string): Promise<string> {
-  console.log('get base64 of url: ', url);
+  // console.log('get base64 of url: ', url);
 
   return new Promise((resolve, reject) => {
     fetch(url)
@@ -495,7 +409,7 @@ export function getImageBase64(url: string): Promise<string> {
         reader.readAsDataURL(blob);
       })
       .catch((error2) => {
-        console.log('url to base64 rejected');
+        // console.log('url to base64 rejected');
         reject(error2);
       });
   });
