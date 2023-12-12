@@ -105,7 +105,8 @@
     "version": "版本",
     "website": "网站",
     "hindi": "印地语",
-    "tamil": "泰米尔语"
+    "tamil": "泰米尔语",
+    "edit": "编辑"
   },
   "signup": {
     "add_photo": "添加您的照片以继续",
