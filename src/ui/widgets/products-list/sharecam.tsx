@@ -204,7 +204,7 @@ export const ShareCam = ({ route }: any) => {
               ref={imgRef}
               style={{
                 width: '100%',
-                height: '70%',
+                height: '80%',
                 borderColor: 'white',
                 overflow: 'hidden',
                 backgroundColor: 'red',
@@ -214,7 +214,7 @@ export const ShareCam = ({ route }: any) => {
                 <Image
                   source={{ uri: imageData }}
                   style={{ width: '100%', height: '100%' }}
-                  resizeMode="cover"
+                  resizeMode="stretch"
                 />
               )}
               <View style={styles.abs}>

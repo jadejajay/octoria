@@ -12,7 +12,7 @@
 //       }
 //     );
 //     const data = await response.text();
-//     console.log(data);
+//     logger.log(data);
 //   }
 // };
 

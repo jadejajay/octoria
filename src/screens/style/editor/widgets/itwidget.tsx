@@ -35,8 +35,6 @@ export const ITWidget = ({ data, id, index, onClick, fontSize }: Props) => {
       lineHeight: fontSize.value,
     };
   });
-  // console.log('ITWidget', data);
-
   React.useEffect(() => {
     switch (id) {
       case 'user_name':

@@ -7,10 +7,17 @@ import * as Linking from 'expo-linking';
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect, useState } from 'react';
 
-import { useEditorX, useIsFirstTime, useIsSignUp, useUserStore } from '@/core';
+import {
+  logger,
+  useEditorX,
+  useIsFirstTime,
+  useIsSignUp,
+  useUserStore,
+} from '@/core';
 import {
   DayList,
   DayList2,
+  FilterScreen,
   Gallery,
   ImageEditor,
   ImageViewer,
@@ -45,7 +52,7 @@ import { TabNavigator } from './tab-navigator';
 const prefix = Linking.createURL('/');
 const Stack = createNativeStackNavigator();
 export const Root = () => {
-  // console.log('Root Stack Activated', Date.now());
+  logger.log('Root Stack Activated', Date.now());
   const [isFirstTime] = useIsFirstTime();
   const [isSignUp, setIsSignUp] = useIsSignUp();
   const [initializing, setInitializing] = useState(true);
@@ -92,7 +99,7 @@ export const Root = () => {
           });
           const isUserSignedUp = !!User?.email;
           setIsSignUp(isUserSignedUp);
-          // console.log('user loaded', Date.now());
+          logger.log('user loaded', Date.now());
         } else {
           setIsSignUp(false);
         }
@@ -156,6 +163,11 @@ export const Root = () => {
                   <Stack.Screen name="TextModal" component={TextModal} />
                   <Stack.Screen name="ColorWidget" component={ColorWidget} />
                   <Stack.Screen name="FontWidget" component={FontWidget} />
+                  <Stack.Screen name="FilterScreen" component={FilterScreen} />
+                  {/* <Stack.Screen
+                    name="ImageColorPicker"
+                    component={ImageColorPicker}
+                  /> */}
                   <Stack.Screen
                     name="BackgroundVideosWidget"
                     component={BackgroundVideosWidget}

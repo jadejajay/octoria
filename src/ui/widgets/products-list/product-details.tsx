@@ -24,7 +24,7 @@ import { HorizontalLine } from './horizontal-line';
 export const ProductDetails = ({ item }: { item: Product }) => {
   const navigation = useNavigation();
   const { addFavorite, deleteFavorite, isFavorite } = useFavorites();
-  const isItemInFavorites = isFavorite(item.id);
+  const isItemInFavorites = isFavorite(item?.id);
   const [Size, setSize] = React.useState('');
   const [Finishing, setFinishing] = React.useState('');
   const share = useFirestoreDocLiveQuery('links', 'share');
@@ -36,8 +36,8 @@ export const ProductDetails = ({ item }: { item: Product }) => {
   };
   const handleEnquiry = async () => {
     const LINK = enquiryPost({
-      name: item.name,
-      id: item.id,
+      name: item?.name,
+      id: item?.id,
       size: Size,
       finishing: Finishing,
     });
@@ -134,13 +134,13 @@ export const ProductDetails = ({ item }: { item: Product }) => {
       <HorizontalLine style="mt-2" color="#56a8" />
       <ButtonRow
         title={'Sizes'}
-        titles={item.sizes as string[]}
+        titles={item?.sizes as string[]}
         onButtonPress={handleButtonPress1}
       />
       <HorizontalLine style="mt-2" color="#56a8" />
       <ButtonRow
         title={'Finishing'}
-        titles={item.finishing as string[]}
+        titles={item?.finishing as string[]}
         onButtonPress={handleButtonPress2}
       />
       <HorizontalLine style="mt-2" color="#56a8" />
@@ -150,7 +150,7 @@ export const ProductDetails = ({ item }: { item: Product }) => {
           style={{ backgroundColor: 'white', elevation: 8 }}
           onPress={() => {
             showSuccessMessage('product.removed');
-            deleteFavorite(item.id);
+            deleteFavorite(item?.id);
           }}
         >
           <Entypo name="heart" size={18} color="black" />
@@ -166,7 +166,7 @@ export const ProductDetails = ({ item }: { item: Product }) => {
           style={{ backgroundColor: 'white', elevation: 4 }}
           onPress={() => {
             showSuccessMessage('product.added');
-            addFavorite(item.id, item.name, item.category, item.images[0]);
+            addFavorite(item?.id, item?.name, item?.category, item?.images[0]);
           }}
         >
           <Entypo name="heart-outlined" size={18} color="black" />

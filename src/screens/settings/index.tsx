@@ -9,8 +9,11 @@ import * as React from 'react';
 import { Switch } from 'react-native';
 import { FadeOutDown, FlipInXDown } from 'react-native-reanimated';
 
-import { openLinkInBrowser, useFirestoreDocLiveQuery } from '@/core';
-import { useAssistance } from '@/core/hooks/use-assistance';
+import {
+  openLinkInBrowser,
+  useAssistance,
+  useFirestoreDocLiveQuery,
+} from '@/core';
 import {
   Button,
   colors,

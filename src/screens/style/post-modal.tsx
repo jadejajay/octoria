@@ -16,7 +16,7 @@ import {
 import FastImage from 'react-native-fast-image';
 import { captureRef } from 'react-native-view-shot';
 
-import { saveToGallery, shareImageWithTitle } from '@/core';
+import { logger, saveToGallery, shareImageWithTitle } from '@/core';
 import { sharePost } from '@/core/share-strings';
 import { ActivityIndicator, Text, TouchableOpacity, View } from '@/ui';
 
@@ -44,7 +44,7 @@ export const PostModal = ({
       shareImageWithTitle(localUri, sharePost({ type: 'Post' }));
       setLoading(false);
     } catch (e) {
-      // console.log(e);
+      logger.error(e);
       setLoading(false);
     }
   };
@@ -69,7 +69,7 @@ export const PostModal = ({
 
       setLoading(false);
     } catch (e) {
-      // console.log(e);
+      logger.log(e);
       ToastAndroid.show('Permission denied !', ToastAndroid.SHORT);
       setLoading(false);
     }

@@ -20,7 +20,7 @@ import { useEditorX } from '@/core';
 import { ScrollView, TouchableOpacity } from '@/ui/core';
 
 export function ColorWidget() {
-  const pickerRef = useRef<ColorPickerRef>(null);
+  // const pickerRef = useRef<ColorPickerRef>(null);
   // const [showInput, setShowInput] = React.useState(false);
   // const data = useEditorX((s) => s.editorData);
   const state = useEditorX((s) => s.selectedItem);
@@ -62,7 +62,7 @@ export function ColorWidget() {
         <Animated.View style={[styles.roundedBox, backgroundColorStyle]} />
         <View style={styles.pickerContainer}>
           <ColorPicker
-            ref={pickerRef}
+            // ref={pickerRef}
             value={selectedColor.value}
             sliderThickness={20}
             thumbSize={24}

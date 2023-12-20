@@ -19,7 +19,7 @@ import { Controller, useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 import type { BusinessDataType } from '@/core';
-import { useEditorX } from '@/core';
+import { logger, useEditorX } from '@/core';
 import {
   Image,
   Input,
@@ -68,7 +68,7 @@ export const InfoWidget = () => {
     // Subscribe to real-time updates
     const unsubscribe = collectionRef.onSnapshot((querySnapshot) => {
       const user: any = querySnapshot?.data();
-      // console.log(user?.business);
+      logger.log(user?.business);
 
       const info: any = querySnapshot.get('info');
       if (info) {

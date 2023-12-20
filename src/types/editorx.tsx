@@ -5,8 +5,8 @@ import type { Element } from '@/core';
 export const EDITORX_DATA = 'EDITORX_DATA';
 export const SUB_CATEGORY = 'SUB_CATEGORY';
 export type FrameType = {
-  id: string;
-  image: string;
+  id?: string;
+  image?: string;
   elements?: Element[];
   mainWidth?: number;
 };
@@ -15,18 +15,18 @@ export type BackgroundType = {
   image: string;
 };
 export type FestivalType = {
-  id: string;
-  image: string;
+  id?: string;
+  image?: string;
   thumbnail?: string;
-  categoryCode: number;
-  subCategory: number;
+  categoryCode?: number;
+  subCategory?: number;
   tags?: string;
 };
 export type SubCategoryType = {
-  id: string;
-  name: string;
-  code: number;
-  date: string;
+  id?: string;
+  name?: string;
+  code?: number;
+  date?: string;
 };
 export type ElementsType = {
   id: string;
@@ -49,18 +49,18 @@ export type LogosType = {
   image: string;
 };
 export type PostMainCategoryType = {
-  id: string;
-  image: string;
-  name: string;
-  code: number;
-  subCode: number;
+  id?: string;
+  image?: string;
+  name?: string;
+  code?: number;
+  subCode?: number;
 };
 export type PostVideoType = {
-  id: string;
-  video: string;
-  thumbnail: string;
-  categoryCode: number;
-  subCategory: number;
+  id?: string;
+  video?: string;
+  thumbnail?: string;
+  categoryCode?: number;
+  subCategory?: number;
   tags?: string;
 };
 export type resolutionParams = {

@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 
-import { useEditorX } from '@/core';
+import { logger, useEditorX } from '@/core';
 import { FirestoreData } from '@/core/fire-util';
 import type { LogosType } from '@/types';
 import { Image, TouchableOpacity, Vertical2CompList, View } from '@/ui';
@@ -31,7 +31,7 @@ export const LogosWidget = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const handleEndReached = useCallback(async () => {
-    // console.log('handleEndReached');
+    logger.log('handleEndReached');
     const data = await imagesHandler.loadMore(20);
     if (data)
       setLogos((p) => {

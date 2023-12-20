@@ -3,6 +3,7 @@ import * as MediaLibrary from 'expo-media-library';
 import { ToastAndroid } from 'react-native';
 
 import { ImageProcessor } from './image-filter';
+import { logger } from './logger';
 export async function uploadImage(uri: string, user: any) {
   let x = '';
   if (user) {
@@ -10,7 +11,7 @@ export async function uploadImage(uri: string, user: any) {
     imageProcessor
       .resize(uri)
       .then(async (resizedImage) => {
-        console.log('resizedImage', resizedImage);
+        logger.log('resizedImage', resizedImage);
         if (resizedImage?.uri) {
           const response = await fetch(resizedImage.uri);
           const blob = await response.blob();
@@ -20,9 +21,7 @@ export async function uploadImage(uri: string, user: any) {
         }
       })
       .catch((error) => {
-        if (__DEV__) {
-          console.log(error);
-        }
+        logger.log(error);
       });
     return x;
   }

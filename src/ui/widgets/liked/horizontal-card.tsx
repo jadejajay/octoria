@@ -22,7 +22,12 @@ export const LikedCard = ({ item, index, deleteFavorite }: Props) => {
         key={index}
         entering={BounceInDown.delay(300 * index)}
         exiting={BounceOutDown}
-        style={{ backgroundColor: 'white', elevation: 4 }}
+        style={{
+          backgroundColor: 'white',
+          elevation: 4,
+          borderRadius: 8,
+          margin: 4,
+        }}
       >
         <View className="m-1 w-full flex-row rounded-xl">
           <View

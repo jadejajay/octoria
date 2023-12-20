@@ -2,6 +2,7 @@ import { NativeWindStyleSheet, useColorScheme } from 'nativewind';
 import React from 'react';
 import { useMMKVString } from 'react-native-mmkv';
 
+import { logger } from '../logger';
 import { storage } from '../storage';
 
 const SELECTED_THEME = 'SELECTED_THEME';
@@ -33,7 +34,7 @@ export const loadSelectedTheme = () => {
   // const theme = storage.getString(SELECTED_THEME);
   const theme = 'light';
   if (theme !== undefined) {
-    // console.log('theme', theme);
+    logger.log('theme', theme);
     NativeWindStyleSheet.setColorScheme(theme as ColorSchemeType);
   }
 };

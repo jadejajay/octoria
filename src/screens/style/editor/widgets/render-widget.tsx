@@ -10,32 +10,26 @@ import { Env } from '@env';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { ResizeMode, Video } from 'expo-av';
-import {
-  FFmpegKit,
-  FFmpegKitConfig,
-  ReturnCode,
-} from 'ffmpeg-kit-react-native';
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import RNFetchBlob from 'react-native-blob-util';
 
 import {
-  getImageBase64,
+  FFmpegWrapper,
   handleFacebookShare,
   handleInstagramShare,
   handleTelegramShare,
   handleWhatsappShare2,
+  logger,
   saveToGallery,
+  sharePost,
   useEditorX,
   useRenderStore,
 } from '@/core';
-import { sharePost } from '@/core/share-strings';
 import {
   ActivityIndicator,
   Image,
   ScrollView,
   showErrorMessage,
-  showSuccessMessage,
   Text,
   TouchableOpacity,
   View,
@@ -52,19 +46,19 @@ export const RenderWidget = () => {
   const setRenderedAssetData = useRenderStore((s) => s.setRenderedAssetData);
   const [progress, setProgress] = React.useState(0);
   const [isLoading, setRenderModalLoading] = React.useState(false);
-  const { goBack } = useNavigation();
-  const dirs = RNFetchBlob.fs.dirs.DocumentDir;
+  const { goBack, navigate } = useNavigation();
+  const ffmpeg = new FFmpegWrapper();
   React.useEffect(() => {
     captureView();
     return () => {
-      FFmpegKit.cancel();
+      ffmpeg.cancel(renderedAsset);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const [progress2, _setProgress2] = React.useState(3);
   React.useEffect(() => {
     if (renderedAsset) {
-      console.log('renderedAsset', renderedAsset);
+      logger.log('renderedAsset', renderedAsset);
     }
   }, [renderedAsset, progress2]);
 
@@ -75,59 +69,28 @@ export const RenderWidget = () => {
         if (dwnVideo) {
           setRenderedAsset('');
           setRenderModalLoading(true);
-          let totalFrames = 0;
-          FFmpegKitConfig.enableLogCallback((log) => {
-            const message = log.getMessage();
-            if (__DEV__) {
-              console.log('message', message);
-            }
-
-            if (message.startsWith('frame=')) {
-              // This log message contains progress information
-              const progressMatch = /frame=(\s*\d+)\s+fps=/.exec(
-                message as string
-              );
-              if (progressMatch && progressMatch.length >= 2) {
-                const frame = parseInt(progressMatch[1], 10);
-                if (!isNaN(frame)) {
-                  if (totalFrames === 0) {
-                    // Determine the total number of frames (first frame message)
-                    totalFrames = frame;
-                  } else {
-                    // Calculate and update the progress state variable
-                    const completionPercentage = Math.round(
-                      (frame / totalFrames) * 100
-                    );
-                    setProgress(completionPercentage);
-                  }
-                }
+          ffmpeg.Logs(setProgress);
+          ffmpeg
+            .combineVideoImage({
+              dwnVideo,
+              renderedAsset,
+              resolution,
+              ext: 'mp4',
+            })
+            .then((res) => {
+              if (res) {
+                setRenderedAsset(res);
+                ffmpeg.getImageBase64(res).then((base64: string | null) => {
+                  if (base64) setRenderedAssetData(base64);
+                });
               }
-            }
-          });
-          //@ts-ignore
-          const out = `${dirs}/OCTORIA_${Date.now()}.mp4`;
-          const cmd = `-i ${dwnVideo} -i ${renderedAsset} -filter_complex "[0:v]scale=${resolution}:${resolution} [video]; [video][1:v]overlay=0:0 [output]" -map 0:a -c:a copy -map 0:a -strict -2 -c:a aac -map "[output]"  -q:v 1 ${out}`;
-          FFmpegKit.execute(cmd).then(async (session) => {
-            const returnCode = await session.getReturnCode();
-            if (ReturnCode.isSuccess(returnCode)) {
-              // SUCCESS
-              setRenderedAsset(`file://${out}`);
-              getImageBase64(`file://${out}`).then((base64: string) => {
-                setRenderedAssetData(base64);
-              });
-              showSuccessMessage('render.succ_video');
-            } else if (ReturnCode.isCancel(returnCode)) {
-              showErrorMessage('render.proc_canceled');
-            } else {
-              showErrorMessage('render.failed_video');
-            }
-            setRenderModalLoading(false);
-          });
+            })
+            .finally(() => {
+              setRenderModalLoading(false);
+            });
         }
       } catch (error) {
-        if (__DEV__) {
-          console.log(error);
-        }
+        logger.error(error);
         setRenderModalLoading(false);
         showErrorMessage('render.failed_gen_video');
       }
@@ -201,13 +164,17 @@ export const RenderWidget = () => {
         ) : (
           type === 'photo' &&
           renderedAsset && (
-            <View style={styles.video}>
+            <TouchableOpacity
+              activeOpacity={1}
+              style={styles.video}
+              onPress={() => navigate('ImageViewer', { url: renderedAsset })}
+            >
               <Image
                 src={renderedAsset}
                 className="h-full w-full rounded-xl"
                 resizeMode="contain"
               />
-            </View>
+            </TouchableOpacity>
           )
         )}
       </View>

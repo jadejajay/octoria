@@ -11,7 +11,7 @@ import firestore from '@react-native-firebase/firestore';
 //         .add({
 //           time: 1696243535636 + 7200000 * i,
 //         });
-//       console.log(`Added document ${i + 1}`);
+//       logger.log(`Added document ${i + 1}`);
 //     } catch (error) {
 //       console.error(`Error adding document ${i + 1}:`, error);
 //     }
@@ -34,22 +34,22 @@ import firestore from '@react-native-firebase/firestore';
 //         await collectionRef.doc(item).update({
 //           url: `http://itekindia.com/chats/images/${index + 1}.png`,
 //         });
-//         console.log(
+//         logger.log(
 //           `Field uploadTime updated in document with ID: ${item},${
 //             1696243535636 + 7200000 * (index + 1)
 //           }`
 //         );
 //       } catch (error) {
-//         console.error(
+//         logger.error(
 //           `Error updating field in document with ID: ${item}`,
 //           error
 //         );
 //       }
 //     });
 
-//     console.log(`changed document`);
+//     logger.log(`changed document`);
 //   } catch (error) {
-//     console.error(`Error adding document :`, error);
+//     logger.error(`Error adding document :`, error);
 //   }
 // };
 // // http://itekindia.com/chats/frames/format1.png
@@ -61,15 +61,15 @@ import firestore from '@react-native-firebase/firestore';
 //         await collection.add({
 //           image: `http://itekindia.com/chats/frames/format${i}.png`,
 //         });
-//         console.log(`Added document ${i}`);
+//         logger.log(`Added document ${i}`);
 //       } catch (error) {
 //         console.error(`Error adding document ${i}:`, error);
 //       }
 //     }
 
-//     console.log(`added document`);
+//     logger.log(`added document`);
 //   } catch (error) {
-//     console.error(`Error adding document :`, error);
+//     logger.error(`Error adding document :`, error);
 //   }
 // };
 // http://itekindia.com/octoria/models/getmodel.php?file=handle.glb
@@ -81,12 +81,12 @@ import firestore from '@react-native-firebase/firestore';
 //     for (let i = 0; i < list_of_subcategory.length; i++) {
 //       try {
 //         await collection.add(list_of_subcategory[i]);
-//         console.log(`Added document ${i}`);
+//         logger.log(`Added document ${i}`);
 //       } catch (error) {
 //         console.error(`Error adding document ${i}:`, error);
 //       }
 //     }
-//     console.log(`added document`);
+//     logger.log(`added document`);
 //   } catch (error) {
 //     console.error(`Error adding document :`, error);
 //   }
@@ -100,10 +100,10 @@ export const addData = async () => {
     // );
     const ref = firestore().collection('MainCarousel2').doc();
     batch.set(ref, MainCarousel[i]);
-    console.log(`Added document ${i}`);
+    logger.log(`Added document ${i}`);
   }
   batch.commit();
-  console.log(`added document`);
+  logger.log(`added document`);
 };
 
 // export const updateData = async () => {
@@ -118,7 +118,7 @@ export const addData = async () => {
 //         id: doc.id,
 //       });
 //     });
-//     console.log(list);
+//     logger.log(list);
 
 //     for (let i = 0; i < videothumb.length; i++) {
 //       try {
@@ -126,14 +126,14 @@ export const addData = async () => {
 //           video: videos[i],
 //           thumbnail: videothumb[i],
 //         });
-//         console.log(`updated document ${i}`);
+//         logger.log(`updated document ${i}`);
 //       } catch (error) {
-//         console.error(`Error adding document ${i}:`, error);
+//         logger.error(`Error adding document ${i}:`, error);
 //       }
 //     }
-//     console.log(`updated all document`);
+//     logger.log(`updated all document`);
 //   } catch (error) {
-//     console.error(`Error adding document :`, error);
+//     logger.error(`Error adding document :`, error);
 //   }
 // };
 const MainCarousel = [

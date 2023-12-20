@@ -60,7 +60,7 @@ export const FestivalSearchBar = () => {
         onEndEditing={handleSearch}
       />
       <View className="absolute  inset-y-0  right-0">
-        <View className="flex-1 flex-row items-center justify-end px-2 ">
+        <View className="flex-1 flex-row items-center justify-end px-2">
           {searchText && (
             <TouchableOpacity onPress={handleClearSearch} className="mx-2">
               <MaterialIcons

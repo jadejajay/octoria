@@ -11,12 +11,12 @@
 //     const fetchData = async () => {
 //       try {
 //         const response = await client.get(`${primaryKey}`);
-//         console.log(response.data, 'response.data');
+//         logger.log(response.data, 'response.data');
 
 //         setData(response.data);
 //         setIsLoading(false);
 //       } catch (error) {
-//         console.log(error, 'erro');
+//         logger.log(error, 'erro');
 //         setIsLoading(false);
 //       }
 //     };

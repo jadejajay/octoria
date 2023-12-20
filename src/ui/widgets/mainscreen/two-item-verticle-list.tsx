@@ -1,6 +1,7 @@
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 
+import { logger } from '@/core';
 import type { Product } from '@/types';
 import { EmptyList, List } from '@/ui/list';
 
@@ -11,7 +12,7 @@ type Props = {
   isLoading: boolean;
 };
 export const NewProductList = ({ data, isLoading }: Props) => {
-  // console.log('new Product List loaded', Date.now());
+  logger.log('new Product List loaded', Date.now());
   const navigation = useNavigation();
   const ListComponent = React.useCallback(
     () => (
@@ -19,7 +20,6 @@ export const NewProductList = ({ data, isLoading }: Props) => {
         key={7735}
         data={data}
         renderItem={({ item, index }) => (
-          // <ProductCardHorizontal item={item} index={index} />
           <PostListCard
             item={item}
             index={index}
@@ -33,7 +33,6 @@ export const NewProductList = ({ data, isLoading }: Props) => {
         ListEmptyComponent={<EmptyList isLoading={isLoading} />}
         keyExtractor={(_, index) => `product-item-${index}`}
         numColumns={2}
-        // onEndReached={() => handle()}
         onEndReachedThreshold={0.1}
       />
     ),

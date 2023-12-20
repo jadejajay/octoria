@@ -3,6 +3,8 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { useEffect, useState } from 'react';
 
+import { logger } from '../logger';
+
 export function useFavorites() {
   const [favorites, setFavorites] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -20,7 +22,7 @@ export function useFavorites() {
         });
 
         setFavorites(updatedFavorites);
-        // console.log('Favorites updated: ', updatedFavorites);
+        logger.log('Favorites updated: ', updatedFavorites);
 
         setIsLoading(false);
       });

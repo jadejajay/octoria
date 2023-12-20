@@ -148,6 +148,20 @@ export const ImageWidget = ({
         <IconButtonW
           icon={
             <MaterialCommunityIcons
+              name="image-filter-tilt-shift"
+              size={24}
+              color={'black'}
+            />
+          }
+          onPress={() => {
+            navigate('FilterScreen');
+          }}
+          title="filter image"
+          className="my-1"
+        />
+        <IconButtonW
+          icon={
+            <MaterialCommunityIcons
               name="chevron-left-circle-outline"
               size={24}
               color={'black'}

@@ -4,6 +4,7 @@
 import firestore from '@react-native-firebase/firestore';
 
 import {
+  logger,
   useFestivalStore,
   useFrameStore,
   usePostMainCategoryStore,
@@ -23,7 +24,7 @@ import type {
 const loadDataFromFirestore = async () => {
   try {
     useProductsStore.setState({ productLoading: true });
-    // console.log('loading started', Date.now());
+    logger.log('loading started', Date.now());
     const ProductSnapshot = await firestore().collection('productList').get();
     const product: Product[] = ProductSnapshot.docs.map((doc) => ({
       id: doc.id,
@@ -44,9 +45,9 @@ const loadDataFromFirestore = async () => {
       featured: doc.data()?.featured,
     }));
     useProductsStore.setState({ products: product });
-    // console.log('products==========================\n', product);
+    // logger.log('products==========================\n', product);
 
-    // console.log('products loaded', Date.now());
+    logger.log('products loaded', Date.now());
     const SubCategoryStoreSnapshot = await firestore()
       .collection('SubCategory')
       .orderBy('code')
@@ -61,8 +62,11 @@ const loadDataFromFirestore = async () => {
     useSubCategoryStore.setState({
       SubCategory: SubCategoryStoreSnapshotList,
     });
-    // console.log('post main category ========================\n',SubCategoryStoreSnapshotList);
-    // console.log('SubCategoryStore loaded', Date.now());
+    logger.log(
+      'post main category ========================\n',
+      SubCategoryStoreSnapshotList
+    );
+    logger.log('SubCategoryStore loaded', Date.now());
     const PostMainCategorySnapshot = await firestore()
       .collection('postMainCategory')
       .orderBy('code')
@@ -78,8 +82,11 @@ const loadDataFromFirestore = async () => {
     usePostMainCategoryStore.setState({
       postMainCategory: postMainCategorySnapshotList,
     });
-    // console.log('post main category ========================\n',postMainCategorySnapshotList);
-    // console.log('post main category loaded', Date.now());
+    // logger.log(
+    //   'post main category ========================\n',
+    //   postMainCategorySnapshotList
+    // );
+    logger.log('post main category loaded', Date.now());
     useProductsStore.setState({ productLoading: false });
     // festival images and videos to load
     const FestivalSnapshot = await firestore().collection('postImages').get();
@@ -92,8 +99,8 @@ const loadDataFromFirestore = async () => {
       tags: doc.data()?.tags,
     }));
     useFestivalStore.setState({ festival: festival });
-    // console.log('festival ==========================\n', festival);
-    // console.log('festival loaded', Date.now());
+    // logger.log('festival ==========================\n', festival);
+    logger.log('festival loaded', Date.now());
     const PostVideosSnapshot = await firestore().collection('postVideos').get();
     const postVideos: PostVideoType[] = PostVideosSnapshot.docs.map((doc) => ({
       id: doc.id,
@@ -104,8 +111,8 @@ const loadDataFromFirestore = async () => {
       tags: doc.data()?.tags,
     }));
     usePostVideoStore.setState({ postVideos: postVideos });
-    // console.log('post videos ==========================\n', postVideos);
-    // console.log('post videos loaded', Date.now());
+    // logger.log('post videos ==========================\n', postVideos);
+    logger.log('post videos loaded', Date.now());
     // frames lower priority to load
     const FrameSnapshot = await firestore().collection('frames').get();
     const frame: FrameType[] = FrameSnapshot.docs.map((doc) => ({
@@ -115,10 +122,10 @@ const loadDataFromFirestore = async () => {
       mainWidth: doc.data()?.mainWidth,
     }));
     useFrameStore.setState({ frames: frame });
-    // console.log('frames ==========================\n', frame);
-    // console.log('frames loaded', Date.now());
+    logger.log('frames ==========================\n', frame);
+    logger.log('frames loaded', Date.now());
   } catch (error) {
-    console.error('Error loading data from Firestore:', error);
+    logger.error('Error loading data from Firestore:', error);
   }
 };
 

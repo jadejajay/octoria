@@ -1,4 +1,3 @@
-/* eslint-disable react-native/no-inline-styles */
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import * as Animated from 'react-native-animatable';
@@ -11,9 +10,9 @@ import { View } from './view';
 
 type Props = {
   item: {
-    title: string;
-    image: string;
-    color: string;
+    title?: string;
+    image?: string;
+    color?: string;
   };
   onClick: () => void;
 };
@@ -23,7 +22,7 @@ export const RectCard = ({ item, onClick }: Props) => {
       <AnimatedButton onClick={onClick}>
         <View
           className="m-1 flex-1 flex-row items-center justify-between rounded-lg shadow-lg"
-          style={{ backgroundColor: item.color, elevation: 4 }}
+          style={[styles.shadow, { backgroundColor: item.color }]}
         >
           <View className="absolute h-full w-full overflow-hidden rounded-lg">
             <Animated.View animation="bounceIn" style={styles.container}>
@@ -54,5 +53,15 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: '100%',
+  },
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -2,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
+    elevation: 4,
   },
 });

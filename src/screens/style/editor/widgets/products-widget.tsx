@@ -87,7 +87,8 @@ const Card = ({ item, index, setElement, onClose }: Props) => {
   return (
     <TouchableOpacity
       key={`festival-card-${index}`}
-      className="m-2 aspect-[3/4] w-11/12 overflow-hidden rounded-lg bg-green-400"
+      className="m-2 aspect-[3/4] w-11/12 overflow-hidden rounded-lg"
+      style={[styles.shadow]}
       activeOpacity={1}
       onPress={() => {
         setElement(element(item));
@@ -102,6 +103,17 @@ const styles = StyleSheet.create({
   image: { width: '100%', height: '100%' },
   image2: { width: '100%', height: '100%', opacity: 1 },
   color1: { color: theme },
+  shadow: {
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -5,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
+    elevation: 5,
+  },
 });
 
 const element = (item: string) => ({

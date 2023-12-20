@@ -7,14 +7,15 @@ import { BounceInUp } from 'react-native-reanimated';
 
 import {
   getGreetingByTimezone,
+  logger,
   speak,
   translate,
+  useAssistance,
   useFirestoreLiveQuery,
   useProductsStore,
   useSearchStore,
   useUserStore,
 } from '@/core';
-import { useAssistance } from '@/core/hooks/use-assistance';
 import {
   CategoriesList,
   ChooseBrand,
@@ -32,14 +33,14 @@ import { PostCard } from './post-maker';
 import { PostModal } from './post-modal';
 
 export const Style = () => {
-  // console.log('Style screen loaded', Date.now());
+  logger.log('Style screen loaded', Date.now());
 
   const [modalVisible, setModalVisible] = useState(false);
   const [update, setUpdate] = useState(1);
   const { navigate } = useNavigation();
 
   const MainCategories = useFirestoreLiveQuery('MainCategory');
-  // console.log(MainCategories, '<=====MainCategories');
+  logger.log(MainCategories, '<=====MainCategories');
 
   const User = useUserStore((s) => s.user);
   const setSearch = useSearchStore((s) => s.setSearch);

@@ -13,7 +13,7 @@ import React, { useCallback } from 'react';
 import { ToastAndroid } from 'react-native';
 import { StyleSheet } from 'react-native';
 
-import { useEditorX } from '@/core';
+import { logger, useEditorX } from '@/core';
 import { FirestoreData } from '@/core/fire-util';
 import type { ImageListType } from '@/types';
 import { Image, Text, TouchableOpacity, Vertical2CompList, View } from '@/ui';
@@ -35,7 +35,7 @@ export const ImageModal = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const handleEndReached = useCallback(async () => {
-    // console.log('handleEndReached');
+    logger.log('handleEndReached');
     const data = await imagesHandler.loadMore(20);
     if (data)
       setImages((p) => {

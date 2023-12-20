@@ -58,7 +58,7 @@ import FlashMessage from 'react-native-flash-message';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { APIProvider } from '@/api';
-import { loadSelectedTheme } from '@/core';
+import { loadSelectedTheme, logger } from '@/core';
 import { RootNavigator } from '@/navigation';
 LogBox.ignoreLogs([
   "ViewPropTypes will be removed from React Native. Migrate to ViewPropTypes exported from 'deprecated-react-native-prop-types'.",
@@ -77,13 +77,13 @@ loadSelectedTheme();
 SplashScreen.preventAutoHideAsync();
 
 const App = () => {
-  // console.log('app started', Date.now());
+  logger.log('app started', Date.now());
   usePreventScreenCapture();
   const auth = firebase.auth();
   auth.useEmulator('http://192.168.0.8:9099');
   firestore().useEmulator('192.168.0.8', 8080);
   storage().useEmulator('192.168.0.8', 9199);
-  // console.log('Emulator started', Date.now());
+  logger.log('Emulator started', Date.now());
   return (
     <GestureHandlerRootView style={styles.container}>
       <APIProvider>

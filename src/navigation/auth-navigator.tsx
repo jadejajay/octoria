@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 
+import { logger } from '@/core';
 import { Login } from '@/screens';
 
 export type AuthStackParamList = {
@@ -10,7 +11,7 @@ export type AuthStackParamList = {
 const Stack = createNativeStackNavigator<AuthStackParamList>();
 
 export const AuthNavigator = () => {
-  // console.log('auth navigator loaded', Date.now());
+  logger.log('auth navigator loaded', Date.now());
   return (
     <Stack.Navigator>
       <Stack.Screen

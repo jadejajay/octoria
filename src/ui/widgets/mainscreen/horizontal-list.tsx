@@ -24,12 +24,12 @@ export const CategoriesList = ({ data }: Props) => {
           return (
             <RectCard
               item={{
-                title: item.title,
+                title: item?.title,
                 color: item?.color!,
-                image: item.image,
+                image: item?.image,
               }}
               onClick={() => {
-                setSearch(`${item.title}`);
+                setSearch(`${item?.title}`);
                 //@ts-ignore
                 navigate('FeedNavigator', {
                   screen: 'Feed',

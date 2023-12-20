@@ -1,4 +1,6 @@
 import firestore from '@react-native-firebase/firestore';
+
+import { logger } from './logger';
 export const getCollection = async <T>(collection: string): Promise<T[]> => {
   const ProductSnapshot = await firestore().collection(collection).get();
   const data: T[] = ProductSnapshot.docs.map(
@@ -43,9 +45,9 @@ export class FirestoreData<T> {
   }
 
   async loadMore(limit: number): Promise<T[] | []> {
-    // console.log('last visible', this.lastVisible);
+    logger.log('last visible', this.lastVisible);
     if (!this.lastVisible) {
-      // console.log('No more data to load');
+      logger.log('No more data to load');
       return [];
     }
     const snapshot = await firestore()

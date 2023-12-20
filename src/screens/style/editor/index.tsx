@@ -23,6 +23,7 @@ import {
   EditingFeatures,
   getImageBase64,
   getItem,
+  logger,
   setItem,
   shuffleArray,
   useEditorX,
@@ -101,7 +102,7 @@ export const Editorx = ({ dim }: Props) => {
   // data management
   const frames = useFrameStore((s) => s.frames);
   const sFrame = shuffleArray(frames);
-  // console.log('editorData.elements', editorData.elements);
+  logger.log('editorData.elements', editorData.elements);
 
   // component specific
   const { goBack, navigate } = useNavigation();
@@ -134,7 +135,7 @@ export const Editorx = ({ dim }: Props) => {
 
   React.useEffect(() => {
     const blurListener = navigation.addListener('blur', () => {
-      // console.log('Screen is blurred');
+      logger.log('Screen is blurred');
       videoRef.current?.pauseAsync();
       const list_without_empty = editorData.elements.filter(
         (item: Element) => item.properties.width !== 0
@@ -147,7 +148,7 @@ export const Editorx = ({ dim }: Props) => {
       // Your code when the screen is blurred
     });
     const focusListener = navigation.addListener('focus', () => {
-      // console.log('Screen is Focused');
+      logger.log('Screen is Focused');
       loadSubCat();
       videoRef.current?.playAsync();
       // Your code when the screen is blurred
@@ -206,16 +207,16 @@ export const Editorx = ({ dim }: Props) => {
     [navigate, toggleWidget]
   );
   const captureView = React.useCallback(async () => {
-    // console.log('capture called');
+    logger.log('capture called');
     setSelectedItem(-1);
     toggleWidgetModal('Photos');
     setRenderModalLoading(true);
     try {
-      // console.log('photo rendered');
+      logger.log('photo rendered');
       //@ts-ignore
       const _result = await viewShotRef.current.capture().then(
         (uri: string) => {
-          // console.log('do something with ', uri);
+          logger.log('do something with ', uri);
           setRenderedAsset(uri);
           setItem(POST_IMAGE, uri);
           getImageBase64(uri).then((base64: string) => {
@@ -224,18 +225,14 @@ export const Editorx = ({ dim }: Props) => {
           navigate('RenderWidget');
         },
         (error: any) => {
-          if (__DEV__) {
-            console.log('Oops, snapshot failed', error);
-          }
+          logger.log('Oops, snapshot failed', error);
           showErrorMessage('editor.fail_image');
         }
       );
       setRenderModalLoading(false);
     } catch (error) {
       setRenderModalLoading(false);
-      if (__DEV__) {
-        console.log('Oops, snapshot failed', error);
-      }
+      logger.log('Oops, snapshot failed', error);
       showErrorMessage('editor.fail_image');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -347,7 +344,7 @@ export const Editorx = ({ dim }: Props) => {
             </Text>
             <MaterialCommunityIcons
               name="information-outline"
-              size={16}
+              size={14}
               onPress={() => navigate('Tutorials')}
               style={styles.left6}
             />
@@ -439,9 +436,7 @@ export const Editorx = ({ dim }: Props) => {
           uri: dwnVideo,
         }}
         onError={(error) => {
-          if (__DEV__) {
-            console.log('video error', error);
-          }
+          logger.log('video error', error);
           showErrorMessage('editor.fail_video');
         }}
         isMuted={false}
@@ -498,11 +493,9 @@ export const Editorx = ({ dim }: Props) => {
       <>
         {editorData.elements &&
           editorData.elements.map((item: Element, index: number) => {
-            // console.log('item==>???==>', item.name);
             return (
-              <View key={`magic-${index}`}>
+              <React.Fragment key={`magic-${index}`}>
                 <Magic
-                  // key={`Magic_${index}__${editorData.elements.length}_${editorData.frame}`}
                   ref={selectedItem === index ? magicRef : null}
                   isFocused={selectedItem === index ? true : false}
                   index={index}
@@ -520,7 +513,7 @@ export const Editorx = ({ dim }: Props) => {
                     }
                   }}
                 />
-              </View>
+              </React.Fragment>
             );
           })}
       </>
@@ -571,7 +564,7 @@ export const Editorx = ({ dim }: Props) => {
           style={[styles.canvas, { width: dim.width, height: dim.width }]}
           options={{
             format: 'png',
-            fileName: `OCTORIA_${Date.now()}`,
+            fileName: `OCTORIA`,
             quality: 1,
             width: resolution,
             height: resolution,
@@ -581,11 +574,6 @@ export const Editorx = ({ dim }: Props) => {
             <PostImageComponent />
           )}
           {editorData.frame && <PostFrameComponent />}
-          {/* {editorData.elements &&
-            editorData.elements.map((item: Element, index: number) => {
-              // console.log('item', index);
-              return MagicComponent(item, index);
-            })} */}
           {ListMagic()}
           <View className="absolute -right-3 top-1/2 z-50">
             <FastImage
@@ -646,7 +634,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
   },
   left6: {
-    marginLeft: 6,
+    marginLeft: 3,
+    opacity: 0.25,
   },
   widget: {
     flexDirection: 'row',
@@ -678,4 +667,5 @@ const styles = StyleSheet.create({
 });
 export * from './day-list';
 export * from './day-list2';
+export * from './filters-screen';
 export * from './tutorials';

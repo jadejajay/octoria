@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 
+import { logger } from '@/core';
 import { AddPost, Feed, Post } from '@/screens';
 import { PDFExample } from '@/screens';
 import { ShareCam } from '@/ui';
@@ -16,7 +17,7 @@ export type FeedStackParamList = {
 const Stack = createNativeStackNavigator<FeedStackParamList>();
 
 export const FeedNavigator = () => {
-  // console.log('feed navigator loaded', Date.now());
+  logger.log('feed navigator loaded', Date.now());
   return (
     <Stack.Navigator initialRouteName="Feed" id="feed-navigator">
       <Stack.Group

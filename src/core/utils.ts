@@ -9,6 +9,7 @@ import type { StoreApi, UseBoundStore } from 'zustand';
 
 import type { TxKeyPath } from './i18n';
 import { getLanguage, translate } from './i18n';
+import { logger } from './logger';
 
 export function openLinkInBrowser(url: string) {
   Linking.canOpenURL(url).then((canOpen) => canOpen && Linking.openURL(url));
@@ -129,11 +130,11 @@ const speechOptions = {
   phoneme: Platform.OS === 'ios' ? 'x-sampa' : 'ipa', // Use 'x-sampa' for iOS and 'ipa' for Android
 };
 export async function speak(text: TxKeyPath, vars?: string) {
-  console.log(speechOptions.language);
+  logger.log(speechOptions.language);
   if (vars) {
     const thingToSay2 = translate(text) as string;
     const thingToSay = `${vars} ${thingToSay2}`;
-    console.log(thingToSay);
+    logger.log(thingToSay);
     Speech.speak(thingToSay, speechOptions);
     return;
   } else {
@@ -257,7 +258,7 @@ export const handleWhatsappShare2 = async (
       //@ts-ignore
       appId: 'com.whatsapp',
     };
-    // console.log('whatsapp share called');
+    logger.log('whatsapp share called');
 
     await Share.shareSingle(options);
   } catch (error) {
@@ -286,11 +287,11 @@ export const handleInstagramShare = async (
       // url: 'http://itekindia.com/dashboard/bronco.jpg', //'data:image/png;base64,<imageInBase64>',
       social: Share.Social.INSTAGRAM as Social,
     };
-    // console.log('instagram share called');
+    logger.log('instagram share called');
 
     await Share.shareSingle(options);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     ToastAndroid.show('Some Error', ToastAndroid.SHORT);
   }
 };
@@ -315,11 +316,11 @@ export const handleTelegramShare = async (
       // url: 'http://itekindia.com/dashboard/bronco.jpg', //'data:image/png;base64,<imageInBase64>',
       social: Share.Social.TELEGRAM as Social,
     };
-    // console.log('telegram share called');
+    // logger.log('telegram share called');
 
     await Share.shareSingle(options);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     ToastAndroid.show('Some Error', ToastAndroid.SHORT);
   }
 };
@@ -344,11 +345,11 @@ export const handleFacebookShare = async (
       // url: 'http://itekindia.com/dashboard/bronco.jpg', //'data:image/png;base64,<imageInBase64>',
       social: Share.Social.FACEBOOK as Social,
     };
-    // console.log('facebook share called');
+    // logger.log('facebook share called');
 
     await Share.shareSingle(options);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     ToastAndroid.show('Some Error', ToastAndroid.SHORT);
   }
 };
@@ -392,7 +393,7 @@ export const saveToGallery = async (res: string) => {
 };
 
 export function getImageBase64(url: string): Promise<string> {
-  // console.log('get base64 of url: ', url);
+  logger.log('get base64 of url: ', url);
 
   return new Promise((resolve, reject) => {
     fetch(url)
@@ -402,14 +403,14 @@ export function getImageBase64(url: string): Promise<string> {
         reader.onload = () => {
           //@ts-ignore
           const base64Data = reader?.result.split(',')[1]; // Remove data:image/jpeg;base64,
-          console.log('url to base64 resolved');
+          logger.log('url to base64 resolved');
 
           resolve(base64Data);
         };
         reader.readAsDataURL(blob);
       })
       .catch((error2) => {
-        // console.log('url to base64 rejected');
+        logger.log('url to base64 rejected');
         reject(error2);
       });
   });

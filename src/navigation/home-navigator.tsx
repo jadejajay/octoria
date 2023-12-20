@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 
+import { logger } from '@/core';
 import { PDFExample, Post, Style, WebViewScreen } from '@/screens';
 import type { PostMainCategoryType } from '@/types';
 import { ShareCam } from '@/ui';
@@ -24,6 +25,7 @@ export type HomeStackParamList = {
   RenderWidget: undefined;
   ColorWidget: undefined;
   FontWidget: undefined;
+  FilterScreen: undefined;
   InfoWidget: undefined;
   Tutorials: undefined;
   Stickers: undefined;
@@ -39,7 +41,7 @@ export type HomeStackParamList = {
 const Stack = createNativeStackNavigator<HomeStackParamList>();
 
 export const HomeNavigator = () => {
-  // console.log('home navigator loaded', Date.now());
+  logger.log('home navigator loaded', Date.now());
 
   return (
     <Stack.Navigator initialRouteName="Style" id="home-navigator">

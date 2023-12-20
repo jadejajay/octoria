@@ -13,7 +13,7 @@ import FastImage from 'react-native-fast-image';
 import ViewShot, { captureRef } from 'react-native-view-shot';
 import { WebView } from 'react-native-webview';
 
-import { handleShare, saveToGallery } from '@/core';
+import { handleShare, logger, saveToGallery } from '@/core';
 import {
   AbsoluteButton,
   ActivityIndicator,
@@ -28,7 +28,7 @@ export const ARView = ({ route }: Props) => {
   const url = route.params?.model
     ? `${route.params?.model}`
     : `${Env.XRSERVICE_FALLBACK}`;
-  // console.log('url', url);
+  logger.log('url', url);
 
   const share = 'Hello, This Image is Generate by Octoria Application.';
   const imgRef = useRef(null);
@@ -150,7 +150,7 @@ export const ARView = ({ route }: Props) => {
             ref={imgRef}
             style={{
               width: '100%',
-              height: '70%',
+              height: '80%',
               borderColor: 'white',
               overflow: 'hidden',
             }}
@@ -221,11 +221,6 @@ export const ARView = ({ route }: Props) => {
   );
 };
 
-// class MyLogger {
-//   log = (message) => {
-//     console.log(message, '<==from webview'); // Print in RN logs for now...
-//   };
-// }
 const styles = StyleSheet.create({
   container: {
     width: '100%',

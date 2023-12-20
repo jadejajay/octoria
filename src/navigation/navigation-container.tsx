@@ -2,6 +2,8 @@ import { NavigationContainer as RNNavigationContainer } from '@react-navigation/
 import * as React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { logger } from '@/core';
+
 import { useThemeConfig } from './use-theme-config';
 
 export const NavigationContainer = ({
@@ -11,7 +13,7 @@ export const NavigationContainer = ({
   children: React.ReactNode;
   linking: any;
 }) => {
-  // console.log('navigation container loaded', Date.now());
+  logger.log('navigation container loaded', Date.now());
   const theme = useThemeConfig();
   return (
     <SafeAreaProvider>

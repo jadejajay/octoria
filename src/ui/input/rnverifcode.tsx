@@ -119,8 +119,8 @@ export class VerifCode extends Component<Props, State> {
   //       });
   //     }
   //   } catch (error) {
-  //     console.log('sms listener error');
-  //     console.log(JSON.stringify(error));
+  //     logger.log('sms listener error');
+  //     logger.log(JSON.stringify(error));
   //   }
   // };
 

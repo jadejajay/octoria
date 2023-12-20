@@ -8,19 +8,17 @@ type Props = { onPress: () => void; item: Product; index: number };
 
 export const PostListCard = ({ item, onPress, index }: Props) => {
   return (
-    <AnimatedButton key={`item-${item?.id}`} onClick={onPress}>
-      <Animated.View key={`zoomIn-${index}`} animation="zoomIn">
-        <View
-          key={`zoomInView-${index}`}
-          className="flex-column m-2 overflow-hidden "
-        >
-          <View key={`zoomInViewIMage-${index}`} className="h-56 w-full ">
-            <Image
-              key={`zoomInImage-${index}`}
-              src={item?.images[0]}
-              style={styles.image}
-              resizeMode="cover"
-            />
+    <AnimatedButton key={`item-${item?.id}-${index}`} onClick={onPress}>
+      <Animated.View animation="zoomIn">
+        <View className="flex-column m-2 overflow-hidden">
+          <View className="h-56 w-full ">
+            {item?.thumbnail && (
+              <Image
+                src={item.thumbnail}
+                style={styles.image}
+                resizeMode="cover"
+              />
+            )}
           </View>
           <Text variant="sm" className="font-sfbold text-slate-500">
             {item?.name}

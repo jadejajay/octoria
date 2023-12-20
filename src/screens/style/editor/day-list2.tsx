@@ -5,6 +5,7 @@ import { StyleSheet } from 'react-native';
 import * as Animated from 'react-native-animatable';
 
 import {
+  logger,
   setItem,
   useEditorX,
   useFestivalStore,
@@ -132,7 +133,7 @@ export const DayList2 = ({ route }: Props) => {
   );
   const PostListCard = React.useCallback(
     ({ index, item }: { index: number; item: FestivalType }) => {
-      // console.log(item, 'item');
+      logger.log(item, 'item');
 
       const imagesWithSameSubcategory = filteredImages.filter(
         (img) => img.subCategory === item.subCategory

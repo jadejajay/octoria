@@ -31,7 +31,6 @@ export const WebViewScreen = () => {
       };
     }
   }, []);
-
   return (
     <View className="flex-1">
       <WebView

@@ -1,3 +1,4 @@
+export * from './use-assistance';
 export * from './use-favorite';
 export * from './use-firestore';
 export * from './use-firestore-doc';

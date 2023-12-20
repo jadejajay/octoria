@@ -109,11 +109,16 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
   }, []);
   const moveToCenter = useCallback(() => {
     offset.value = withTiming({ x: 0, y: 0 });
+    start.value = withTiming({ x: 0, y: 0 });
     setData({ id: props.index, props: { offset: { x: 0, y: 0 } } });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const moveToPosition = useCallback(({ x, y }: { x: number; y: number }) => {
     offset.value = withTiming(
+      { x: offset.value.x + x, y: offset.value.y + y },
+      { duration: 100 }
+    );
+    start.value = withTiming(
       { x: offset.value.x + x, y: offset.value.y + y },
       { duration: 100 }
     );
@@ -279,14 +284,13 @@ const styles = StyleSheet.create({
   container: {
     position: 'absolute',
     padding: 4,
-    backgroundColor: 'transparent',
   },
   container2: {
     padding: 4,
     position: 'absolute',
-    alignItems: 'center',
     borderColor: '#fff',
     justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: 'transparent',
   },
   boundary: {

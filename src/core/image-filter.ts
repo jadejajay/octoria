@@ -12,7 +12,7 @@ export class ImageProcessor {
         imageUri,
         256,
         256,
-        'WEBP',
+        'PNG',
         100,
         0,
         undefined,

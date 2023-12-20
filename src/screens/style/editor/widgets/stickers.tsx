@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 
-import { useEditorX } from '@/core';
+import { logger, useEditorX } from '@/core';
 import { FirestoreData } from '@/core/fire-util';
 import type { StickerType } from '@/types';
 import { Image, TouchableOpacity, Vertical2CompList, View, WIDTH } from '@/ui';
@@ -22,7 +22,7 @@ export const StickersWidget = () => {
   const [stickers, setStickers] = React.useState<
     StickerType[] | undefined | null
   >([]);
-  // console.log('stickers', stickers);
+  logger.log('stickers', stickers);
 
   const getStickers = useCallback(async () => {
     const data = await elementsHandler.getData(30);
@@ -34,7 +34,7 @@ export const StickersWidget = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const handleEndReached = useCallback(async () => {
-    // console.log('handleEndReached');
+    logger.log('handleEndReached');
     const data = await elementsHandler.loadMore(30);
     if (data)
       setStickers((p) => {

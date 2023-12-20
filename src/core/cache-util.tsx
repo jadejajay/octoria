@@ -65,9 +65,9 @@ export class VideoCacheManager {
 // // To get a video from a URL
 // cacheManager.getVideo('https://example.com/video.mp4').then((localPath) => {
 //   if (localPath) {
-//     console.log('Video cached at:', localPath);
+//     logger.log('Video cached at:', localPath);
 //     // Play the video from localPath
 //   } else {
-//     console.log('Video download failed.');
+//     logger.log('Video download failed.');
 //   }
 // });

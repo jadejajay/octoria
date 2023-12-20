@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as React from 'react';
 
+import { logger } from '@/core';
 import {
   GstView,
   ScanNGo,
@@ -20,7 +21,7 @@ export type SettingStackParamList = {
 const Stack = createNativeStackNavigator<SettingStackParamList>();
 
 export const SettingNavigator = () => {
-  // console.log('setting navigator loaded', Date.now());
+  logger.log('setting navigator loaded', Date.now());
   return (
     <Stack.Navigator initialRouteName="Settings" id="setting-navigator">
       <Stack.Group

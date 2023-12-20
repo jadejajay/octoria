@@ -8,9 +8,11 @@ export const AddPost = ({}: Props) => {
   const { favorites, isLoading, deleteFavorite } = useFavorites();
 
   return (
-    <View className="flex-1 p-2">
+    <View className="flex-1">
       <List
         data={favorites}
+        // eslint-disable-next-line react-native/no-inline-styles
+        contentContainerStyle={{ paddingVertical: 20 }}
         keyExtractor={(_, index) => index.toString()}
         estimatedItemSize={100}
         ListEmptyComponent={<EmptyList isLoading={isLoading} />}

@@ -7,6 +7,7 @@ import { create } from 'zustand';
 import { EDITORX_DATA } from '@/types';
 import { showErrorMessage, showSuccessMessage } from '@/ui';
 
+import { logger } from '../logger';
 import { getItem } from '../storage';
 import { createSelectors, newValue } from '../utils';
 
@@ -282,7 +283,7 @@ const _useEditorX = create<EditorXState>((set, get) => ({
     }
   },
   setEditor: async (id) => {
-    // console.log('set editor called<=====================');
+    logger.log('set editor called<=====================');
     const Data: string = await getItem(EDITORX_DATA);
     const newData: EditorData = JSON.parse(Data);
     if (newData?.bgType) {
@@ -308,7 +309,7 @@ const _useEditorX = create<EditorXState>((set, get) => ({
     }
   },
   setData: (newData) => {
-    // console.log('set data called<=====================');
+    logger.log('set data called<=====================');
     set(
       produce((state: EditorXState) => {
         const index = newData.id;
@@ -709,7 +710,9 @@ const _useEditorX = create<EditorXState>((set, get) => ({
 export const useEditorX = createSelectors(_useEditorX);
 export * from './festival';
 export * from './frames';
+export * from './image-color-picker';
 export * from './post-main-category';
 export * from './post-video';
 export * from './render';
+export * from './search-bot';
 export * from './sub-category';

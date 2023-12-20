@@ -7,6 +7,7 @@ import type { ComponentType } from 'react';
 import * as React from 'react';
 import type { SvgProps } from 'react-native-svg';
 
+import { logger } from '@/core';
 import { colors, Feed as FeedIcon, Home, Person } from '@/ui';
 
 import { FeedNavigator } from './feed-navigator';
@@ -71,7 +72,7 @@ const BarIcon = ({ color, name, ...reset }: BarIconType) => {
 };
 
 export const TabNavigator = () => {
-  // console.log('Tab navigator started', Date.now());
+  logger.log('Tab navigator started', Date.now());
 
   const { colorScheme } = useColorScheme();
   return (

@@ -1,10 +1,12 @@
 import * as React from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 
+import { logger } from '@/core';
+
 import { ErrorFallback } from './error-fallback';
 
 const myErrorHandler = (error: Error) => {
-  console.log(error);
+  logger.log(error);
   // captureException(error);
 };
 
