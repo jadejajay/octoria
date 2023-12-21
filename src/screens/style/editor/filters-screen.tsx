@@ -41,19 +41,20 @@ export const FilterScreen = () => {
   const state = useEditorX((s) => s.selectedItem);
   const setBusiness = useEditorX((s) => s.setBusiness);
   const businessData = useEditorX((s) => s.businessData);
-  // const setColorImage = useImageColorPickerStore((s) => s.setImage);
+  const setImage = useImageColorPickerStore((s) => s.setFinalImage);
+  const image = useImageColorPickerStore((s) => s.finalImage);
   const setMainImage = useEditorX((s) => s.setImage);
   const mainimage = useEditorX(
     (s) => s.editorData.elements[state].properties.image
   );
   const isSpecial = useEditorX((s) => s.isSpecial);
   const userPhoto = useEditorX((s) => s.businessData.photo);
-  const [image, setImage] = React.useState<any>('');
+  // const [image, setImage] = React.useState<any>('');
   const [loading, setLoading] = React.useState(false);
   const question = useBotSearchStore((s) => s.text);
   const [displayedText, setDisplayedText] = React.useState('');
   const [modalVisible, setModalVisible] = React.useState(false);
-  const ffmpeg = new FFmpegWrapper();
+  // const ffmpeg = new FFmpegWrapper();
 
   const { goBack } = useNavigation();
 
@@ -62,7 +63,7 @@ export const FilterScreen = () => {
     let index = 0;
     let speed = 5;
     const chat = new Chat();
-    const text = chat.converse(question);
+    const text = chat.converse(question, image);
     if (text.length > 0) {
       const intervalId = setInterval(() => {
         setDisplayedText((prevText) => {
@@ -85,9 +86,9 @@ export const FilterScreen = () => {
     if (isSpecial()) {
       setImage(userPhoto);
     } else {
-      setImage(mainimage);
+      if (mainimage) setImage(mainimage);
     }
-  }, [isSpecial, mainimage, userPhoto]);
+  }, [mainimage, userPhoto]);
 
   const backgroundColorStyle = useAnimatedStyle(() => ({
     backgroundColor: selectedColor.value,
@@ -97,18 +98,18 @@ export const FilterScreen = () => {
     selectedColor.value = color.hex;
   };
 
-  const applyFilter = async (filter: string) => {
-    if (!image) return;
-    setLoading(true);
-    const result = await ffmpeg.applyFilter({
-      dwnimage: image,
-      filter,
-      ext: 'png',
-    });
-    logger.log(result, '<=========result of filter');
-    if (result) setImage(result);
-    setLoading(false);
-  };
+  // const applyFilter = async (filter: string) => {
+  //   if (!image) return;
+  //   setLoading(true);
+  //   const result = await ffmpeg.applyFilter({
+  //     dwnimage: image,
+  //     filter,
+  //     ext: 'png',
+  //   });
+  //   logger.log(result, '<=========result of filter');
+  //   if (result) setImage(result);
+  //   setLoading(false);
+  // };
   const apply = async () => {
     if (isSpecial()) {
       setBusiness({
@@ -169,13 +170,13 @@ export const FilterScreen = () => {
             apply
           </Text>
         </View> */}
-        <Text
+        {/* <Text
           variant="sm"
           className="rounded bg-slate-600 px-4 py-2 text-center text-white"
           onPress={() => applyFilter('-vf negate')}
         >
           Line Art
-        </Text>
+        </Text> */}
         <Text
           variant="sm"
           className="rounded bg-slate-600 px-4 py-2 text-center text-white"
@@ -196,16 +197,6 @@ export const FilterScreen = () => {
           snapToInterval={SNAP}
           data={normalFilters}
         />
-        {/* <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
-          👉🏻 Darken
-        </Text>
-        <HorizontalList
-          Comp={SmallImageCard}
-          padding={7.5}
-          estimatedItemSize={SNAP}
-          snapToInterval={SNAP}
-          data={filterList}
-        /> */}
         <View className="mx-16 my-8 border-b-2 border-slate-200" />
       </ScrollView>
       <View className="absolute bottom-10 m-4 self-center rounded-full bg-slate-700 px-16 py-4">
@@ -241,7 +232,7 @@ export const FilterScreen = () => {
             style={styles.previewTxtContainer}
             onPress={() => {
               setModalVisible(!modalVisible);
-              applyFilter(`-vf chromakey=${selectedColor.value}:0.16`);
+              // applyFilter(`-vf chromakey=${selectedColor.value}:0.16`);
             }}
           >
             <Preview />
@@ -273,12 +264,13 @@ const SmallIconCard = ({ item, index }: any) => {
     <View
       key={index}
       className="overflow-hidden rounded-lg"
-      style={[styles.shadow, styles.imageCard]}
+      style={[styles.shadow, styles.imageCard2]}
     >
       <MaterialCommunityIcons
         name={item.icon}
         size={30}
         color="black"
+        // eslint-disable-next-line react-native/no-inline-styles
         style={{ alignSelf: 'center' }}
       />
     </View>
@@ -327,6 +319,11 @@ const styles = StyleSheet.create({
   imageCard: {
     width: SNAP - 15,
     margin: 5,
+    aspectRatio: 1,
+  },
+  imageCard2: {
+    width: WIDTH / 5 - 10,
+    marginLeft: 2.5,
     aspectRatio: 1,
   },
   colorPicker: {

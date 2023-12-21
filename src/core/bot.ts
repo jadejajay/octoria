@@ -4,9 +4,11 @@ export class Chat {
   private _pairs: any;
   private _reflections: any;
   private _regex: any;
-  private _ffmpeg = new FFmpegWrapper();
   constructor(pairs: any = pair, reflections: any = reflection) {
-    this._pairs = pairs.map((pair: any) => [new RegExp(pair[0], 'i'), pair[1]]);
+    this._pairs = pairs.map((pair2: any) => [
+      new RegExp(pair2[0], 'i'),
+      pair2[1],
+    ]);
     this._reflections = reflections;
     this._regex = this._compileReflections();
   }
@@ -34,11 +36,11 @@ export class Chat {
     }
     return response;
   }
-  respond(str: string) {
+  respond(str: string, image: string) {
     for (const [pattern, response] of this._pairs) {
       const match = pattern.exec(str);
       if (match) {
-        let resp = response(match);
+        let resp = response(match, image);
         resp = this.wildcards(resp, match);
         if (resp.slice(-2) === '?.') {
           resp = resp.slice(0, -2) + '.';
@@ -50,13 +52,13 @@ export class Chat {
       }
     }
   }
-  converse(user_input: string) {
+  converse(user_input: string, image: string) {
     if (user_input.length > 0) {
       while (user_input.slice(-1) === '?!.') {
         user_input = user_input.slice(0, -1);
       }
-      if (this.respond(user_input)) {
-        return this.respond(user_input);
+      if (this.respond(user_input, image)) {
+        return this.respond(user_input, image);
       } else {
         return "Sorry, I don't understand.";
       }
@@ -65,20 +67,10 @@ export class Chat {
   }
 }
 
-// // Define response functions that accept the match
-// function startResponse(match: any) {
-//   try {
-//     const numInt = parseInt(match[1], 10);
-//     return `result is :${numInt * 2}`;
-//   } catch (e) {
-//     const x = '2';
-//     const numInt = parseInt(x, 10); // Assign a default value
-//     return `result is :${numInt * 2}`;
-//   }
-// }
-
-function executeResponse(_match: any) {
-  return `Executing the ${_match[1]} function`;
+function executeResponse(_match: any, _image: string) {
+  const ffmpeg = new FFmpegWrapper();
+  ffmpeg.executeResponse(_match);
+  return `Executing the ${_match[1]} ${_image} function`;
 }
 function executeNegate(_match: any) {
   return `Executing the negate function`;

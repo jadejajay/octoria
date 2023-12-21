@@ -154,4 +154,11 @@ export class FFmpegWrapper {
       logger.error('Error deleting cache files:', error);
     }
   }
+  executeResponse(_match: any) {
+    logger.log(__DEV__);
+    logger.log(_match);
+    const cmd = '-version';
+    const _result = this.executeFFmpegCommand(cmd);
+    return 'FFmpeg command executed successfully.';
+  }
 }
