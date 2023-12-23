@@ -77,12 +77,14 @@ export const RenderWidget = () => {
               resolution,
               ext: 'mp4',
             })
-            .then((res) => {
+            .then(async (res) => {
               if (res) {
                 setRenderedAsset(res);
-                ffmpeg.getImageBase64(res).then((base64: string | null) => {
-                  if (base64) setRenderedAssetData(base64);
-                });
+                await ffmpeg
+                  .getImageBase64(res)
+                  .then((base64: string | null) => {
+                    if (base64) setRenderedAssetData(base64);
+                  });
               }
             })
             .finally(() => {

@@ -206,6 +206,7 @@ export type BusinessDataType = {
 export interface EditorXState {
   editorData: EditorData;
   businessData: BusinessDataType;
+  elementsKey: string;
   selectedItem: number;
   categoryCode: number;
   activeWidget: string;
@@ -217,10 +218,12 @@ export interface EditorXState {
   canRedo: boolean;
   saveFrame: (id: string, width: number) => void;
   setEditor: (id: any) => void;
+  rearrangeElements: (elements2: Element[]) => void;
   setData: (newData: any) => void;
   setCategoryCode: (code: any) => void;
   isSpecial: () => boolean;
   setBusiness: (data: BusinessDataType) => void;
+  setElementsKey: (key: string) => void;
   setDataById: (
     property: Element[] | undefined,
     mainWidth: number,
@@ -243,9 +246,9 @@ export interface EditorXState {
   undo: () => void;
   redo: () => void;
 }
-// const id = auth().currentUser?.uid;
 const _useEditorX = create<EditorXState>((set, get) => ({
   editorData: DATA,
+  elementsKey: '',
   businessData: {
     name: '',
     photo: '',
@@ -308,6 +311,22 @@ const _useEditorX = create<EditorXState>((set, get) => ({
       } catch (error) {}
     }
   },
+  rearrangeElements: (elements2) => {
+    set(
+      produce((state: EditorXState) => {
+        state.editorData.elements = elements2;
+        return state;
+      })
+    );
+  },
+  setElementsKey: (key) => {
+    set(
+      produce((state: EditorXState) => {
+        state.elementsKey = key;
+        return state;
+      })
+    );
+  },
   setData: (newData) => {
     logger.log('set data called<=====================');
     set(
@@ -352,6 +371,21 @@ const _useEditorX = create<EditorXState>((set, get) => ({
   setBusiness: (data) => {
     set(
       produce((state: EditorXState) => {
+        state.editorData.elements.forEach((element: Element, _) => {
+          if (element.id === 'user_photo') {
+            element.properties.image = data.photo;
+          } else if (element.id === 'user_name') {
+            element.properties.text = data.name;
+          } else if (element.id === 'user_phone') {
+            element.properties.text = data.phone;
+          } else if (element.id === 'user_email') {
+            element.properties.text = data.email;
+          } else if (element.id === 'user_website') {
+            element.properties.text = data.website;
+          } else if (element.id === 'user_address') {
+            element.properties.text = data.address;
+          }
+        });
         state.businessData = data;
         return state;
       })
@@ -410,7 +444,11 @@ const _useEditorX = create<EditorXState>((set, get) => ({
       });
       set(
         produce((state: EditorXState) => {
-          lodash.merge(state.editorData.elements, property2);
+          state.editorData.elements = lodash.merge(
+            [],
+            state.editorData.elements,
+            property2
+          );
           return state;
         })
       );

@@ -11,13 +11,12 @@ import { logger } from './logger';
 import { isVideoURL } from './utils';
 
 export class FFmpegWrapper {
-  cacheDir = RNFetchBlob.fs.dirs.CacheDir;
-  dirs = RNFetchBlob.fs.dirs.DocumentDir;
+  dirs = RNFetchBlob.fs.dirs.CacheDir;
   outputFile = `${this.dirs}/OCTORIA_`;
 
   async executeFFmpegCommand(command: string): Promise<number> {
     try {
-      const session = await FFmpegKit.execute(`-y -hide_banner ${command}`);
+      const session = await FFmpegKit.execute(`-hide_banner ${command}`);
       const returnCode = await session.getReturnCode();
 
       if (ReturnCode.isSuccess(returnCode)) {
@@ -53,10 +52,10 @@ export class FFmpegWrapper {
     logger.log('renderedAsset', renderedAsset);
     logger.log('resolution', resolution);
     logger.log('ext', ext);
-    this.outputFile = `${this.outputFile}.${ext}`;
+    this.outputFile = `${this.outputFile}${Date.now()}.${ext}`;
+    this.outputFile = `file://${this.outputFile}`;
     const cmd = `-i ${dwnVideo} -i ${renderedAsset} -filter_complex "[0:v]scale=${resolution}:${resolution} [video]; [video][1:v]overlay=0:0 [output]" -map 0:a -c:a copy -map 0:a -strict -2 -c:a aac -map "[output]" -q:v 1 ${this.outputFile}`;
     const result = await this.executeFFmpegCommand(cmd);
-    this.outputFile = `file:///${this.outputFile}`;
     if (result === 1) {
       showSuccessMessage('render.succ_video');
       return this.outputFile;
@@ -144,21 +143,14 @@ export class FFmpegWrapper {
 
   async deleteCacheFiles(): Promise<void> {
     try {
-      const files = await RNFetchBlob.fs.ls(this.cacheDir);
+      const files = await RNFetchBlob.fs.ls(this.dirs);
       for (const file of files) {
-        const filePath = `${this.cacheDir}/${file}`;
+        const filePath = `${this.dirs}/${file}`;
         await this.deleteFile(filePath);
       }
       logger.log('Cache files deleted.');
     } catch (error) {
       logger.error('Error deleting cache files:', error);
     }
-  }
-  executeResponse(_match: any) {
-    logger.log(__DEV__);
-    logger.log(_match);
-    const cmd = '-version';
-    const _result = this.executeFFmpegCommand(cmd);
-    return 'FFmpeg command executed successfully.';
   }
 }

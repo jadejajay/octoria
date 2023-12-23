@@ -72,6 +72,7 @@ export const Editorx = ({ dim }: Props) => {
   const selectedItem = useEditorX((state) => state.selectedItem);
   const widget = useEditorX((state) => state.activeWidget);
   const dwnVideo = useEditorX((state) => state.dwnVideo);
+  const elementsKey = useEditorX((state) => state.elementsKey);
   const setDwnVideo = useEditorX((state) => state.setDwnVideo);
   const setSelectedItem = useEditorX((state) => state.setSelectedItem);
   const setBg = useEditorX((s) => s.setBackground);
@@ -349,6 +350,12 @@ export const Editorx = ({ dim }: Props) => {
               style={styles.left6}
             />
           </View>
+          <MaterialCommunityIcons
+            name="arrange-bring-forward"
+            size={24}
+            onPress={() => navigate('DragList')}
+            color={'#07ab86'}
+          />
           <IconButton
             icon={<Feather name="upload" color={'#07ab86'} size={24} />}
             onPress={() => {
@@ -357,11 +364,6 @@ export const Editorx = ({ dim }: Props) => {
             className="mx-2 my-1"
           />
         </View>
-        {/* <View style={[styles.header, { height: 20 }]}>
-          <Text variant="xxs" className="text-center">
-            {editorData.bgType === 'video' ? 'Video' : 'Photo'}
-          </Text>
-        </View> */}
       </>
     );
   }, [captureView, goBack, navigate, renderModalLoading]);
@@ -490,7 +492,9 @@ export const Editorx = ({ dim }: Props) => {
   );
   const ListMagic = React.useCallback(() => {
     return (
-      <>
+      <React.Fragment
+        key={`${elementsKey}-${editorData.elements.length}-${editorData.frame}`}
+      >
         {editorData.elements &&
           editorData.elements.map((item: Element, index: number) => {
             return (
@@ -516,9 +520,16 @@ export const Editorx = ({ dim }: Props) => {
               </React.Fragment>
             );
           })}
-      </>
+      </React.Fragment>
     );
-  }, [editorData.elements, selectedItem, setSelectedItem, toggleWidgetModal]);
+  }, [
+    editorData.elements,
+    editorData.frame,
+    elementsKey,
+    selectedItem,
+    setSelectedItem,
+    toggleWidgetModal,
+  ]);
   const handleRotationPress = (r: number) => {
     // rotateToDegree 90 to magicRef
     magicRef.current?.rotateToDegree(r);
@@ -605,7 +616,7 @@ const styles = StyleSheet.create({
   header: {
     width: '100%',
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'baseline',
     justifyContent: 'space-between',
     height: 50, //  Header Height
   },

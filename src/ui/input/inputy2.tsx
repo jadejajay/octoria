@@ -4,6 +4,7 @@ import type { InputOutline } from 'react-native-input-outline';
 // import { TextInput as NTextInput } from 'react-native';
 import { InputOutline as NTextInput } from 'react-native-input-outline';
 
+import { Text } from '../core';
 import { View } from '../core/view';
 // import { isRTL } from '@/core';
 import colors from '../theme/colors';
@@ -45,6 +46,11 @@ export const Input2 = React.forwardRef<InputOutline, NInputProps>(
           onFocus={onFocus}
           {...inputProps}
         />
+        {error && (
+          <Text variant="xs" className="text-red-600">
+            {error}
+          </Text>
+        )}
       </View>
     );
   }

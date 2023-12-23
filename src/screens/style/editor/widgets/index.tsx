@@ -15,3 +15,4 @@ export * from './shape-widget';
 export * from './stickers';
 export * from './text-modal';
 export * from './text-widget';
+export * from './drag-list';

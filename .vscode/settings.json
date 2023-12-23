@@ -61,7 +61,7 @@
     "editor.defaultFormatter": "redhat.java"
   },
   "docify.commentService.docstringFormat": "JsDoc",
-  "codewindProfiling.showProfiling": true,
+  "codewindProfiling.showProfiling": false,
   "[cpp]": {
     "editor.defaultFormatter": "ms-vscode.cpptools"
   },

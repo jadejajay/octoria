@@ -20,6 +20,7 @@ export const BotSearchBar = () => {
   const searchPlaceholder = 'Ask me Ex. ' + placeholderArray[placeholderIndex];
 
   useEffect(() => {
+    setSearch('');
     const timer = setInterval(() => {
       setPlaceholderIndex(
         (prevIndex) => (prevIndex + 1) % placeholderArray.length

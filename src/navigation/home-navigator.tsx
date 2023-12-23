@@ -23,6 +23,7 @@ export type HomeStackParamList = {
   ChangeImageModal: undefined;
   ImageEditor: undefined;
   RenderWidget: undefined;
+  DragList: undefined;
   ColorWidget: undefined;
   FontWidget: undefined;
   FilterScreen: undefined;

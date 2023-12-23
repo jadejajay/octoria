@@ -32,7 +32,7 @@ export const ITWidget = ({ data, id, index, onClick, fontSize }: Props) => {
   const animatedFontSize = useAnimatedStyle(() => {
     return {
       fontSize: fontSize.value,
-      lineHeight: fontSize.value,
+      lineHeight: fontSize.value * 1.35,
     };
   });
   React.useEffect(() => {

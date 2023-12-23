@@ -1,10 +1,9 @@
-import { FFmpegWrapper } from './ffmpeg-wrapper';
-
+//ciea cute image editing assistant
 export class Chat {
-  private _pairs: any;
+  private _pairs: typeof pair;
   private _reflections: any;
   private _regex: any;
-  constructor(pairs: any = pair, reflections: any = reflection) {
+  constructor(pairs = pair, reflections = reflection) {
     this._pairs = pairs.map((pair2: any) => [
       new RegExp(pair2[0], 'i'),
       pair2[1],
@@ -36,11 +35,11 @@ export class Chat {
     }
     return response;
   }
-  respond(str: string, image: string) {
+  respond(str: string) {
     for (const [pattern, response] of this._pairs) {
       const match = pattern.exec(str);
       if (match) {
-        let resp = response(match, image);
+        let { cmd, resp } = response(match);
         resp = this.wildcards(resp, match);
         if (resp.slice(-2) === '?.') {
           resp = resp.slice(0, -2) + '.';
@@ -48,68 +47,102 @@ export class Chat {
         if (resp.slice(-2) === '??') {
           resp = resp.slice(0, -2) + '?';
         }
-        return resp;
+        return { cmd, resp };
       }
     }
   }
-  converse(user_input: string, image: string) {
+  converse(user_input: string) {
     if (user_input.length > 0) {
       while (user_input.slice(-1) === '?!.') {
         user_input = user_input.slice(0, -1);
       }
-      if (this.respond(user_input, image)) {
-        return this.respond(user_input, image);
+      if (this.respond(user_input)) {
+        return this.respond(user_input);
       } else {
-        return "Sorry, I don't understand.";
+        const cmd = '';
+        const resp = `Sorry, I don't understand.`;
+        return { cmd, resp };
       }
     }
-    return '';
+    const cmd = '';
+    const resp = ``;
+    return { cmd, resp };
   }
 }
 
-function executeResponse(_match: any, _image: string) {
-  const ffmpeg = new FFmpegWrapper();
-  ffmpeg.executeResponse(_match);
-  return `Executing the ${_match[1]} ${_image} function`;
+function randomChoice(arr: any[]) {
+  return arr[Math.floor(arr.length * Math.random())];
+}
+
+function executeResponse(_match: any) {
+  const cmd = '';
+  const resp = `we can not execute command right now 😥, but we will soon 😎`;
+  return { cmd, resp };
 }
 function executeNegate(_match: any) {
-  return `Executing the negate function`;
+  const cmd = '-vf negate';
+  const resp = randomChoice([`I hope You Like It 🙂`]);
+  return { cmd, resp };
 }
 function executeVerticalFlip(_match: any) {
-  return `Executing the vertical flip function`;
+  const cmd = '-vf vflip';
+  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  return { cmd, resp };
 }
 function executeHorizontalFlip(_match: any) {
-  return `Executing the horizontal flip function`;
+  const cmd = '-vf hflip';
+  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  return { cmd, resp };
 }
 function executeRotate(_match: any) {
-  return `Executing the rotate function`;
+  const cmd = '-vf transpose=1';
+  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  return { cmd, resp };
 }
 function executeResize(_match: any) {
-  return `Executing the resize function`;
+  const cmd = '-vf scale=512:512';
+  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  return { cmd, resp };
 }
 function executeCrop(_match: any) {
-  return `Executing the crop function`;
+  const cmd = '-vf crop=512:512';
+  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  return { cmd, resp };
 }
 function executeRemove(_match: any) {
-  return `Executing the remove function`;
+  const cmd = '-vf chromakey=0x00FF00:0.1:0.2';
+  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  return { cmd, resp };
 }
 function executeBlur(_match: any) {
-  return `Executing the blur function`;
+  const cmd = '-vf boxblur=10:1';
+  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  return { cmd, resp };
 }
 function executeExtract(_match: any) {
-  return `Executing the extract function`;
+  const cmd = '-vf extractplanes=y';
+  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  return { cmd, resp };
 }
 function executeSharp(_match: any) {
-  return `Executing the sharp function`;
+  const cmd = '-vf unsharp';
+  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  return { cmd, resp };
 }
 function executeEdge(_match: any) {
-  return `i am so hurry, Executing the edge function`;
+  const cmd = '-vf edgedetect';
+  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  return { cmd, resp };
 }
 function executeEmboss(_match: any) {
-  return `Executing the emboss function`;
+  const cmd = '-vf colorchannelmixer=.3:.4:.3:0:.3:.4:.3:0:.3:.4:.3';
+  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  return { cmd, resp };
 }
 function executePosturize(_match: any) {
-  return `Executing the posturize function`;
+  const cmd = '-vf elgb=2:2:1:1:1:1:1:1:1:1:1:1:1:1:1:1';
+  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  return { cmd, resp };
 }
 // Define pattern-response pairs
 const pair = [

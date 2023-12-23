@@ -5,10 +5,11 @@ import { ToastAndroid } from 'react-native';
 import { ImageProcessor } from './image-filter';
 import { logger } from './logger';
 export async function uploadImage(uri: string, user: any) {
-  let x = '';
+  logger.log('uri', uri);
+  var x = '';
   if (user) {
     const imageProcessor = new ImageProcessor();
-    imageProcessor
+    await imageProcessor
       .resize(uri)
       .then(async (resizedImage) => {
         logger.log('resizedImage', resizedImage);
@@ -18,6 +19,7 @@ export async function uploadImage(uri: string, user: any) {
           const ref = storage().ref().child(`images/${user.uid}/avatar.png`);
           await ref.put(blob);
           x = await ref.getDownloadURL();
+          logger.log('stored image ==> ', x);
         }
       })
       .catch((error) => {

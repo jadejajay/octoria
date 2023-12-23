@@ -29,6 +29,7 @@ import {
   BackgroundVideosWidget,
   BackgroundWidget,
   ChangeImageModal,
+  DragList,
   ElementsWidget,
   FontWidget,
   FrameWidget,
@@ -177,6 +178,7 @@ export const Root = () => {
                     component={BackgroundWidget}
                   />
                   <Stack.Screen name="Frames" component={FrameWidget} />
+                  <Stack.Screen name="DragList" component={DragList} />
                   <Stack.Screen name="RenderWidget" component={RenderWidget} />
                   <Stack.Screen name="Elements" component={ElementsWidget} />
                   <Stack.Screen name="Gallery" component={Gallery} />

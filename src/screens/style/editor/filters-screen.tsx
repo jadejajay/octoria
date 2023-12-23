@@ -42,52 +42,70 @@ export const FilterScreen = () => {
   const setBusiness = useEditorX((s) => s.setBusiness);
   const businessData = useEditorX((s) => s.businessData);
   const setImage = useImageColorPickerStore((s) => s.setFinalImage);
+  const setOriginalImage = useImageColorPickerStore((s) => s.setImage);
   const image = useImageColorPickerStore((s) => s.finalImage);
+  const originalImage = useImageColorPickerStore((s) => s.image);
   const setMainImage = useEditorX((s) => s.setImage);
   const mainimage = useEditorX(
     (s) => s.editorData.elements[state].properties.image
   );
   const isSpecial = useEditorX((s) => s.isSpecial);
   const userPhoto = useEditorX((s) => s.businessData.photo);
-  // const [image, setImage] = React.useState<any>('');
   const [loading, setLoading] = React.useState(false);
   const question = useBotSearchStore((s) => s.text);
   const [displayedText, setDisplayedText] = React.useState('');
   const [modalVisible, setModalVisible] = React.useState(false);
-  // const ffmpeg = new FFmpegWrapper();
+  const ffmpeg = new FFmpegWrapper();
 
   const { goBack } = useNavigation();
+
+  React.useEffect(() => {
+    setDisplayedText('');
+  }, []);
 
   React.useEffect(() => {
     setDisplayedText('');
     let index = 0;
     let speed = 5;
     const chat = new Chat();
-    const text = chat.converse(question, image);
-    if (text.length > 0) {
-      const intervalId = setInterval(() => {
-        setDisplayedText((prevText) => {
-          const char = text[index];
-          index++;
-          if (index >= text.length) {
-            clearInterval(intervalId);
-          }
-          return prevText + char;
-        });
-      }, speed);
+    const answerCommands = chat.converse(question);
+    if (answerCommands) {
+      const { cmd, resp } = answerCommands;
+      logger.log(cmd, '<=========cmd');
+      if (cmd) {
+        applyFilter(cmd);
+      }
+      if (resp.length > 0) {
+        const intervalId = setInterval(() => {
+          setDisplayedText((prevText) => {
+            const char = resp[index];
+            index++;
+            if (index >= resp.length) {
+              clearInterval(intervalId);
+            }
+            return prevText + char;
+          });
+        }, speed);
 
-      return () => {
-        clearInterval(intervalId);
-      };
+        return () => {
+          clearInterval(intervalId);
+        };
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [question]);
 
   React.useEffect(() => {
     if (isSpecial()) {
       setImage(userPhoto);
+      setOriginalImage(userPhoto);
     } else {
-      if (mainimage) setImage(mainimage);
+      if (mainimage) {
+        setImage(mainimage);
+        setOriginalImage(mainimage);
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [mainimage, userPhoto]);
 
   const backgroundColorStyle = useAnimatedStyle(() => ({
@@ -98,18 +116,18 @@ export const FilterScreen = () => {
     selectedColor.value = color.hex;
   };
 
-  // const applyFilter = async (filter: string) => {
-  //   if (!image) return;
-  //   setLoading(true);
-  //   const result = await ffmpeg.applyFilter({
-  //     dwnimage: image,
-  //     filter,
-  //     ext: 'png',
-  //   });
-  //   logger.log(result, '<=========result of filter');
-  //   if (result) setImage(result);
-  //   setLoading(false);
-  // };
+  const applyFilter = async (filter: string) => {
+    if (!image) return;
+    setLoading(true);
+    const result = await ffmpeg.applyFilter({
+      dwnimage: image,
+      filter,
+      ext: 'png',
+    });
+    logger.log(result, '<=========result of filter');
+    if (result) setImage(result);
+    setLoading(false);
+  };
   const apply = async () => {
     if (isSpecial()) {
       setBusiness({
@@ -138,7 +156,11 @@ export const FilterScreen = () => {
           {loading && <ActivityIndicator size="large" color="#fff" />}
         </View>
       </View>
-      <ScrollView className="flex-1" nestedScrollEnabled>
+      <ScrollView
+        className="flex-1"
+        nestedScrollEnabled
+        showsVerticalScrollIndicator={false}
+      >
         <View
           className="w-full items-center justify-center"
           // style={[styles.shadow]}
@@ -154,48 +176,100 @@ export const FilterScreen = () => {
             </Text>
           )}
         </View>
-        {/* <View className="mt-4 flex-row items-center justify-between border border-slate-300 px-4">
-          <Text variant="sm" className="text-left font-sfbold text-black">
-            ChromaKey
-          </Text>
-          <AnimatedTouchableOpacity
-            activeOpacity={1}
-            style={[styles.box, backgroundColorStyle]}
-            onPress={() => setModalVisible(true)}
-          />
-          <Text
-            variant="sm"
-            className="rounded bg-slate-600 px-4 py-2 text-center text-white"
-          >
-            apply
-          </Text>
-        </View> */}
-        {/* <Text
-          variant="sm"
-          className="rounded bg-slate-600 px-4 py-2 text-center text-white"
-          onPress={() => applyFilter('-vf negate')}
-        >
-          Line Art
-        </Text> */}
-        <Text
-          variant="sm"
-          className="rounded bg-slate-600 px-4 py-2 text-center text-white"
-          onPress={() => {
-            // setColorImage(image);
-            // navigate('ImageColorPicker');
-          }}
-        >
-          Line Art
-        </Text>
         <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
-          👉🏻 Brighten
+          👉🏻 Quick Tools
+        </Text>
+        <View key={'1234'} style={[styles.shadow, styles.tools]}>
+          <SmallIconCard
+            index={1}
+            item={{
+              name: 'original',
+              command: '',
+              icon: 'circle-off-outline',
+            }}
+            onClick={() => {
+              setImage(originalImage);
+            }}
+          />
+          <SmallIconCard
+            index={2}
+            item={{
+              name: 'flip-x',
+              command: '-vf hflip',
+              icon: 'flip-horizontal',
+            }}
+            onClick={() => {
+              applyFilter('-vf hflip');
+            }}
+          />
+          <SmallIconCard
+            index={3}
+            item={{
+              name: 'flip-y',
+              command: '-vf vflip',
+              icon: 'flip-vertical',
+            }}
+            onClick={() => {
+              applyFilter('-vf vflip');
+            }}
+          />
+          <SmallIconCard
+            index={4}
+            item={{
+              name: 'rotate-90',
+              command: '-vf transpose=1',
+              icon: 'rotate-right',
+            }}
+            onClick={() => {
+              applyFilter('-vf transpose=1');
+            }}
+          />
+          <SmallIconCard
+            index={5}
+            item={{
+              name: 'negate',
+              command: '-vf negate',
+              icon: 'invert-colors',
+            }}
+            onClick={() => {
+              applyFilter('-vf negate');
+            }}
+          />
+        </View>
+        <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+          👉🏻 Chroma Tools
+        </Text>
+        <View style={[styles.shadow, styles.chromaCol]}>
+          <View style={[styles.chroma]}>
+            <Text variant="sm" className="text-left font-sfbold text-black">
+              🔑 Chroma Key
+            </Text>
+            <AnimatedTouchableOpacity
+              activeOpacity={1}
+              style={[styles.box, backgroundColorStyle]}
+              onPress={() => setModalVisible(true)}
+            />
+          </View>
+          <View style={[styles.chroma]}>
+            <Text variant="sm" className="text-left font-sfbold text-black">
+              🔑 Chroma Key
+            </Text>
+            <AnimatedTouchableOpacity
+              activeOpacity={1}
+              style={[styles.box, backgroundColorStyle]}
+              onPress={() => setModalVisible(true)}
+            />
+          </View>
+        </View>
+        <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+          👉🏻 Quick Tools
         </Text>
         <HorizontalList
-          Comp={SmallIconCard}
+          Comp={SmallImageCard}
           padding={7.5}
           estimatedItemSize={SNAP}
           snapToInterval={SNAP}
-          data={normalFilters}
+          data={brightnessFilters}
         />
         <View className="mx-16 my-8 border-b-2 border-slate-200" />
       </ScrollView>
@@ -207,7 +281,7 @@ export const FilterScreen = () => {
             apply();
           }}
         >
-          apply
+          🎨 apply
         </Text>
       </View>
       <Modal
@@ -232,10 +306,16 @@ export const FilterScreen = () => {
             style={styles.previewTxtContainer}
             onPress={() => {
               setModalVisible(!modalVisible);
-              // applyFilter(`-vf chromakey=${selectedColor.value}:0.16`);
+              applyFilter(`-vf chromakey=${selectedColor.value}:0.16`);
             }}
           >
             <Preview />
+            <Text
+              variant="sm"
+              className="mt-4 rounded-full bg-zinc-950 px-4 py-2 text-center text-white"
+            >
+              🏹 Remove
+            </Text>
           </TouchableOpacity>
         </ColorPicker>
       </Modal>
@@ -259,12 +339,16 @@ const SmallImageCard = ({ item, index }: any) => {
     </View>
   );
 };
-const SmallIconCard = ({ item, index }: any) => {
+const SmallIconCard = ({ item, index, onClick }: any) => {
   return (
-    <View
+    <TouchableOpacity
       key={index}
+      activeOpacity={1}
+      onPress={() => {
+        onClick();
+      }}
       className="overflow-hidden rounded-lg"
-      style={[styles.shadow, styles.imageCard2]}
+      style={[styles.imageCard2]}
     >
       <MaterialCommunityIcons
         name={item.icon}
@@ -273,7 +357,7 @@ const SmallIconCard = ({ item, index }: any) => {
         // eslint-disable-next-line react-native/no-inline-styles
         style={{ alignSelf: 'center' }}
       />
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -283,11 +367,11 @@ const styles = StyleSheet.create({
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: -5,
+      height: -3,
     },
     shadowOpacity: 0.8,
-    shadowRadius: 10,
-    elevation: 10,
+    shadowRadius: 5,
+    elevation: 5,
   },
   hueSlider: {
     height: 40,
@@ -298,6 +382,27 @@ const styles = StyleSheet.create({
   modal: {
     flex: 1,
     backgroundColor: 'transparent',
+  },
+  tools: {
+    alignSelf: 'center',
+    width: WIDTH - 30,
+    height: 60,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+  },
+  chroma: {
+    width: WIDTH - 30,
+    height: 60,
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    justifyContent: 'space-between',
+  },
+  chromaCol: {
+    alignSelf: 'center',
+    width: WIDTH - 30,
+    flexDirection: 'column',
   },
   box: {
     height: 40,
@@ -322,8 +427,9 @@ const styles = StyleSheet.create({
     aspectRatio: 1,
   },
   imageCard2: {
-    width: WIDTH / 5 - 10,
-    marginLeft: 2.5,
+    height: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
     aspectRatio: 1,
   },
   colorPicker: {
@@ -361,31 +467,37 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
 });
-// http://itekindia.com/octoria/database/presets/space_empty.png
-const normalFilters = [
+
+const brightnessFilters = [
   {
-    name: 'original',
-    command: '',
-    icon: 'image',
+    image:
+      'http://itekindia.com/octoria/database/filters/brightness/minus_one.webp',
+    command: '-vf eq=brightness=-1',
   },
   {
-    name: 'flip-x',
-    command: '-vf hflip',
-    icon: 'mirror-horizontal',
+    image:
+      'http://itekindia.com/octoria/database/filters/brightness/minus_half.webp',
+    command: '-vf eq=brightness=-0.5',
   },
   {
-    name: 'flip-y',
-    command: '-vf vflip',
-    icon: 'mirror-vertical',
+    image:
+      'http://itekindia.com/octoria/database/filters/brightness/minus_p2.webp',
+    command: '-vf eq=brightness=-1',
   },
   {
-    name: 'rotate-90',
-    command: '-vf transpose=1',
-    icon: 'rotate-right',
+    image: 'http://itekindia.com/octoria/database/filters/brightness/p2.webp',
+    command: '-vf eq=brightness=-1',
   },
   {
-    name: 'negate',
-    command: '-vf negate',
-    icon: 'invert-colors',
+    image: 'http://itekindia.com/octoria/database/filters/brightness/p3.webp',
+    command: '-vf eq=brightness=-1',
+  },
+  {
+    image: 'http://itekindia.com/octoria/database/filters/brightness/p5.webp',
+    command: '-vf eq=brightness=-1',
+  },
+  {
+    image: 'http://itekindia.com/octoria/database/filters/brightness/full.webp',
+    command: '-vf eq=brightness=-1',
   },
 ];

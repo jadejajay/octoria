@@ -11,7 +11,7 @@ import { useForm } from 'react-hook-form';
 import { Image, ImageBackground } from 'react-native';
 import * as z from 'zod';
 
-import { useIsSignUp } from '@/core';
+import { logger, useIsSignUp } from '@/core';
 import { uploadImage } from '@/core/upload-image';
 import {
   ActivityIndicator,
@@ -95,7 +95,7 @@ export const SignUpForm = () => {
     }
   };
 
-  const handleImage = async () => {
+  const handleImage = React.useCallback(async () => {
     // No permissions request is necessary for launching the image library
     setIsLoading(true);
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -108,10 +108,11 @@ export const SignUpForm = () => {
     if (!result.canceled) {
       const x = await uploadImage(result.assets[0].uri.toString(), user);
       setImage(x as string);
+      logger.log('Image set', x);
       setIsLoading(false);
     }
     setIsLoading(false);
-  };
+  }, []);
 
   const onSubmit = (data: FormType) => {
     if (!image2) {
