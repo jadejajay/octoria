@@ -37,9 +37,14 @@ export class Chat {
   }
   respond(str: string) {
     for (const [pattern, response] of this._pairs) {
-      const match = pattern.exec(str);
+      const match = pattern instanceof RegExp ? pattern.exec(str) : null;
       if (match) {
-        let { cmd, resp } = response(match);
+        let cmd, resp;
+        if (typeof response === 'function') {
+          ({ cmd, resp } = response(match));
+        } else {
+          resp = response;
+        }
         resp = this.wildcards(resp, match);
         if (resp.slice(-2) === '?.') {
           resp = resp.slice(0, -2) + '.';
@@ -81,67 +86,165 @@ function executeResponse(_match: any) {
 }
 function executeNegate(_match: any) {
   const cmd = '-vf negate';
-  const resp = randomChoice([`I hope You Like It 🙂`]);
+  const resp = randomChoice([
+    `I hope You Like It 🙂`,
+    `I think you like Negative.`,
+  ]);
   return { cmd, resp };
 }
 function executeVerticalFlip(_match: any) {
   const cmd = '-vf vflip';
-  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  const resp = randomChoice([
+    `I hope You Like It 🙂.`,
+    `Image is Vertically fliped`,
+  ]);
   return { cmd, resp };
 }
 function executeHorizontalFlip(_match: any) {
   const cmd = '-vf hflip';
-  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  const resp = randomChoice([
+    `I hope You Like It 🙂.`,
+    `Image Horizontaly fliped`,
+  ]);
+  return { cmd, resp };
+}
+function executeBrightness(_match: any) {
+  const cmd = '-vf eq=brightness=0.3';
+  const resp = randomChoice([
+    `I hope You Like It 🙂.`,
+    `Image Brightness is Decreased`,
+  ]);
+  return { cmd, resp };
+}
+function executeContrast(_match: any) {
+  const cmd = '-vf eq=contrast=1.5';
+  const resp = randomChoice([
+    `I hope You Like It 🙂.`,
+    `Image Contrast is Increased`,
+  ]);
+  return { cmd, resp };
+}
+function executeSaturation(_match: any) {
+  const cmd = '-vf eq=saturation=1.5';
+  const resp = randomChoice([
+    `I hope You Like It 🙂.`,
+    `Image Saturation is Increased`,
+  ]);
+  return { cmd, resp };
+}
+function executeGamma(_match: any) {
+  const cmd = '-vf eq=gamma=0.5';
+  const resp = randomChoice([
+    `I hope You Like It 🙂.`,
+    `Image Gamma is Decreased`,
+  ]);
+  return { cmd, resp };
+}
+function executeHue(_match: any) {
+  const cmd = '-vf eq=hue=0.3';
+  const resp = randomChoice([
+    `I hope You Like It 🙂.`,
+    `Image Hue is Decreased`,
+  ]);
+  return { cmd, resp };
+}
+function executeInvert(_match: any) {
+  const cmd = '-vf eq=invert=1';
+  const resp = randomChoice([`I hope You Like It 🙂.`, `Image Inverted`]);
+  return { cmd, resp };
+}
+function executeOpacity(_match: any) {
+  const cmd = '-vf eq=opacity=0.5';
+  const resp = randomChoice([
+    `I hope You Like It 🙂.`,
+    `Image Opacity is Decreased`,
+  ]);
+  return { cmd, resp };
+}
+function executePixelate(_match: any) {
+  const cmd = '-vf scale=iw/10:ih/10:flags=neighbor';
+  const resp = randomChoice([`I hope You Like It 🙂.`, `Image Pixelated 🦾`]);
+  return { cmd, resp };
+}
+function executeSolarize(_match: any) {
+  const cmd = '-vf solarize';
+  const resp = randomChoice([`I hope You Like It 🙂.`, `Image Solarized 🎊`]);
+  return { cmd, resp };
+}
+function executeThreshold(_match: any) {
+  const cmd = '-vf threshold=128';
+  const resp = randomChoice([`I hope You Like It 🙂.`, `Image Threshed 🎉`]);
+  return { cmd, resp };
+}
+function executeVignette(_match: any) {
+  const cmd = '-vf vignette';
+  const resp = randomChoice([`I hope You Like It 🙂.`, `Image Vignetted 🕶`]);
+  return { cmd, resp };
+}
+function executeWarp(_match: any) {
+  const cmd = '-vf lenscorrection=k1=-0.2:k2=0.1';
+  const resp = randomChoice([`I hope You Like It 🙂.`, `Image Warped 🎉`]);
+  return { cmd, resp };
+}
+function executeWave(_match: any) {
+  const cmd = '-vf wave';
+  const resp = randomChoice([`I hope You Like It 🙂.`, `Image Waved 🎯`]);
+  return { cmd, resp };
+}
+function executeZoom(_match: any) {
+  const cmd = `-vf zoompan=z="min(zoom+0.0015,1.5)":d=125`;
+  const resp = randomChoice([`I hope You Like It 🙂.`, `Image Zoomed 🔍`]);
   return { cmd, resp };
 }
 function executeRotate(_match: any) {
   const cmd = '-vf transpose=1';
-  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  const resp = randomChoice([`I hope You Like It 🙂.`, `Image Rotated 🎯`]);
   return { cmd, resp };
 }
 function executeResize(_match: any) {
   const cmd = '-vf scale=512:512';
-  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  const resp = randomChoice([`I hope You Like It 🙂.`, `Image Resized 🖼`]);
   return { cmd, resp };
 }
 function executeCrop(_match: any) {
   const cmd = '-vf crop=512:512';
-  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  const resp = randomChoice([`I hope You Like It 🙂.`, `Image Cropped 🖼`]);
   return { cmd, resp };
 }
 function executeRemove(_match: any) {
   const cmd = '-vf chromakey=0x00FF00:0.1:0.2';
-  const resp = randomChoice([`I hope You Like It 🙂.`]);
-  return { cmd, resp };
-}
-function executeBlur(_match: any) {
-  const cmd = '-vf boxblur=10:1';
-  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  const resp = randomChoice([`I hope You Like It 🙂.`, `So Do You Like This?`]);
   return { cmd, resp };
 }
 function executeExtract(_match: any) {
   const cmd = '-vf extractplanes=y';
-  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  const resp = randomChoice([`I hope You Like It 🙂.`, `Image Extracted 🖼`]);
   return { cmd, resp };
 }
 function executeSharp(_match: any) {
   const cmd = '-vf unsharp';
-  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  const resp = randomChoice([`I hope You Like It 🙂.`, `Image Sharpen ✔`]);
   return { cmd, resp };
 }
 function executeEdge(_match: any) {
   const cmd = '-vf edgedetect';
-  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  const resp = randomChoice([`I hope You Like It 🙂.`, `It Looks Scary 👻`]);
   return { cmd, resp };
 }
 function executeEmboss(_match: any) {
   const cmd = '-vf colorchannelmixer=.3:.4:.3:0:.3:.4:.3:0:.3:.4:.3';
-  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  const resp = randomChoice([
+    `I hope You Like It 🙂.`,
+    `Image Looks More Embossed 🎯`,
+  ]);
   return { cmd, resp };
 }
 function executePosturize(_match: any) {
   const cmd = '-vf elgb=2:2:1:1:1:1:1:1:1:1:1:1:1:1:1:1';
-  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  const resp = randomChoice([
+    `I hope You Like It 🙂.`,
+    `Image is Pasteurized 🎯`,
+  ]);
   return { cmd, resp };
 }
 // Define pattern-response pairs
@@ -165,8 +268,6 @@ const pair = [
   ['crop (.+)', executeCrop], //ex : crop image
   // question related to chroma key image which contain chroma key in the question
   ['remove (.+)', executeRemove], //ex : chroma key image
-  // question related to blur image which contain blur in the question
-  ['blur (.+)', executeBlur], //ex : blur image
   // question related to extract color from image
   ['extract (.+)', executeExtract], //ex : extract color from image
   // question related to sharp image which contain sharp in the question
@@ -177,6 +278,22 @@ const pair = [
   ['emboss (.+)', executeEmboss], //ex : emboss image
   // question related to posturize image which contain posturize in the question
   ['posturize (.+)', executePosturize], //ex : posturize image
+  ['invert (.+)', executeInvert], //ex : invert image
+  ['opacity (.+)', executeOpacity], //ex : opacity image
+  ['pixelate (.+)', executePixelate], //ex : pixelate image
+  ['solarize (.+)', executeSolarize], //ex : solarize image
+  ['threshold (.+)', executeThreshold], //ex : threshold image
+  ['vignette (.+)', executeVignette], //ex : vignette image
+  ['warp (.+)', executeWarp], //ex : warp image
+  ['wave (.+)', executeWave], //ex : wave image
+  ['zoom (.+)', executeZoom], //ex : zoom image
+  ['brightness (.+)', executeBrightness], //ex : brightness image
+  ['contrast (.+)', executeContrast], //ex : contrast image
+  ['saturation (.+)', executeSaturation], //ex : saturation image
+  ['gamma (.+)', executeGamma], //ex : gamma image
+  ['hue (.+)', executeHue], //ex : hue image
+  ['(.+) (.+)', executeResponse], //ex : hue image
+  ['(.+)', executeResponse], //ex : hue image
 ];
 
 // const chatbot = new Chat(pairs, reflection);

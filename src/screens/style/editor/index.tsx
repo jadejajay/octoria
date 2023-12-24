@@ -31,6 +31,7 @@ import {
   useFrameStore,
   usePostVideoStore,
   useRenderStore,
+  VideoCacheManager,
 } from '@/core';
 import {
   type BackgroundType,
@@ -104,6 +105,7 @@ export const Editorx = ({ dim }: Props) => {
   const frames = useFrameStore((s) => s.frames);
   const sFrame = shuffleArray(frames);
   logger.log('editorData.elements', editorData.elements);
+  const cacheManager = new VideoCacheManager();
 
   // component specific
   const { goBack, navigate } = useNavigation();
@@ -127,12 +129,30 @@ export const Editorx = ({ dim }: Props) => {
     handleEditorx();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const downloadVideo = React.useCallback(
+    (url: string) => {
+      cacheManager.getVideo(url).then((localPath) => {
+        if (localPath) {
+          setDwnVideo(localPath);
+        } else {
+          showMessage({
+            type: 'danger',
+            message: `Failed to load Video`,
+            duration: 2000,
+          });
+        }
+      });
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
   React.useEffect(() => {
     editorData.bgType === 'video' &&
       editorData.backgroundPost &&
-      setDwnVideo(editorData.backgroundPost);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editorData.backgroundPost, editorData.bgType]);
+      downloadVideo(editorData.backgroundPost);
+  }, [downloadVideo, editorData.backgroundPost, editorData.bgType]);
 
   React.useEffect(() => {
     const blurListener = navigation.addListener('blur', () => {
@@ -278,7 +298,7 @@ export const Editorx = ({ dim }: Props) => {
           <SmallCard2
             key={item.id}
             onClick={() => {
-              setBg(item.video, 'video');
+              item.video && setBg(item.video, 'video');
             }}
             url={item.thumbnail}
             // isSelected={BackGroundPicker.imageUri === item.image}
@@ -307,7 +327,7 @@ export const Editorx = ({ dim }: Props) => {
           <SmallCard
             key={item.id}
             onClick={() => {
-              setFrm(item.image);
+              item.image && setFrm(item.image);
               if (item.mainWidth)
                 setDataById(item.elements, item.mainWidth, dim.width);
             }}

@@ -10,13 +10,13 @@ import { showErrorMessage, showSuccessMessage } from '@/ui';
 import { logger } from './logger';
 import { isVideoURL } from './utils';
 
+const dirs = RNFetchBlob.fs.dirs.DocumentDir;
 export class FFmpegWrapper {
-  dirs = RNFetchBlob.fs.dirs.CacheDir;
-  outputFile = `${this.dirs}/OCTORIA_`;
+  outputFile = `${dirs}/OCTORIA`;
 
   async executeFFmpegCommand(command: string): Promise<number> {
     try {
-      const session = await FFmpegKit.execute(`-hide_banner ${command}`);
+      const session = await FFmpegKit.execute(`-y -hide_banner ${command}`);
       const returnCode = await session.getReturnCode();
 
       if (ReturnCode.isSuccess(returnCode)) {
@@ -52,10 +52,10 @@ export class FFmpegWrapper {
     logger.log('renderedAsset', renderedAsset);
     logger.log('resolution', resolution);
     logger.log('ext', ext);
-    this.outputFile = `${this.outputFile}${Date.now()}.${ext}`;
-    this.outputFile = `file://${this.outputFile}`;
+    this.outputFile = `${this.outputFile}.${ext}`;
     const cmd = `-i ${dwnVideo} -i ${renderedAsset} -filter_complex "[0:v]scale=${resolution}:${resolution} [video]; [video][1:v]overlay=0:0 [output]" -map 0:a -c:a copy -map 0:a -strict -2 -c:a aac -map "[output]" -q:v 1 ${this.outputFile}`;
     const result = await this.executeFFmpegCommand(cmd);
+    this.outputFile = `file://${this.outputFile}`;
     if (result === 1) {
       showSuccessMessage('render.succ_video');
       return this.outputFile;
@@ -143,9 +143,9 @@ export class FFmpegWrapper {
 
   async deleteCacheFiles(): Promise<void> {
     try {
-      const files = await RNFetchBlob.fs.ls(this.dirs);
+      const files = await RNFetchBlob.fs.ls(dirs);
       for (const file of files) {
-        const filePath = `${this.dirs}/${file}`;
+        const filePath = `${dirs}/${file}`;
         await this.deleteFile(filePath);
       }
       logger.log('Cache files deleted.');

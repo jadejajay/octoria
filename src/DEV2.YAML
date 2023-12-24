@@ -1,226 +1,11 @@
-.............................:-+-=**########*==+#####+=+###*+++===+++++++++++++==-::......
-............................:=++++*###%%%%%%%%###**%%%%#**#%#+**++++++++====---::::.......
-.........................::-=+*#*####%%%%%%%##******%@@@####%#=#*+***++==---::::::::::....
-........................::-+*##%%%%%@@@@@@%*++###%#*#%@@%%%#%#=##*#****+=-::::::::---:::..
-.....................:::::=*#%%%%%@@#%@@@@@@@*#%%@@@%%@@@@@%%#+#####*#**+=-::::---===-::..
-..........:::.......:---=++#%%%@%#%%#*#%@@@@%%@@@@@@%@@@@@@%##%%#%%%##**+=-----===+==-::..
-.......:::::.........-==++**%%@@%#@@%%%%%@@@@%@@@@@@@@@@@@%%%%%%%%@%%###++=-====+++==-:::.
-....:::::::::........::-+**##%%%%%%%@@%@@%%%%%@@@@%%%%%@@@@@@@@%%@%%@%#*++=====+=+==-:::..
-..:::------::.......::=++**#%%@%@@@@%%#%**+===----=+*******#%%%@@@@@%%#*++++======--::....
-:::--====--:........:-=+*#%%%%%@%%%%#*+=-:....           ...:-+#%#%@@%#*++++===--:::......
-:--=+++==-:..........:-+##%%@@@@%#+-:::::....              ...:-+#%%@%#*++===---::........
--=++++=-::::::::::::::=*##%@@@@@#=::::::::..               ...::-=+%%%#*+=---::::.........
-+***+=--::::::::::::::-*##%%@@@%%*=----::::...             ...::---#%%**=--::::...........
-****=-----------::::::-*#%%%%%@@%#=----:::...              ...::--:+%%#*-:::..............
-***+++=========---:::::+#%@@@%@@%+-:-::::...                ..:::--*%%%*-:............:::.
-*###*******++===--:::::-#%@@@@%+:.:---===---::.               ..:::#@%%+:............::::.
-*####*****+++==---::::.:##%%%#=.:+%@%##*%@@@@@@%#**+++++*+***++===-+@%%-............:::::.
-********+++===---::::-*=.=%#+---+%@@@@@@@@@@@@@@@@*+++#%@@@@@@%#%@%@%#+..........::--::::.
-*****+++++====----:::-+-+-=%@#+**+@@@@@@@@@@@@@@@@=..=@@@@@@@@@@@@%@##:.........:---:::...
-****+++++====----::::::-=**%%:..-+%@@@@@@@@@@@@@@#:   %@@@@@@@@@@@@@%#*:......::-----:::::
-**+++=====----:::::::.:=*#=%*:.  :%%@@@@@@@@@@@@#-:   +@@@@@@@@@@@%%##+......::-----::::::
-*++====------:::::..:::=++.#+-:. .:+%@@@@@@@@%%*--:.  -%@@@@@@@@@@%*+-:.....::------::::::
-++=====------:::::....--:==*+--::..:=+*#####***=-:.   .=*%%%%@@%%#+.+-.....::-------::::::
-++====------:::::.......:::+*=--:::----====--:- .:.   ..:-+***++-:..=.:...:::::-------::::
-====------::::::...........=*==--::::...     :-==:.   ...  ..:----:: :....::::---------:::
-==---------::::...........:=*++=--:....      :**##=-:-**:     ..:::. ....:::-=======----::
---====-----::::............:*++++--:...     ..=#%%%#%%#-     ...:::....:::-=+++++==-------
--=======--::::::::..........+****+=-:...:=**##%@%%***%@#+-. ..:::-:....:-=+++**++====-----
--======---::::::::........  =#****++-:::+##%%%%%%##+*##%##*=::----:...:-=++****++++===----
--====---------::......      :#*+*#**+=--=+=-===------=+*##*=--===-..:-==+*********+===----
-------------:::......       .=#******++==----=+**#**+=-::==--==+-:::-=+++*********++===---
-:----------:::.......       .-+###*###*+==--:--+*###*=----==++*=::-===++***********++==---
-:-----===---:::::....       .:=+#%######*+=::.  .--  .:-==+***+----==+++************+=----
-----=======---::::..        .:=+*#%%%#####*+=-::-==:::-=++***+:---==+++++*****###***==----
----===+====----::..        ..:=**##%%%%%%#%##++=+**+=+**###*-::--===+++++***####***+=-----
--===++==------::...       .-::=+*##%%%%@@%%%%####%########+::::--====++****####***+==-----
-=++++===----:::...       .+:::-=+*##%%%%%%%@%%%%%%%%%%%#*=-=+-::--==++************+==-----
-=++++==----:::..         -*-::--=+*##%%%%%%%%%%%%%%%%##*=-:+**+-:.:======++*****++==------
-++++===---::...   ..     =*+--:--=+*##%#%%%%%%%%%%%%##*=-::*#*+*+-. .--===+++++===--------
-++=====--::..   ....     =#+=-:::-=+*####%%%%%%%%%##*+=-:::*%%##**-.  :-=======-----------
-+===----:..   ..::..     -#*+--:::-==+*####%%%%###*+=-::.:-+%%%###+:.  .---==-------------
-=-----::.    ..:-:...    .#*+=--::.:-=++**#####*++=--:...:-+#%%##*=-.   .-----------------
----::..:    ..:--:...     ***+=-::..:--=+++++====-::....:-=+#%%#**=:     .:---------------
-:::::-=.   ..::+=:...     =**+==-::.::---=====--::.....:-==+*#%#*+-.      .:--------------
-::..:-.   ...:-+=:...     :***+=--:::::-----:::::....::--=++*#%#+:.  .  .   ...:----------
-                                                                                          
-     -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
-    +* .##+ .@..*+ %+-:   *= -##-     :%  #*%  *++* +*.:@.:@--.-% -%.%*:: +* %%+.@ =%::*+ 
- .  @::@*## +*  #=:%--.. .@ -@+#*     #= ##+@  .@-  @: :@ **--  @=#  .-** @.:% %#* %=:-@. 
- =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
-                                                                                          
-    .--=***+=-.                                                                           
-  :+**=*****++++:                                                                         
- =***=**++++*****+                                                                        
-:****=+.    =++***=                                                                       
-+++**=       =+++**                                                                       
-=**+++:     :=***+=                                                                       
-.*****+--::-*=****:                                                                       
- .+**+++++***=**+:                                                                        
-   .=*******=*+:                                                                          
-      .::--:.                                                                             
- .---------------              :------------:.                .:-----------:.             
- .***************.          -+****************+-           .=*****************=.          
-  =**************-        :*********************+.        =*********************-         
-  .***************       -************************.      +***********************:        
-   =**************-     .*************************=     =************************+        
-   :***************     -**************************     **************************:       
-    +**************:    ***************************-   -**************************=       
-    :**************+   -****************************   ****************************.      
-     +**************:  +****************************- -****************************=      
-     -**************+ :*****************************+ +*****************************.     
-      ***************:+**************:+**************+**************+=**************-     
-      -*****************************+ :*****************************:.***************     
-       *****************************-  +***************************+  =**************-    
-       =****************************   -***************************-  :***************    
-       .***************************-    ***************************    +**************:   
-        =**************************     -*************************-    :**************+   
-        .*************************=      *************************      +**************:  
-         +************************.      =***********************=      -**************+  
-         :***********************=       .***********************.       ***************. 
-          =**********************.        =*********************=        -**************= 
-           :+*******************-          -*******************=          ***************.
-             .-=+++++++++++++=-.             -=++++++++++++++-.           -++++++++++++++-
-                                                                                          
-                                                                                          
-.:   ......       :.      :    .:::.        ..    ...   .......   ......    .:      :.    
-=*: .*+---=*-    +**-    =*-  ++-::++.     =**+  .***: :*+-----. =*=--=++:  =*:    +**=   
-+*: .*+  .-*=   =*.=*:   =*- .*+-:..:      =*=*: =*=*: :*=....   =*-    **  =*:   =*.-*:  
-+*: .*+--==+-  -*- .+*.  =*-   :-=+*+.     =*.++:*--*: :*+-----  =*-    +*. =*:  :*=  +*. 
-+*: .*+    +*::*+====*+  =*- :+:   :*=     =*.:*** -*: :*=       =*-   :*+  =*: .*+====*+ 
-=*. .+++++++- ++     :*- -*:  -++=++=      =*  +*- -*. :+++++++: -++++++-   -*: ++.    :*-                                           
-                  .::------::.                  
-         .    .:-==============-:.    .         
-            .-====================-.            
-      .    -====-::=================-    .      
-     .    -===-    .=================-    .     
-     .   -====.     :=================-   .     
-    .   .=====:     :==================:   .    
-    .   -======.   .===================-   .    
-    .   :=======:   .-=================-   .    
-    .   .========-.   .:===-. .:-======:   .    
-     .   -=========-.     .      :====-   .     
-     .    -==========-:.         -===-    .     
-      .    ==============--::.:-====-    .      
-      .   :=======================-.            
-          ===--:-==============-:.    .         
-     .    .       .::------::.                  
-                                                
-    .                                           
-                                                 
-           :-=++++******+++++++++==-:           
-        .=**********************++++++-.        
-       =*****=:.                .:=**+++-       
-      -****=  :=+**************+=:  =***+-      
-      +***= .*###############*==**+. =***+      
-      **##  *########+=--=+###==#**+  ****      
-      ####  ######*: .:--:. :*######  ****      
-      ####  #####+ .+######+. +#####  #***      
-      ####  ###**  +*******#*  #####  ###*      
-      ####  *****  +********+  #####  ####      
-      ###*  ***++-  =++++++=  =**###  ####      
-      #***  ++++==-.  .::.  .=*****#  ####      
-      ****  ====-----:...:-==+++***+  ####      
-      ***+- .---::::::::::--==+++*+. =####      
-      =*++=:  ...:......::::-===-:  =*###+      
-       =++==-:                  .:=***##+       
-        :==--:::..........:::-==++****+:        
-          .:::::..........::--==+++=-.          
-                                                
-                                               
-System:
-  OS: Windows 10 10.0.19045
-  CPU: (8) x64 Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz
-  Memory: 7.59 GB / 15.92 GB
-Binaries:
-  Node:
-    version: 18.16.1
-    path: C:\Program Files\nodejs\node.EXE
-  Yarn:
-    version: 1.22.19
-    path: C:\Program Files (x86)\Yarn\bin\yarn.CMD
-  npm:
-    version: 9.7.1
-    path: C:\Program Files\nodejs\npm.CMD
-  Watchman: Not Found
-SDKs:
-  Android SDK:
-    API Levels:
-      - "23"
-      - "28"
-      - "29"
-      - "30"
-      - "31"
-      - "32"
-      - "33"
-      - "33"
-      - "34"
-    Build Tools:
-      - 28.0.3
-      - 30.0.2
-      - 30.0.3
-      - 33.0.0
-      - 33.0.1
-      - 34.0.0
-    System Images:
-      - android-29 | Google Play Intel x86 Atom
-      - android-30 | Google APIs Intel x86 Atom
-      - android-33-ext4 | Google Play Intel x86_64 Atom
-      - android-33 | Google APIs ARM 64 v8a
-      - android-33 | Google Play Intel x86_64 Atom
-    Android NDK: Not Found
-  Windows SDK:
-    AllowDevelopmentWithoutDevLicense: Enabled
-IDEs:
-  Android Studio: AI-222.4459.24.2221.9862592
-  Visual Studio: Not Found
-Languages:
-  Java:
-    version: 11.0.18
-    path: C:\Program Files\Microsoft\jdk-11.0.18.10-hotspot\bin\javac.EXE
-  Ruby: Not Found
-npmPackages:
-  "@react-native-community/cli": Not Found
-  react:
-    installed: 18.2.0
-    wanted: 18.2.0
-  react-native:
-    installed: 0.72.6
-    wanted: 0.72.6
-  react-native-windows: Not Found
-npmGlobalPackages:
-  "*react-native*": Not Found
-Android:
-  hermesEnabled: true
-  newArchEnabled: false
-iOS:
-  hermesEnabled: Not found
-  newArchEnabled: Not found
-  
-ffmpegKitPackage = 'full-gpl'
- ext {
-        buildToolsVersion = findProperty('android.buildToolsVersion') ?: '33.0.0'
-        minSdkVersion = Integer.parseInt(findProperty('android.minSdkVersion') ?: '21')
-        compileSdkVersion = Integer.parseInt(findProperty('android.compileSdkVersion') ?: '33')
-        targetSdkVersion = Integer.parseInt(findProperty('android.targetSdkVersion') ?: '33')
-        kotlinVersion = findProperty('android.kotlinVersion') ?: '1.8.10'
-        frescoVersion = findProperty('expo.frescoVersion') ?: '2.5.0'
-        ffmpegKitPackage = 'full-gpl'
-        // We use NDK 23 which has both M1 support and is the side-by-side NDK version from AGP.
-        ndkVersion = "23.1.7779620"
-
- LOG  Loading ffmpeg-kit-react-native.
- LOG  LOGGER :=> Screen is blurred
- LOG  Loaded ffmpeg-kit-react-native-android-full-gpl-x86-6.0.2.
- LOG  Filters:
-  T.. = Timeline support
-  .S. = Slice threading
-  ..C = Command support
-  A = Audio input/output
-  V = Video input/output
-  N = Dynamic number and/or type of input/output
-  | = Source or sink filter
-  ... abench            A->A       (null)
+T.. = Timeline support
+.S. = Slice threading
+..C = Command support
+A = Audio input/output
+V = Video input/output
+N = Dynamic number and/or type of input/output
+| = Source or sink filter
+... abench            A->A       (null)
 ..C acompressor       A->A       (null)
 ... acontrast         A->A       (null)
 ... acopy             A->A       (null)
@@ -371,12 +156,10 @@ T.C bbox              V->V       (null)
 TSC bilateral         V->V       (null)
 T.. bitplanenoise     V->V       (null)
 .S. blackdetect       V->V       (null)
-... blackframe        V->V       (null)
 TSC blend             VV->V      (null)
 ... blockdetect       V->V       (null)
 ... blurdetect        V->V       (null)
 TS. bm3d              N->V       (null)
-T.. boxblur           V->V       (null)
 TS. bwdif             V->V       (null)
 TSC cas               V->V       (null)
 TSC chromahold        V->V       (null)
@@ -394,16 +177,13 @@ TSC colorkey          V->V       (null)
 TSC colorhold         V->V       (null)
 TSC colorlevels       V->V       (null)
 TSC colormap          VVV->V     (null)
-TS. colormatrix       V->V       (null)
 TS. colorspace        V->V       (null)
 TSC colortemperature  V->V       (null)
 TSC convolution       V->V       (null)
 TS. convolve          VV->V      (null)
 ... copy              V->V       (null)
 T.. corr              VV->V      (null)
-... cover_rect        V->V       (null)
 ..C crop              V->V       (null)
-T.C cropdetect        V->V       (null)
 ... cue               V->V       (null)
 TSC curves            V->V       (null)
 .SC datascope         V->V       (null)
@@ -417,7 +197,6 @@ TS. dedot             V->V       (null)
 TSC deflate           V->V       (null)
 ... deflicker         V->V       (null)
 ... dejudder          V->V       (null)
-T.. delogo            V->V       (null)
 T.. derain            V->V       (null)
 ... deshake           V->V       (null)
 TSC despill           V->V       (null)
@@ -436,7 +215,6 @@ T.. edgedetect        V->V       (null)
 ... elbg              V->V       (null)
 T.. entropy           V->V       (null)
 .S. epx               V->V       (null)
-T.C eq                V->V       (null)
 TSC erosion           V->V       (null)
 TSC estdif            V->V       (null)
 TSC exposure          V->V       (null)
@@ -450,7 +228,6 @@ TS. fftfilt           V->V       (null)
 ... fieldmatch        N->V       (null)
 T.. fieldorder        V->V       (null)
 T.C fillborders       V->V       (null)
-... find_rect         V->V       (null)
 T.. floodfill         V->V       (null)
 ... format            V->V       (null)
 ... fps               V->V       (null)
@@ -459,7 +236,6 @@ T.. floodfill         V->V       (null)
 T.. framestep         V->V       (null)
 ... freezedetect      V->V       (null)
 ... freezeframes      VV->V      (null)
-T.. fspp              V->V       (null)
 TSC gblur             V->V       (null)
 TS. geq               V->V       (null)
 T.. gradfun           V->V       (null)
@@ -469,9 +245,7 @@ TS. greyedge          V->V       (null)
 TSC guided            N->V       (null)
 TSC haldclut          VV->V      (null)
 TS. hflip             V->V       (null)
-T.. histeq            V->V       (null)
 ... histogram         V->V       (null)
-TSC hqdn3d            V->V       (null)
 .S. hqx               V->V       (null)
 .S. hstack            N->V       (null)
 TSC hsvhold           V->V       (null)
@@ -486,9 +260,7 @@ TS. identity          VV->V      (null)
 ... idet              V->V       (null)
 T.C il                V->V       (null)
 TSC inflate           V->V       (null)
-... interlace         V->V       (null)
 ... interleave        N->V       (null)
-... kerndeint         V->V       (null)
 TSC kirsch            V->V       (null)
 TSC lagfun            V->V       (null)
 T.. latency           V->V       (null)
@@ -518,35 +290,28 @@ T.. midequalizer      VV->V      (null)
 TSC mix               N->V       (null)
 TSC monochrome        V->V       (null)
 T.C morpho            VV->V      (null)
-... mpdecimate        V->V       (null)
 TS. msad              VV->V      (null)
 TSC multiply          VV->V      (null)
 TSC negate            V->V       (null)
 TS. nlmeans           V->V       (null)
-TSC nnedi             V->V       (null)
 ... noformat          V->V       (null)
 TS. noise             V->V       (null)
 T.C normalize         V->V       (null)
 ... null              V->V       (null)
 T.C oscilloscope      V->V       (null)
 TSC overlay           VV->V      (null)
-T.. owdenoise         V->V       (null)
 ... pad               V->V       (null)
 ... palettegen        V->V       (null)
 ... paletteuse        VV->V      (null)
 T.C perms             V->V       (null)
-TS. perspective       V->V       (null)
-T.C phase             V->V       (null)
 ... photosensitivity  V->V       (null)
 ... pixdesctest       V->V       (null)
 TSC pixelize          V->V       (null)
 T.C pixscope          V->V       (null)
-T.. pp7               V->V       (null)
 TS. premultiply       N->V       (null)
 TSC prewitt           V->V       (null)
 TSC pseudocolor       V->V       (null)
 TS. psnr              VV->V      (null)
-... pullup            V->V       (null)
 T.. qp                V->V       (null)
 ... random            V->V       (null)
 TSC readeia608        V->V       (null)
@@ -555,12 +320,10 @@ TSC readeia608        V->V       (null)
 .S. remap             VVV->V     (null)
 TS. removegrain       V->V       (null)
 T.. removelogo        V->V       (null)
-... repeatfields      V->V       (null)
 ... reverse           V->V       (null)
 TSC rgbashift         V->V       (null)
 TSC roberts           V->V       (null)
 TSC rotate            V->V       (null)
-T.. sab               V->V       (null)
 ..C scale             V->V       (null)
 ..C scale2ref         VV->VV     (null)
 ... scdet             V->V       (null)
@@ -586,19 +349,14 @@ TS. shufflepixels     V->V       (null)
 T.. shuffleplanes     V->V       (null)
 T.. sidedata          V->V       (null)
 .S. signalstats       V->V       Generate statistics from video analysis.
-... signature         N->V       (null)
 ... siti              V->V       (null)
-T.. smartblur         V->V       (null)
 TSC sobel             V->V       (null)
 ... split             V->N       (null)
-T.C spp               V->V       (null)
 ... sr                V->V       (null)
 TS. ssim              VV->V      (null)
 ... ssim360           VV->V      (null)
-.S. stereo3d          V->V       (null)
 ..C streamselect      N->N       (null)
 ... subtitles         V->V       (null)
-.S. super2xsai        V->V       (null)
 T.C swaprect          V->V       (null)
 T.. swapuv            V->V       (null)
 TSC tblend            V->V       (null)
@@ -607,7 +365,6 @@ TSC tblend            V->V       (null)
 TSC threshold         VVVV->V    (null)
 TS. thumbnail         V->V       (null)
 ... tile              V->V       (null)
-... tinterlace        V->V       (null)
 TSC tlut2             V->V       (null)
 TSC tmedian           V->V       (null)
 T.. tmidequalizer     V->V       (null)
@@ -620,14 +377,11 @@ TS. unpremultiply     N->V       (null)
 TS. unsharp           V->V       (null)
 ... untile            V->V       (null)
 .SC v360              V->V       (null)
-T.. vaguedenoiser     V->V       (null)
 TSC varblur           VV->V      (null)
 ..C vectorscope       V->V       (null)
 T.. vflip             V->V       (null)
 ... vfrdet            V->V       (null)
 TSC vibrance          V->V       (null)
-... vidstabdetect     V->V       (null)
-... vidstabtransform  V->V       (null)
 TS. vif               VV->V      (null)
 T.. vignette          V->V       (null)
 ... vmafmotion        V->V       (null)
@@ -654,7 +408,6 @@ TSC yaepblur          V->V       (null)
 ... haldclutsrc       |->V       (null)
 ... life              |->V       (null)
 ... mandelbrot        |->V       (null)
-... mptestsrc         |->V       (null)
 ... nullsrc           |->V       (null)
 ... pal75bars         |->V       (null)
 ... pal100bars        |->V       (null)

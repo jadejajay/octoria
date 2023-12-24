@@ -61,6 +61,7 @@ export const FilterScreen = () => {
 
   React.useEffect(() => {
     setDisplayedText('');
+    // ffmpeg.executeFFmpegCommand('-filters');
   }, []);
 
   React.useEffect(() => {
@@ -127,6 +128,10 @@ export const FilterScreen = () => {
     logger.log(result, '<=========result of filter');
     if (result) setImage(result);
     setLoading(false);
+  };
+  const handleChromaPress = () => {
+    setModalVisible(!modalVisible);
+    applyFilter(`-vf chromakey=${selectedColor.value}:0.16`);
   };
   const apply = async () => {
     if (isSpecial()) {
@@ -250,19 +255,9 @@ export const FilterScreen = () => {
               onPress={() => setModalVisible(true)}
             />
           </View>
-          <View style={[styles.chroma]}>
-            <Text variant="sm" className="text-left font-sfbold text-black">
-              🔑 Chroma Key
-            </Text>
-            <AnimatedTouchableOpacity
-              activeOpacity={1}
-              style={[styles.box, backgroundColorStyle]}
-              onPress={() => setModalVisible(true)}
-            />
-          </View>
         </View>
         <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
-          👉🏻 Quick Tools
+          👉🏻 Quick filters
         </Text>
         <HorizontalList
           Comp={SmallImageCard}
@@ -304,10 +299,7 @@ export const FilterScreen = () => {
           <TouchableOpacity
             activeOpacity={1}
             style={styles.previewTxtContainer}
-            onPress={() => {
-              setModalVisible(!modalVisible);
-              applyFilter(`-vf chromakey=${selectedColor.value}:0.16`);
-            }}
+            onPress={handleChromaPress}
           >
             <Preview />
             <Text
