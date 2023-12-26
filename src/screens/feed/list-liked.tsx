@@ -3,8 +3,7 @@ import * as React from 'react';
 import { useFavorites } from '@/core';
 import { EmptyList, LikedCard, List, View } from '@/ui';
 
-type Props = {};
-export const AddPost = ({}: Props) => {
+export const AddPost = () => {
   const { favorites, isLoading, deleteFavorite } = useFavorites();
 
   return (

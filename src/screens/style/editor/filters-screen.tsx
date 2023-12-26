@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+import PhotoEditor from '@baronha/react-native-photo-editor';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
@@ -25,6 +26,7 @@ import {
   ActivityIndicator,
   HorizontalList,
   Image,
+  Input,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -55,6 +57,7 @@ export const FilterScreen = () => {
   const question = useBotSearchStore((s) => s.text);
   const [displayedText, setDisplayedText] = React.useState('');
   const [modalVisible, setModalVisible] = React.useState(false);
+  const [chromakey, setChromakey] = React.useState('1');
   const ffmpeg = new FFmpegWrapper();
 
   const { goBack } = useNavigation();
@@ -131,7 +134,8 @@ export const FilterScreen = () => {
   };
   const handleChromaPress = () => {
     setModalVisible(!modalVisible);
-    applyFilter(`-vf chromakey=${selectedColor.value}:0.16`);
+    if (isFinite(parseFloat(chromakey)))
+      applyFilter(`-vf chromakey=${selectedColor.value}:${chromakey}/100`);
   };
   const apply = async () => {
     if (isSpecial()) {
@@ -249,11 +253,44 @@ export const FilterScreen = () => {
             <Text variant="sm" className="text-left font-sfbold text-black">
               🔑 Chroma Key
             </Text>
+            <Input
+              className="mt-4 font-sfbold"
+              value={chromakey.toString()}
+              onChangeText={(text) => {
+                setChromakey(text);
+              }}
+              keyboardType="numeric"
+            />
             <AnimatedTouchableOpacity
               activeOpacity={1}
               style={[styles.box, backgroundColorStyle]}
               onPress={() => setModalVisible(true)}
             />
+          </View>
+        </View>
+        <View style={[styles.shadow, styles.chromaCol]}>
+          <View style={[styles.chroma]}>
+            <Text
+              variant="sm"
+              onPress={async () => {
+                const result = (await PhotoEditor.open({
+                  path: image,
+                  stickers: [
+                    'http://itekindia.com/octoria/database/filters/brightness/minus_one.webp',
+                    'http://itekindia.com/octoria/database/filters/brightness/minus_half.webp',
+                    'http://itekindia.com/octoria/database/filters/brightness/minus_p2.webp',
+                    'http://itekindia.com/octoria/database/filters/brightness/p2.webp',
+                    'http://itekindia.com/octoria/database/filters/brightness/p3.webp',
+                    'http://itekindia.com/octoria/database/filters/brightness/p5.webp',
+                    'http://itekindia.com/octoria/database/filters/brightness/full.webp',
+                  ],
+                })) as string;
+                setImage(result);
+              }}
+              className="text-center"
+            >
+              🔍 Color Picker
+            </Text>
           </View>
         </View>
         <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
@@ -268,7 +305,7 @@ export const FilterScreen = () => {
         />
         <View className="mx-16 my-8 border-b-2 border-slate-200" />
       </ScrollView>
-      <View className="absolute bottom-10 m-4 self-center rounded-full bg-slate-700 px-16 py-4">
+      <View className="m-4 self-center rounded-full bg-slate-700 px-16 py-4">
         <Text
           variant="sm"
           className="text-center font-sfbold text-white"

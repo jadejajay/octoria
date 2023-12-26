@@ -1,3 +1,5 @@
+import { logger } from './logger';
+
 //ciea cute image editing assistant
 export class Chat {
   private _pairs: typeof pair;
@@ -38,6 +40,7 @@ export class Chat {
   respond(str: string) {
     for (const [pattern, response] of this._pairs) {
       const match = pattern instanceof RegExp ? pattern.exec(str) : null;
+      logger.log('match', match);
       if (match) {
         let cmd, resp;
         if (typeof response === 'function') {
@@ -79,6 +82,65 @@ function randomChoice(arr: any[]) {
   return arr[Math.floor(arr.length * Math.random())];
 }
 
+// Define pattern-response pairs
+const pair = [
+  [`\\bblur\\b.*?(\\d+(\\.\\d+)?)\\b`, executeBlur], //ex : blur image
+  ['remove (.+)', executeRemove], //ex : chroma key image
+  ['execute (.+)', executeResponse],
+  // question related to negate image which contain negate in the question
+  ['negate', executeNegate], //ex : negate image
+  // question related to vertical flip image which contain vertical flip in the question
+  ['vertical flip (.+)', executeVerticalFlip], //ex : vertical flip image
+  ['flip (.+) vertically', executeHorizontalFlip], //ex : flip image vertically
+  // question related to horizontal flip image which contain horizontal flip in the question
+  ['horizontal flip (.+)', executeHorizontalFlip], //ex : horizontal flip image
+  ['flip', executeResponse], //ex : flip image horizontally
+  // question related to rotate image which contain rotate in the question
+  ['rotate (.+)', executeRotate], //ex : rotate image
+  // question related to extract color from image
+  ['extract (.+)', executeExtract], //ex : extract color from image
+  // question related to sharp image which contain sharp in the question
+  ['sharp (.+)', executeSharp], //ex : sharp image
+  // question related to edge image which contain edge in the question
+  ['edge (.+)', executeEdge], //ex : edge image
+  // question related to emboss image which contain emboss in the question
+  ['emboss (.+)', executeEmboss], //ex : emboss image
+  // question related to posturize image which contain posturize in the question
+  ['posturize (.+)', executePosturize], //ex : posturize image
+  ['pixelate (.+)', executePixelate], //ex : pixelate image
+  ['threshold (.+)', executeThreshold], //ex : threshold image
+  ['vignette (.+)', executeVignette], //ex : vignette image
+  ['warp (.+)', executeWarp], //ex : warp image
+  ['zoom (.+)', executeZoom], //ex : zoom image
+  ['hue (.+)', executeHue], //ex : hue image
+  ['(.+) (.+)', executeResponse], //ex : hue image
+  ['(.+)', executeResponse], //ex : hue image
+];
+
+function executeBlur(_match: any) {
+  logger.log('executeBlur', _match[1]);
+  const cmd = _match[1] ? `-vf avgblur=${_match[1]}` : '-vf avgblur=20';
+  const resp = randomChoice([
+    `I hope You Like It 🙂`,
+    `I think you like blurry.`,
+  ]);
+  return { cmd, resp };
+}
+function executeHue(_match: any) {
+  logger.log('executeHue', _match[1]);
+  const cmd = _match[1] ? `-vf avgblur=${_match[1]}` : '-vf avgblur=20';
+  const resp = randomChoice([
+    `I hope You Like It 🙂`,
+    `I think you like blurry.`,
+  ]);
+  return { cmd, resp };
+}
+function executeRemove(_match: any) {
+  const cmd = '-vf chromakey=0x00FF00:0.1:0.2';
+  const resp = randomChoice([`I hope You Like It 🙂.`, `So Do You Like This?`]);
+  return { cmd, resp };
+}
+
 function executeResponse(_match: any) {
   const cmd = '';
   const resp = `we can not execute command right now 😥, but we will soon 😎`;
@@ -96,7 +158,7 @@ function executeVerticalFlip(_match: any) {
   const cmd = '-vf vflip';
   const resp = randomChoice([
     `I hope You Like It 🙂.`,
-    `Image is Vertically fliped`,
+    `Image is Vertically flipped`,
   ]);
   return { cmd, resp };
 }
@@ -104,71 +166,67 @@ function executeHorizontalFlip(_match: any) {
   const cmd = '-vf hflip';
   const resp = randomChoice([
     `I hope You Like It 🙂.`,
-    `Image Horizontaly fliped`,
+    `Image Horizontally flipped`,
   ]);
   return { cmd, resp };
 }
-function executeBrightness(_match: any) {
-  const cmd = '-vf eq=brightness=0.3';
-  const resp = randomChoice([
-    `I hope You Like It 🙂.`,
-    `Image Brightness is Decreased`,
-  ]);
-  return { cmd, resp };
-}
-function executeContrast(_match: any) {
-  const cmd = '-vf eq=contrast=1.5';
-  const resp = randomChoice([
-    `I hope You Like It 🙂.`,
-    `Image Contrast is Increased`,
-  ]);
-  return { cmd, resp };
-}
-function executeSaturation(_match: any) {
-  const cmd = '-vf eq=saturation=1.5';
-  const resp = randomChoice([
-    `I hope You Like It 🙂.`,
-    `Image Saturation is Increased`,
-  ]);
-  return { cmd, resp };
-}
-function executeGamma(_match: any) {
-  const cmd = '-vf eq=gamma=0.5';
-  const resp = randomChoice([
-    `I hope You Like It 🙂.`,
-    `Image Gamma is Decreased`,
-  ]);
-  return { cmd, resp };
-}
-function executeHue(_match: any) {
-  const cmd = '-vf eq=hue=0.3';
-  const resp = randomChoice([
-    `I hope You Like It 🙂.`,
-    `Image Hue is Decreased`,
-  ]);
-  return { cmd, resp };
-}
-function executeInvert(_match: any) {
-  const cmd = '-vf eq=invert=1';
-  const resp = randomChoice([`I hope You Like It 🙂.`, `Image Inverted`]);
-  return { cmd, resp };
-}
-function executeOpacity(_match: any) {
-  const cmd = '-vf eq=opacity=0.5';
-  const resp = randomChoice([
-    `I hope You Like It 🙂.`,
-    `Image Opacity is Decreased`,
-  ]);
-  return { cmd, resp };
-}
+
+// function executeBrightness(_match: any) {
+//   const cmd = '-vf eq=brightness=0.3';
+//   const resp = randomChoice([
+//     `I hope You Like It 🙂.`,
+//     `Image Brightness is Decreased`,
+//   ]);
+//   return { cmd, resp };
+// }
+// function executeContrast(_match: any) {
+//   const cmd = '-vf eq=contrast=1.5';
+//   const resp = randomChoice([
+//     `I hope You Like It 🙂.`,
+//     `Image Contrast is Increased`,
+//   ]);
+//   return { cmd, resp };
+// }
+// function executeSaturation(_match: any) {
+//   const cmd = '-vf eq=saturation=1.5';
+//   const resp = randomChoice([
+//     `I hope You Like It 🙂.`,
+//     `Image Saturation is Increased`,
+//   ]);
+//   return { cmd, resp };
+// }
+// function executeGamma(_match: any) {
+//   const cmd = '-vf eq=gamma=0.5';
+//   const resp = randomChoice([
+//     `I hope You Like It 🙂.`,
+//     `Image Gamma is Decreased`,
+//   ]);
+//   return { cmd, resp };
+// }
+// function executeHue(_match: any) {
+//   const cmd = '-vf eq=hue=0.3';
+//   const resp = randomChoice([
+//     `I hope You Like It 🙂.`,
+//     `Image Hue is Decreased`,
+//   ]);
+//   return { cmd, resp };
+// }
+// function executeInvert(_match: any) {
+//   const cmd = '-vf eq=invert=1';
+//   const resp = randomChoice([`I hope You Like It 🙂.`, `Image Inverted`]);
+//   return { cmd, resp };
+// }
+// function executeOpacity(_match: any) {
+//   const cmd = '-vf eq=opacity=0.5';
+//   const resp = randomChoice([
+//     `I hope You Like It 🙂.`,
+//     `Image Opacity is Decreased`,
+//   ]);
+//   return { cmd, resp };
+// }
 function executePixelate(_match: any) {
   const cmd = '-vf scale=iw/10:ih/10:flags=neighbor';
   const resp = randomChoice([`I hope You Like It 🙂.`, `Image Pixelated 🦾`]);
-  return { cmd, resp };
-}
-function executeSolarize(_match: any) {
-  const cmd = '-vf solarize';
-  const resp = randomChoice([`I hope You Like It 🙂.`, `Image Solarized 🎊`]);
   return { cmd, resp };
 }
 function executeThreshold(_match: any) {
@@ -186,11 +244,6 @@ function executeWarp(_match: any) {
   const resp = randomChoice([`I hope You Like It 🙂.`, `Image Warped 🎉`]);
   return { cmd, resp };
 }
-function executeWave(_match: any) {
-  const cmd = '-vf wave';
-  const resp = randomChoice([`I hope You Like It 🙂.`, `Image Waved 🎯`]);
-  return { cmd, resp };
-}
 function executeZoom(_match: any) {
   const cmd = `-vf zoompan=z="min(zoom+0.0015,1.5)":d=125`;
   const resp = randomChoice([`I hope You Like It 🙂.`, `Image Zoomed 🔍`]);
@@ -199,21 +252,6 @@ function executeZoom(_match: any) {
 function executeRotate(_match: any) {
   const cmd = '-vf transpose=1';
   const resp = randomChoice([`I hope You Like It 🙂.`, `Image Rotated 🎯`]);
-  return { cmd, resp };
-}
-function executeResize(_match: any) {
-  const cmd = '-vf scale=512:512';
-  const resp = randomChoice([`I hope You Like It 🙂.`, `Image Resized 🖼`]);
-  return { cmd, resp };
-}
-function executeCrop(_match: any) {
-  const cmd = '-vf crop=512:512';
-  const resp = randomChoice([`I hope You Like It 🙂.`, `Image Cropped 🖼`]);
-  return { cmd, resp };
-}
-function executeRemove(_match: any) {
-  const cmd = '-vf chromakey=0x00FF00:0.1:0.2';
-  const resp = randomChoice([`I hope You Like It 🙂.`, `So Do You Like This?`]);
   return { cmd, resp };
 }
 function executeExtract(_match: any) {
@@ -240,61 +278,13 @@ function executeEmboss(_match: any) {
   return { cmd, resp };
 }
 function executePosturize(_match: any) {
-  const cmd = '-vf elgb=2:2:1:1:1:1:1:1:1:1:1:1:1:1:1:1';
+  const cmd = '-vf elbg=2:2:1:1:1:1:1:1:1:1:1:1:1:1:1:1';
   const resp = randomChoice([
     `I hope You Like It 🙂.`,
     `Image is Pasteurized 🎯`,
   ]);
   return { cmd, resp };
 }
-// Define pattern-response pairs
-const pair = [
-  ['execute (.+)', executeResponse],
-  // question related to negate image which contain negate in the question
-  ['negate', executeNegate], //ex : negate image
-  // question related to vertical flip image which contain vertical flip in the question
-  ['vertical flip (.+)', executeVerticalFlip], //ex : vertical flip image
-  ['flip (.+) vertically', executeHorizontalFlip], //ex : flip image vertically
-  // question related to horizontal flip image which contain horizontal flip in the question
-  ['horizontal flip (.+)', executeHorizontalFlip], //ex : horizontal flip image
-  ['flip', executeResponse], //ex : flip image horizontally
-  // question related to rotate image which contain rotate in the question
-  ['rotate (.+)', executeRotate], //ex : rotate image
-  // question related to resize image which contain resize in the question
-  ['resize (.+)', executeResize], //ex : resize image
-  // question related to crop image which contain crop in the question
-  ['crop (.+)', executeCrop], //ex : crop image
-  // question related to crop image which contain crop in the question
-  ['crop (.+)', executeCrop], //ex : crop image
-  // question related to chroma key image which contain chroma key in the question
-  ['remove (.+)', executeRemove], //ex : chroma key image
-  // question related to extract color from image
-  ['extract (.+)', executeExtract], //ex : extract color from image
-  // question related to sharp image which contain sharp in the question
-  ['sharp (.+)', executeSharp], //ex : sharp image
-  // question related to edge image which contain edge in the question
-  ['edge (.+)', executeEdge], //ex : edge image
-  // question related to emboss image which contain emboss in the question
-  ['emboss (.+)', executeEmboss], //ex : emboss image
-  // question related to posturize image which contain posturize in the question
-  ['posturize (.+)', executePosturize], //ex : posturize image
-  ['invert (.+)', executeInvert], //ex : invert image
-  ['opacity (.+)', executeOpacity], //ex : opacity image
-  ['pixelate (.+)', executePixelate], //ex : pixelate image
-  ['solarize (.+)', executeSolarize], //ex : solarize image
-  ['threshold (.+)', executeThreshold], //ex : threshold image
-  ['vignette (.+)', executeVignette], //ex : vignette image
-  ['warp (.+)', executeWarp], //ex : warp image
-  ['wave (.+)', executeWave], //ex : wave image
-  ['zoom (.+)', executeZoom], //ex : zoom image
-  ['brightness (.+)', executeBrightness], //ex : brightness image
-  ['contrast (.+)', executeContrast], //ex : contrast image
-  ['saturation (.+)', executeSaturation], //ex : saturation image
-  ['gamma (.+)', executeGamma], //ex : gamma image
-  ['hue (.+)', executeHue], //ex : hue image
-  ['(.+) (.+)', executeResponse], //ex : hue image
-  ['(.+)', executeResponse], //ex : hue image
-];
 
 // const chatbot = new Chat(pairs, reflection);
 // chatbot.converse('quit');

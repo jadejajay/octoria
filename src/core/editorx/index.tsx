@@ -288,27 +288,34 @@ const _useEditorX = create<EditorXState>((set, get) => ({
   setEditor: async (id) => {
     logger.log('set editor called<=====================');
     const Data: string = await getItem(EDITORX_DATA);
-    const newData: EditorData = JSON.parse(Data);
+    const newData = JSON.parse(Data);
+    const updated = lodash.unionBy(DATA.elements, newData?.elements, 'id');
     if (newData?.bgType) {
       set(
         produce((state: EditorXState) => {
           state.editorData = newData;
+          state.editorData.elements = updated;
+          logger.log(
+            JSON.stringify(state.editorData, null, 2),
+            id,
+            'set editor<====================='
+          );
           return state;
         })
       );
     } else {
-      try {
-        const userDoc = await firestore().collection('Users').doc(id).get();
-        const data: EditorData = userDoc.data()?.editorData;
-        if (data) {
-          set(
-            produce((state: EditorXState) => {
-              state.editorData = data;
-              return state;
-            })
-          );
-        }
-      } catch (error) {}
+      // try {
+      //   const userDoc = await firestore().collection('Users').doc(id).get();
+      //   const data: EditorData = userDoc.data()?.editorData;
+      //   if (data) {
+      //     set(
+      //       produce((state: EditorXState) => {
+      //         state.editorData = data;
+      //         return state;
+      //       })
+      //     );
+      //   }
+      // } catch (error) {}
     }
   },
   rearrangeElements: (elements2) => {

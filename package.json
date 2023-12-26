@@ -40,6 +40,7 @@
     "@animatereactnative/stagger": "^0.2.0",
     "@bacons/link-assets": "^1.1.0",
     "@bam.tech/react-native-image-resizer": "^3.0.7",
+    "@baronha/react-native-photo-editor": "^1.1.6",
     "@gorhom/bottom-sheet": "^4",
     "@hookform/resolvers": "^2.9.11",
     "@react-native-clipboard/clipboard": "^1.11.2",
