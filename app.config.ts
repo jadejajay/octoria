@@ -125,6 +125,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       './plugins/with-manifesto.js',
       {
         'tools:replace': 'android:allowBackup',
+        'android:allowBackup': 'false',
       },
     ],
     '@react-native-firebase/app',
@@ -136,7 +137,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         android: {
           kotlinVersion: '1.7.22', // this is for softinput package
           minSdkVersion: 24,
-          //buildScript: 'buildscript { ext.ffmpegKitPackage = "full-gpl" }', // ffmpegKitPackage = 'full-gpl'
           packagingOptions: {
             pickFirst: [
               'lib/x86_64/libjsc.so',
