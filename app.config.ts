@@ -122,7 +122,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       ],
     ],
     [
-      './plugins/with-menifesto.js',
+      './plugins/with-manifesto.js',
       {
         'tools:replace': 'android:allowBackup',
       },
