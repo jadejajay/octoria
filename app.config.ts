@@ -34,6 +34,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       foregroundImage: './assets/adaptive-icon.png',
       backgroundColor: '#FFFFFF',
     },
+    allowBackup: false,
     package: Env.PACKAGE,
     intentFilters: [
       {
@@ -125,7 +126,6 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       './plugins/with-manifesto.js',
       {
         'tools:replace': 'android:allowBackup',
-        'android:allowBackup': 'false',
       },
     ],
     '@react-native-firebase/app',
