@@ -126,6 +126,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       './plugins/with-manifesto.js',
       {
         'tools:replace': 'android:allowBackup',
+        'android:allowBackup': 'false',
       },
     ],
     '@react-native-firebase/app',
