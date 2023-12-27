@@ -121,6 +121,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         './assets/fonts/Inter.ttf',
       ],
     ],
+    [
+      './plugins/with-menifesto.js',
+      {
+        'tools:replace': 'android:allowBackup',
+      },
+    ],
     '@react-native-firebase/app',
     '@react-native-firebase/auth',
     'expo-localization',
