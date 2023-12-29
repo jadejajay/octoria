@@ -60,7 +60,7 @@ export const FilterScreen = () => {
   const [chromakey, setChromakey] = React.useState('1');
   const ffmpeg = new FFmpegWrapper();
 
-  const { goBack } = useNavigation();
+  const { goBack, navigate } = useNavigation();
 
   React.useEffect(() => {
     setDisplayedText('');
@@ -276,13 +276,13 @@ export const FilterScreen = () => {
                 const result = (await PhotoEditor.open({
                   path: image,
                   stickers: [
-                    'http://itekindia.com/octoria/database/filters/brightness/minus_one.webp',
-                    'http://itekindia.com/octoria/database/filters/brightness/minus_half.webp',
-                    'http://itekindia.com/octoria/database/filters/brightness/minus_p2.webp',
-                    'http://itekindia.com/octoria/database/filters/brightness/p2.webp',
-                    'http://itekindia.com/octoria/database/filters/brightness/p3.webp',
-                    'http://itekindia.com/octoria/database/filters/brightness/p5.webp',
-                    'http://itekindia.com/octoria/database/filters/brightness/full.webp',
+                    'https://ibaisindia.co.in/octoria/database/filters/brightness/minus_one.webp',
+                    'https://ibaisindia.co.in/octoria/database/filters/brightness/minus_half.webp',
+                    'https://ibaisindia.co.in/octoria/database/filters/brightness/minus_p2.webp',
+                    'https://ibaisindia.co.in/octoria/database/filters/brightness/p2.webp',
+                    'https://ibaisindia.co.in/octoria/database/filters/brightness/p3.webp',
+                    'https://ibaisindia.co.in/octoria/database/filters/brightness/p5.webp',
+                    'https://ibaisindia.co.in/octoria/database/filters/brightness/full.webp',
                   ],
                 })) as string;
                 setImage(result);
@@ -293,6 +293,15 @@ export const FilterScreen = () => {
             </Text>
           </View>
         </View>
+        <Text
+          variant="sm"
+          onPress={() => {
+            navigate('ImageColorPicker');
+          }}
+          className="mt-4 pl-4 text-left font-sfbold"
+        >
+          👉🏻 color picker
+        </Text>
         <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
           👉🏻 Quick filters
         </Text>
@@ -341,7 +350,7 @@ export const FilterScreen = () => {
             <Preview />
             <Text
               variant="sm"
-              className="mt-4 rounded-full bg-zinc-950 px-4 py-2 text-center text-white"
+              className="bg-zinc-950 mt-4 rounded-full px-4 py-2 text-center text-white"
             >
               🏹 Remove
             </Text>
@@ -500,33 +509,33 @@ const styles = StyleSheet.create({
 const brightnessFilters = [
   {
     image:
-      'http://itekindia.com/octoria/database/filters/brightness/minus_one.webp',
+      'https://ibaisindia.co.in/octoria/database/filters/brightness/minus_one.webp',
     command: '-vf eq=brightness=-1',
   },
   {
     image:
-      'http://itekindia.com/octoria/database/filters/brightness/minus_half.webp',
+      'https://ibaisindia.co.in/octoria/database/filters/brightness/minus_half.webp',
     command: '-vf eq=brightness=-0.5',
   },
   {
     image:
-      'http://itekindia.com/octoria/database/filters/brightness/minus_p2.webp',
+      'https://ibaisindia.co.in/octoria/database/filters/brightness/minus_p2.webp',
     command: '-vf eq=brightness=-1',
   },
   {
-    image: 'http://itekindia.com/octoria/database/filters/brightness/p2.webp',
+    image: 'https://ibaisindia.co.in/octoria/database/filters/brightness/p2.webp',
     command: '-vf eq=brightness=-1',
   },
   {
-    image: 'http://itekindia.com/octoria/database/filters/brightness/p3.webp',
+    image: 'https://ibaisindia.co.in/octoria/database/filters/brightness/p3.webp',
     command: '-vf eq=brightness=-1',
   },
   {
-    image: 'http://itekindia.com/octoria/database/filters/brightness/p5.webp',
+    image: 'https://ibaisindia.co.in/octoria/database/filters/brightness/p5.webp',
     command: '-vf eq=brightness=-1',
   },
   {
-    image: 'http://itekindia.com/octoria/database/filters/brightness/full.webp',
+    image: 'https://ibaisindia.co.in/octoria/database/filters/brightness/full.webp',
     command: '-vf eq=brightness=-1',
   },
 ];

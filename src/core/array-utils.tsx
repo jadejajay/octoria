@@ -22,21 +22,21 @@
 // }
 // export function generateRandomFestivalProducts(urls: string[], tags: string[]) {
 //   const catalogue =
-//     'http://itekindia.com/octoria/Octoria%20%28Without%20Price%29_compressed.pdf';
+//     'https://ibaisindia.co.in/octoria/Octoria%20%28Without%20Price%29_compressed.pdf';
 //   const category = 'Hardware';
 //   const description = 'this is demo product not for production';
 //   const randomFeatured = Math.floor(Math.random() * 2);
 //   const finishing = ['Polished'];
 //   const image3d =
-//     'http://itekindia.com/octoria/dashboard/uploads/Untitled-1.webp';
+//     'https://ibaisindia.co.in/octoria/dashboard/uploads/Untitled-1.webp';
 //   const thumbnail =
-//     'http://itekindia.com/octoria/dashboard/uploads/Untitled-1.webp';
+//     'https://ibaisindia.co.in/octoria/dashboard/uploads/Untitled-1.webp';
 //   const images = [
-//     'http://itekindia.com/octoria/dashboard/uploads/Untitled-1.webp',
+//     'https://ibaisindia.co.in/octoria/dashboard/uploads/Untitled-1.webp',
 //   ];
 //   const material = 'Stainless Steel';
 //   const model =
-//     'http://itekindia.com/octoria/models/getmodel.php?file=handle.glb';
+//     'https://ibaisindia.co.in/octoria/models/getmodel.php?file=handle.glb';
 //   const name = '100 XYLO';
 //   const price = '100';
 //   const quantity = ['1'];
@@ -65,16 +65,16 @@
 // }
 //   // {
 //   //   catalogue:
-//   //     'http://itekindia.com/octoria/Octoria%20%28Without%20Price%29_compressed.pdf',
+//   //     'https://ibaisindia.co.in/octoria/Octoria%20%28Without%20Price%29_compressed.pdf',
 //   //   category: 'Hardware',
 //   //   description: 'this is demo product not for production',
 //   //   featured: 1,
 //   //   finishing: ['Polished'],
-//   //   image3d: 'http://itekindia.com/octoria/dashboard/uploads/Untitled-1.webp',
-//   //   thumbnail: 'http://itekindia.com/octoria/dashboard/uploads/Untitled-1.webp',
-//   //   images: ['http://itekindia.com/octoria/dashboard/uploads/Untitled-1.webp'],
+//   //   image3d: 'https://ibaisindia.co.in/octoria/dashboard/uploads/Untitled-1.webp',
+//   //   thumbnail: 'https://ibaisindia.co.in/octoria/dashboard/uploads/Untitled-1.webp',
+//   //   images: ['https://ibaisindia.co.in/octoria/dashboard/uploads/Untitled-1.webp'],
 //   //   material: 'Stainless Steel',
-//   //   model: 'http://itekindia.com/octoria/models/getmodel.php?file=handle.glb',
+//   //   model: 'https://ibaisindia.co.in/octoria/models/getmodel.php?file=handle.glb',
 //   //   name: '100 XYLO',
 //   //   price: '100',
 //   //   quantity: ['1'],

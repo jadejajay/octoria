@@ -22,7 +22,7 @@ import firestore from '@react-native-firebase/firestore';
 //   const list: any = [];
 //   try {
 //     const collectionRef = firestore().collection('IBAIS HARDWARE GROUP');
-//     // http://itekindia.com/chats/images/1.webp
+//     // https://ibaisindia.co.in/chats/images/1.webp
 //     // Fetch documents from the collection
 //     const querySnapshot = await collectionRef.get();
 //     querySnapshot.forEach(async (doc) => {
@@ -32,7 +32,7 @@ import firestore from '@react-native-firebase/firestore';
 //       try {
 //         // Update the field in each document
 //         await collectionRef.doc(item).update({
-//           url: `http://itekindia.com/chats/images/${index + 1}.png`,
+//           url: `https://ibaisindia.co.in/chats/images/${index + 1}.png`,
 //         });
 //         logger.log(
 //           `Field uploadTime updated in document with ID: ${item},${
@@ -52,14 +52,14 @@ import firestore from '@react-native-firebase/firestore';
 //     logger.error(`Error adding document :`, error);
 //   }
 // };
-// // http://itekindia.com/chats/frames/format1.png
+// // https://ibaisindia.co.in/chats/frames/format1.png
 // export const addFrames = async () => {
 //   try {
 //     const collection = firestore().collection('frames');
 //     for (let i = 2; i < 21; i++) {
 //       try {
 //         await collection.add({
-//           image: `http://itekindia.com/chats/frames/format${i}.png`,
+//           image: `https://ibaisindia.co.in/chats/frames/format${i}.png`,
 //         });
 //         logger.log(`Added document ${i}`);
 //       } catch (error) {
@@ -72,7 +72,7 @@ import firestore from '@react-native-firebase/firestore';
 //     logger.error(`Error adding document :`, error);
 //   }
 // };
-// http://itekindia.com/octoria/models/getmodel.php?file=handle.glb
+// https://ibaisindia.co.in/octoria/models/getmodel.php?file=handle.glb
 
 // export const addData = async () => {
 //   // const result = generateRandomFestivalPost(festivalImages, festivalTags);
@@ -110,7 +110,7 @@ export const addData = async () => {
 //   let list: any = [];
 //   try {
 //     const collection = firestore().collection('postVideos');
-//     // http://itekindia.com/chats/images/1.png
+//     // https://ibaisindia.co.in/chats/images/1.png
 //     // Fetch documents from the collection
 //     const querySnapshot = await collection.orderBy('video').get();
 //     querySnapshot.forEach(async (doc) => {
@@ -138,18 +138,18 @@ export const addData = async () => {
 // };
 const MainCarousel = [
   {
-    image: 'http://itekindia.com/octoria/products-image/towerbolt.webp',
+    image: 'https://ibaisindia.co.in/octoria/products-image/towerbolt.webp',
   },
   {
-    image: 'http://itekindia.com/octoria/products-image/towerbolt.webp',
+    image: 'https://ibaisindia.co.in/octoria/products-image/towerbolt.webp',
   },
   {
-    image: 'http://itekindia.com/octoria/products-image/towerbolt.webp',
+    image: 'https://ibaisindia.co.in/octoria/products-image/towerbolt.webp',
   },
   {
-    image: 'http://itekindia.com/octoria/products-image/towerbolt.webp',
+    image: 'https://ibaisindia.co.in/octoria/products-image/towerbolt.webp',
   },
   {
-    image: 'http://itekindia.com/octoria/products-image/towerbolt.webp',
+    image: 'https://ibaisindia.co.in/octoria/products-image/towerbolt.webp',
   },
 ];

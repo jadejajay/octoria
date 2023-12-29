@@ -1,5 +1,5 @@
 export const images = [
   {
-    image: 'http://itekindia.com/chats/imagesElement/cloud.png',
+    image: 'https://ibaisindia.co.in/chats/imagesElement/cloud.png',
   },
 ];

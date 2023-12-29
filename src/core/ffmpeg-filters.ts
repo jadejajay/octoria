@@ -217,7 +217,7 @@ export class FfmpegFilters {
     return `${this.filterCommand} chromakey=${color}:${similarity}:${blend}:${yuv}`;
   };
   psContrast = ({}: {}) => {
-    return `curves=psfile=http://itekindia.com/octoria/database/presets/Contrast.acv`;
+    return `curves=psfile=https://ibaisindia.co.in/octoria/database/presets/Contrast.acv`;
   };
 }
 // ffmpeg -i 1.png -vf "curves=psfile=Brighten.acv"  brighten_1.webp

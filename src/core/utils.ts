@@ -201,10 +201,10 @@ export const handleWhatsappShare = async (
       // type: 'image/*',
       // url: fileUri,
       url: `data:image/png;base64,${fileUri}`,
-      // url: `http://itekindia.com/dashboard/test.jpg`, // The URI of the image you want to share
+      // url: `https://ibaisindia.co.in/dashboard/test.jpg`, // The URI of the image you want to share
       // image: fileUri,
       // filename: item.image3d,
-      // url: 'http://itekindia.com/dashboard/bronco.jpg', //'data:image/png;base64,<imageInBase64>',
+      // url: 'https://ibaisindia.co.in/dashboard/bronco.jpg', //'data:image/png;base64,<imageInBase64>',
       type: 'image/*',
       social: Share.Social.WHATSAPP as Social,
       //@ts-ignore
@@ -250,10 +250,10 @@ export const handleWhatsappShare2 = async (
       // type: 'image/*',
       // url: fileUri,
       url: `data:${type};base64,${fileUri}`,
-      // url: `http://itekindia.com/dashboard/test.jpg`, // The URI of the image you want to share
+      // url: `https://ibaisindia.co.in/dashboard/test.jpg`, // The URI of the image you want to share
       // image: fileUri,
       // filename: item.image3d,
-      // url: 'http://itekindia.com/dashboard/bronco.jpg', //'data:image/png;base64,<imageInBase64>',
+      // url: 'https://ibaisindia.co.in/dashboard/bronco.jpg', //'data:image/png;base64,<imageInBase64>',
       social: Share.Social.WHATSAPP as Social,
       //@ts-ignore
       appId: 'com.whatsapp',
@@ -281,10 +281,10 @@ export const handleInstagramShare = async (
       type: type,
       // url: fileUri,
       url: `data:${type};base64,${fileUri}`,
-      // url: `http://itekindia.com/dashboard/test.jpg`, // The URI of the image you want to share
+      // url: `https://ibaisindia.co.in/dashboard/test.jpg`, // The URI of the image you want to share
       // image: fileUri,
       // filename: item.image3d,
-      // url: 'http://itekindia.com/dashboard/bronco.jpg', //'data:image/png;base64,<imageInBase64>',
+      // url: 'https://ibaisindia.co.in/dashboard/bronco.jpg', //'data:image/png;base64,<imageInBase64>',
       social: Share.Social.INSTAGRAM as Social,
     };
     logger.log('instagram share called');
@@ -310,10 +310,10 @@ export const handleTelegramShare = async (
       type: type,
       // url: fileUri,
       url: `data:${type};base64,${fileUri}`,
-      // url: `http://itekindia.com/dashboard/test.jpg`, // The URI of the image you want to share
+      // url: `https://ibaisindia.co.in/dashboard/test.jpg`, // The URI of the image you want to share
       // image: fileUri,
       // filename: item.image3d,
-      // url: 'http://itekindia.com/dashboard/bronco.jpg', //'data:image/png;base64,<imageInBase64>',
+      // url: 'https://ibaisindia.co.in/dashboard/bronco.jpg', //'data:image/png;base64,<imageInBase64>',
       social: Share.Social.TELEGRAM as Social,
     };
     // logger.log('telegram share called');
@@ -339,10 +339,10 @@ export const handleFacebookShare = async (
       type: type,
       // url: fileUri,
       url: `data:${type};base64,${fileUri}`,
-      // url: `http://itekindia.com/dashboard/test.jpg`, // The URI of the image you want to share
+      // url: `https://ibaisindia.co.in/dashboard/test.jpg`, // The URI of the image you want to share
       // image: fileUri,
       // filename: item.image3d,
-      // url: 'http://itekindia.com/dashboard/bronco.jpg', //'data:image/png;base64,<imageInBase64>',
+      // url: 'https://ibaisindia.co.in/dashboard/bronco.jpg', //'data:image/png;base64,<imageInBase64>',
       social: Share.Social.FACEBOOK as Social,
     };
     // logger.log('facebook share called');

@@ -4,6 +4,6 @@ export const SvgGrid = () => (
   <SvgUri
     width="100%"
     height="100%"
-    uri="http://itekindia.com/chats/svgpattern.svg"
+    uri="https://ibaisindia.co.in/chats/svgpattern.svg"
   />
 );
