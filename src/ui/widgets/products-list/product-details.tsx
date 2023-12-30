@@ -24,7 +24,7 @@ import { HorizontalLine } from './horizontal-line';
 export const ProductDetails = ({ item }: { item: Product }) => {
   const navigation = useNavigation();
   const { addFavorite, deleteFavorite, isFavorite } = useFavorites();
-  const isItemInFavorites = isFavorite(item?.id);
+  const isItemInFavorites = isFavorite(item?.id || '');
   const [Size, setSize] = React.useState('');
   const [Finishing, setFinishing] = React.useState('');
   const share = useFirestoreDocLiveQuery('links', 'share');
@@ -42,8 +42,10 @@ export const ProductDetails = ({ item }: { item: Product }) => {
       finishing: Finishing,
     });
     try {
-      const fileUrl = await getImageBase64(item?.images[0]);
-      handleWhatsappShare(fileUrl, LINK, share?.data?.phone);
+      if (item?.images) {
+        const fileUrl = await getImageBase64(item?.images[0]);
+        handleWhatsappShare(fileUrl, LINK, share?.data?.phone);
+      }
     } catch (error) {
       ToastAndroid.show('Some Error', ToastAndroid.SHORT);
     }
@@ -53,7 +55,7 @@ export const ProductDetails = ({ item }: { item: Product }) => {
     <View className="px-2">
       <View className="w-full">
         <View
-          className="mt-6 flex-row items-center justify-around rounded-xl p-2"
+          className="mt-6 flex-row items-center justify-around rounded-t-xl p-2"
           style={{ backgroundColor: 'white', elevation: 8 }}
         >
           {item?.catalogue && (
@@ -98,7 +100,7 @@ export const ProductDetails = ({ item }: { item: Product }) => {
         </View>
         {item?.model ? (
           <View
-            className="mt-6 flex-row items-center justify-around rounded-xl p-2"
+            className="flex-row items-center justify-around rounded-b-xl p-2"
             style={{ backgroundColor: 'white', elevation: 8 }}
           >
             <TouchableOpacity
@@ -165,8 +167,15 @@ export const ProductDetails = ({ item }: { item: Product }) => {
           className="m-2 flex-row items-center justify-center rounded-lg py-3"
           style={{ backgroundColor: 'white', elevation: 4 }}
           onPress={() => {
-            showSuccessMessage('product.added');
-            addFavorite(item?.id, item?.name, item?.category, item?.images[0]);
+            if (item?.images) {
+              showSuccessMessage('product.added');
+              addFavorite(
+                item?.id,
+                item?.name,
+                item?.category,
+                item?.images[0]
+              );
+            }
           }}
         >
           <Entypo name="heart-outlined" size={18} color="black" />

@@ -3383,3 +3383,80 @@ int main()
     sequential_search(arr, n, key);
     return 0;
 }
+
+//Implement a program to convert infix notation to postfix notation using stack.
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#define MAX 100 //Maximum size of the stack
+char stack[MAX]; //Declaring the stack
+int top=-1; //Variable to store the top of the stack
+void push(char); //Function to push an element into the stack
+char pop(); //Function to pop an element from the stack
+int priority(char); //Function to return the priority of the operators
+
+int main()
+{
+  char infix[MAX],postfix[MAX],ch,elem;
+  int i=0,k=0;
+  printf("Enter the infix expression\n");
+  scanf("%s",infix);
+  while((ch=infix[i++])!='\0')
+  {
+    if(ch=='(')
+      push(ch);
+    else if(isalnum(ch))
+      postfix[k++]=ch;
+    else if(ch==')')
+    {
+      while((elem=pop())!='(')
+        postfix[k++]=elem;
+    }
+    else
+    {
+      while(priority(stack[top])>=priority(ch))
+        postfix[k++]=pop();
+      push(ch);
+    }
+  }
+  while(top!=-1)
+    postfix[k++]=pop();
+  postfix[k]='\0';
+  printf("The postfix expression is\n");
+  printf("%s\n",postfix);
+  return 0;
+}
+
+void push(char ch)
+{
+  if(top==MAX-1)
+  {
+    printf("Stack overflow\n");
+    return;
+  }
+  stack[++top]=ch;
+}
+
+char pop()
+{
+  if(top==-1)
+  {
+    printf("Stack underflow\n");
+    exit(1);
+  }
+  return stack[top--];
+}
+
+int priority(char ch)
+{
+  switch(ch)
+  {
+    case '#':return 0;
+    case '(':return 1;
+    case '+':
+    case '-':return 2;
+    case '*':
+    case '/':return 3;
+  }
+  return 0;
+}

@@ -193,6 +193,7 @@ export const handleWhatsappShare = async (
 ) => {
   //https://api.whatsapp.com/send?phone=918734845201&text=
   // openLinkInBrowser(LINK);
+  logger.log('whatsapp share called');
   try {
     //@ts-ignore
     const options: ShareSingleOptions = {

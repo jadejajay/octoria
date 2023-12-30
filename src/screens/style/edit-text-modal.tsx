@@ -1,12 +1,19 @@
-/* eslint-disable react/react-in-jsx-scope */
-import { type SetStateAction } from 'react';
+import React from 'react';
 import { Modal, StyleSheet, TextInput } from 'react-native';
 
 import { Text, View } from '@/ui';
 
 interface Props {
   text: string;
-  setText: (text: SetStateAction<string>) => void;
+  setText: ({
+    text,
+    width,
+    height,
+  }: {
+    text: string;
+    width: number;
+    height: number;
+  }) => void;
   isModalVisible: boolean;
   SetModalVisible: (visible: boolean) => void;
   onPress?: (text: string) => void;
@@ -18,6 +25,7 @@ export const EditTextModal = ({
   SetModalVisible,
   onPress = () => {},
 }: Props) => {
+  const [layout, setLayout] = React.useState({ width: 10, height: 10 });
   const handlePress = () => {
     SetModalVisible(false);
     onPress(text);
@@ -38,16 +46,22 @@ export const EditTextModal = ({
             style={styles.textFont}
             value={text}
             autoFocus={true}
+            // numberOfLines={5}
             multiline={true}
-            numberOfLines={5}
             autoCorrect={true}
             cursorColor={'red'}
             returnKeyType={'send'}
             selectTextOnFocus={true}
             autoComplete={'username-new'}
             clearButtonMode={'unless-editing'}
-            onChangeText={(text2) => setText(text2)}
-            // onContentSizeChange={(e) => logger.log(e.nativeEvent.contentSize)}
+            onChangeText={(text2) =>
+              setText({
+                text: text2,
+                width: layout.width * 1.35,
+                height: layout.height * 1.35,
+              })
+            }
+            onContentSizeChange={(e) => setLayout(e.nativeEvent.contentSize)}
           />
           <Text
             variant="sm"

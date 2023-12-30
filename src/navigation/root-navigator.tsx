@@ -49,7 +49,6 @@ import { AuthNavigator } from './auth-navigator';
 import { loadDataFromFirestore } from './loads';
 import { NavigationContainer } from './navigation-container';
 import { TabNavigator } from './tab-navigator';
-import { ImageColorPicker } from '@/screens/style/web-image-color-picker';
 
 const prefix = Linking.createURL('/');
 const Stack = createNativeStackNavigator();
@@ -166,10 +165,10 @@ export const Root = () => {
                   <Stack.Screen name="ColorWidget" component={ColorWidget} />
                   <Stack.Screen name="FontWidget" component={FontWidget} />
                   <Stack.Screen name="FilterScreen" component={FilterScreen} />
-                  <Stack.Screen
+                  {/* <Stack.Screen
                     name="ImageColorPicker"
                     component={ImageColorPicker}
-                  />
+                  /> */}
                   <Stack.Screen
                     name="BackgroundVideosWidget"
                     component={BackgroundVideosWidget}

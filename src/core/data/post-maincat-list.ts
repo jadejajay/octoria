@@ -19,7 +19,8 @@ export const postMainCategory = [
   },
   {
     code: 4,
-    image: 'https://ibaisindia.co.in/chats/mainfestivalcategory/indian-flag.jpg',
+    image:
+      'https://ibaisindia.co.in/chats/mainfestivalcategory/indian-flag.jpg',
     name: 'Special Days',
     subCode: 1,
   },

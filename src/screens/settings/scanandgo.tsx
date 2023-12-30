@@ -72,7 +72,10 @@ export const ScanNGo = () => {
                 tx={'scanqr.open_link'}
               />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => setScanned(false)}>
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => setScanned(false)}
+            >
               <Text
                 className="text-text rounded-xl p-2 font-varela text-xl"
                 style={{ elevation: 4, backgroundColor: 'white' }}

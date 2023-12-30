@@ -50,8 +50,8 @@ export const TextModal = () => {
       addElement(
         element({
           text: t,
-          width: twh.width,
-          height: twh.height,
+          width: twh.width * 1.35,
+          height: twh.height * 1.35,
           color: clr,
           textAlign: textAlign,
         })
@@ -68,8 +68,8 @@ export const TextModal = () => {
           style={[styles.textFont, { color: clr }]}
           value={t}
           autoFocus={true}
+          // numberOfLines={1}
           multiline={true}
-          numberOfLines={5}
           autoCorrect={true}
           cursorColor={'red'}
           returnKeyType={'send'}

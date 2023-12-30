@@ -1,9 +1,0 @@
-{
-  "platforms": ["ios", "android", "web"],
-  "ios": {
-    "modules": ["EditorxColorPickerModule"]
-  },
-  "android": {
-    "modules": ["expo.modules.editorxcolorpicker.EditorxColorPickerModule"]
-  }
-}

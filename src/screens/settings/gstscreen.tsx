@@ -57,9 +57,11 @@ export const GstView = ({}: Props) => {
         </Text>
         <View className="w-screen p-3">
           <Input
-            className="m-2 w-max rounded-lg border  border-indigo-600 p-2 pr-10"
+            className="m-2 w-max rounded-lg border  border-indigo-600 p-2 pr-10 text-indigo-600"
             placeholder=" Ex : 24AAAAA0000A1Z5"
             value={search}
+            placeholderTextColor={'rgb(79, 70, 229)'}
+            cursorColor={'rgb(79, 70, 229)'}
             onChangeText={(e) => {
               setSearch(e);
             }}

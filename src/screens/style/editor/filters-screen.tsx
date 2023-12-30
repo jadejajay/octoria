@@ -60,7 +60,7 @@ export const FilterScreen = () => {
   const [chromakey, setChromakey] = React.useState('1');
   const ffmpeg = new FFmpegWrapper();
 
-  const { goBack, navigate } = useNavigation();
+  const { goBack } = useNavigation();
 
   React.useEffect(() => {
     setDisplayedText('');
@@ -293,15 +293,6 @@ export const FilterScreen = () => {
             </Text>
           </View>
         </View>
-        <Text
-          variant="sm"
-          onPress={() => {
-            navigate('ImageColorPicker');
-          }}
-          className="mt-4 pl-4 text-left font-sfbold"
-        >
-          👉🏻 color picker
-        </Text>
         <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
           👉🏻 Quick filters
         </Text>
@@ -523,19 +514,23 @@ const brightnessFilters = [
     command: '-vf eq=brightness=-1',
   },
   {
-    image: 'https://ibaisindia.co.in/octoria/database/filters/brightness/p2.webp',
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/brightness/p2.webp',
     command: '-vf eq=brightness=-1',
   },
   {
-    image: 'https://ibaisindia.co.in/octoria/database/filters/brightness/p3.webp',
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/brightness/p3.webp',
     command: '-vf eq=brightness=-1',
   },
   {
-    image: 'https://ibaisindia.co.in/octoria/database/filters/brightness/p5.webp',
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/brightness/p5.webp',
     command: '-vf eq=brightness=-1',
   },
   {
-    image: 'https://ibaisindia.co.in/octoria/database/filters/brightness/full.webp',
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/brightness/full.webp',
     command: '-vf eq=brightness=-1',
   },
 ];

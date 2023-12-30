@@ -33,7 +33,7 @@ export const TextWidget = ({
   const setData = useEditorX((s) => s.setTextStyle);
   const setAlign = useEditorX((s) => s.setData);
   const state = useEditorX((s) => s.selectedItem);
-  const setText = useEditorX((s) => s.setText);
+  const setText = useEditorX((s) => s.setData);
   const data = useEditorX((s) => s.editorData);
   const isSpecial = useEditorX((s) => s.isSpecial);
   const { navigate } = useNavigation();
@@ -130,11 +130,17 @@ export const TextWidget = ({
       <View className="flex-row flex-wrap justify-between">
         <EditTextModal
           text={data.elements[state]?.properties?.text!}
-          setText={(text) => {
-            setText({
-              id: state,
-              text: text,
-            });
+          setText={({ height, text, width }) => {
+            if (text.length > 0) {
+              setText({
+                id: state,
+                props: {
+                  text: text,
+                  width: width,
+                  height: height,
+                },
+              });
+            }
           }}
           isModalVisible={textModalVisible}
           SetModalVisible={setTextModalVisible}
