@@ -14,6 +14,6 @@ export type Product = {
   material?: string;
   finishing?: string[];
   type?: string;
-  quantity?: number[];
-  featured?: boolean;
+  quantity?: string[];
+  featured?: number;
 };

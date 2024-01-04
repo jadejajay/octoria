@@ -13,6 +13,7 @@ import * as z from 'zod';
 
 import { logger, useIsSignUp } from '@/core';
 import { uploadImage } from '@/core/upload-image';
+import { F_USERS } from '@/types';
 import {
   ActivityIndicator,
   Button,
@@ -73,7 +74,7 @@ export const SignUpForm = () => {
     try {
       setIsLoading(true);
       const userDoc = await firestore()
-        .collection('Users')
+        .collection(F_USERS)
         .doc(user?.uid)
         .get();
 
@@ -120,7 +121,7 @@ export const SignUpForm = () => {
     } else {
       try {
         firestore()
-          .collection('Users')
+          .collection(F_USERS)
           .doc(user?.uid)
           .set({
             business: data.business,

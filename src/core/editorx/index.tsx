@@ -4,248 +4,15 @@ import { produce } from 'immer';
 import lodash from 'lodash';
 import { create } from 'zustand';
 
-import { EDITORX_DATA } from '@/types';
+import type { EditorXState, Element } from '@/types';
+import { EDITORX_DATA, F_FRAME_LIST } from '@/types';
 import { showErrorMessage, showSuccessMessage } from '@/ui';
 
 import { logger } from '../logger';
 import { getItem } from '../storage';
 import { createSelectors, newValue } from '../utils';
+import { DATA } from './data-elements';
 
-const elements: Element[] = [
-  {
-    id: 'user_photo',
-    name: 'user_photo',
-    component: 'image',
-    properties: {
-      height: 0,
-      width: 0,
-      image: '',
-      viewProps: {
-        style: {
-          overflow: 'hidden',
-          borderRadius: 0,
-        },
-      },
-      resizeMode: 'stretch',
-      offset: {
-        x: 0,
-        y: 0,
-      },
-      scale: 1,
-      rotation: 0,
-    },
-  },
-  {
-    id: 'user_name',
-    name: 'user_name',
-    component: 'text',
-    properties: {
-      height: 0,
-      width: 0,
-      text: 'octoria',
-      textProps: {
-        style: {
-          color: 'white',
-          fontSize: 20,
-        },
-      },
-      offset: {
-        x: 0,
-        y: 0,
-      },
-      scale: 1,
-      rotation: 0,
-    },
-  },
-  {
-    id: 'user_phone',
-    name: 'user_phone',
-    component: 'text',
-    properties: {
-      height: 0,
-      width: 0,
-      text: '+91 1234567890',
-      textProps: {
-        style: {
-          color: 'white',
-          fontSize: 20,
-        },
-      },
-      offset: {
-        x: 0,
-        y: 0,
-      },
-      scale: 1,
-      rotation: 0,
-    },
-  },
-  {
-    id: 'user_email',
-    name: 'user_email',
-    component: 'text',
-    properties: {
-      height: 0,
-      width: 0,
-      text: 'abcd@gmail.com',
-      textProps: {
-        style: {
-          color: 'white',
-          fontSize: 20,
-        },
-      },
-      offset: {
-        x: 0,
-        y: 0,
-      },
-      scale: 1,
-      rotation: 0,
-    },
-  },
-  {
-    id: 'user_website',
-    name: 'user_website',
-    component: 'text',
-    properties: {
-      height: 0,
-      width: 0,
-      text: 'www.abc.com',
-      textProps: {
-        style: {
-          color: 'white',
-          fontSize: 20,
-        },
-      },
-      offset: {
-        x: 0,
-        y: 0,
-      },
-      scale: 1,
-      rotation: 0,
-    },
-  },
-  {
-    id: 'user_address',
-    name: 'user_address',
-    component: 'text',
-    properties: {
-      height: 0,
-      width: 0,
-      text: 'Ground Floor, 123, XYZ city, India',
-      textProps: {
-        style: {
-          color: 'white',
-          fontSize: 20,
-        },
-      },
-      offset: {
-        x: 0,
-        y: 0,
-      },
-      scale: 1,
-      rotation: 0,
-    },
-  },
-];
-
-const DATA: EditorData = {
-  backgroundPost: '',
-  bgType: 'photo',
-  frame: '',
-  elements: elements,
-};
-
-export interface ElementProperties {
-  image?: string;
-  resizeMode?: 'center' | 'stretch' | 'contain' | 'cover' | undefined;
-  text?: string;
-  textProps?: {
-    style: {
-      [key: string]: any;
-    };
-    [key: string]: any;
-  };
-  viewProps?: {
-    style: {
-      [key: string]: any;
-    };
-    [key: string]: any;
-  };
-  offset: {
-    x: number;
-    y: number;
-  };
-  scale: number;
-  width: number;
-  height: number;
-  rotation: number;
-}
-
-export interface Element {
-  id: string;
-  name: string;
-  component: string;
-  properties: ElementProperties;
-}
-
-export interface EditorData {
-  bgType: 'photo' | 'video';
-  backgroundPost?: string;
-  color?: string;
-  frame: string;
-  elements: Element[];
-}
-
-export type BusinessDataType = {
-  name: string;
-  photo: string;
-  email: string;
-  phone: string;
-  website: string;
-  address: string;
-};
-export interface EditorXState {
-  editorData: EditorData;
-  businessData: BusinessDataType;
-  elementsKey: string;
-  selectedItem: number;
-  categoryCode: number;
-  activeWidget: string;
-  dwnVideo: string;
-  past: any[];
-  present: any | null;
-  future: any[];
-  canUndo: boolean;
-  canRedo: boolean;
-  saveFrame: (id: string, width: number) => void;
-  setEditor: (id: any) => void;
-  rearrangeElements: (elements2: Element[]) => void;
-  setData: (newData: any) => void;
-  setCategoryCode: (code: any) => void;
-  isSpecial: () => boolean;
-  setBusiness: (data: BusinessDataType) => void;
-  setElementsKey: (key: string) => void;
-  setDataById: (
-    property: Element[] | undefined,
-    mainWidth: number,
-    currentWidth: number
-  ) => void;
-  setTextStyle: (newData: any) => void;
-  setViewStyle: (newData: any) => void;
-  setText: (newData: any) => void;
-  setImage: (newData: any) => void;
-  setImageResizeMode: (newData: any) => void;
-  setSelectedItem: (index: number) => void;
-  setActiveWidget: (wdg: string) => void;
-  setDwnVideo: (url: string) => void;
-  setBackground: (url: string, type: 'photo' | 'video') => void;
-  setFrame: (url: string) => void;
-  getData: (id: number) => Element;
-  deleteElement: (id: number) => void;
-  addElement: (data: any) => void;
-  copyElement: (id: number) => void;
-  undo: () => void;
-  redo: () => void;
-}
 const _useEditorX = create<EditorXState>((set, get) => ({
   editorData: DATA,
   elementsKey: '',
@@ -273,7 +40,7 @@ const _useEditorX = create<EditorXState>((set, get) => ({
     try {
       if (id) {
         showSuccessMessage('editor.updating_frame');
-        await firestore().collection('frames').doc(id).set(
+        await firestore().collection(F_FRAME_LIST).doc(id).set(
           { elements: elements2, mainWidth: width },
           {
             merge: true,
@@ -305,7 +72,7 @@ const _useEditorX = create<EditorXState>((set, get) => ({
       );
     } else {
       // try {
-      //   const userDoc = await firestore().collection('Users').doc(id).get();
+      //   const userDoc = await firestore().collection(F_USERS).doc(id).get();
       //   const data: EditorData = userDoc.data()?.editorData;
       //   if (data) {
       //     set(

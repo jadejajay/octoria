@@ -15,12 +15,12 @@ import { StyleSheet } from 'react-native';
 
 import { logger, useEditorX } from '@/core';
 import { FirestoreData } from '@/core/fire-util';
-import type { ImageListType } from '@/types';
+import { F_IMAGES_ELEMENTS, type ImageListType } from '@/types';
 import { Image, Text, TouchableOpacity, Vertical2CompList, View } from '@/ui';
 
 const theme = '#07ab86';
 export const ImageModal = () => {
-  const imagesHandler = new FirestoreData<ImageListType>('imagesElement');
+  const imagesHandler = new FirestoreData<ImageListType>(F_IMAGES_ELEMENTS);
   const [images, setImages] = React.useState<ImageListType[] | []>([]);
   const addElement = useEditorX((s) => s.addElement);
   const { goBack } = useNavigation();
@@ -90,9 +90,10 @@ export const ImageModal = () => {
   };
   return (
     <>
-      <View className="h-40 flex-row justify-around">
+      <View className="h-40 flex-row justify-around border-b-2 border-slate-100">
         <TouchableOpacity
-          className="m-4 flex-1 items-center justify-center"
+          className="m-4 flex-1 items-center justify-center rounded-md"
+          style={styles.shadow}
           onPress={captureImage}
           activeOpacity={1}
         >
@@ -104,7 +105,8 @@ export const ImageModal = () => {
           <Text className="font-sfbold text-lg" tx={'editor.click_picture'} />
         </TouchableOpacity>
         <TouchableOpacity
-          className="m-4 flex-1 items-center justify-center"
+          className="m-4 flex-1 items-center justify-center rounded-md"
+          style={styles.shadow}
           onPress={pickImage}
           activeOpacity={1}
         >
@@ -119,6 +121,7 @@ export const ImageModal = () => {
       <View className="flex-1">
         <Vertical2CompList
           Comp={CardComp}
+          numColumn={3}
           onEndReached={handleEndReached}
           data={images}
           estimatedItemSize={130}
@@ -139,14 +142,17 @@ const Card = ({ item, index, addElement, onClose }: Props) => {
     <View className="flex-1 p-2">
       <TouchableOpacity
         key={`festival-card-${index}`}
-        className="aspect-square w-full overflow-hidden rounded-lg bg-green-400"
+        className="aspect-square w-full overflow-hidden rounded-lg"
+        style={styles.shadow}
         activeOpacity={1}
         onPress={() => {
           addElement(element(item.image));
           onClose();
         }}
       >
-        <Image src={item.image} style={styles.image} resizeMode="cover" />
+        {item?.thumbnail && (
+          <Image src={item.thumbnail} style={styles.image} resizeMode="cover" />
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -156,6 +162,17 @@ const styles = StyleSheet.create({
   image: { width: '100%', height: '100%' },
   image2: { width: '100%', height: '100%', opacity: 1 },
   color1: { color: theme },
+  shadow: {
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -3,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
+    elevation: 5,
+  },
 });
 
 const element = (image: string) => ({

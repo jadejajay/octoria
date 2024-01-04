@@ -92,21 +92,26 @@ const pair = [
   [`\\bnegate|negative|invert\\b`, executeNegate], //ex : negate image
   [`\\bflip|mirror\\b`, executeFlip], //ex : flip image vertically
   [`\\brotate\\b`, executeRotate], //ex : rotate image
-  // [`\\bsharp\\b`, executeSharp], //ex : sharp image
-  // [`\\bedge\\b`, executeEdge], //ex : edge image
-  // [`\\bemboss\\b`, executeEmboss], //ex : emboss image
-  // [`\\bposturize\\b`, executePosturize], //ex : posturize image
-  // [`\\bpixelate\\b`, executePixelate], //ex : pixelate image
-  // [`\\bthreshold\\b`, executeThreshold], //ex : threshold image
-  // [`\\bvignette\\b`, executeVignette], //ex : vignette image
-  // [`\\bwarp\\b`, executeWarp], //ex : warp image
-  // [`\\bzoom\\b`, executeZoom], //ex : zoom image
-  // [`\\bsmooth\\b`, executeSmooth], //ex : hue image
-  // [`(.+)`, executeResponse], //ex : hue image
-  // [`\\bexecute\\b`, executeResponse],
+  [`\\bcontrast\\b`, executeContrast], //ex : rotate image
+  [`\\btemperature\\b`, executeTemperature], //ex : rotate image
+  [`\\bsmooth\\b`, executeSmooth], //ex : hue image
+  [`\\bsharp\\b`, executeSharp], //ex : sharp image
+  [`\\bedge|edgy|line\\b`, executeEdge], //ex : edge image
+  [`\\bpainting\\b`, executePainting], //ex : edge image
+  [`\\bgamma|light|lightning\\b`, executeGamma], //ex : edge image
+  [`\\bpixelate\\b`, executePixelate], //ex : pixelate image
+  [`\\bemboss|embossed\\b`, executeEmboss], //ex : emboss image
+  [`\\bposturize|poster\\b`, executePosturize], //ex : posturize image
+  [`\\bvignette\\b`, executeVignette], //ex : vignette image
+  [`\\bshift\\b`, executeShift], //ex : zoom image
+  [`\\bnoise\\b`, executeNoise], //ex : zoom image
+  [`\\bexposure\\b`, executeExposure], //ex : zoom image
+  [`\\bname\\b`, executeName], //ex : hue image
+  [`(.+)`, executeResponse], //ex : hue image
 ];
 // -vf rgbashift=rh=-6:gh=6
 // noise=alls=100:allf=t+u
+// exposure=-3
 // normalize=blackpt=black:whitept=white:smoothing=0
 // hue=h=2:s=1:b=1
 // edgedetect=low=0.1:high=0.4
@@ -186,9 +191,9 @@ function executeBrighten(_match: any) {
   const decreased = /decrease|reduce/i.exec(_match);
   const increased = /increase|add/i.exec(_match);
   const val = Number(_match2?.[0]) || 0;
-  if (_match2 && val >= -10 && val <= 10) {
+  if (_match2 && val >= -100 && val <= 100) {
     logger.log('_match2', _match2);
-    const cmd = `-vf hue=b=${val}`;
+    const cmd = `-vf eq=brightness=${val / 100}`;
     const resp = randomChoice([
       `I hope You Like It 🙂`,
       `I think you like more bright.`,
@@ -196,12 +201,12 @@ function executeBrighten(_match: any) {
     ]);
     return { cmd, resp };
   }
-  let cmd = '-vf hue=b=1';
+  let cmd = '-vf eq=brightness=0.3';
   if (decreased) {
-    cmd = '-vf hue=b=-3';
+    cmd = '-vf eq=brightness=0.3';
   }
   if (increased) {
-    cmd = '-vf hue=b=3';
+    cmd = '-vf eq=brightness=0.5';
   }
   const resp = randomChoice([
     `I hope You Like It 🙂`,
@@ -269,6 +274,18 @@ function executeNegate(_match: any) {
   ]);
   return { cmd, resp };
 }
+function executeName(_match: any) {
+  const color = /color/.exec(_match);
+  var cmd = '-vf negate';
+  if (color) {
+    cmd = '-vf curves=preset=color_negative';
+  }
+  const resp = randomChoice([
+    `I hope You Like It 🙂`,
+    `I think you like Negative.`,
+  ]);
+  return { cmd, resp };
+}
 
 function executeFlip(_match: any) {
   var cmd = '-vf hflip';
@@ -289,7 +306,7 @@ function executeFlip(_match: any) {
 }
 
 function executeRotate(_match: any) {
-  // command to ratate image x degree
+  // command to rotate image x degree
   var cmd = '-vf rotate=PI/2';
   const _match2 = /(-?[0-9]{1,3})/i.exec(_match);
   if (_match2) {
@@ -303,133 +320,176 @@ function executeRotate(_match: any) {
   const resp = randomChoice([`I hope You Like It 🙂.`, `Image Rotated 🎯`]);
   return { cmd, resp };
 }
-// function executeContrast(_match: any) {
-//   const cmd = '-vf eq=contrast=1.5';
-//   const acmd = '-vf colorcontrast=0.5:0.5:0.5';
-//   const resp = randomChoice([
-//     `I hope You Like It 🙂.`,
-//     `Image Contrast is Increased`,
-//   ]);
-//   return { cmd, resp };
-// }
-// function executeSaturation(_match: any) {
-//   const cmd = '-vf eq=saturation=1.5';
-//   const resp = randomChoice([
-//     `I hope You Like It 🙂.`,
-//     `Image Saturation is Increased`,
-//   ]);
-//   return { cmd, resp };
-// }
-// function executeGamma(_match: any) {
-//   const cmd = '-vf eq=gamma=0.5';
-//   const resp = randomChoice([
-//     `I hope You Like It 🙂.`,
-//     `Image Gamma is Decreased`,
-//   ]);
-//   return { cmd, resp };
-// }
-// function executeHue(_match: any) {
-//   const cmd = '-vf eq=hue=0.3';
-//   const resp = randomChoice([
-//     `I hope You Like It 🙂.`,
-//     `Image Hue is Decreased`,
-//   ]);
-//   return { cmd, resp };
-// }
-// function executeInvert(_match: any) {
-//   const cmd = '-vf eq=invert=1';
-//   const resp = randomChoice([`I hope You Like It 🙂.`, `Image Inverted`]);
-//   return { cmd, resp };
-// }
-// function executeOpacity(_match: any) {
-//   const cmd = '-vf eq=opacity=0.5';
-//   const resp = randomChoice([
-//     `I hope You Like It 🙂.`,
-//     `Image Opacity is Decreased`,
-//   ]);
-//   return { cmd, resp };
-// }
-// function executePixelate(_match: any) {
-//   const cmd = '-vf scale=iw/10:ih/10:flags=neighbor';
-//   logger.log('executeHue', _match);
-//   const resp = randomChoice([`I hope You Like It 🙂.`, `Image Pixelated 🦾`]);
-//   return { cmd, resp };
-// }
-// function executeThreshold(_match: any) {
-//   const cmd = '-vf threshold=128';
-//   logger.log('executeHue', _match);
-//   const resp = randomChoice([`I hope You Like It 🙂.`, `Image Threshed 🎉`]);
-//   return { cmd, resp };
-// }
-// function executeVignette(_match: any) {
-//   const cmd = '-vf vignette';
-//   logger.log('executeHue', _match);
-//   const resp = randomChoice([`I hope You Like It 🙂.`, `Image Vignetted 🕶`]);
-//   return { cmd, resp };
-// }
-// function executeWarp(_match: any) {
-//   const cmd = '-vf lenscorrection=k1=-0.2:k2=0.1';
-//   logger.log('executeHue', _match);
-//   const resp = randomChoice([`I hope You Like It 🙂.`, `Image Warped 🎉`]);
-//   return { cmd, resp };
-// }
-// function executeZoom(_match: any) {
-//   const cmd = `-vf zoompan=z="min(zoom+0.0015,1.5)":d=125`;
-//   logger.log('executeHue', _match);
-//   const resp = randomChoice([`I hope You Like It 🙂.`, `Image Zoomed 🔍`]);
-//   return { cmd, resp };
-// }
-// function executeExtract(_match: any) {
-//   const cmd = '-vf extractplanes=y';
-//   logger.log('executeHue', _match);
-//   const resp = randomChoice([`I hope You Like It 🙂.`, `Image Extracted 🖼`]);
-//   return { cmd, resp };
-// }
-// function executeSharp(_match: any) {
-//   const cmd = '-vf unsharp';
-//   logger.log('executeHue', _match);
-//   const resp = randomChoice([`I hope You Like It 🙂.`, `Image Sharpen ✔`]);
-//   return { cmd, resp };
-// }
-// function executeEdge(_match: any) {
-//   const cmd = '-vf edgedetect';
-//   logger.log('executeHue', _match);
-//   const resp = randomChoice([`I hope You Like It 🙂.`, `It Looks Scary 👻`]);
-//   return { cmd, resp };
-// }
-// function executeEmboss(_match: any) {
-//   const cmd = '-vf colorchannelmixer=.3:.4:.3:0:.3:.4:.3:0:.3:.4:.3';
-//   logger.log('executeHue', _match);
-//   const resp = randomChoice([
-//     `I hope You Like It 🙂.`,
-//     `Image Looks More Embossed 🎯`,
-//   ]);
-//   return { cmd, resp };
-// }
-// function executePosturize(_match: any) {
-//   const cmd = '-vf elbg=2:2:1:1:1:1:1:1:1:1:1:1:1:1:1:1';
-//   logger.log('executeHue', _match);
-//   const resp = randomChoice([
-//     `I hope You Like It 🙂.`,
-//     `Image is Pasteurized 🎯`,
-//   ]);
-//   return { cmd, resp };
-// }
-// function executeSmooth(_match: any) {
-//   const cmd = '-vf dctdnoiz=4:4:2:8';
-//   logger.log('executeSmooth', _match);
-//   const resp = randomChoice([`I hope You Like It 🙂.`, `Image is Smooth 🎯`]);
-//   return { cmd, resp };
-// }
-// function executeResponse(_match: any) {
-//   logger.log('executeHue', _match);
-//   const cmd = '';
-//   const resp = `we can not execute command right now 😥, but we will soon 😎`;
-//   return { cmd, resp };
-// }
+function executeContrast(_match: any) {
+  var cmd = '-vf eq=contrast=1.5';
+  const decreased = /decrease|reduce/i.exec(_match);
+  const increased = /increase|add/i.exec(_match);
+  if (decreased) {
+    cmd = '-vf eq=contrast=0.5';
+  }
+  if (increased) {
+    cmd = '-vf eq=contrast=2.5';
+  }
+  const val = /([0-9]{1,3})/i.exec(_match);
+  if (val) {
+    logger.log('_match2', val);
+    const value = parseInt(val[0], 10);
+    cmd = `-vf eq=contrast=${value}`;
+  }
+  // const cmd = '-vf curves=all="0/0 0.5/1 1/1"';
+  const resp = randomChoice([
+    `I hope You Like It 🙂.`,
+    `Image Contrast is Increased`,
+  ]);
+  return { cmd, resp };
+}
+function executeTemperature(_match: any) {
+  const cmd = '-vf -vf colortemperature=8000';
+  const resp = randomChoice([
+    `I hope You Like It 🙂.`,
+    `Image Contrast is Increased`,
+  ]);
+  return { cmd, resp };
+}
+function executeSmooth(_match: any) {
+  const cmd = '-vf dctdnoiz=100:n=4';
+  logger.log('executeSmooth', _match);
+  const resp = randomChoice([`I hope You Like It 🙂.`, `Image is Smooth 🎯`]);
+  return { cmd, resp };
+}
+function executeSharp(_match: any) {
+  const cmd = '-vf unsharp=luma_msize_x=7:luma_msize_y=7:luma_amount=2.5'; //-vf unsharp=3:5:5.0:3:5:5.0
+  logger.log('executeHue', _match);
+  const resp = randomChoice([`I hope You Like It 🙂.`, `Image Sharpen ✔`]);
+  return { cmd, resp };
+}
+function executeEdge(_match: any) {
+  const cmd = '-vf edgedetect=low=0.1:high=0.4';
+  logger.log('executeHue', _match);
+  const resp = randomChoice([`I hope You Like It 🙂.`, `It Looks Scary 👻`]);
+  return { cmd, resp };
+}
+function executePainting(_match: any) {
+  const cmd = '-vf edgedetect=mode=colormix:high=0';
+  logger.log('executeHue', _match);
+  const resp = randomChoice([`I hope You Like It 🙂.`, `It Looks Scary 👻`]);
+  return { cmd, resp };
+}
+function executeGamma(_match: any) {
+  var cmd = '-vf eq=gamma=0.5';
+  const decreased = /decrease|reduce/i.exec(_match);
+  const increased = /increase|add/i.exec(_match);
+  if (decreased) {
+    cmd = '-vf eq=gamma=0.3';
+  }
+  if (increased) {
+    cmd = '-vf eq=gamma=0.7';
+  }
+  const val = /([0-9]{1,3})/i.exec(_match);
+  if (val) {
+    logger.log('_match2', val);
+    const value = parseInt(val[0], 10);
+    cmd = `-vf eq=gamma=${value}`;
+  }
+  const resp = randomChoice([
+    `I hope You Like It 🙂.`,
+    `Image Gamma is corrected`,
+  ]);
+  return { cmd, resp };
+}
+function executePixelate(_match: any) {
+  const cmd = '-vf scale=iw/10:ih/10:flags=neighbor';
+  logger.log('executeHue', _match);
+  const resp = randomChoice([`I hope You Like It 🙂.`, `Image Pixelated 🦾`]);
+  return { cmd, resp };
+}
+function executeEmboss(_match: any) {
+  const cmd =
+    '-vf convolution="-2 -1 0 -1 1 1 0 1 2:-2 -1 0 -1 1 1 0 1 2:-2 -1 0 -1 1 1 0 1 2:-2 -1 0 -1 1 1 0 1 2"';
+  const resp = randomChoice([
+    `I hope You Like It 🙂.`,
+    `Image Looks More Embossed 🎯`,
+  ]);
+  return { cmd, resp };
+}
+function executePosturize(_match: any) {
+  const cmd = '-vf elbg=2.14';
+  logger.log('executeHue', _match);
+  const resp = randomChoice([
+    `I hope You Like It 🙂.`,
+    `Image is Pasteurized 🎯`,
+  ]);
+  return { cmd, resp };
+}
+function executeVignette(_match: any) {
+  const cmd = '-vf vignette';
+  logger.log('executeHue', _match);
+  const resp = randomChoice([`I hope You Like It 🙂.`, `Image Vignetted 🕶`]);
+  return { cmd, resp };
+}
+function executeShift(_match: any) {
+  const cmd = `-vf rgbashift=rh=-6:gh=6`;
+  logger.log('executeHue', _match);
+  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  return { cmd, resp };
+}
+function executeNoise(_match: any) {
+  const cmd = `-vf noise=alls=100:allf=t+u`;
+  logger.log('executeHue', _match);
+  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  return { cmd, resp };
+}
+function executeExposure(_match: any) {
+  var cmd = `-vf exposure=2`;
+  const decreased = /decrease|reduce/i.exec(_match);
+  const increased = /increase|add/i.exec(_match);
+  if (decreased) {
+    cmd = `-vf exposure=-3`;
+  }
+  if (increased) {
+    cmd = `-vf exposure=3`;
+  }
+  const val = /([0-9]{1,3})/i.exec(_match);
+  if (val) {
+    logger.log('_match2', val);
+    const value = parseInt(val[0], 10);
+    cmd = `-vf exposure=${value}`;
+  }
+  const resp = randomChoice([`I hope You Like It 🙂.`]);
+  return { cmd, resp };
+}
+
+function executeResponse(_match: any) {
+  logger.log('executeHue', _match);
+  const cmd = '';
+  const resp = `we can not execute command right now 😥, but we will soon 😎`;
+  return { cmd, resp };
+}
 
 // const chatbot = new Chat(pairs, reflection);
 // chatbot.converse('quit');
+
+// lights
+// exposure -5ev-5ev, contrast-100-100, highlights-100-100,
+// shadows -100-100, whites -100-100, blacks -100-100,
+// color
+// temp -100-100, tint -100-100, vibrance -100-100, saturation -100-100
+// effects
+// texture, clarity, dehaze, vignette, midpoint, fade
+// feather, roundness, highlights, grain 0-100= size 0-100= roughness 0-100
+// details
+// sharpening 0-100 = radius 0.5-3.00 =detail 0-100 =masking 0-100
+// noise reduction 0-100 = detail 0-100=contrast 0-100
+// color noise reduction 0-100= detail 0-100= smoothness 0-100
+// optics
+// remove chromatic aberration
+// enable lens correction = distortion correction 0-200, lens vignetting 0-200
+// geometry
+// distortion, vertical, horizontal, rotate, aspect, scale , x-offset, y-offset
+// preset, profiles, masking, healing\
+// photo-shop
+// adjustments
+// split tone, color mix =>hs_luminance, blur,vignette,optics
 
 const reflection = {
   'i am': 'you are',
@@ -458,4 +518,4 @@ const reflection = {
 
 // user input "" call function with understanding user input with proper parameter.
 // do not give explaination of result just give one line which shows call to that function with params.
-//6d1de57562424043831a083e44be8b5b
+//6d1de57562424043831a083e44be8b5b news.com

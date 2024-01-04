@@ -1,4 +1,10 @@
-export const stickers = [
+import firestore from '@react-native-firebase/firestore';
+
+import { F_STICKERS, type StickerType } from '@/types';
+
+import { logger } from '../logger';
+
+export const stickers: StickerType[] = [
   {
     image: 'https://ibaisindia.co.in/chats/emojis/0_95.png',
   },
@@ -600,3 +606,13 @@ export const stickers = [
     image: 'https://ibaisindia.co.in/chats/emojis/0_156.png',
   },
 ];
+export const addStickers = async () => {
+  const batch = firestore().batch();
+  for (let i = 0; i < stickers.length; i++) {
+    const ref = firestore().collection(F_STICKERS).doc();
+    batch.set(ref, stickers[i]);
+    logger.log(`Added document ${i}`);
+  }
+  batch.commit();
+  logger.log(`All Stickers Added Successfully.`);
+};

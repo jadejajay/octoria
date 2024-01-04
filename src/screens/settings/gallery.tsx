@@ -7,6 +7,7 @@ import { Image, List, Text, TouchableOpacity, View, WIDTH } from '@/ui';
 type Props = {};
 export const Gallery = ({}: Props) => {
   const [images, setImages] = React.useState<MediaLibrary.Asset[]>([]);
+  const [lastId, setLastId] = React.useState<any>(30);
   const { navigate } = useNavigation();
   React.useEffect(() => {
     (async () => {
@@ -28,7 +29,7 @@ export const Gallery = ({}: Props) => {
         tx="gallery.gallery"
       />
       <List
-        data={images}
+        data={images.slice(0, lastId)}
         renderItem={({ item, index }) => (
           <ImageComp
             key={`image-${index}`}
@@ -38,6 +39,9 @@ export const Gallery = ({}: Props) => {
             }}
           />
         )}
+        onEndReached={() => {
+          setLastId((p: number) => p + 30);
+        }}
         numColumns={3}
         keyExtractor={(_item, index) => `image-${index}`}
         estimatedItemSize={WIDTH / 3}

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable max-lines-per-function */
 /*
      -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
@@ -21,7 +22,13 @@ import {
   useSubCategoryStore,
 } from '@/core';
 import { isDateInRange } from '@/core/date-util';
-import { POST_IMAGE, type PostMainCategoryType, SUB_CATEGORY } from '@/types';
+import type { FestivalType, PostVideoType } from '@/types';
+import {
+  F_MAIN_CAROUSEL2,
+  POST_IMAGE,
+  type PostMainCategoryType,
+  SUB_CATEGORY,
+} from '@/types';
 import {
   HEIGHT,
   HorizontalList,
@@ -40,7 +47,6 @@ import {
   SmallPostImageCard,
   SmallPostVideoCard,
 } from './components/small-card';
-// import { addData } from '@/core/firebase-bulk';
 type Props = {};
 const SNAP = WIDTH / 3 - 5;
 export const DayList = ({}: Props) => {
@@ -55,7 +61,6 @@ export const DayList = ({}: Props) => {
   const videos = usePostVideoStore((s) => s.postVideos);
   React.useEffect(() => {
     postImage();
-    // addData();
   }, []);
   const postImage = async () => {
     const url = (await getItem(POST_IMAGE)) as string;
@@ -79,33 +84,31 @@ export const DayList = ({}: Props) => {
     navigation.navigate('ImageEditor');
   };
   const SmallImageCard = React.useCallback(
-    ({ item, index }: { item: any; index: number }) => {
+    ({ item, index }: { item: FestivalType; index: number }) => {
       return (
         <SmallPostImageCard item={item} index={index} handleNav={handleNav3} />
       );
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
   const SmallVideoCard = React.useCallback(
-    ({ item, index }: { item: any; index: number }) => {
+    ({ item, index }: { item: PostVideoType; index: number }) => {
       return (
         <SmallPostVideoCard item={item} index={index} handleNav={handleNav4} />
       );
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
   const CardComp = React.useCallback(
     ({ item, index }: { item: PostMainCategoryType; index: number }) => {
       const filteredImages = images.filter((img) => {
-        return img?.categoryCode === item.code;
+        return img.categoryCode === item.code;
       });
       const imagesInRange = filteredImages.filter((img) =>
         isDateInRange(codeToDate(img.subCategory))
       );
       const filteredVideos = videos.filter((img) => {
-        return img?.categoryCode === item.code;
+        return img.categoryCode === item.code;
       });
       const videosInRange = filteredVideos.filter((img) =>
         isDateInRange(codeToDate(img.subCategory))
@@ -125,8 +128,7 @@ export const DayList = ({}: Props) => {
             {item?.image && (
               <Image
                 src={item.image}
-                // eslint-disable-next-line react-native/no-inline-styles
-                style={{ width: '100%', height: '100%' }}
+                className="h-full w-full"
                 resizeMode="cover"
               />
             )}
@@ -138,7 +140,7 @@ export const DayList = ({}: Props) => {
           </TouchableOpacity>
           {imagesInRange.length > 0 ? (
             <View className="my-4 h-44">
-              <PostCardHeader title={item.name} subtitle={'This Month'} />
+              <PostCardHeader title={item?.name} subtitle={'This Month'} />
               <Text variant="sm" className="mx-5 text-left font-sfregular">
                 Images
               </Text>
@@ -174,51 +176,44 @@ export const DayList = ({}: Props) => {
         </>
       );
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [
+      SmallImageCard,
+      SmallVideoCard,
+      codeToDate,
+      images,
+      navigation,
+      setFestival,
+      videos,
+    ]
   );
-  const CardCompHeader = React.useCallback(
-    () => {
-      return (
-        <View
-          key={`category-card-header`}
-          className="mt-2 h-28 overflow-hidden rounded-lg"
-          style={styles.container2}
+  const CardCompHeader = React.useCallback(() => {
+    return (
+      <View
+        key={`category-card-header`}
+        className="mt-2 h-28 overflow-hidden rounded-lg"
+        style={styles.container2}
+      >
+        {image && (
+          <Image src={image} style={styles.imageMain} resizeMode="contain" />
+        )}
+        <TouchableOpacity
+          className="absolute h-full w-full items-center justify-center"
+          onPress={() => handleNav2()}
+          activeOpacity={1}
         >
-          {image && (
-            <Image
-              src={image}
-              // eslint-disable-next-line react-native/no-inline-styles
-              style={{
-                width: '100%',
-                height: '100%',
-                opacity: 0.3,
-                transform: [{ rotate: '45deg' }, { scale: 1.7 }],
-              }}
-              resizeMode="contain"
-            />
-          )}
-          <TouchableOpacity
-            className="absolute h-full w-full items-center justify-center"
-            onPress={() => handleNav2()}
-            activeOpacity={1}
-          >
-            <Text
-              className="font-sfbold text-xl leading-10 text-green-400"
-              tx={'editor.continue_last_post'}
-            />
-          </TouchableOpacity>
-        </View>
-      );
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [image]
-  );
+          <Text
+            className="font-sfbold text-xl leading-10 text-green-400"
+            tx={'editor.continue_last_post'}
+          />
+        </TouchableOpacity>
+      </View>
+    );
+  }, [image]);
   const PostCategoryList = React.useCallback(() => {
     return (
       <>
         <View className="py-2 pt-4 ">
-          <MainCarousel name={'MainCarousel2'} />
+          <MainCarousel name={F_MAIN_CAROUSEL2} />
         </View>
       </>
     );
@@ -239,7 +234,6 @@ export const DayList = ({}: Props) => {
     </ScrollView>
   );
 };
-//https://firebasestorage.googleapis.com/v0/b/speedy-league-335221.appspot.com/o/app_assets%2Findependent-day.jpg?alt=media&token=08bb9d54-bca7-4a2e-b2dc-a1cfe8d390a4
 const styles = StyleSheet.create({
   container2: {
     backgroundColor: 'white',
@@ -256,6 +250,12 @@ const styles = StyleSheet.create({
   cStyle: {
     width: WIDTH,
     height: HEIGHT * 4 - 80,
+  },
+  imageMain: {
+    width: '100%',
+    height: '100%',
+    opacity: 0.3,
+    transform: [{ rotate: '45deg' }, { scale: 1.7 }],
   },
 });
 // Abs => Abstract 1

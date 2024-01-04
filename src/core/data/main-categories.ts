@@ -1,34 +1,35 @@
 import firestore from '@react-native-firebase/firestore';
 
-import type { MainCarouselType } from '@/types';
-import { F_MAIN_CAROUSEL } from '@/types';
+import type { MainCategory } from '@/types';
+import { F_MAIN_CATEGORY } from '@/types';
 
 import { logger } from '../logger';
 
-const mainCategory: MainCarouselType[] = [
-  {
-    image: 'https://ibaisindia.co.in/octoria/products-image/cabinet.webp',
-  },
+const mainCategory: MainCategory[] = [
   {
     image: 'https://ibaisindia.co.in/octoria/products-image/towerbolt.webp',
+    title: 'Tower Bolt',
   },
   {
     image: 'https://ibaisindia.co.in/octoria/products-image/hook.webp',
+    title: 'khuti',
   },
   {
-    video: 'https://ibaisindia.co.in/octoria/products-image/Octoria.mp4',
+    image: 'https://ibaisindia.co.in/octoria/products-image/cabinet.webp',
+    title: 'Cabinet Handle',
   },
   {
     image: 'https://ibaisindia.co.in/octoria/products-image/conceal.webp',
+    title: 'Conceal Handle',
   },
 ];
-export const addMainCarousel = async () => {
+export const addMainCategory = async () => {
   const batch = firestore().batch();
   for (let i = 0; i < mainCategory.length; i++) {
-    const ref = firestore().collection(F_MAIN_CAROUSEL).doc();
+    const ref = firestore().collection(F_MAIN_CATEGORY).doc();
     batch.set(ref, mainCategory[i]);
     logger.log(`Added document ${i}`);
   }
   batch.commit();
-  logger.log(`All Main Carousel Added Successfully.`);
+  logger.log(`All Main Category Added Successfully.`);
 };

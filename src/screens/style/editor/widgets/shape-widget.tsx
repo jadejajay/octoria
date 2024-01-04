@@ -16,7 +16,7 @@ import { StyleSheet } from 'react-native';
 
 import { logger, useEditorX } from '@/core';
 import { FirestoreData } from '@/core/fire-util';
-import type { ShapesType } from '@/types';
+import { F_SHAPES, type ShapesType } from '@/types';
 import { EmptyList, Image, Text, TouchableOpacity, View } from '@/ui';
 
 type Props = {
@@ -31,7 +31,7 @@ type mesProp = {
 const theme = '#07ab86';
 export const ShapesWidget = () => {
   const shapesHandler = React.useMemo(
-    () => new FirestoreData<ShapesType>('shapes'),
+    () => new FirestoreData<ShapesType>(F_SHAPES),
     []
   );
   const [shapes, setShapes] = React.useState<ShapesType[] | []>([]);
@@ -99,21 +99,24 @@ export const ShapesWidget = () => {
             }}
             style={[
               styles.fullWidth,
+              styles.shadow,
               index % 2 === 0 ? styles.height75 : styles.height150,
             ]}
           >
-            <Image
-              src={item.image}
-              style={styles.image}
-              resizeMode="contain"
-              onLoad={(e) => {
-                mes.push({
-                  id: index,
-                  width: e.nativeEvent.width,
-                  height: e.nativeEvent.height,
-                });
-              }}
-            />
+            {item?.thumbnail && (
+              <Image
+                src={item.thumbnail}
+                style={styles.image}
+                resizeMode="contain"
+                onLoad={(e) => {
+                  mes.push({
+                    id: index,
+                    width: e.nativeEvent.width,
+                    height: e.nativeEvent.height,
+                  });
+                }}
+              />
+            )}
           </TouchableOpacity>
         </View>
       );
@@ -122,9 +125,10 @@ export const ShapesWidget = () => {
   );
   return (
     <>
-      <View className="h-40 flex-row justify-around">
+      <View className="h-40 flex-row justify-around border-b-2 border-slate-100">
         <TouchableOpacity
-          className="m-4 flex-1 items-center justify-center"
+          className="m-4 flex-1 items-center justify-center rounded-md"
+          style={styles.shadow}
           onPress={pickImage}
           activeOpacity={1}
         >
@@ -163,6 +167,17 @@ const styles = StyleSheet.create({
   fullWidth: { width: '100%' },
   height75: { height: 75 },
   height150: { height: 150 },
+  shadow: {
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -3,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
+    elevation: 5,
+  },
 });
 const element = (image: string, width: number, height: number) => ({
   component: 'image',

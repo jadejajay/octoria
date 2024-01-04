@@ -14,7 +14,7 @@ import {
   useFirestoreDocLiveQuery,
 } from '@/core';
 import { enquiryPost } from '@/core/share-strings';
-import type { Product } from '@/types';
+import { F_LINKS, F_LINKS_SHARE, type Product } from '@/types';
 import { Text, TouchableOpacity, View } from '@/ui/core';
 import { showSuccessMessage } from '@/ui/utils';
 
@@ -27,7 +27,7 @@ export const ProductDetails = ({ item }: { item: Product }) => {
   const isItemInFavorites = isFavorite(item?.id || '');
   const [Size, setSize] = React.useState('');
   const [Finishing, setFinishing] = React.useState('');
-  const share = useFirestoreDocLiveQuery('links', 'share');
+  const share = useFirestoreDocLiveQuery(F_LINKS, F_LINKS_SHARE);
   const handleButtonPress1 = (_: any, item2: any) => {
     setSize(item2);
   };
@@ -173,7 +173,7 @@ export const ProductDetails = ({ item }: { item: Product }) => {
                 item?.id,
                 item?.name,
                 item?.category,
-                item?.images[0]
+                item?.thumbnail
               );
             }
           }}

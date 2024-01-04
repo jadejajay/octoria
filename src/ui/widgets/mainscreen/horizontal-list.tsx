@@ -8,7 +8,7 @@ import { List } from '@/ui/list';
 import { WIDTH } from '@/ui/theme';
 
 type Props = {
-  data: MainCategory[];
+  data: MainCategory[] | [];
 };
 export const CategoriesList = ({ data }: Props) => {
   const { navigate } = useNavigation();
@@ -25,7 +25,7 @@ export const CategoriesList = ({ data }: Props) => {
             <RectCard
               item={{
                 title: item?.title,
-                color: item?.color!,
+                color: item?.color,
                 image: item?.image,
               }}
               onClick={() => {

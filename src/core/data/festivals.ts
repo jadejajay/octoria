@@ -1,4 +1,10 @@
-export const festivals = [
+import firestore from '@react-native-firebase/firestore';
+
+import { F_POST_IMAGES, type FestivalType } from '@/types';
+
+import { logger } from '../logger';
+
+export const festivals: FestivalType[] = [
   {
     categoryCode: 2,
     thumbnail: 'https://ibaisindia.co.in/chats/festival/25-Pongal.webp',
@@ -673,3 +679,13 @@ export const festivalTags = [
   'Human Rights Day, festival, 10 december, indian flag',
   'New Year 2021, festival, 1 january, indian festival',
 ];
+export const addPostImages = async () => {
+  const batch = firestore().batch();
+  for (let i = 0; i < festivals.length; i++) {
+    const ref = firestore().collection(F_POST_IMAGES).doc();
+    batch.set(ref, festivals[i]);
+    logger.log(`Added document ${i}`);
+  }
+  batch.commit();
+  logger.log(`All Post Images Added Successfully.`);
+};

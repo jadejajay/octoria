@@ -1,8 +1,8 @@
 import firestore from '@react-native-firebase/firestore'; // Import Firestore from your Firebase package
 import { useEffect, useState } from 'react';
 
-export function useFirestoreLiveQuery(collectionName: string) {
-  const [data, setData] = useState<any>([]);
+export function useFirestoreLiveQuery<T>(collectionName: string) {
+  const [data, setData] = useState<T[] | []>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -15,7 +15,7 @@ export function useFirestoreLiveQuery(collectionName: string) {
       querySnapshot?.forEach((doc) => {
         // Extract the document data along with its ID
         const docData = doc.data();
-        const docWithId = { id: doc.id, ...docData };
+        const docWithId = { id: doc.id, ...docData } as T;
         updatedData.push(docWithId);
       });
 

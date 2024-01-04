@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Text, View } from '@/ui';
 
 type Props = {
-  title: string;
+  title?: string;
   subtitle: string;
 };
 export const PostCardHeader = ({ title, subtitle }: Props) => {

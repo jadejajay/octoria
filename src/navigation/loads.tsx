@@ -12,52 +12,42 @@ import {
   useProductsStore,
 } from '@/core';
 import { useSubCategoryStore } from '@/core/editorx/sub-category';
-import type {
-  FestivalType,
-  FrameType,
-  PostMainCategoryType,
-  PostVideoType,
-  Product,
-  SubCategoryType,
+import {
+  F_FRAME_LIST,
+  F_POST_IMAGES,
+  F_POST_MAIN_CATEGORY,
+  F_POST_VIDEOS,
+  F_PRODUCT_LIST,
+  F_SUB_CATEGORY,
+  type FestivalType,
+  type FrameType,
+  type PostMainCategoryType,
+  type PostVideoType,
+  type Product,
+  type SubCategoryType,
 } from '@/types';
 
 const loadDataFromFirestore = async () => {
   try {
     useProductsStore.setState({ productLoading: true });
     logger.log('loading started', Date.now());
-    const ProductSnapshot = await firestore().collection('productList').get();
+    const ProductSnapshot = await firestore().collection(F_PRODUCT_LIST).get();
     const product: Product[] = ProductSnapshot.docs.map((doc) => ({
       id: doc.id,
-      images: doc.data()?.images,
-      catalogue: doc.data()?.catalogue,
-      image3d: doc.data()?.image3d,
-      model: doc.data()?.model,
-      name: doc.data()?.name,
-      price: doc.data()?.price,
-      description: doc.data()?.description,
-      category: doc.data()?.category,
-      subCategory: doc.data()?.subCategory,
-      sizes: doc.data()?.sizes,
-      material: doc.data()?.material,
-      finishing: doc.data()?.finishing,
-      type: doc.data()?.type,
-      quantity: doc.data()?.quantity,
-      featured: doc.data()?.featured,
+      ...doc.data(),
     }));
     useProductsStore.setState({ products: product });
     // logger.log('products==========================\n', product);
 
     logger.log('products loaded', Date.now());
     const SubCategoryStoreSnapshot = await firestore()
-      .collection('SubCategory')
+      .collection(F_SUB_CATEGORY)
       .orderBy('code')
       .get();
     const SubCategoryStoreSnapshotList: SubCategoryType[] =
       SubCategoryStoreSnapshot.docs.map((doc) => ({
         id: doc.id,
-        name: doc.data()?.name,
-        code: doc.data()?.code,
-        date: doc.data()?.date,
+        ...(doc.data() as SubCategoryType),
       }));
     useSubCategoryStore.setState({
       SubCategory: SubCategoryStoreSnapshotList,
@@ -68,16 +58,13 @@ const loadDataFromFirestore = async () => {
     );
     logger.log('SubCategoryStore loaded', Date.now());
     const PostMainCategorySnapshot = await firestore()
-      .collection('postMainCategory')
+      .collection(F_POST_MAIN_CATEGORY)
       .orderBy('code')
       .get();
     const postMainCategorySnapshotList: PostMainCategoryType[] =
       PostMainCategorySnapshot.docs.map((doc) => ({
         id: doc.id,
-        image: doc.data()?.image,
-        name: doc.data()?.name,
-        code: doc.data()?.code,
-        subCode: doc.data()?.subCode,
+        ...(doc.data() as PostMainCategoryType),
       }));
     usePostMainCategoryStore.setState({
       postMainCategory: postMainCategorySnapshotList,
@@ -89,40 +76,35 @@ const loadDataFromFirestore = async () => {
     logger.log('post main category loaded', Date.now());
     useProductsStore.setState({ productLoading: false });
     // festival images and videos to load
-    const FestivalSnapshot = await firestore().collection('postImages').get();
+    const FestivalSnapshot = await firestore().collection(F_POST_IMAGES).get();
     const festival: FestivalType[] = FestivalSnapshot.docs.map((doc) => ({
       id: doc.id,
-      image: doc.data()?.image,
-      thumbnail: doc.data()?.thumbnail,
-      categoryCode: doc.data()?.categoryCode,
-      subCategory: doc.data()?.subCategory,
-      tags: doc.data()?.tags,
+      ...(doc.data() as FestivalType),
     }));
     useFestivalStore.setState({ festival: festival });
     // logger.log('festival ==========================\n', festival);
     logger.log('festival loaded', Date.now());
-    const PostVideosSnapshot = await firestore().collection('postVideos').get();
+    const PostVideosSnapshot = await firestore()
+      .collection(F_POST_VIDEOS)
+      .get();
     const postVideos: PostVideoType[] = PostVideosSnapshot.docs.map((doc) => ({
       id: doc.id,
-      video: doc.data()?.video,
-      thumbnail: doc.data()?.thumbnail,
-      categoryCode: doc.data()?.categoryCode,
-      subCategory: doc.data()?.subCategory,
-      tags: doc.data()?.tags,
+      ...(doc.data() as PostVideoType),
     }));
     usePostVideoStore.setState({ postVideos: postVideos });
     // logger.log('post videos ==========================\n', postVideos);
     logger.log('post videos loaded', Date.now());
     // frames lower priority to load
-    const FrameSnapshot = await firestore().collection('frames').get();
+    const FrameSnapshot = await firestore().collection(F_FRAME_LIST).get();
     const frame: FrameType[] = FrameSnapshot.docs.map((doc) => ({
       id: doc.id,
-      image: doc.data()?.image,
-      elements: doc.data()?.elements,
-      mainWidth: doc.data()?.mainWidth,
+      ...(doc.data() as FrameType),
     }));
     useFrameStore.setState({ frames: frame });
-    logger.log('frames ==========================\n', frame);
+    logger.log(
+      'frames ==========================\n',
+      JSON.stringify(frame, null, 2)
+    );
     logger.log('frames loaded', Date.now());
   } catch (error) {
     logger.error('Error loading data from Firestore:', error);

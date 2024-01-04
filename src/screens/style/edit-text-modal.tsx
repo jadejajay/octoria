@@ -46,7 +46,6 @@ export const EditTextModal = ({
             style={styles.textFont}
             value={text}
             autoFocus={true}
-            // numberOfLines={5}
             multiline={true}
             autoCorrect={true}
             cursorColor={'red'}

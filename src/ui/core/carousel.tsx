@@ -7,6 +7,7 @@ import { Image, StyleSheet, View } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 
 import { useFirestoreLiveQuery } from '@/core';
+import type { MainCarouselType } from '@/types';
 
 import { WIDTH } from '../theme';
 import { AnimatedButton } from './animated-button';
@@ -15,13 +16,14 @@ const horizontalMargin = 4;
 const SLIDER_WIDTH = WIDTH;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH) + horizontalMargin * 2;
 type Props = {
-  item: any;
+  item: MainCarouselType;
   index: any;
 };
 
 export const MainCarousel = ({ name }: { name: string }) => {
   const { navigate } = useNavigation();
-  const { data, isLoading } = useFirestoreLiveQuery(name);
+  const { data, isLoading } = useFirestoreLiveQuery<MainCarouselType>(name);
+
   const filteredData = data?.filter((item: any) => item?.image || item?.video);
   const isCarousel = React.useRef(null);
 

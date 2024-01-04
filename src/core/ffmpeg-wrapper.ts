@@ -52,13 +52,13 @@ export class FFmpegWrapper {
     logger.log('renderedAsset', renderedAsset);
     logger.log('resolution', resolution);
     logger.log('ext', ext);
-    this.outputFile = `${this.outputFile}.${ext}`;
-    const cmd = `-i ${dwnVideo} -i ${renderedAsset} -filter_complex "[0:v]scale=${resolution}:${resolution} [video]; [video][1:v]overlay=0:0 [output]" -map 0:a -c:a copy -map 0:a -strict -2 -c:a aac -map "[output]" -q:v 1 ${this.outputFile}`;
+    var temp = `${this.outputFile}.${ext}`;
+    const cmd = `-i ${dwnVideo} -i ${renderedAsset} -filter_complex "[0:v]scale=${resolution}:${resolution} [video]; [video][1:v]overlay=0:0 [output]" -map 0:a -c:a copy -map 0:a -strict -2 -c:a aac -map "[output]" -q:v 1 ${temp}`;
     const result = await this.executeFFmpegCommand(cmd);
-    this.outputFile = `file://${this.outputFile}`;
+    temp = `file://${this.outputFile}`;
     if (result === 1) {
       showSuccessMessage('render.succ_video');
-      return this.outputFile;
+      return temp;
     } else if (result === 2) {
       showErrorMessage('render.proc_canceled');
       return false;
@@ -104,12 +104,11 @@ export class FFmpegWrapper {
     logger.log('dwnVideo', dwnimage);
     logger.log('filter', filter);
     logger.log('ext', ext);
-    this.outputFile = `${this.outputFile}${Date.now()}.${ext}`;
-    const cmd = `-i ${dwnimage} ${filter} -c:v png ${this.outputFile}`;
+    var temp = `${this.outputFile}_${Date.now()}.${ext}`;
+    const cmd = `-i ${dwnimage} ${filter} -c:v png ${temp}`;
     const result = await this.executeFFmpegCommand(cmd);
-    this.outputFile = `file://${this.outputFile}`;
     if (result === 1) {
-      return this.outputFile;
+      return temp;
     } else {
       return false;
     }

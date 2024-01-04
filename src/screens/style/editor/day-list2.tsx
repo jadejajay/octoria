@@ -41,9 +41,15 @@ export const DayList2 = ({ route }: Props) => {
   const list_of_subcategory = useSubCategoryStore((s) => s.SubCategory);
   const codeToSubcategory = useSubCategoryStore((s) => s.codeToSubcategory);
   const codeToDateFormated = useSubCategoryStore((s) => s.codeToDateFormated);
+  console.log(
+    'postMainCategory',
+    postMainCategory.code,
+    images[0]?.categoryCode
+  );
   const filteredImages = images.filter((img) => {
     return img?.categoryCode === postMainCategory.code;
   });
+  console.log('filteredImages', filteredImages);
   const filteredVideos = videos.filter((img) => {
     return img?.categoryCode === postMainCategory.code;
   });
@@ -51,6 +57,7 @@ export const DayList2 = ({ route }: Props) => {
     ...festival,
     ...list_of_subcategory.find((code) => code.code === festival.subCategory),
   }));
+  console.log('combinedData', combinedData);
   const today = new Date();
   const sortedFestivals = combinedData.map((festival) => {
     if (festival.date === undefined) return festival;
@@ -66,6 +73,7 @@ export const DayList2 = ({ route }: Props) => {
     if (dateDifference >= -1) return { ...festival, dateDifference };
     return { ...festival, dateDifference: 365 + dateDifference };
   });
+  console.log('sortedFestivals', sortedFestivals);
   //@ts-ignore
   sortedFestivals.sort((a, b) => a.dateDifference - b.dateDifference);
   const sortedFestivals2 = combinedData.map((festival) => {
@@ -77,15 +85,18 @@ export const DayList2 = ({ route }: Props) => {
   const uniqueCategoryCodesSet = new Set<number>();
   const newArray: FestivalType[] = semiFinalArray.reduce((result, obj) => {
     // Check if the categoryCode is not in the Set
-    if (!uniqueCategoryCodesSet.has(obj?.subCategory)) {
-      // Add the object to the result array
-      //@ts-ignore
-      result.push(obj);
-      // Add the categoryCode to the Set to mark it as seen
-      uniqueCategoryCodesSet.add(obj?.subCategory);
+    if (obj?.subCategory) {
+      if (!uniqueCategoryCodesSet.has(obj?.subCategory)) {
+        // Add the object to the result array
+        //@ts-ignore
+        result.push(obj);
+        // Add the categoryCode to the Set to mark it as seen
+        uniqueCategoryCodesSet.add(obj?.subCategory);
+      }
     }
     return result;
   }, []);
+  console.log('newArray', newArray);
   function fuzzySearch(query: string): FestivalType[] {
     return newArray.filter((festival) => {
       if (festival?.tags === undefined) return null;
@@ -138,6 +149,7 @@ export const DayList2 = ({ route }: Props) => {
       const imagesWithSameSubcategory = filteredImages.filter(
         (img) => img.subCategory === item.subCategory
       );
+      console.log('imagesWithSameSubcategory', imagesWithSameSubcategory);
       const videosWithSameSubcategory = filteredVideos.filter(
         (img) => img.subCategory === item.subCategory
       );

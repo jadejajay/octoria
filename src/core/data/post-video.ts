@@ -1,4 +1,10 @@
-export const postVideo = [
+import firestore from '@react-native-firebase/firestore';
+
+import type { PostVideoType } from '@/types';
+import { F_POST_VIDEOS } from '@/types';
+
+import { logger } from '../logger';
+export const postVideo: PostVideoType[] = [
   {
     categoryCode: 2,
     subCategory: 15,
@@ -148,3 +154,14 @@ export const postVideoThumbnails = [
   'https://ibaisindia.co.in/chats/gifs/17.gif',
   'https://ibaisindia.co.in/chats/gifs/18.gif',
 ];
+
+export const addPostVideo = async () => {
+  const batch = firestore().batch();
+  for (let i = 0; i < postVideo.length; i++) {
+    const ref = firestore().collection(F_POST_VIDEOS).doc();
+    batch.set(ref, postVideo[i]);
+    logger.log(`Added document ${i}`);
+  }
+  batch.commit();
+  logger.log(`All Videos Added Successfully.`);
+};

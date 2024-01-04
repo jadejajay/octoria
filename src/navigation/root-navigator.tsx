@@ -25,6 +25,7 @@ import {
   SignUpForm,
   Tutorial,
 } from '@/screens';
+import { DeveloperScreen } from '@/screens/style/developer';
 import {
   BackgroundVideosWidget,
   BackgroundWidget,
@@ -42,7 +43,7 @@ import {
   StickersWidget,
   TextModal,
 } from '@/screens/style/editor/widgets';
-import type { UserType } from '@/types';
+import { F_USERS, type UserType } from '@/types';
 import { ARView, ColorWidget } from '@/ui';
 
 import { AuthNavigator } from './auth-navigator';
@@ -75,7 +76,7 @@ export const Root = () => {
       try {
         setEditor(userw?.uid);
         const userDoc = await firestore()
-          .collection('Users')
+          .collection(F_USERS)
           .doc(userw?.uid)
           .get();
 
@@ -165,6 +166,10 @@ export const Root = () => {
                   <Stack.Screen name="ColorWidget" component={ColorWidget} />
                   <Stack.Screen name="FontWidget" component={FontWidget} />
                   <Stack.Screen name="FilterScreen" component={FilterScreen} />
+                  <Stack.Screen
+                    name="DeveloperScreen"
+                    component={DeveloperScreen}
+                  />
                   {/* <Stack.Screen
                     name="ImageColorPicker"
                     component={ImageColorPicker}

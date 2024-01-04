@@ -3,7 +3,7 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
 import { Image, TouchableOpacity } from '@/ui/core';
-import { Shadow } from '@/ui/shadow';
+import { WIDTH } from '@/ui/theme';
 
 type Props = {
   onClick?: () => void;
@@ -24,30 +24,25 @@ export const SmallCard = ({
       onPress={onClick}
       onLongPress={onLongPress}
       activeOpacity={1}
+      style={[
+        styles.container,
+        styles.shadow,
+        isSelected ? { backgroundColor: '#86fbea' } : {},
+      ]}
     >
-      <Shadow
-        style={[
-          styles.container,
-          isSelected ? { backgroundColor: '#86fbea' } : {},
-        ]}
-        className="justify-center rounded bg-white"
-      >
-        <Image
-          key={index}
-          src={url}
-          resizeMode="stretch"
-          style={styles.image}
-        />
-      </Shadow>
+      <Image key={index} src={url} resizeMode="stretch" style={styles.image} />
     </TouchableOpacity>
   );
 };
 const styles = StyleSheet.create({
   container: {
-    overflow: 'hidden',
+    borderColor: '#fff',
+    borderWidth: 2,
+    borderRadius: 3,
+    width: WIDTH / 3 - 8,
+    aspectRatio: 1,
     margin: 4,
-    width: 120,
-    height: 120,
+    marginVertical: 8,
   },
   image: {
     width: '100%',
@@ -63,6 +58,6 @@ const styles = StyleSheet.create({
     },
     shadowOpacity: 0.8,
     shadowRadius: 5,
-    elevation: 4,
+    elevation: 3,
   },
 });

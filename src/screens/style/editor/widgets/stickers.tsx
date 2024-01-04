@@ -11,14 +11,14 @@ import { StyleSheet } from 'react-native';
 
 import { logger, useEditorX } from '@/core';
 import { FirestoreData } from '@/core/fire-util';
-import type { StickerType } from '@/types';
+import { F_STICKERS, type StickerType } from '@/types';
 import { Image, TouchableOpacity, Vertical2CompList, View, WIDTH } from '@/ui';
 
 const theme = '#07ab86';
 export const StickersWidget = () => {
   const addElement = useEditorX((s) => s.addElement);
   const { goBack } = useNavigation();
-  const elementsHandler = new FirestoreData<StickerType>('stickers');
+  const elementsHandler = new FirestoreData<StickerType>(F_STICKERS);
   const [stickers, setStickers] = React.useState<
     StickerType[] | undefined | null
   >([]);
@@ -101,14 +101,20 @@ const Card = ({ item, setElement, onClose }: Props) => {
   };
   return (
     <TouchableOpacity
-      className="m-2 aspect-square w-full"
+      className="m-1 aspect-square w-full rounded p-1"
       activeOpacity={1}
       onPress={() => {
         setElement(element);
         onClose();
       }}
     >
-      <Image src={item.image} style={styles.image} resizeMode="contain" />
+      {item?.image && (
+        <Image
+          src={item.image}
+          style={[styles.image, styles.shadow]}
+          resizeMode="cover"
+        />
+      )}
     </TouchableOpacity>
   );
 };
@@ -116,4 +122,16 @@ const styles = StyleSheet.create({
   image: { width: '100%', height: '100%' },
   image2: { width: '100%', height: '100%', opacity: 1 },
   color1: { color: theme },
+  shadow: {
+    borderRadius: 10,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -3,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
+    elevation: 5,
+  },
 });

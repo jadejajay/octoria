@@ -100,9 +100,10 @@ export const BackgroundWidget = () => {
 
   return (
     <>
-      <View className="h-40 flex-row justify-around">
+      <View className="h-40 flex-row justify-around border-b-2 border-slate-100">
         <TouchableOpacity
-          className="m-4 flex-1 items-center justify-center"
+          className="m-4 flex-1 items-center justify-center rounded-md"
+          style={styles.shadow}
           onPress={captureImage}
           activeOpacity={1}
         >
@@ -114,7 +115,8 @@ export const BackgroundWidget = () => {
           <Text className="font-sfbold text-lg" tx={'editor.click_picture'} />
         </TouchableOpacity>
         <TouchableOpacity
-          className="m-4 flex-1 items-center justify-center"
+          className="m-4 flex-1 items-center justify-center rounded-md"
+          style={styles.shadow}
           onPress={pickImage}
           activeOpacity={1}
         >
@@ -158,11 +160,14 @@ const Card = ({ item, index, setBg, onClose }: Props) => {
       >
         <TouchableOpacity
           key={`festival-card-${index}`}
-          className="aspect-square w-full overflow-hidden rounded-lg bg-green-400"
+          className="aspect-square w-full overflow-hidden rounded-lg"
+          style={styles.shadow}
           activeOpacity={1}
           onPress={() => {
-            setBg(item.image, 'photo');
-            setItem(SUB_CATEGORY, item.subCategory);
+            if (item?.image) {
+              setBg(item.image, 'photo');
+              setItem(SUB_CATEGORY, item.subCategory);
+            }
             onClose();
           }}
         >
@@ -186,4 +191,15 @@ const styles = StyleSheet.create({
   image: { width: WIDTH / 2, height: WIDTH / 2 },
   image2: { width: '100%', height: '100%', opacity: 1 },
   color1: { color: theme },
+  shadow: {
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -3,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
+    elevation: 5,
+  },
 });

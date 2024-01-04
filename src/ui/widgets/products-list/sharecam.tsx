@@ -1,50 +1,94 @@
 /* eslint-disable react-native/no-inline-styles */
-/* eslint-disable react/react-in-jsx-scope */
+
 /* eslint-disable max-lines-per-function */
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import * as MediaLibrary from 'expo-media-library';
 import { useEffect, useRef, useState } from 'react';
-import { Modal, StyleSheet, TouchableOpacity, View } from 'react-native';
+import React from 'react';
+import { Modal, StyleSheet } from 'react-native';
 import { ToastAndroid } from 'react-native';
 import { ImageBackground } from 'react-native';
+import * as Animated from 'react-native-animatable';
 import FastImage from 'react-native-fast-image';
 import ViewShot, { captureRef } from 'react-native-view-shot';
 
 import {
   handleShare,
+  logger,
   saveToGallery,
   useFirestoreLiveQuery,
   useImageStore,
 } from '@/core';
-import { AbsoluteButton, ActivityIndicator, Image, Text } from '@/ui/core';
+import { FirestoreData } from '@/core/fire-util';
+import type { ShareCamBgType } from '@/types';
+import { F_LINKS, F_SHARE_CAM_BG_IMAGES } from '@/types';
+import {
+  AbsoluteButton,
+  ActivityIndicator,
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+} from '@/ui/core';
+import { HorizontalList } from '@/ui/list';
+import { WIDTH } from '@/ui/theme';
 
 import { Gestures } from './simultaneous-gesture';
 
+const ITEM_SIZE = WIDTH / 3;
 export const ShareCam = ({ route }: any) => {
   const { url } = route.params;
-  const server = useFirestoreLiveQuery('links');
+  const server = useFirestoreLiveQuery<{
+    data: any[];
+  }>(F_LINKS);
+  const imagesHandler = new FirestoreData<ShareCamBgType>(
+    F_SHARE_CAM_BG_IMAGES
+  );
   const demoShare = 'Hello, This Post is Generate by Octoria Application.';
   const { image, setImage } = useImageStore();
   const imgRef = useRef(null);
   const imgRefMain = useRef(null);
   const [loading, setLoading] = useState(false);
+  const [showList, setShowList] = useState(false);
   const [share, setShare] = useState(demoShare);
+  const [data, setData] = useState<ShareCamBgType[]>([]);
   const [imageData, setImageData] = useState<string>('');
   const [openShare, setOpenShare] = useState(false);
   const { goBack } = useNavigation();
   useEffect(() => {
+    imagesHandler
+      .getData(20)
+      .then((data2) => {
+        if (data2) {
+          setData(data2);
+        }
+      })
+      .catch((e) => {
+        logger.log(e);
+      });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  useEffect(() => {
     setLoading(true);
-    const shareLink = server.data.find((item: any) => item.id === 'share');
+    const shareLink = server.data.find(
+      (item: any) => item.id === 'share'
+    ) as unknown as {
+      id: string;
+      value: string;
+    };
     const backgroundLink = server.data.find(
       (item: any) => item.id === 'background'
-    );
+    ) as unknown as {
+      id: string;
+      url: string;
+    };
     if (shareLink) {
-      setShare(shareLink.value!);
+      setShare(shareLink.value);
     }
     if (backgroundLink) {
-      setImage(backgroundLink.url!);
+      setImage(backgroundLink.url);
     }
     setLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -102,7 +146,7 @@ export const ShareCam = ({ route }: any) => {
   const handleShareButton = async () => {
     try {
       setLoading(true);
-      const _localUri = await captureRef(imgRef, {
+      await captureRef(imgRef, {
         quality: 1,
       })
         .then((localUri) => {
@@ -117,7 +161,7 @@ export const ShareCam = ({ route }: any) => {
   const handleCapture = async () => {
     try {
       setLoading(true);
-      const _localUri = await captureRef(imgRefMain, {
+      await captureRef(imgRefMain, {
         quality: 1,
       })
         .then((localUri) => {
@@ -133,7 +177,7 @@ export const ShareCam = ({ route }: any) => {
   async function handleDownload() {
     try {
       setLoading(true);
-      const _localUri = await captureRef(imgRef, {
+      await captureRef(imgRef, {
         quality: 1,
       })
         .then((localUri) => {
@@ -145,6 +189,43 @@ export const ShareCam = ({ route }: any) => {
       ToastAndroid.show('download Failed !', ToastAndroid.SHORT);
     }
   }
+  const LongImageCard = React.useCallback(
+    ({ item, index }: { item: ShareCamBgType; index: number }) => {
+      return (
+        <TouchableOpacity
+          key={`category-card-${index}`}
+          className="p-2"
+          activeOpacity={1}
+          style={styles.postImage}
+          onPress={() => {
+            setShowList(false);
+            setImage(item.image);
+          }}
+        >
+          <Animated.View
+            key={index}
+            animation="zoomIn"
+            delay={((index % 10) + 1) * 200}
+            style={styles.button}
+          >
+            <View
+              className="overflow-hidden rounded-lg border-2 border-gray-200"
+              style={[styles.container2, styles.imageCard]}
+            >
+              {item?.thumbnail && (
+                <Image
+                  src={item.thumbnail}
+                  className="h-full w-full"
+                  resizeMode="stretch"
+                />
+              )}
+            </View>
+          </Animated.View>
+        </TouchableOpacity>
+      );
+    },
+    [setImage]
+  );
 
   return (
     <View style={styles.container}>
@@ -176,6 +257,16 @@ export const ShareCam = ({ route }: any) => {
             goBack();
           }}
           color="#fff"
+          sstyle={styles.shadow}
+        />
+        <AbsoluteButton
+          position="top-right"
+          iconName="apps"
+          onPress={() => {
+            setShowList(true);
+          }}
+          color="#fff"
+          sstyle={styles.shadow}
         />
         <Modal visible={loading} style={{ flex: 1 }} transparent={true}>
           <View
@@ -184,6 +275,29 @@ export const ShareCam = ({ route }: any) => {
             <ActivityIndicator size="large" />
           </View>
         </Modal>
+        {showList && (
+          <Modal
+            visible={showList}
+            style={{ flex: 1 }}
+            transparent={true}
+            onRequestClose={() => setShowList(false)}
+          >
+            <View
+              className="flex-1 items-center justify-center"
+              style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}
+            >
+              <View className="h-48">
+                <HorizontalList
+                  Comp={LongImageCard}
+                  data={data}
+                  estimatedItemSize={ITEM_SIZE}
+                  snapToInterval={ITEM_SIZE}
+                />
+              </View>
+            </View>
+          </Modal>
+        )}
+
         <Modal
           visible={openShare}
           onRequestClose={() => {
@@ -204,17 +318,16 @@ export const ShareCam = ({ route }: any) => {
               ref={imgRef}
               style={{
                 width: '100%',
-                height: '80%',
+                height: '95%',
                 borderColor: 'white',
                 overflow: 'hidden',
-                backgroundColor: 'red',
               }}
             >
               {imageData && (
                 <Image
                   source={{ uri: imageData }}
                   style={{ width: '100%', height: '100%' }}
-                  resizeMode="stretch"
+                  resizeMode="cover"
                 />
               )}
               <View style={styles.abs}>
@@ -271,32 +384,46 @@ export const ShareCam = ({ route }: any) => {
         >
           <TouchableOpacity
             onPress={pickImage}
+            activeOpacity={1}
             style={{ flexDirection: 'column', alignItems: 'center' }}
           >
             <MaterialIcons
               name="photo-camera-front"
               size={30}
               color={'white'}
+              style={styles.shadow}
             />
-            <Text variant="xxs" className="font-sfregular text-white">
+            <Text variant="xxs" className="mt-2 font-sfregular text-white">
               Upload From Camera
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={handleCapture}
+            activeOpacity={1}
             style={{ flexDirection: 'column', alignItems: 'center' }}
           >
-            <MaterialIcons name="camera-enhance" size={30} color={'white'} />
-            <Text variant="xxs" className="font-sfregular text-white">
+            <MaterialIcons
+              name="camera-enhance"
+              size={30}
+              color={'white'}
+              style={styles.shadow}
+            />
+            <Text variant="xxs" className="mt-2 font-sfregular text-white">
               Capture
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={uploadImage}
+            activeOpacity={1}
             style={{ flexDirection: 'column', alignItems: 'center' }}
           >
-            <MaterialIcons name="photo-camera-back" size={30} color={'white'} />
-            <Text variant="xxs" className="font-sfregular text-white">
+            <MaterialIcons
+              name="photo-camera-back"
+              size={30}
+              color={'white'}
+              style={styles.shadow}
+            />
+            <Text variant="xxs" className="mt-2 font-sfregular text-white">
               Upload From Gallery
             </Text>
           </TouchableOpacity>
@@ -364,5 +491,39 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: 'white',
+  },
+  container2: {
+    backgroundColor: 'white',
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 4,
+  },
+  shadow: {
+    backgroundColor: 'rgba(255,255,255,0.5)',
+    borderRadius: 100,
+    padding: 5,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 4,
+  },
+  imageCard: {
+    width: '100%',
+    height: '100%',
+  },
+  postImage: {
+    // width: '33.3333%',
+    width: ITEM_SIZE,
+    height: ITEM_SIZE + 50,
   },
 });

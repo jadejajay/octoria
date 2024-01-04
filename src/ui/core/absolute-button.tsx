@@ -8,6 +8,7 @@ interface AbsoluteButtonProps {
   onPress: () => void;
   position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
   style?: string;
+  sstyle?: any;
   color?: string;
 }
 
@@ -31,13 +32,14 @@ export const AbsoluteButton: React.FC<AbsoluteButtonProps> = ({
   onPress,
   position = 'top-left',
   style = '',
+  sstyle,
   color = 'white',
 }) => {
   const buttonPositionStyle = getButtonPositionStyle(position);
   const style2 = `absolute rounded-full p-1 ${buttonPositionStyle} ${style}`;
 
   return (
-    <TouchableOpacity className={style2} onPress={onPress}>
+    <TouchableOpacity className={style2} onPress={onPress} style={sstyle}>
       <Ionicons name={iconName} size={24} color={color} />
     </TouchableOpacity>
   );

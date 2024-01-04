@@ -54,9 +54,10 @@ export const FrameWidget = () => {
   };
   return (
     <>
-      <View className="h-40 flex-row justify-around">
+      <View className="h-40 flex-row justify-around border-b-2 border-slate-100">
         <TouchableOpacity
-          className="m-4 flex-1 items-center justify-center"
+          className="m-4 flex-1 items-center justify-center rounded-md"
+          style={styles.shadow}
           onPress={() => {
             setBg('');
             goBack();
@@ -71,7 +72,8 @@ export const FrameWidget = () => {
           <Text className="font-sfbold text-lg" tx={'editor.remove_frame'} />
         </TouchableOpacity>
         <TouchableOpacity
-          className="m-4 flex-1 items-center justify-center"
+          className="m-4 flex-1 items-center justify-center rounded-md"
+          style={styles.shadow}
           onPress={pickImage}
           activeOpacity={1}
         >
@@ -105,11 +107,13 @@ const Card = ({ item, index, setBg, onClose }: Props) => {
         style={styles.shadow}
         activeOpacity={1}
         onPress={() => {
-          if (item.image) setBg(item.image);
+          if (item?.image) setBg(item.image);
           onClose();
         }}
       >
-        <Image src={item.image} style={styles.image} resizeMode="cover" />
+        {item?.thumbnail && (
+          <Image src={item.thumbnail} style={styles.image} resizeMode="cover" />
+        )}
       </TouchableOpacity>
     </View>
   );

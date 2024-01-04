@@ -16,10 +16,12 @@ import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { StyleSheet } from 'react-native';
 import * as z from 'zod';
 
-import type { BusinessDataType } from '@/core';
 import { logger, useEditorX } from '@/core';
+import type { BusinessDataType } from '@/types';
+import { F_USERS } from '@/types';
 import {
   Image,
   Input,
@@ -64,7 +66,7 @@ export const InfoWidget = () => {
   });
   useEffect(() => {
     // Reference to the Firestore collection
-    const collectionRef = firestore().collection('Users').doc(id);
+    const collectionRef = firestore().collection(F_USERS).doc(id);
     // Subscribe to real-time updates
     const unsubscribe = collectionRef.onSnapshot((querySnapshot) => {
       const user: any = querySnapshot?.data();
@@ -158,7 +160,7 @@ export const InfoWidget = () => {
     try {
       if (data3) {
         setBusiness(data3);
-        await firestore().collection('Users').doc(id).set(
+        await firestore().collection(F_USERS).doc(id).set(
           { info: data3 },
           {
             merge: true,
@@ -181,7 +183,10 @@ export const InfoWidget = () => {
           activeOpacity={1}
           className="w-full items-center justify-center"
         >
-          <View className="m-4 h-20 w-20 overflow-hidden rounded-md bg-slate-400">
+          <View
+            className="m-4 h-20 w-20 overflow-hidden rounded-md"
+            style={styles.shadow}
+          >
             {data?.photo && (
               <Image src={data.photo} style={{ width: wh, height: wh }} />
             )}
@@ -281,7 +286,9 @@ export const InfoWidget = () => {
         />
         <View className="mt-4">
           <TouchableOpacity
-            className="rounded-lg border bg-white shadow-xl"
+            className="rounded-lg border bg-white"
+            style={styles.shadow}
+            activeOpacity={1}
             onPress={handleSubmit(onSubmit)}
           >
             <Text variant="xl" className="text-center" tx={'editor.update'} />
@@ -291,3 +298,17 @@ export const InfoWidget = () => {
     </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  shadow: {
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -3,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+});

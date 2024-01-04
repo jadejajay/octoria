@@ -1,4 +1,10 @@
-export const postMainCategory = [
+import firestore from '@react-native-firebase/firestore';
+
+import { F_POST_MAIN_CATEGORY, type PostMainCategoryType } from '@/types';
+
+import { logger } from '../logger';
+
+export const postMainCategory: PostMainCategoryType[] = [
   {
     code: 1,
     image: 'https://ibaisindia.co.in/chats/mainfestivalcategory/tiles.jpg',
@@ -31,3 +37,13 @@ export const postMainCategory = [
     subCode: 1,
   },
 ];
+export const addPostMainCategory = async () => {
+  const batch = firestore().batch();
+  for (let i = 0; i < postMainCategory.length; i++) {
+    const ref = firestore().collection(F_POST_MAIN_CATEGORY).doc();
+    batch.set(ref, postMainCategory[i]);
+    logger.log(`Added document ${i}`);
+  }
+  batch.commit();
+  logger.log(`All Main Category Added Successfully.`);
+};

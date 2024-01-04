@@ -55,9 +55,10 @@ export const ProductsWidget = () => {
   }, []);
   return (
     <>
-      <View className="h-40 flex-row justify-around">
+      <View className="h-40 flex-row justify-around border-b-2 border-slate-100">
         <TouchableOpacity
-          className="m-4 flex-1 items-center justify-center"
+          className="m-4 flex-1 items-center justify-center rounded-md"
+          style={styles.shadow}
           onPress={pickImage}
           activeOpacity={1}
         >

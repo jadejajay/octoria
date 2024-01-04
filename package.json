@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "cross-env EXPO_NO_DOTENV=1 expo start",
+    "start": "code . && cross-env EXPO_NO_DOTENV=1 expo start",
     "prebuild": "cross-env EXPO_NO_DOTENV=1 pnpm expo prebuild",
     "android": "cross-env EXPO_NO_DOTENV=1 expo run:android",
     "ios": "cross-env EXPO_NO_DOTENV=1 expo run:ios",
@@ -81,7 +81,7 @@
     "expo-splash-screen": "0.20.5",
     "expo-status-bar": "~1.6.0",
     "expo-system-ui": "~2.4.0",
-    "expo-updates": "~0.18.18",
+    "expo-updates": "~0.18.19",
     "ffmpeg-kit-react-native": "^6.0.2",
     "i18next": "^22.4.11",
     "immer": "^10.0.3",

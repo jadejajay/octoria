@@ -25,7 +25,9 @@ export const HorizontalList = ({
     <List
       data={data}
       horizontal
-      contentContainerStyle={{ paddingLeft: padding || 0 }}
+      contentContainerStyle={{
+        paddingLeft: padding || 0,
+      }}
       pagingEnabled
       onEndReached={onEndReached}
       keyExtractor={(_, index) => {

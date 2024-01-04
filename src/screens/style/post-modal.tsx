@@ -18,10 +18,11 @@ import { captureRef } from 'react-native-view-shot';
 
 import { logger, saveToGallery, shareImageWithTitle } from '@/core';
 import { sharePost } from '@/core/share-strings';
+import type { FestivalImageType } from '@/types';
 import { ActivityIndicator, Text, TouchableOpacity, View } from '@/ui';
 
 type Props = {
-  data: any;
+  data: FestivalImageType[] | [];
   modalVisible: any;
   setModalVisible: any;
   User: any;
@@ -144,7 +145,7 @@ const Post = ({
   name,
   photo,
 }: {
-  data: any;
+  data: FestivalImageType[];
   name: string;
   photo: string;
 }) => {

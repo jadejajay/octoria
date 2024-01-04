@@ -11,12 +11,12 @@ import { StyleSheet } from 'react-native';
 
 import { logger, useEditorX } from '@/core';
 import { FirestoreData } from '@/core/fire-util';
-import type { LogosType } from '@/types';
+import { F_LOGOS_LIST, type LogosType } from '@/types';
 import { Image, TouchableOpacity, Vertical2CompList, View } from '@/ui';
 
 const theme = '#07ab86';
 export const LogosWidget = () => {
-  const imagesHandler = new FirestoreData<LogosType>('logosList');
+  const imagesHandler = new FirestoreData<LogosType>(F_LOGOS_LIST);
   const [logos, setLogos] = React.useState<LogosType[] | []>([]);
   const addElement = useEditorX((s) => s.addElement);
   const { goBack } = useNavigation();
@@ -102,14 +102,17 @@ const Card = ({ item, index, setElement, onClose }: Props) => {
     <View className="flex-1 p-2">
       <TouchableOpacity
         key={`festival-card-${index}`}
-        className="aspect-square w-full overflow-hidden rounded-lg bg-green-400"
+        className="aspect-square w-full overflow-hidden rounded-lg"
+        style={styles.shadow}
         activeOpacity={1}
         onPress={() => {
           setElement(element);
           onClose();
         }}
       >
-        <Image src={item.image} style={styles.image} resizeMode="cover" />
+        {item?.thumbnail && (
+          <Image src={item.thumbnail} style={styles.image} resizeMode="cover" />
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -119,4 +122,15 @@ const styles = StyleSheet.create({
   image: { width: '100%', height: '100%' },
   image2: { width: '100%', height: '100%', opacity: 1 },
   color1: { color: theme },
+  shadow: {
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -3,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
+    elevation: 5,
+  },
 });

@@ -37,6 +37,7 @@ export type HomeStackParamList = {
   Products: undefined;
   Logos: undefined;
   Elements: undefined;
+  DeveloperScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<HomeStackParamList>();

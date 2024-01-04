@@ -18,7 +18,6 @@ import FastImage from 'react-native-fast-image';
 import { showMessage } from 'react-native-flash-message';
 import ViewShot from 'react-native-view-shot';
 
-import type { Element } from '@/core';
 import {
   EditingFeatures,
   getImageBase64,
@@ -33,6 +32,7 @@ import {
   useRenderStore,
   VideoCacheManager,
 } from '@/core';
+import type { Element } from '@/types';
 import {
   type BackgroundType,
   type EditingFeaturesType,
@@ -52,6 +52,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  WIDTH,
 } from '@/ui';
 
 import { ImageWidget, TextWidget } from './widgets';
@@ -64,6 +65,7 @@ type Props = {
   };
 };
 const resolution = 1024;
+const interval = WIDTH / 3 - 8;
 //promise classes reference
 export const Editorx = ({ dim }: Props) => {
   // state management
@@ -267,11 +269,11 @@ export const Editorx = ({ dim }: Props) => {
         // eslint-disable-next-line react/no-unstable-nested-components
         Comp={({ item }: { item: BackgroundType }) => (
           <SmallCard
-            key={item.id}
+            key={item?.id}
             onClick={() => {
-              setBg(item.image, 'photo');
+              if (item?.image) setBg(item.image, 'photo');
             }}
-            url={item.image}
+            url={item?.image}
             // isSelected={BackGroundPicker.imageUri === item.image}
           />
         )}
@@ -282,8 +284,8 @@ export const Editorx = ({ dim }: Props) => {
             url={Env.GIF_CAMERA}
           />
         )}
-        snapToInterval={128}
-        estimatedItemSize={130}
+        snapToInterval={interval}
+        estimatedItemSize={interval}
         data={sFestivals}
       />
     );
@@ -311,8 +313,8 @@ export const Editorx = ({ dim }: Props) => {
             url={Env.GIF_CAMERA}
           />
         )}
-        snapToInterval={128}
-        estimatedItemSize={100}
+        snapToInterval={interval}
+        estimatedItemSize={interval}
         data={sPostVideos}
       />
     );
@@ -340,8 +342,8 @@ export const Editorx = ({ dim }: Props) => {
         Header={() => (
           <SmallCard onClick={() => navigate('Frames')} url={Env.GIF_CAMERA} />
         )}
-        snapToInterval={128}
-        estimatedItemSize={100}
+        snapToInterval={interval}
+        estimatedItemSize={interval}
         data={sFrame.slice(0, 10)}
       />
     );
@@ -669,8 +671,6 @@ const styles = StyleSheet.create({
     opacity: 0.25,
   },
   widget: {
-    flexDirection: 'row',
-    alignItems: 'center',
     height: 160, //  Widget Height
   },
   fullVideo: {
@@ -688,7 +688,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   footerHeight: {
-    height: 140, //  Footer Height
+    // height: 140, //  Footer Height
   },
   octoria: {
     width: 50,

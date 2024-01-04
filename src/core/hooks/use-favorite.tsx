@@ -3,6 +3,8 @@ import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { useEffect, useState } from 'react';
 
+import { F_FAVORITES } from '@/types';
+
 import { logger } from '../logger';
 
 export function useFavorites() {
@@ -12,7 +14,7 @@ export function useFavorites() {
 
   useEffect(() => {
     const unsubscribe = firestore()
-      .collection('favorites')
+      .collection(F_FAVORITES)
       .where('userId', '==', userId)
       .onSnapshot((querySnapshot) => {
         const updatedFavorites: any = [];
@@ -37,7 +39,7 @@ export function useFavorites() {
     image: any
   ) => {
     try {
-      await firestore().collection('favorites').doc(id).set({
+      await firestore().collection(F_FAVORITES).doc(id).set({
         userId,
         name,
         desc,
@@ -55,7 +57,7 @@ export function useFavorites() {
 
   const deleteFavorite = async (favoriteId: string | undefined) => {
     try {
-      await firestore().collection('favorites').doc(favoriteId).delete();
+      await firestore().collection(F_FAVORITES).doc(favoriteId).delete();
     } catch (error) {
       console.error('Error deleting favorite:', error);
     }

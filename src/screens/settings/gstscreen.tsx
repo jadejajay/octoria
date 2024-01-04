@@ -7,6 +7,7 @@ import * as React from 'react';
 import { Modal, StyleSheet, ToastAndroid } from 'react-native';
 
 import { useFirestoreDocLiveQuery } from '@/core';
+import { F_LINKS, F_LINKS_GSTAPIKEY } from '@/types';
 import {
   ActivityIndicator,
   AnimatedButton,
@@ -28,7 +29,7 @@ export const GstView = ({}: Props) => {
     }
   );
   const [loading, setLoading] = React.useState(false);
-  const apiKey = useFirestoreDocLiveQuery('links', 'gstapi');
+  const apiKey = useFirestoreDocLiveQuery(F_LINKS, F_LINKS_GSTAPIKEY);
 
   const handleSearch = () => {
     setLoading(true);

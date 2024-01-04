@@ -16,6 +16,8 @@ import {
   useSearchStore,
   useUserStore,
 } from '@/core';
+import type { FestivalImageType, MainCategory } from '@/types';
+import { F_FESTIVAL_IMAGE, F_MAIN_CAROUSEL, F_MAIN_CATEGORY } from '@/types';
 import {
   CategoriesList,
   ChooseBrand,
@@ -25,6 +27,7 @@ import {
   NewProductList,
   ScrollView,
   SearchBar,
+  Text,
   View,
   WIDTH,
 } from '@/ui';
@@ -39,12 +42,13 @@ export const Style = () => {
   const [update, setUpdate] = useState(1);
   const { navigate } = useNavigation();
 
-  const MainCategories = useFirestoreLiveQuery('MainCategory');
+  const MainCategories = useFirestoreLiveQuery<MainCategory>(F_MAIN_CATEGORY);
   logger.log(MainCategories, '<=====MainCategories');
 
   const User = useUserStore((s) => s.user);
   const setSearch = useSearchStore((s) => s.setSearch);
-  const FestivalImage = useFirestoreLiveQuery('FestivalImage');
+  const FestivalImage =
+    useFirestoreLiveQuery<FestivalImageType>(F_FESTIVAL_IMAGE);
 
   const { productLoading, products } = useProductsStore();
   const [assist, _] = useAssistance();
@@ -118,7 +122,7 @@ export const Style = () => {
       <>
         <Greeting />
         <View className="py-2 pt-4 ">
-          <MainCarousel name={'MainCarousel'} />
+          <MainCarousel name={F_MAIN_CAROUSEL} />
         </View>
         <ChooseBrand title={'mainscreen.categories'} />
       </>
@@ -180,6 +184,16 @@ export const Style = () => {
         </View>
         {FestivalImageModal()}
       </ScrollView>
+      {/* developer screen */}
+      <Text
+        variant="sm"
+        className="absolute bottom-6 right-6 rounded-lg bg-blue-600 p-4 font-sfbold text-white"
+        onPress={() => {
+          navigate('DeveloperScreen');
+        }}
+      >
+        {'</>'}
+      </Text>
     </>
   );
 };

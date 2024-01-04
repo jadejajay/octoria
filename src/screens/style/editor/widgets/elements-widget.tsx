@@ -16,7 +16,7 @@ import { StyleSheet } from 'react-native';
 
 import { logger, useEditorX } from '@/core';
 import { FirestoreData } from '@/core/fire-util';
-import type { ElementsType } from '@/types';
+import { type ElementsType, F_ELEMENTS } from '@/types';
 import { EmptyList, Image, Text, TouchableOpacity, View } from '@/ui';
 
 type Props = {
@@ -31,12 +31,10 @@ type mesProp = {
 const theme = '#07ab86';
 export const ElementsWidget = () => {
   const elementsHandler = React.useMemo(
-    () => new FirestoreData<ElementsType>('elements'),
+    () => new FirestoreData<ElementsType>(F_ELEMENTS),
     []
   );
-  const [elements, setElements] = React.useState<
-    ElementsType[] | undefined | null
-  >([]);
+  const [elements, setElements] = React.useState<ElementsType[]>([]);
   const addElement = useEditorX((s) => s.addElement);
   const { goBack } = useNavigation();
   const mes: mesProp[] = React.useMemo(() => [], []);
@@ -82,38 +80,43 @@ export const ElementsWidget = () => {
             className="overflow-hidden rounded-lg"
             activeOpacity={1}
             onPress={() => {
-              if (mes[index]?.width) {
-                if (mes[index]?.height) {
-                  addElement(
-                    element(item.image, mes[index]?.width, mes[index]?.height)
-                  );
-                  goBack();
+              if (item?.image) {
+                if (mes[index]?.width) {
+                  if (mes[index]?.height) {
+                    addElement(
+                      element(item.image, mes[index]?.width, mes[index]?.height)
+                    );
+                    goBack();
+                  } else {
+                    addElement(element(item.image, mes[index]?.width, 150));
+                    goBack();
+                  }
                 } else {
-                  addElement(element(item.image, mes[index]?.width, 150));
+                  addElement(element(item.image, 150, 150));
                   goBack();
                 }
-              } else {
-                addElement(element(item.image, 150, 150));
-                goBack();
               }
             }}
             style={[
               styles.fullWidth,
+              styles.shadow,
               index % 2 === 0 ? styles.height75 : styles.height150,
             ]}
           >
-            <Image
-              src={item.image}
-              style={styles.image}
-              resizeMode="contain"
-              onLoad={(e) => {
-                mes.push({
-                  id: index,
-                  width: e.nativeEvent.width,
-                  height: e.nativeEvent.height,
-                });
-              }}
-            />
+            {item?.thumbnail && (
+              <Image
+                src={item.thumbnail}
+                style={styles.image}
+                resizeMode="contain"
+                onLoad={(e) => {
+                  mes.push({
+                    id: index,
+                    width: e.nativeEvent.width,
+                    height: e.nativeEvent.height,
+                  });
+                }}
+              />
+            )}
           </TouchableOpacity>
         </View>
       );
@@ -123,9 +126,10 @@ export const ElementsWidget = () => {
 
   return (
     <>
-      <View className="h-40 flex-row justify-around">
+      <View className="h-40 flex-row justify-around border-b-2 border-slate-100">
         <TouchableOpacity
-          className="m-4 flex-1 items-center justify-center"
+          className="m-4 flex-1 items-center justify-center rounded-md"
+          style={styles.shadow}
           onPress={pickImage}
           activeOpacity={1}
         >
@@ -166,6 +170,18 @@ export const styles = StyleSheet.create({
   fullWidth: { width: '100%' },
   height75: { height: 75 },
   height150: { height: 150 },
+  shadow: {
+    borderRadius: 10,
+    backgroundColor: '#fff',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -3,
+    },
+    shadowOpacity: 0.8,
+    shadowRadius: 5,
+    elevation: 5,
+  },
 });
 const element = (image: string, width: number, height: number) => ({
   component: 'image',

@@ -1,5 +1,6 @@
-//@ts-nocheck
 import firestore from '@react-native-firebase/firestore';
+
+import { logger } from './logger';
 
 // import { generateRandomFestivalPost } from './array-utils';
 // import { postVideosList, postVideoThumbnails } from './data/post-video';

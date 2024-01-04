@@ -4,8 +4,8 @@ import type { RenderItemParams } from 'react-native-draggable-flatlist';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import Animated, { SlideInRight, SlideInUp } from 'react-native-reanimated';
 
-import type { Element } from '@/core';
 import { useEditorX } from '@/core';
+import type { Element } from '@/types';
 import { Image, Text, TouchableOpacity, View } from '@/ui';
 
 const AnimatedTouchableOpacity =

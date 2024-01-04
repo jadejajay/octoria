@@ -14,6 +14,7 @@ import {
   useAssistance,
   useFirestoreDocLiveQuery,
 } from '@/core';
+import { F_LINKS, F_LINKS_SETTINGS, F_USERS } from '@/types';
 import {
   Button,
   colors,
@@ -34,8 +35,8 @@ export const Settings = () => {
   const [update, setUpdate] = React.useState(1);
   const [isEnabled, setIsEnable] = useAssistance();
   const user = auth().currentUser;
-  const { data } = useFirestoreDocLiveQuery('links', 'settings');
-  const User = useFirestoreDocLiveQuery('Users', user?.uid as string);
+  const { data } = useFirestoreDocLiveQuery(F_LINKS, F_LINKS_SETTINGS);
+  const User = useFirestoreDocLiveQuery(F_USERS, user?.uid as string);
   const iconColor = colors.neutral[400];
   const signOut = () => {
     auth().signOut();

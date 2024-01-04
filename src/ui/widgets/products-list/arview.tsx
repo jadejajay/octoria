@@ -65,7 +65,7 @@ export const ARView = ({ route }: Props) => {
   const handleShareButton = async () => {
     try {
       setLoading(true);
-      const _localUri = await captureRef(imgRef, {
+      await captureRef(imgRef, {
         quality: 1,
       })
         .then((localUri) => {
@@ -80,7 +80,7 @@ export const ARView = ({ route }: Props) => {
   async function handleDownload() {
     try {
       setLoading(true);
-      const _localUri = await captureRef(imgRef, {
+      await captureRef(imgRef, {
         quality: 1,
       })
         .then((localUri) => {
@@ -150,7 +150,7 @@ export const ARView = ({ route }: Props) => {
             ref={imgRef}
             style={{
               width: '100%',
-              height: '80%',
+              height: '95%',
               borderColor: 'white',
               overflow: 'hidden',
             }}

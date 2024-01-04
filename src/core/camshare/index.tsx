@@ -1,4 +1,3 @@
-//zustand store for saving image
 import { Env } from '@env';
 import { create } from 'zustand';
 
