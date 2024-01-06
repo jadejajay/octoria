@@ -1,5 +1,4 @@
 export function isDateInRange(dateString: string): boolean {
-  console.log('dateString', dateString);
   // Parse the input date string to create a Date object
   if (dateString === 'every') return true;
   if (!dateString) return false;
@@ -15,7 +14,6 @@ export function isDateInRange(dateString: string): boolean {
 
   // Calculate the number of days
   const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-  console.log('daysDifference', daysDifference);
   // Check if the date is within a 30-day range from today
   return daysDifference >= 0 && daysDifference <= 30;
   // return true;

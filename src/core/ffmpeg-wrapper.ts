@@ -110,6 +110,7 @@ export class FFmpegWrapper {
     if (result === 1) {
       return temp;
     } else {
+      showErrorMessage('render.failed_filter');
       return false;
     }
   }

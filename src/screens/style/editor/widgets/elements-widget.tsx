@@ -14,7 +14,7 @@ import React, { useCallback, useEffect } from 'react';
 import { ToastAndroid } from 'react-native';
 import { StyleSheet } from 'react-native';
 
-import { logger, useEditorX } from '@/core';
+import { useEditorX } from '@/core';
 import { FirestoreData } from '@/core/fire-util';
 import { type ElementsType, F_ELEMENTS } from '@/types';
 import { EmptyList, Image, Text, TouchableOpacity, View } from '@/ui';
@@ -22,11 +22,6 @@ import { EmptyList, Image, Text, TouchableOpacity, View } from '@/ui';
 type Props = {
   item: ElementsType;
   index: number;
-};
-type mesProp = {
-  id: any;
-  width: number;
-  height: number;
 };
 const theme = '#07ab86';
 export const ElementsWidget = () => {
@@ -37,7 +32,6 @@ export const ElementsWidget = () => {
   const [elements, setElements] = React.useState<ElementsType[]>([]);
   const addElement = useEditorX((s) => s.addElement);
   const { goBack } = useNavigation();
-  const mes: mesProp[] = React.useMemo(() => [], []);
   const getElements = useCallback(async () => {
     const data = await elementsHandler.getData(20);
     if (data) setElements(data);
@@ -62,9 +56,8 @@ export const ElementsWidget = () => {
         quality: 1,
       });
       if (!result.canceled) {
-        logger.log(result);
-
-        addElement(element(result.assets[0]?.uri, 150, 150));
+        var aspect = result.assets[0].width / result.assets[0].height;
+        addElement(element(result.assets[0].uri, 150, 150 / aspect));
         goBack();
       }
     } catch (error) {
@@ -80,22 +73,8 @@ export const ElementsWidget = () => {
             className="overflow-hidden rounded-lg"
             activeOpacity={1}
             onPress={() => {
-              if (item?.image) {
-                if (mes[index]?.width) {
-                  if (mes[index]?.height) {
-                    addElement(
-                      element(item.image, mes[index]?.width, mes[index]?.height)
-                    );
-                    goBack();
-                  } else {
-                    addElement(element(item.image, mes[index]?.width, 150));
-                    goBack();
-                  }
-                } else {
-                  addElement(element(item.image, 150, 150));
-                  goBack();
-                }
-              }
+              addElement(element(item.image, 150, 150));
+              goBack();
             }}
             style={[
               styles.fullWidth,
@@ -108,20 +87,13 @@ export const ElementsWidget = () => {
                 src={item.thumbnail}
                 style={styles.image}
                 resizeMode="contain"
-                onLoad={(e) => {
-                  mes.push({
-                    id: index,
-                    width: e.nativeEvent.width,
-                    height: e.nativeEvent.height,
-                  });
-                }}
               />
             )}
           </TouchableOpacity>
         </View>
       );
     },
-    [addElement, goBack, mes]
+    [addElement, goBack]
   );
 
   return (
@@ -194,7 +166,7 @@ const element = (image: string, width: number, height: number) => ({
         overflow: 'hidden',
       },
     },
-    resizeMode: 'stretch',
+    resizeMode: 'contain',
     offset: {
       x: 0,
       y: 0,

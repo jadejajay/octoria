@@ -23,11 +23,6 @@ type Props = {
   item: ShapesType;
   index: number;
 };
-type mesProp = {
-  id: any;
-  width: number;
-  height: number;
-};
 const theme = '#07ab86';
 export const ShapesWidget = () => {
   const shapesHandler = React.useMemo(
@@ -37,8 +32,6 @@ export const ShapesWidget = () => {
   const [shapes, setShapes] = React.useState<ShapesType[] | []>([]);
   const addElement = useEditorX((s) => s.addElement);
   const { goBack } = useNavigation();
-  const mes: mesProp[] = React.useMemo(() => [], []);
-
   const getShapes = useCallback(async () => {
     const data = await shapesHandler.getData(20);
     if (data) setShapes(data);
@@ -64,9 +57,8 @@ export const ShapesWidget = () => {
         quality: 1,
       });
       if (!result.canceled) {
-        logger.log(result);
-
-        addElement(element(result.assets[0]?.uri, 150, 150));
+        var aspect = result.assets[0].width / result.assets[0].height;
+        addElement(element(result.assets[0]?.uri, 150, 150 / aspect));
         goBack();
       }
     } catch (error) {
@@ -82,20 +74,8 @@ export const ShapesWidget = () => {
             className="overflow-hidden rounded-lg"
             activeOpacity={1}
             onPress={() => {
-              if (mes[index]?.width) {
-                if (mes[index]?.height) {
-                  addElement(
-                    element(item.image, mes[index]?.width, mes[index]?.height)
-                  );
-                  goBack();
-                } else {
-                  addElement(element(item.image, mes[index]?.width, 150));
-                  goBack();
-                }
-              } else {
-                addElement(element(item.image, 150, 150));
-                goBack();
-              }
+              addElement(element(item.image, 150, 150));
+              goBack();
             }}
             style={[
               styles.fullWidth,
@@ -108,20 +88,13 @@ export const ShapesWidget = () => {
                 src={item.thumbnail}
                 style={styles.image}
                 resizeMode="contain"
-                onLoad={(e) => {
-                  mes.push({
-                    id: index,
-                    width: e.nativeEvent.width,
-                    height: e.nativeEvent.height,
-                  });
-                }}
               />
             )}
           </TouchableOpacity>
         </View>
       );
     },
-    [addElement, goBack, mes]
+    [addElement, goBack]
   );
   return (
     <>
@@ -190,7 +163,7 @@ const element = (image: string, width: number, height: number) => ({
         overflow: 'hidden',
       },
     },
-    resizeMode: 'stretch',
+    resizeMode: 'contain',
     offset: {
       x: 0,
       y: 0,

@@ -50,7 +50,7 @@ export const DeveloperScreen = () => {
           <Text className="font-sfbold text-blue-200">{text}</Text>
         </ScrollView>
       </View>
-      <View className="flex-1 flex-row flex-wrap gap-4 p-4">
+      <ScrollView className="mt-4 flex-1 gap-4 p-4">
         <Text
           className="rounded bg-blue-600 p-3 text-center font-sfbold text-white"
           onPress={() => addMainCarousel()}
@@ -141,7 +141,7 @@ export const DeveloperScreen = () => {
         >
           Add Stickers
         </Text>
-      </View>
+      </ScrollView>
     </View>
   );
 };

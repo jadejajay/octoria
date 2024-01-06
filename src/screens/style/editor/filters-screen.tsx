@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { Modal, StyleSheet } from 'react-native';
+// import RNFetchBlob from 'react-native-blob-util';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -36,6 +37,8 @@ import {
 
 import { BotSearchBar } from './components/bot-searchbar';
 const SNAP = WIDTH / 3;
+
+// const dirs = RNFetchBlob.fs.dirs.DocumentDir;
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
 export const FilterScreen = () => {
@@ -58,9 +61,17 @@ export const FilterScreen = () => {
   const [displayedText, setDisplayedText] = React.useState('');
   const [modalVisible, setModalVisible] = React.useState(false);
   const [brightenList, setBrightenList] = React.useState<any>([]);
+  const [contrastList, setContrastList] = React.useState<any>([]);
+  const [saturationList, setSaturationList] = React.useState<any>([]);
+  const [gammaList, setGammaList] = React.useState<any>([]);
+  const [hueList, setHueList] = React.useState<any>([]);
+  const [blurList, setBlurList] = React.useState<any>([]);
+  const [sharpenList, setSharpenList] = React.useState<any>([]);
+  const [tintList, setTintList] = React.useState<any>([]);
+  const [sepiaList, setSepiaList] = React.useState<any>([]);
   const [thumbnail, setThumbnail] = React.useState('');
-  const [chromakey, setChromakey] = React.useState('1');
-  const [chromakey2, setChromakey2] = React.useState('1');
+  const [chromakey, setChromakey] = React.useState('5');
+  const [chromakey2, setChromakey2] = React.useState('10');
   const [chromaFunc, setChromaFunc] = React.useState(true);
   const ffmpeg = React.useMemo(() => new FFmpegWrapper(), []);
 
@@ -78,31 +89,212 @@ export const FilterScreen = () => {
   }, [thumbnail]);
 
   const createThumbnailAsync = React.useCallback(async () => {
-    const result = await ffmpeg.applyFilter({
-      dwnimage: originalImage,
-      filter: '-vf scale=64:-1',
-      ext: 'png',
-    });
-    logger.log(result, '<=========result of thumbnail');
-    if (result) setThumbnail(result);
-  }, [ffmpeg, originalImage]);
+    setDisplayedText('');
+    let selectedImage = isSpecial() ? userPhoto : mainimage;
+    if (selectedImage) {
+      setOriginalImage(selectedImage);
+      setImage(selectedImage);
+    }
+    if (!selectedImage) return;
+
+    try {
+      const result = await ffmpeg.applyFilter({
+        dwnimage: selectedImage,
+        filter: '-vf scale=64:-1',
+        ext: 'png',
+      });
+      logger.log(result, '<=========result of thumbnail');
+      if (result) setThumbnail(result);
+    } catch (error) {
+      logger.error(error, '<=========error creating thumbnail');
+    }
+  }, [ffmpeg, isSpecial, mainimage, setImage, setOriginalImage, userPhoto]);
 
   const createBrightenListAsync = React.useCallback(async () => {
     if (!thumbnail) return;
-    brightenCommand.map(async (cmd) => {
-      await ffmpeg
-        .applyFilter({
-          dwnimage: thumbnail,
-          filter: cmd,
-          ext: 'png',
-        })
-        .then((res) => {
-          setBrightenList((prevList: any) => {
-            return [...prevList, { command: cmd, image: res }];
-          });
-        });
-    });
+    await processBrightenCommands();
+    await processContrastCommands();
+    await processSaturationCommands();
+    await processGammaCommands();
+    await processHueCommands();
+    await processBlurCommands();
+    await processSharpenCommands();
+    await processTintCommands();
+    await processSepiaCommands();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ffmpeg, thumbnail]);
+
+  const processBrightenCommands = async () => {
+    try {
+      await Promise.all(
+        brightenCommand.map(async (cmd) => {
+          return await ffmpeg
+            .applyFilter({
+              dwnimage: thumbnail,
+              filter: cmd,
+              ext: 'png',
+            })
+            .then((res) => {
+              setBrightenList((prevList: any) => {
+                return [...prevList, { command: cmd, image: res }];
+              });
+            });
+        })
+      );
+    } catch (error) {}
+  };
+  const processContrastCommands = async () => {
+    try {
+      await Promise.all(
+        contrastCommand.map(async (cmd) => {
+          return await ffmpeg
+            .applyFilter({
+              dwnimage: thumbnail,
+              filter: cmd,
+              ext: 'png',
+            })
+            .then((res) => {
+              setContrastList((prevList: any) => {
+                return [...prevList, { command: cmd, image: res }];
+              });
+            });
+        })
+      );
+    } catch (error) {}
+  };
+  const processSaturationCommands = async () => {
+    try {
+      await Promise.all(
+        saturationCommand.map(async (cmd) => {
+          return await ffmpeg
+            .applyFilter({
+              dwnimage: thumbnail,
+              filter: cmd,
+              ext: 'png',
+            })
+            .then((res) => {
+              setSaturationList((prevList: any) => {
+                return [...prevList, { command: cmd, image: res }];
+              });
+            });
+        })
+      );
+    } catch (error) {}
+  };
+  const processGammaCommands = async () => {
+    try {
+      await Promise.all(
+        gammaCommand.map(async (cmd) => {
+          return await ffmpeg
+            .applyFilter({
+              dwnimage: thumbnail,
+              filter: cmd,
+              ext: 'png',
+            })
+            .then((res) => {
+              setGammaList((prevList: any) => {
+                return [...prevList, { command: cmd, image: res }];
+              });
+            });
+        })
+      );
+    } catch (error) {}
+  };
+  const processHueCommands = async () => {
+    try {
+      await Promise.all(
+        hueCommand.map(async (cmd) => {
+          return await ffmpeg
+            .applyFilter({
+              dwnimage: thumbnail,
+              filter: cmd,
+              ext: 'png',
+            })
+            .then((res) => {
+              setHueList((prevList: any) => {
+                return [...prevList, { command: cmd, image: res }];
+              });
+            });
+        })
+      );
+    } catch (error) {}
+  };
+  const processBlurCommands = async () => {
+    try {
+      await Promise.all(
+        blurCommand.map(async (cmd) => {
+          return await ffmpeg
+            .applyFilter({
+              dwnimage: thumbnail,
+              filter: cmd,
+              ext: 'png',
+            })
+            .then((res) => {
+              setBlurList((prevList: any) => {
+                return [...prevList, { command: cmd, image: res }];
+              });
+            });
+        })
+      );
+    } catch (error) {}
+  };
+  const processSharpenCommands = async () => {
+    try {
+      await Promise.all(
+        sharpenCommand.map(async (cmd) => {
+          return await ffmpeg
+            .applyFilter({
+              dwnimage: thumbnail,
+              filter: cmd,
+              ext: 'png',
+            })
+            .then((res) => {
+              setSharpenList((prevList: any) => {
+                return [...prevList, { command: cmd, image: res }];
+              });
+            });
+        })
+      );
+    } catch (error) {}
+  };
+  const processTintCommands = async () => {
+    try {
+      await Promise.all(
+        tintCommand.map(async (cmd: any) => {
+          return await ffmpeg
+            .applyFilter({
+              dwnimage: thumbnail,
+              filter: cmd,
+              ext: 'png',
+            })
+            .then((res) => {
+              setTintList((prevList: any) => {
+                return [...prevList, { command: cmd, image: res }];
+              });
+            });
+        })
+      );
+    } catch (error) {}
+  };
+  const processSepiaCommands = async () => {
+    try {
+      await Promise.all(
+        sepiatonesCommand.map(async (cmd: any) => {
+          return await ffmpeg
+            .applyFilter({
+              dwnimage: thumbnail,
+              filter: cmd,
+              ext: 'png',
+            })
+            .then((res) => {
+              setSepiaList((prevList: any) => {
+                return [...prevList, { command: cmd, image: res }];
+              });
+            });
+        })
+      );
+    } catch (error) {}
+  };
 
   React.useEffect(() => {
     setDisplayedText('');
@@ -136,20 +328,6 @@ export const FilterScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [question]);
 
-  React.useEffect(() => {
-    setDisplayedText('');
-    if (isSpecial()) {
-      setImage(userPhoto);
-      setOriginalImage(userPhoto);
-    } else {
-      if (mainimage) {
-        setImage(mainimage);
-        setOriginalImage(mainimage);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   const backgroundColorStyle = useAnimatedStyle(() => ({
     backgroundColor: selectedColor.value,
   }));
@@ -181,6 +359,21 @@ export const FilterScreen = () => {
     },
     [ffmpeg, image, setImage]
   );
+  const handleCardPress = React.useCallback(
+    async (item: any) => {
+      if (item?.command) {
+        applyFilter(item.command);
+      } else {
+        const result = await ffmpeg.applyFilter({
+          dwnimage: image,
+          filter: `-i ${item} -filter_complex "[0:v]scale=600:600[resized_main];[1:v]scale=600:600[resized_cutter];[resized_cutter]format=rgba,alphaextract[alpha];[resized_main][alpha]alphamerge[outv]" -map "[outv]"`,
+          ext: 'png',
+        });
+        if (result) setImage(result);
+      }
+    },
+    [applyFilter, ffmpeg, image, setImage]
+  );
   const handleChromaPress = React.useCallback(() => {
     setModalVisible(!modalVisible);
     // applyFilter(`-vf chromakey=${selectedColor.value}:${chromakey}/100`);
@@ -202,7 +395,7 @@ export const FilterScreen = () => {
   const apply = async () => {
     if (isSpecial()) {
       setBusiness({
-        photo: image,
+        photo: urlDecode(),
         name: businessData.name,
         email: businessData.email,
         phone: businessData.phone,
@@ -210,31 +403,31 @@ export const FilterScreen = () => {
         address: businessData.address,
       });
     } else {
-      setMainImage({ id: state, image: image });
+      setMainImage({ id: state, image: urlDecode() });
     }
     goBack();
   };
   const SmallImageCard = React.useCallback(
     ({ item, index }: any) => {
+      const image2 = item?.image ? `file://${item.image}` : item;
       return (
         <TouchableOpacity
-          onPress={() => {
-            applyFilter(item.command);
-          }}
+          onPress={() => handleCardPress(item)}
           key={index}
+          activeOpacity={0.9}
           className="overflow-hidden rounded-lg"
           style={[styles.shadow, styles.imageCard]}
         >
           <Image
-            src={`file://${item.image}`}
+            src={image2}
             // eslint-disable-next-line react-native/no-inline-styles
             style={{ width: '100%', height: '100%' }}
-            resizeMode="cover"
+            resizeMode="stretch"
           />
         </TouchableOpacity>
       );
     },
-    [applyFilter]
+    [handleCardPress]
   );
   const ColorModal = React.useCallback(() => {
     return (
@@ -460,16 +653,129 @@ export const FilterScreen = () => {
         <ColorModal />
         <ChromaTools />
         <Annotate />
-        <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
-          👉🏻 Quick filters
+        <Text variant="sm" className="mt-4 pl-4 text-center font-sfbold">
+          👉🏻 Quick filters👈🏻
         </Text>
-        <HorizontalList
-          Comp={SmallImageCard}
-          padding={7.5}
-          estimatedItemSize={SNAP}
-          snapToInterval={SNAP}
-          data={brightenList}
-        />
+        <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+          👉🏻 Brightness
+        </Text>
+        <View className="h-36">
+          <HorizontalList
+            Comp={SmallImageCard}
+            padding={7.5}
+            estimatedItemSize={SNAP}
+            snapToInterval={SNAP}
+            data={brightenList}
+          />
+        </View>
+        <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+          👉🏻 Contrast
+        </Text>
+        <View className="h-36">
+          <HorizontalList
+            Comp={SmallImageCard}
+            padding={7.5}
+            estimatedItemSize={SNAP}
+            snapToInterval={SNAP}
+            data={contrastList}
+          />
+        </View>
+        <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+          👉🏻 Saturation
+        </Text>
+        <View className="h-36">
+          <HorizontalList
+            Comp={SmallImageCard}
+            padding={7.5}
+            estimatedItemSize={SNAP}
+            snapToInterval={SNAP}
+            data={saturationList}
+          />
+        </View>
+        <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+          👉🏻 Gamma
+        </Text>
+        <View className="h-36">
+          <HorizontalList
+            Comp={SmallImageCard}
+            padding={7.5}
+            estimatedItemSize={SNAP}
+            snapToInterval={SNAP}
+            data={gammaList}
+          />
+        </View>
+        <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+          👉🏻 Hue
+        </Text>
+        <View className="h-36">
+          <HorizontalList
+            Comp={SmallImageCard}
+            padding={7.5}
+            estimatedItemSize={SNAP}
+            snapToInterval={SNAP}
+            data={hueList}
+          />
+        </View>
+        <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+          👉🏻 Blur
+        </Text>
+        <View className="h-36">
+          <HorizontalList
+            Comp={SmallImageCard}
+            padding={7.5}
+            estimatedItemSize={SNAP}
+            snapToInterval={SNAP}
+            data={blurList}
+          />
+        </View>
+        <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+          👉🏻 Sharpen
+        </Text>
+        <View className="h-36">
+          <HorizontalList
+            Comp={SmallImageCard}
+            padding={7.5}
+            estimatedItemSize={SNAP}
+            snapToInterval={SNAP}
+            data={sharpenList}
+          />
+        </View>
+        <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+          👉🏻 Tint
+        </Text>
+        <View className="h-36">
+          <HorizontalList
+            Comp={SmallImageCard}
+            padding={7.5}
+            estimatedItemSize={40}
+            snapToInterval={40}
+            data={tintList}
+          />
+        </View>
+        <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+          👉🏻 Sepia Tones
+        </Text>
+        <View className="h-36">
+          <HorizontalList
+            Comp={SmallImageCard}
+            padding={7.5}
+            estimatedItemSize={40}
+            snapToInterval={40}
+            data={sepiaList}
+          />
+        </View>
+        <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+          👉🏻 Cut Image
+        </Text>
+        <View className="h-36">
+          <HorizontalList
+            Comp={SmallImageCard}
+            padding={7.5}
+            estimatedItemSize={40}
+            snapToInterval={40}
+            data={cutOutImages()}
+          />
+        </View>
         <View className="mx-16 my-8 border-b-2 border-slate-200" />
       </ScrollView>
       <View className="m-4 self-center rounded-full bg-slate-700 px-16 py-4">
@@ -628,22 +934,36 @@ const brightenCommand = [
   '-vf eq=brightness=1',
 ];
 const contrastCommand = [
-  '-vf eq=contrast=-1',
-  '-vf eq=contrast=-0.5',
-  '-vf eq=contrast=-0.2',
-  '-vf eq=contrast=0.2',
-  '-vf eq=contrast=0.3',
-  '-vf eq=contrast=0.5',
-  '-vf eq=contrast=1',
+  '-vf eq=contrast=-100',
+  '-vf eq=contrast=-50',
+  '-vf eq=contrast=-20',
+  '-vf eq=contrast=-10',
+  '-vf eq=contrast=-3',
+  '-vf eq=contrast=3',
+  '-vf eq=contrast=10',
+  '-vf eq=contrast=20',
+  '-vf eq=contrast=50',
+  '-vf eq=contrast=100',
 ];
 const saturationCommand = [
-  '-vf eq=saturation=-1',
-  '-vf eq=saturation=-0.5',
-  '-vf eq=saturation=-0.2',
+  '-vf eq=saturation=0',
   '-vf eq=saturation=0.2',
-  '-vf eq=saturation=0.3',
-  '-vf eq=saturation=0.5',
-  '-vf eq=saturation=1',
+  '-vf eq=saturation=0.6',
+  '-vf eq=saturation=1.2',
+  '-vf eq=saturation=1.7',
+  '-vf eq=saturation=2.5',
+  '-vf eq=saturation=3',
+];
+const gammaCommand = [
+  '-vf eq=gamma=0.1',
+  '-vf eq=gamma=0.3',
+  '-vf eq=gamma=0.5',
+  '-vf eq=gamma=1.4',
+  '-vf eq=gamma=2.7',
+  '-vf eq=gamma=4.5',
+  '-vf eq=gamma=6',
+  '-vf eq=gamma=8',
+  '-vf eq=gamma=10',
 ];
 const hueCommand = [
   '-vf hue=h=0',
@@ -656,24 +976,39 @@ const hueCommand = [
   '-vf hue=h=315',
 ];
 const blurCommand = [
-  '-vf boxblur=1:1',
   '-vf boxblur=2:2',
   '-vf boxblur=3:3',
-  '-vf boxblur=4:4',
   '-vf boxblur=5:5',
   '-vf boxblur=6:6',
-  '-vf boxblur=7:7',
   '-vf boxblur=8:8',
-  '-vf boxblur=9:9',
   '-vf boxblur=10:10',
 ];
 const sharpenCommand = [
   '-vf unsharp=3:3:1.5:3:3:1.5',
-  '-vf unsharp=4:4:2:4:4:2',
   '-vf unsharp=5:5:2.5:5:5:2.5',
-  '-vf unsharp=6:6:3:6:6:3',
   '-vf unsharp=7:7:3.5:7:7:3.5',
-  '-vf unsharp=8:8:4:8:8:4',
   '-vf unsharp=9:9:4.5:9:9:4.5',
-  '-vf unsharp=10:10:5:10:10:5',
+  '-vf unsharp=11:11:5:11:11:5',
 ];
+const tintCommand = [
+  '-vf colorbalance=rs=1',
+  '-vf colorbalance=bs=1',
+  '-vf colorbalance=gs=1',
+  '-vf colorbalance=rs=1:bs=1',
+  '-vf colorbalance=rs=1:gs=1',
+  '-vf colorbalance=bs=1:gs=1',
+];
+const sepiatonesCommand = [
+  '-vf colorchannelmixer=.393:.769:.189:0:.349:.686:.168:0:.272:.534:.131',
+  '-vf colorchannelmixer=.3:.4:.3:0:.3:.4:.3:0:.3:.4:.3',
+];
+
+const cutOutImages = () => {
+  let temp = [];
+  for (let i = 1; i <= 94; i++) {
+    temp.push(
+      `https://ibaisindia.co.in/octoria/database/cutout-shapes/elements%20%28${i}%29.png`
+    );
+  }
+  return temp;
+};

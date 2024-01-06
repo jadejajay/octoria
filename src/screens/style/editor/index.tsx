@@ -106,7 +106,7 @@ export const Editorx = ({ dim }: Props) => {
   // data management
   const frames = useFrameStore((s) => s.frames);
   const sFrame = shuffleArray(frames);
-  logger.log('editorData.elements', editorData.elements);
+  // logger.log('editorData.elements', editorData.elements);
   const cacheManager = new VideoCacheManager();
 
   // component specific

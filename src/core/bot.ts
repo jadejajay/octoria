@@ -119,6 +119,8 @@ const pair = [
 // colorlevels=romin=1:gomin=1:bomin=1
 // colorlevels=rimin=0.039:gimin=0.039:bimin=0.039:rimax=0.96:gimax=0.96:bimax=0.96
 // react-native-image-crop-picker
+//-i https://ibaisindia.co.in/chats/logos/avatar.png -i https://ibaisindia.co.in/chats/logos/bot.png  -filter_complex "[0:v]scale=1600:1600[bg];[1:v]scale=1600:1600[fg];[bg][fg]blend=all_mode=grainextract[outv]" -map "[outv]"
+//
 
 function executeBlur(str: any) {
   logger.log('executeBlur', str);

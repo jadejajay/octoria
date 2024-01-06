@@ -53,7 +53,7 @@ const _useEditorX = create<EditorXState>((set, get) => ({
     }
   },
   setEditor: async (id) => {
-    logger.log('set editor called<=====================');
+    logger.log('set editor called<=====================', id);
     const Data: string = await getItem(EDITORX_DATA);
     const newData = JSON.parse(Data);
     const updated = lodash.unionBy(DATA.elements, newData?.elements, 'id');
@@ -62,11 +62,11 @@ const _useEditorX = create<EditorXState>((set, get) => ({
         produce((state: EditorXState) => {
           state.editorData = newData;
           state.editorData.elements = updated;
-          logger.log(
-            JSON.stringify(state.editorData, null, 2),
-            id,
-            'set editor<====================='
-          );
+          // logger.log(
+          //   JSON.stringify(state.editorData, null, 2),
+          //   id,
+          //   'set editor<====================='
+          // );
           return state;
         })
       );

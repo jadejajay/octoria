@@ -174,6 +174,7 @@ export const ShareCam = ({ route }: any) => {
       ToastAndroid.show('Capturing failed !', ToastAndroid.SHORT);
     }
   };
+  console.log(data, '<=====image');
   async function handleDownload() {
     try {
       setLoading(true);

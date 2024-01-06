@@ -37,8 +37,6 @@ const loadDataFromFirestore = async () => {
       ...doc.data(),
     }));
     useProductsStore.setState({ products: product });
-    // logger.log('products==========================\n', product);
-
     logger.log('products loaded', Date.now());
     const SubCategoryStoreSnapshot = await firestore()
       .collection(F_SUB_CATEGORY)
@@ -52,10 +50,10 @@ const loadDataFromFirestore = async () => {
     useSubCategoryStore.setState({
       SubCategory: SubCategoryStoreSnapshotList,
     });
-    logger.log(
-      'post main category ========================\n',
-      SubCategoryStoreSnapshotList
-    );
+    // logger.log(
+    //   'post main category ========================\n',
+    //   SubCategoryStoreSnapshotList
+    // );
     logger.log('SubCategoryStore loaded', Date.now());
     const PostMainCategorySnapshot = await firestore()
       .collection(F_POST_MAIN_CATEGORY)
@@ -101,10 +99,10 @@ const loadDataFromFirestore = async () => {
       ...(doc.data() as FrameType),
     }));
     useFrameStore.setState({ frames: frame });
-    logger.log(
-      'frames ==========================\n',
-      JSON.stringify(frame, null, 2)
-    );
+    // logger.log(
+    //   'frames ==========================\n',
+    //   JSON.stringify(frame, null, 2)
+    // );
     logger.log('frames loaded', Date.now());
   } catch (error) {
     logger.error('Error loading data from Firestore:', error);

@@ -3,9 +3,11 @@ import { Stagger } from '@animatereactnative/stagger';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Alert, BackHandler } from 'react-native';
+import RNFetchBlob from 'react-native-blob-util';
 import { BounceInUp } from 'react-native-reanimated';
 
 import {
+  FFmpegWrapper,
   getGreetingByTimezone,
   logger,
   speak,
@@ -23,6 +25,7 @@ import {
   ChooseBrand,
   FocusAwareStatusBar,
   Greeting,
+  Image,
   MainCarousel,
   NewProductList,
   ScrollView,
@@ -35,16 +38,19 @@ import {
 import { PostCard } from './post-maker';
 import { PostModal } from './post-modal';
 
+const dirs = RNFetchBlob.fs.dirs.DocumentDir;
+const outputFile = `${dirs}/OCTORIA_${Date.now()}.png`;
+// const dirs = RNFetchBlob.fs.dirs.CacheDir;
 export const Style = () => {
   logger.log('Style screen loaded', Date.now());
 
   const [modalVisible, setModalVisible] = useState(false);
+  const [image, setImage] = useState('');
   const [update, setUpdate] = useState(1);
   const { navigate } = useNavigation();
+  const ffmpeg = React.useMemo(() => new FFmpegWrapper(), []);
 
   const MainCategories = useFirestoreLiveQuery<MainCategory>(F_MAIN_CATEGORY);
-  logger.log(MainCategories, '<=====MainCategories');
-
   const User = useUserStore((s) => s.user);
   const setSearch = useSearchStore((s) => s.setSearch);
   const FestivalImage =
@@ -58,6 +64,8 @@ export const Style = () => {
   );
   //use effects start//////////////////////////////
   useEffect(() => {
+    // listFiles();
+    // testFFmpeg();
     if (User.name) {
       setModalVisible((prev) => {
         if (prev) return prev;
@@ -98,6 +106,44 @@ export const Style = () => {
     ]);
     return true;
   };
+  const testFFmpeg = async () => {
+    await ffmpeg
+      .executeFFmpegCommand(
+        `-i https://ibaisindia.co.in/chats/logos/avatar.png -i https://ibaisindia.co.in/chats/logos/bot.png  -filter_complex "[0:v]scale=1600:1600[resized_main];[1:v]scale=1600:1600[resized_cutter];[resized_cutter]format=rgba,alphaextract[alpha];[resized_main][alpha]alphamerge[outv]" -map "[outv]" ${outputFile}`
+      )
+      .then((res) => {
+        console.log(res, '<=========result of filter');
+        setImage(`file://${outputFile}`);
+      });
+  };
+  const listFiles = useCallback(async () => {
+    // const files = await RNFetchBlob.fs.ls(dirs);
+    // collect all files named starting with 'OCTORIA_'
+    await RNFetchBlob.fs
+      .ls(dirs)
+      .then((files) => {
+        files
+          // .filter((file) => file.startsWith('OCTORIA_'))
+          .map(async (file) => {
+            console.log(file, '<=====file');
+            // do something with the file
+            // if (file) {
+            //   const path = `${dirs}/${file}`;
+            //   // check if file exists
+            //   await RNFetchBlob.fs.exists(path).then(async (exist) => {
+            //     if (!exist) {
+            //       console.log(file, '<=====file from map to does not exists');
+            //       return `file does not exist====> ${file}`;
+            //     }
+            //     await RNFetchBlob.fs.unlink(path);
+            //     console.log(file, '<=====file from map to unlink');
+            //     return `cache deleted====> ${file.toString()}`;
+            //   });
+            // }
+          });
+      })
+      .catch((err) => console.log(err));
+  }, []);
   const PostcardCategory = React.useCallback(() => {
     return (
       <>

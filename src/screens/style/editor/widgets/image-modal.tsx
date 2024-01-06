@@ -66,7 +66,8 @@ export const ImageModal = () => {
         quality: 1,
       });
       if (!result.canceled) {
-        addElement(element(result.assets[0]?.uri));
+        const aspect = result.assets[0].width / result.assets[0].height;
+        addElement(element(result.assets[0]?.uri, aspect));
         goBack();
       }
     } catch (error) {
@@ -81,7 +82,8 @@ export const ImageModal = () => {
         quality: 1,
       });
       if (!result.canceled) {
-        addElement(element(result.assets[0]?.uri));
+        const aspect = result.assets[0].width / result.assets[0].height;
+        addElement(element(result.assets[0]?.uri, aspect));
         goBack();
       }
     } catch (error) {
@@ -146,7 +148,7 @@ const Card = ({ item, index, addElement, onClose }: Props) => {
         style={styles.shadow}
         activeOpacity={1}
         onPress={() => {
-          addElement(element(item.image));
+          addElement(element(item.image, 1));
           onClose();
         }}
       >
@@ -175,11 +177,11 @@ const styles = StyleSheet.create({
   },
 });
 
-const element = (image: string) => ({
+const element = (image: string, aspect: number) => ({
   component: 'image',
   properties: {
-    height: 100,
-    width: 100,
+    height: 150 / aspect,
+    width: 150,
     image: image,
     viewProps: {
       style: {

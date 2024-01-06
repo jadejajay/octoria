@@ -113,6 +113,7 @@
     "succ_video": "Video generated successfully.",
     "proc_canceled": "Failed to generate Video. Process Canceled.",
     "failed_video": "Failed to generate Video. Internal Error.",
+    "failed_filter": "Failed to Apply Filter",
     "failed_gen_video": "Failed to generate Video."
   },
   "gallery": {
