@@ -87,7 +87,7 @@ const pair = [
   [`\\bblur\\b`, executeBlur], //ex : blur image
   [`\\bhue\\b`, executeHue], //ex : hue image
   [`\\bsaturate|saturation\\b`, executeSaturate], //ex : hue image
-  [`\\bbright|brightness|brighten\\b`, executeBrighten], //ex : hue image
+  [`\\bbright|brightness|brighten|darken|dark\\b`, executeBrighten], //ex : hue image
   [`\\bremove|erase\\b`, executeRemove], //ex : chroma key image
   [`\\bnegate|negative|invert\\b`, executeNegate], //ex : negate image
   [`\\bflip|mirror\\b`, executeFlip], //ex : flip image vertically
@@ -147,7 +147,7 @@ function executeBlur(str: any) {
 }
 function executeHue(_match: any) {
   // match hue value between 0-360
-  const _match2 = /([0-9]{1,3})/i.exec(_match);
+  const _match2 = /([0-9]{1,3})/.exec(_match);
   const val = Number(_match2?.[0]) || 0;
   if (_match2 && val >= 0 && val <= 360) {
     logger.log('_match2', _match2);
@@ -168,7 +168,7 @@ function executeHue(_match: any) {
 }
 function executeSaturate(_match: any) {
   // match hue value between -10 to 10
-  const _match2 = /(-?[0-9]{1,2})/i.exec(_match);
+  const _match2 = /(-?[0-9]{1,2})/.exec(_match);
   const val = Number(_match2?.[0]) || 0;
   if (_match2 && val >= -10 && val <= 10) {
     logger.log('_match2', _match2);
@@ -189,9 +189,9 @@ function executeSaturate(_match: any) {
 }
 function executeBrighten(_match: any) {
   // match hue value between -10 to 10
-  const _match2 = /(-?[0-9]{1,2})/i.exec(_match);
-  const decreased = /decrease|reduce/i.exec(_match);
-  const increased = /increase|add/i.exec(_match);
+  const _match2 = /(-?[0-9]{1,2})/.exec(_match);
+  const decreased = /decrease|reduce/.exec(_match);
+  const increased = /increase|add/.exec(_match);
   const val = Number(_match2?.[0]) || 0;
   if (_match2 && val >= -100 && val <= 100) {
     logger.log('_match2', _match2);
@@ -238,9 +238,9 @@ function executeRemove(str: any) {
     str.toLowerCase().includes(color.toLowerCase())
   );
   // match any 6 digit hex color code
-  const _match2 = /([0-9A-F]{6})/i.exec(str);
+  const _match2 = /([0-9A-F]{6})/.exec(str);
   // match any number between 0-255
-  const _match3 = /([0-9]{1,3})/i.exec(str);
+  const _match3 = /([0-9]{1,3})/.exec(str);
   const similarity = _match3?.[0] || 0.1;
   logger.log('executeHue', _match);
   if (_match) {
@@ -277,14 +277,10 @@ function executeNegate(_match: any) {
   return { cmd, resp };
 }
 function executeName(_match: any) {
-  const color = /color/.exec(_match);
-  var cmd = '-vf negate';
-  if (color) {
-    cmd = '-vf curves=preset=color_negative';
-  }
+  var cmd = '';
   const resp = randomChoice([
-    `I hope You Like It 🙂`,
-    `I think you like Negative.`,
+    `My name is Ciea 🙂.`,
+    `My name is Ciea 🙂 and I am here to help you with image filters`,
   ]);
   return { cmd, resp };
 }
@@ -310,7 +306,7 @@ function executeFlip(_match: any) {
 function executeRotate(_match: any) {
   // command to rotate image x degree
   var cmd = '-vf rotate=PI/2';
-  const _match2 = /(-?[0-9]{1,3})/i.exec(_match);
+  const _match2 = /(-?[0-9]{1,3})/.exec(_match);
   if (_match2) {
     logger.log('_match2', _match2);
     const val = parseInt(_match2[0], 10);
@@ -324,15 +320,15 @@ function executeRotate(_match: any) {
 }
 function executeContrast(_match: any) {
   var cmd = '-vf eq=contrast=1.5';
-  const decreased = /decrease|reduce/i.exec(_match);
-  const increased = /increase|add/i.exec(_match);
+  const decreased = /decrease|reduce/.exec(_match);
+  const increased = /increase|add/.exec(_match);
   if (decreased) {
     cmd = '-vf eq=contrast=0.5';
   }
   if (increased) {
     cmd = '-vf eq=contrast=2.5';
   }
-  const val = /([0-9]{1,3})/i.exec(_match);
+  const val = /([0-9]{1,3})/.exec(_match);
   if (val) {
     logger.log('_match2', val);
     const value = parseInt(val[0], 10);
@@ -379,15 +375,15 @@ function executePainting(_match: any) {
 }
 function executeGamma(_match: any) {
   var cmd = '-vf eq=gamma=0.5';
-  const decreased = /decrease|reduce/i.exec(_match);
-  const increased = /increase|add/i.exec(_match);
+  const decreased = /decrease|reduce/.exec(_match);
+  const increased = /increase|add/.exec(_match);
   if (decreased) {
     cmd = '-vf eq=gamma=0.3';
   }
   if (increased) {
     cmd = '-vf eq=gamma=0.7';
   }
-  const val = /([0-9]{1,3})/i.exec(_match);
+  const val = /([0-9]{1,3})/.exec(_match);
   if (val) {
     logger.log('_match2', val);
     const value = parseInt(val[0], 10);
@@ -443,15 +439,15 @@ function executeNoise(_match: any) {
 }
 function executeExposure(_match: any) {
   var cmd = `-vf exposure=2`;
-  const decreased = /decrease|reduce/i.exec(_match);
-  const increased = /increase|add/i.exec(_match);
+  const decreased = /decrease|reduce/.exec(_match);
+  const increased = /increase|add/.exec(_match);
   if (decreased) {
     cmd = `-vf exposure=-3`;
   }
   if (increased) {
     cmd = `-vf exposure=3`;
   }
-  const val = /([0-9]{1,3})/i.exec(_match);
+  const val = /([0-9]{1,3})/.exec(_match);
   if (val) {
     logger.log('_match2', val);
     const value = parseInt(val[0], 10);

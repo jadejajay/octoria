@@ -1,11 +1,14 @@
-import RNFetchBlob from 'react-native-blob-util';
+import { CACHE_DIR, CACHE_VIDEO } from '@/types';
 
+import { FileManagement } from './file-management';
+
+const fileManager = new FileManagement();
 export class VideoCacheManager {
   private cacheDir: string;
 
   constructor() {
     // Set the cache directory path
-    this.cacheDir = RNFetchBlob.fs.dirs.DocumentDir + '/video_cache';
+    this.cacheDir = CACHE_DIR + '/' + CACHE_VIDEO;
   }
 
   async getVideo(url: string): Promise<string | null> {
@@ -19,7 +22,7 @@ export class VideoCacheManager {
     const localPath = `${this.cacheDir}/${filename}`;
 
     // Check if the video exists in the cache
-    const exists = await RNFetchBlob.fs.exists(localPath);
+    const exists = await fileManager.checkExistFile(localPath);
     if (exists) {
       // Video is in the cache, return the local path
       return localPath;
@@ -35,9 +38,7 @@ export class VideoCacheManager {
   ): Promise<string | null> {
     try {
       // Download the video from the network
-      const response = await RNFetchBlob.config({
-        path: localPath,
-      }).fetch('GET', url);
+      const response = await fileManager.downloadFile(url, localPath);
 
       if (response.info().status === 200) {
         // Video downloaded successfully, return the local path

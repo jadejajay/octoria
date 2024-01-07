@@ -102,7 +102,7 @@ export const BackgroundWidget = () => {
     <>
       <View className="h-40 flex-row justify-around border-b-2 border-slate-100">
         <TouchableOpacity
-          className="m-4 flex-1 items-center justify-center rounded-md"
+          className="m-4 px-1  flex-1 items-center justify-center rounded-md"
           style={styles.shadow}
           onPress={captureImage}
           activeOpacity={1}
@@ -112,10 +112,10 @@ export const BackgroundWidget = () => {
             size={40}
             color={theme}
           />
-          <Text className="font-sfbold text-lg" tx={'editor.click_picture'} />
+          <Text className="font-sfbold text-base" tx={'editor.click_picture'} />
         </TouchableOpacity>
         <TouchableOpacity
-          className="m-4 flex-1 items-center justify-center rounded-md"
+          className="m-4 px-1 flex-1 items-center justify-center rounded-md"
           style={styles.shadow}
           onPress={pickImage}
           activeOpacity={1}
@@ -125,7 +125,10 @@ export const BackgroundWidget = () => {
             size={40}
             color={theme}
           />
-          <Text className="font-sfbold text-lg" tx={'editor.select_gallery'} />
+          <Text
+            className="font-sfbold text-base"
+            tx={'editor.select_gallery'}
+          />
         </TouchableOpacity>
       </View>
       <View className="flex-1">

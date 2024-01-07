@@ -104,7 +104,7 @@ export const ChangeImageModal = () => {
             size={40}
             color={theme}
           />
-          <Text className="font-sfbold text-lg" tx={'editor.click_picture'} />
+          <Text className="font-sfbold text-sm" tx={'editor.click_picture'} />
         </TouchableOpacity>
         <TouchableOpacity
           className="m-4 flex-1 items-center justify-center rounded-md"

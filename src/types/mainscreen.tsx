@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+import RNFetchBlob from 'react-native-blob-util';
 export interface MainCategory {
   id?: string;
   image?: string;
@@ -24,9 +26,17 @@ export type ShareCamBgType = {
 //   // Add your data properties here
 // }
 
+export const CACHE_DIR =
+  Platform.OS === 'ios'
+    ? RNFetchBlob.fs.dirs.DocumentDir
+    : RNFetchBlob.fs.dirs.DocumentDir;
+export const APP_DIR = 'Octoria';
 export const ASSISTANCE = 'ASSISTANCE';
 export const POST_IMAGE = 'POST_IMAGE';
 export const POST_VIDEO = 'POST_VIDEO';
+export const CACHE_THUMBNAIL = 'CACHE_THUMBNAIL';
+export const CACHE_VIDEO = 'CACHE_VIDEO';
+export const CACHE_IMAGE = 'CACHE_IMAGE';
 // firestore collections
 export const F_PRODUCT_LIST = 'ProductList';
 export const F_SUB_CATEGORY = 'SubCategory';

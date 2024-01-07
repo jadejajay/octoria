@@ -3,16 +3,16 @@ import {
   FFmpegKitConfig,
   ReturnCode,
 } from 'ffmpeg-kit-react-native';
-import RNFetchBlob from 'react-native-blob-util';
 
+import { CACHE_DIR, CACHE_IMAGE } from '@/types';
 import { showErrorMessage, showSuccessMessage } from '@/ui';
 
+import { FileManagement } from './file-management';
 import { logger } from './logger';
-import { isVideoURL } from './utils';
 
-const dirs = RNFetchBlob.fs.dirs.DocumentDir;
+const fileManager = new FileManagement();
 export class FFmpegWrapper {
-  outputFile = `${dirs}/OCTORIA`;
+  outputFile = `${CACHE_DIR}/${CACHE_IMAGE}`;
 
   async executeFFmpegCommand(command: string): Promise<number> {
     try {
@@ -55,7 +55,7 @@ export class FFmpegWrapper {
     var temp = `${this.outputFile}.${ext}`;
     const cmd = `-i ${dwnVideo} -i ${renderedAsset} -filter_complex "[0:v]scale=${resolution}:${resolution} [video]; [video][1:v]overlay=0:0 [output]" -map 0:a -c:a copy -map 0:a -strict -2 -c:a aac -map "[output]" -q:v 1 ${temp}`;
     const result = await this.executeFFmpegCommand(cmd);
-    temp = `file://${this.outputFile}`;
+    temp = `file://${temp}`;
     if (result === 1) {
       showSuccessMessage('render.succ_video');
       return temp;
@@ -118,39 +118,14 @@ export class FFmpegWrapper {
   async getImageBase64(uri: string): Promise<string | null> {
     logger.log('uri', uri);
     try {
-      const response = await RNFetchBlob.fs.readFile(uri, 'base64');
+      const response = await fileManager.readFile(uri);
       return response;
     } catch (error) {
       logger.error('Error reading file as base64:', error);
       return null;
     }
   }
-  cancel(renderedAsset?: string) {
-    if (renderedAsset) {
-      isVideoURL(renderedAsset) && this.deleteFile(renderedAsset);
-    }
-    FFmpegKit.cancel();
-  }
-
-  async deleteFile(filePath: string): Promise<void> {
-    try {
-      await RNFetchBlob.fs.unlink(filePath);
-      logger.log('File deleted:', filePath);
-    } catch (error) {
-      logger.error('Error deleting file:', error);
-    }
-  }
-
-  async deleteCacheFiles(): Promise<void> {
-    try {
-      const files = await RNFetchBlob.fs.ls(dirs);
-      for (const file of files) {
-        const filePath = `${dirs}/${file}`;
-        await this.deleteFile(filePath);
-      }
-      logger.log('Cache files deleted.');
-    } catch (error) {
-      logger.error('Error deleting cache files:', error);
-    }
+  async cancel() {
+    await FFmpegKit.cancel();
   }
 }

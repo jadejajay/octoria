@@ -4,6 +4,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import { Modal, StyleSheet } from 'react-native';
+import RNFetchBlob from 'react-native-blob-util';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -22,8 +23,6 @@ import {
   useImageColorPickerStore,
 } from '@/core';
 import { Chat } from '@/core/bot';
-import { FileManagement } from '@/core/file-management';
-import { CACHE_DIR } from '@/types';
 import {
   ActivityIndicator,
   HorizontalList,
@@ -38,6 +37,7 @@ import {
 
 import { BotSearchBar } from './components/bot-searchbar';
 const SNAP = WIDTH / 3;
+
 const AnimatedTouchableOpacity =
   Animated.createAnimatedComponent(TouchableOpacity);
 export const FilterScreen = () => {
@@ -60,6 +60,7 @@ export const FilterScreen = () => {
   const [displayedText, setDisplayedText] = React.useState('');
   const [modalVisible, setModalVisible] = React.useState(false);
   const [brightenList, setBrightenList] = React.useState<any>([]);
+  const [contrastList, setContrastList] = React.useState<any>([]);
   const [saturationList, setSaturationList] = React.useState<any>([]);
   const [gammaList, setGammaList] = React.useState<any>([]);
   const [hueList, setHueList] = React.useState<any>([]);
@@ -72,26 +73,19 @@ export const FilterScreen = () => {
   const [chromakey2, setChromakey2] = React.useState('10');
   const [chromaFunc, setChromaFunc] = React.useState(true);
   const ffmpeg = React.useMemo(() => new FFmpegWrapper(), []);
-  const filemanagement = new FileManagement();
+
+  const { goBack } = useNavigation();
+
   React.useEffect(() => {
     setDisplayedText('');
     createThumbnailAsync();
+    // ffmpeg.executeFFmpegCommand('-filters');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const { goBack } = useNavigation();
-  React.useEffect(
-    () => () => {
-      cleanUp();
-    },
+  React.useEffect(() => {
+    if (thumbnail) createBrightenListAsync();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-  const cleanUp = async () => {
-    setDisplayedText('');
-    await filemanagement.deleteThumbnails();
-    await ffmpeg.cancel();
-  };
+  }, [thumbnail]);
 
   const createThumbnailAsync = React.useCallback(async () => {
     setDisplayedText('');
@@ -105,7 +99,7 @@ export const FilterScreen = () => {
     try {
       const result = await ffmpeg.applyFilter({
         dwnimage: selectedImage,
-        filter: '-vf scale=256:-1',
+        filter: '-vf scale=64:-1',
         ext: 'png',
       });
       logger.log(result, '<=========result of thumbnail');
@@ -113,12 +107,23 @@ export const FilterScreen = () => {
     } catch (error) {
       logger.error(error, '<=========error creating thumbnail');
     }
+  }, [ffmpeg, isSpecial, mainimage, setImage, setOriginalImage, userPhoto]);
+
+  const createBrightenListAsync = React.useCallback(async () => {
+    if (!thumbnail) return;
+    await processBrightenCommands();
+    await processContrastCommands();
+    await processSaturationCommands();
+    await processGammaCommands();
+    await processHueCommands();
+    await processBlurCommands();
+    await processSharpenCommands();
+    await processTintCommands();
+    await processSepiaCommands();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [ffmpeg, thumbnail]);
 
   const processBrightenCommands = async () => {
-    logger.log(thumbnail, '<=========thumbnail from brightness');
-    if (!thumbnail) return;
     try {
       await Promise.all(
         brightenCommand.map(async (cmd) => {
@@ -132,19 +137,31 @@ export const FilterScreen = () => {
               setBrightenList((prevList: any) => {
                 return [...prevList, { command: cmd, image: res }];
               });
-            })
-            .catch((err) => {
-              logger.error(err, '<=========error in brighten');
             });
         })
       );
-    } catch (error) {
-      logger.error(error, '<=========error in brighten');
-    }
+    } catch (error) {}
+  };
+  const processContrastCommands = async () => {
+    try {
+      await Promise.all(
+        contrastCommand.map(async (cmd) => {
+          return await ffmpeg
+            .applyFilter({
+              dwnimage: thumbnail,
+              filter: cmd,
+              ext: 'png',
+            })
+            .then((res) => {
+              setContrastList((prevList: any) => {
+                return [...prevList, { command: cmd, image: res }];
+              });
+            });
+        })
+      );
+    } catch (error) {}
   };
   const processSaturationCommands = async () => {
-    logger.log(thumbnail, '<=========thumbnail from saturation');
-    if (!thumbnail) return;
     try {
       await Promise.all(
         saturationCommand.map(async (cmd) => {
@@ -158,19 +175,12 @@ export const FilterScreen = () => {
               setSaturationList((prevList: any) => {
                 return [...prevList, { command: cmd, image: res }];
               });
-            })
-            .catch((err) => {
-              logger.error(err, '<=========error in saturation');
             });
         })
       );
-    } catch (error) {
-      logger.error(error, '<=========error in saturation');
-    }
+    } catch (error) {}
   };
   const processGammaCommands = async () => {
-    logger.log(thumbnail, '<=========thumbnail from gamma');
-    if (!thumbnail) return;
     try {
       await Promise.all(
         gammaCommand.map(async (cmd) => {
@@ -184,19 +194,12 @@ export const FilterScreen = () => {
               setGammaList((prevList: any) => {
                 return [...prevList, { command: cmd, image: res }];
               });
-            })
-            .catch((err) => {
-              logger.error(err, '<=========error in gamma');
             });
         })
       );
-    } catch (error) {
-      logger.error(error, '<=========error in gamma');
-    }
+    } catch (error) {}
   };
   const processHueCommands = async () => {
-    logger.log(thumbnail, '<=========thumbnail from hue');
-    if (!thumbnail) return;
     try {
       await Promise.all(
         hueCommand.map(async (cmd) => {
@@ -210,19 +213,12 @@ export const FilterScreen = () => {
               setHueList((prevList: any) => {
                 return [...prevList, { command: cmd, image: res }];
               });
-            })
-            .catch((err) => {
-              logger.error(err, '<=========error in hue');
             });
         })
       );
-    } catch (error) {
-      logger.error(error, '<=========error in hue');
-    }
+    } catch (error) {}
   };
   const processBlurCommands = async () => {
-    logger.log(thumbnail, '<=========thumbnail from blur');
-    if (!thumbnail) return;
     try {
       await Promise.all(
         blurCommand.map(async (cmd) => {
@@ -236,19 +232,12 @@ export const FilterScreen = () => {
               setBlurList((prevList: any) => {
                 return [...prevList, { command: cmd, image: res }];
               });
-            })
-            .catch((err) => {
-              logger.error(err, '<=========error in blur');
             });
         })
       );
-    } catch (error) {
-      logger.error(error, '<=========error in blur');
-    }
+    } catch (error) {}
   };
   const processSharpenCommands = async () => {
-    logger.log(thumbnail, '<=========thumbnail from sharpen');
-    if (!thumbnail) return;
     try {
       await Promise.all(
         sharpenCommand.map(async (cmd) => {
@@ -262,19 +251,12 @@ export const FilterScreen = () => {
               setSharpenList((prevList: any) => {
                 return [...prevList, { command: cmd, image: res }];
               });
-            })
-            .catch((err) => {
-              logger.error(err, '<=========error in sharpen');
             });
         })
       );
-    } catch (error) {
-      logger.error(error, '<=========error in sharpen');
-    }
+    } catch (error) {}
   };
   const processTintCommands = async () => {
-    logger.log(thumbnail, '<=========thumbnail from tint');
-    if (!thumbnail) return;
     try {
       await Promise.all(
         tintCommand.map(async (cmd: any) => {
@@ -288,19 +270,12 @@ export const FilterScreen = () => {
               setTintList((prevList: any) => {
                 return [...prevList, { command: cmd, image: res }];
               });
-            })
-            .catch((err) => {
-              logger.error(err, '<=========error in tint');
             });
         })
       );
-    } catch (error) {
-      logger.error(error, '<=========error in tint');
-    }
+    } catch (error) {}
   };
   const processSepiaCommands = async () => {
-    logger.log(thumbnail, '<=========thumbnail from sepia');
-    if (!thumbnail) return;
     try {
       await Promise.all(
         sepiatonesCommand.map(async (cmd: any) => {
@@ -314,15 +289,10 @@ export const FilterScreen = () => {
               setSepiaList((prevList: any) => {
                 return [...prevList, { command: cmd, image: res }];
               });
-            })
-            .catch((err) => {
-              logger.error(err, '<=========error in sepia');
             });
         })
       );
-    } catch (error) {
-      logger.error(error, '<=========error in sepia');
-    }
+    } catch (error) {}
   };
 
   React.useEffect(() => {
@@ -388,25 +358,9 @@ export const FilterScreen = () => {
     },
     [ffmpeg, image, setImage]
   );
-  const handleCardPress = React.useCallback(
-    async (item: any) => {
-      if (item?.command) {
-        applyFilter(item.command);
-      } else {
-        setLoading(true);
-        const result = await ffmpeg.applyFilter({
-          dwnimage: image,
-          filter: `-i ${item} -filter_complex "[0:v]scale=600:600[resized_main];[1:v]scale=600:600[resized_cutter];[resized_cutter]format=rgba,alphaextract[alpha];[resized_main][alpha]alphamerge[outv]" -map "[outv]"`,
-          ext: 'png',
-        });
-        setLoading(false);
-        if (result) setImage(result);
-      }
-    },
-    [applyFilter, ffmpeg, image, setImage]
-  );
   const handleChromaPress = React.useCallback(() => {
     setModalVisible(!modalVisible);
+    // applyFilter(`-vf chromakey=${selectedColor.value}:${chromakey}/100`);
     if (chromaFunc) {
       if (isFinite(parseFloat(chromakey)))
         applyFilter(`-vf chromakey=${selectedColor.value}:${chromakey}/100`);
@@ -423,63 +377,42 @@ export const FilterScreen = () => {
     applyFilter,
   ]);
   const apply = async () => {
-    let dest = `${CACHE_DIR}/${Date.now()}.png`;
-    await filemanagement
-      .copyFile(image, dest)
-      .then((res) => {
-        logger.log(res, '<=========res of coping image');
-        filemanagement
-          .checkExistFile(dest)
-          .then((res2) => {
-            logger.log(res2, '<=========res');
-            if (res2) {
-              dest = `file://${dest}`;
-              if (isSpecial()) {
-                setBusiness({
-                  photo: dest,
-                  name: businessData.name,
-                  email: businessData.email,
-                  phone: businessData.phone,
-                  website: businessData.website,
-                  address: businessData.address,
-                });
-              } else {
-                setMainImage({ id: state, image: dest });
-              }
-            }
-          })
-          .catch((err) => {
-            logger.error(err, '<=========error copying image');
-          });
-      })
-      .catch((err) => {
-        logger.error(err, '<=========error copying image');
+    if (isSpecial()) {
+      setBusiness({
+        photo: urlDecode(),
+        name: businessData.name,
+        email: businessData.email,
+        phone: businessData.phone,
+        website: businessData.website,
+        address: businessData.address,
       });
-
+    } else {
+      setMainImage({ id: state, image: urlDecode() });
+    }
     goBack();
   };
   const SmallImageCard = React.useCallback(
     ({ item, index }: any) => {
-      const image2 = item?.image ? `file://${item.image}` : item;
-      logger.log(image2, '<=========image2 from filtered list small card');
       return (
         <TouchableOpacity
-          onPress={() => handleCardPress(item)}
+          onPress={() => {
+            applyFilter(item.command);
+          }}
           key={index}
           activeOpacity={0.9}
           className="overflow-hidden rounded-lg"
           style={[styles.shadow, styles.imageCard]}
         >
           <Image
-            src={image2}
+            src={`file://${item.image}`}
             // eslint-disable-next-line react-native/no-inline-styles
             style={{ width: '100%', height: '100%' }}
-            resizeMode="stretch"
+            resizeMode="cover"
           />
         </TouchableOpacity>
       );
     },
-    [handleCardPress]
+    [applyFilter]
   );
   const ColorModal = React.useCallback(() => {
     return (
@@ -590,23 +523,19 @@ export const FilterScreen = () => {
           <Text
             variant="sm"
             onPress={async () => {
-              try {
-                const result = (await PhotoEditor.open({
-                  path: image,
-                  stickers: [
-                    'https://ibaisindia.co.in/octoria/database/filters/brightness/minus_one.webp',
-                    'https://ibaisindia.co.in/octoria/database/filters/brightness/minus_half.webp',
-                    'https://ibaisindia.co.in/octoria/database/filters/brightness/minus_p2.webp',
-                    'https://ibaisindia.co.in/octoria/database/filters/brightness/p2.webp',
-                    'https://ibaisindia.co.in/octoria/database/filters/brightness/p3.webp',
-                    'https://ibaisindia.co.in/octoria/database/filters/brightness/p5.webp',
-                    'https://ibaisindia.co.in/octoria/database/filters/brightness/full.webp',
-                  ],
-                })) as string;
-                if (result) setImage(result);
-              } catch (error) {
-                logger.error(error, '<=========error in annotate');
-              }
+              const result = (await PhotoEditor.open({
+                path: image,
+                stickers: [
+                  'https://ibaisindia.co.in/octoria/database/filters/brightness/minus_one.webp',
+                  'https://ibaisindia.co.in/octoria/database/filters/brightness/minus_half.webp',
+                  'https://ibaisindia.co.in/octoria/database/filters/brightness/minus_p2.webp',
+                  'https://ibaisindia.co.in/octoria/database/filters/brightness/p2.webp',
+                  'https://ibaisindia.co.in/octoria/database/filters/brightness/p3.webp',
+                  'https://ibaisindia.co.in/octoria/database/filters/brightness/p5.webp',
+                  'https://ibaisindia.co.in/octoria/database/filters/brightness/full.webp',
+                ],
+              })) as string;
+              setImage(result);
             }}
             className="text-center"
           >
@@ -709,8 +638,11 @@ export const FilterScreen = () => {
         <ColorModal />
         <ChromaTools />
         <Annotate />
+        <Text variant="sm" className="mt-4 pl-4 text-center font-sfbold">
+          👉🏻 Quick filters 👈🏻
+        </Text>
         <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
-          👉🏻 Cut Image In a Shape
+          👉🏻 Brightness
         </Text>
         <View className="h-36">
           <HorizontalList
@@ -718,225 +650,113 @@ export const FilterScreen = () => {
             padding={7.5}
             estimatedItemSize={SNAP}
             snapToInterval={SNAP}
-            data={cutOutImages()}
+            data={brightenList}
           />
         </View>
-        {thumbnail && (
-          <>
-            <Text variant="sm" className="mt-4 pl-4 text-center font-sfbold">
-              👉🏻 Quick filters👈🏻
-            </Text>
-            <View className="flex-row items-baseline justify-around">
-              <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
-                Brightness
-              </Text>
-              {brightenList.length === 0 && (
-                <Text
-                  variant="sm"
-                  className="rounded-lg bg-blue-500 p-1 text-center"
-                  onPress={async () => {
-                    await processBrightenCommands();
-                  }}
-                >
-                  Generate 🚀
-                </Text>
-              )}
-            </View>
-            <View className="h-36">
-              <HorizontalList
-                Comp={SmallImageCard}
-                padding={7.5}
-                estimatedItemSize={SNAP}
-                snapToInterval={SNAP}
-                data={brightenList}
-              />
-            </View>
-            <View className="flex-row items-baseline justify-around">
-              <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
-                Saturation
-              </Text>
-              {saturationList.length === 0 && (
-                <Text
-                  variant="sm"
-                  className="rounded-lg bg-blue-500 p-1 text-center"
-                  onPress={async () => {
-                    await processSaturationCommands();
-                  }}
-                >
-                  Generate 🚀
-                </Text>
-              )}
-            </View>
-            <View className="h-36">
-              <HorizontalList
-                Comp={SmallImageCard}
-                padding={7.5}
-                estimatedItemSize={SNAP}
-                snapToInterval={SNAP}
-                data={saturationList}
-              />
-            </View>
-            <View className="flex-row items-baseline justify-around">
-              <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
-                Gamma
-              </Text>
-              {gammaList.length === 0 && (
-                <Text
-                  variant="sm"
-                  className="rounded-lg bg-blue-500 p-1 text-center"
-                  onPress={async () => {
-                    await processGammaCommands();
-                  }}
-                >
-                  Generate 🚀
-                </Text>
-              )}
-            </View>
-            <View className="h-36">
-              <HorizontalList
-                Comp={SmallImageCard}
-                padding={7.5}
-                estimatedItemSize={SNAP}
-                snapToInterval={SNAP}
-                data={gammaList}
-              />
-            </View>
-            <View className="flex-row items-baseline justify-around">
-              <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
-                Hue
-              </Text>
-              {hueList.length === 0 && (
-                <Text
-                  variant="sm"
-                  className="rounded-lg bg-blue-500 p-1 text-center"
-                  onPress={async () => {
-                    await processHueCommands();
-                  }}
-                >
-                  Generate 🚀
-                </Text>
-              )}
-            </View>
-            <View className="h-36">
-              <HorizontalList
-                Comp={SmallImageCard}
-                padding={7.5}
-                estimatedItemSize={SNAP}
-                snapToInterval={SNAP}
-                data={hueList}
-              />
-            </View>
-            <View className="flex-row items-baseline justify-around">
-              <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
-                Blur
-              </Text>
-              {blurList.length === 0 && (
-                <Text
-                  variant="sm"
-                  className="rounded-lg bg-blue-500 p-1 text-center"
-                  onPress={async () => {
-                    await processBlurCommands();
-                  }}
-                >
-                  Generate 🚀
-                </Text>
-              )}
-            </View>
-            <View className="h-36">
-              <HorizontalList
-                Comp={SmallImageCard}
-                padding={7.5}
-                estimatedItemSize={SNAP}
-                snapToInterval={SNAP}
-                data={blurList}
-              />
-            </View>
-            <View className="flex-row items-baseline justify-around">
-              <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
-                Sharpen
-              </Text>
-              {sharpenList.length === 0 && (
-                <Text
-                  variant="sm"
-                  className="rounded-lg bg-blue-500 p-1 text-center"
-                  onPress={async () => {
-                    await processSharpenCommands();
-                  }}
-                >
-                  Generate 🚀
-                </Text>
-              )}
-            </View>
-            <View className="h-36">
-              <HorizontalList
-                Comp={SmallImageCard}
-                padding={7.5}
-                estimatedItemSize={SNAP}
-                snapToInterval={SNAP}
-                data={sharpenList}
-              />
-            </View>
-            <View className="flex-row items-baseline justify-around">
-              <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
-                Tint
-              </Text>
-              {tintList.length === 0 && (
-                <Text
-                  variant="sm"
-                  className="rounded-lg bg-blue-500 p-1 text-center"
-                  onPress={async () => {
-                    await processTintCommands();
-                  }}
-                >
-                  Generate 🚀
-                </Text>
-              )}
-            </View>
-            <View className="h-36">
-              <HorizontalList
-                Comp={SmallImageCard}
-                padding={7.5}
-                estimatedItemSize={SNAP}
-                snapToInterval={SNAP}
-                data={tintList}
-              />
-            </View>
-            <View className="flex-row items-baseline justify-around">
-              <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
-                Sepia Tones
-              </Text>
-              {sepiaList.length === 0 && (
-                <Text
-                  variant="sm"
-                  className="rounded-lg bg-blue-500 p-1 text-center"
-                  onPress={async () => {
-                    await processSepiaCommands();
-                  }}
-                >
-                  Generate 🚀
-                </Text>
-              )}
-            </View>
-            <View className="h-36">
-              <HorizontalList
-                Comp={SmallImageCard}
-                padding={7.5}
-                estimatedItemSize={SNAP}
-                snapToInterval={SNAP}
-                data={sepiaList}
-              />
-            </View>
-          </>
-        )}
-
+        <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+          👉🏻 Contrast
+        </Text>
+        <View className="h-36">
+          <HorizontalList
+            Comp={SmallImageCard}
+            padding={7.5}
+            estimatedItemSize={SNAP}
+            snapToInterval={SNAP}
+            data={contrastList}
+          />
+        </View>
+        <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+          👉🏻 Saturation
+        </Text>
+        <View className="h-36">
+          <HorizontalList
+            Comp={SmallImageCard}
+            padding={7.5}
+            estimatedItemSize={SNAP}
+            snapToInterval={SNAP}
+            data={saturationList}
+          />
+        </View>
+        <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+          👉🏻 Gamma
+        </Text>
+        <View className="h-36">
+          <HorizontalList
+            Comp={SmallImageCard}
+            padding={7.5}
+            estimatedItemSize={SNAP}
+            snapToInterval={SNAP}
+            data={gammaList}
+          />
+        </View>
+        <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+          👉🏻 Hue
+        </Text>
+        <View className="h-36">
+          <HorizontalList
+            Comp={SmallImageCard}
+            padding={7.5}
+            estimatedItemSize={SNAP}
+            snapToInterval={SNAP}
+            data={hueList}
+          />
+        </View>
+        <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+          👉🏻 Blur
+        </Text>
+        <View className="h-36">
+          <HorizontalList
+            Comp={SmallImageCard}
+            padding={7.5}
+            estimatedItemSize={SNAP}
+            snapToInterval={SNAP}
+            data={blurList}
+          />
+        </View>
+        <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+          👉🏻 Sharpen
+        </Text>
+        <View className="h-36">
+          <HorizontalList
+            Comp={SmallImageCard}
+            padding={7.5}
+            estimatedItemSize={SNAP}
+            snapToInterval={SNAP}
+            data={sharpenList}
+          />
+        </View>
+        <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+          👉🏻 Tint
+        </Text>
+        <View className="h-36">
+          <HorizontalList
+            Comp={SmallImageCard}
+            padding={7.5}
+            estimatedItemSize={40}
+            snapToInterval={40}
+            data={tintList}
+          />
+        </View>
+        <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+          👉🏻 Sepia Tones
+        </Text>
+        <View className="h-36">
+          <HorizontalList
+            Comp={SmallImageCard}
+            padding={7.5}
+            estimatedItemSize={40}
+            snapToInterval={40}
+            data={sepiaList}
+          />
+        </View>
         <View className="mx-16 my-8 border-b-2 border-slate-200" />
       </ScrollView>
       <View className="m-4 self-center rounded-full bg-slate-700 px-16 py-4">
         <Text
           variant="sm"
           className="text-center font-sfbold text-white"
-          onPress={async () => {
-            await apply();
+          onPress={() => {
+            apply();
           }}
         >
           🎨 apply
@@ -1086,6 +906,18 @@ const brightenCommand = [
   '-vf eq=brightness=0.7',
   '-vf eq=brightness=1',
 ];
+const contrastCommand = [
+  '-vf eq=contrast=-100',
+  '-vf eq=contrast=-50',
+  '-vf eq=contrast=-20',
+  '-vf eq=contrast=-10',
+  '-vf eq=contrast=-3',
+  '-vf eq=contrast=3',
+  '-vf eq=contrast=10',
+  '-vf eq=contrast=20',
+  '-vf eq=contrast=50',
+  '-vf eq=contrast=100',
+];
 const saturationCommand = [
   '-vf eq=saturation=0',
   '-vf eq=saturation=0.2',
@@ -1119,7 +951,6 @@ const hueCommand = [
 const blurCommand = [
   '-vf boxblur=2:2',
   '-vf boxblur=3:3',
-  '-vf boxblur=4:4',
   '-vf boxblur=5:5',
   '-vf boxblur=6:6',
   '-vf boxblur=8:8',
@@ -1143,15 +974,43 @@ const tintCommand = [
 const sepiatonesCommand = [
   '-vf colorchannelmixer=.393:.769:.189:0:.349:.686:.168:0:.272:.534:.131',
   '-vf colorchannelmixer=.3:.4:.3:0:.3:.4:.3:0:.3:.4:.3',
-  '-vf edgedetect=low=0.1:high=0.4',
 ];
 
-const cutOutImages = () => {
-  let temp = [];
-  for (let i = 1; i <= 94; i++) {
-    temp.push(
-      `https://ibaisindia.co.in/octoria/database/cutout-shapes/elements%20%28${i}%29.png`
-    );
-  }
-  return temp;
-};
+const cutOutImages = [
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%281%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%282%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%283%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%284%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%285%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%286%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%287%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%288%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%289%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2810%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2811%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2812%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2813%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2814%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2815%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2816%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2817%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2818%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2819%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2820%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2821%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2822%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2823%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2824%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2825%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2826%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2827%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2828%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2829%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2830%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2831%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2832%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2833%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2834%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2835%29.png`,
+  `https://ibaisindia.co.in/octoria/database/cutout-shapes/Ele%20%2836%29.png`,
+];

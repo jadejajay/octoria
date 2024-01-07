@@ -111,7 +111,7 @@ export const BackgroundVideosWidget = () => {
             size={40}
             color={theme}
           />
-          <Text className="font-sfbold text-lg" tx={'editor.click_video'} />
+          <Text className="font-sfbold text-base" tx={'editor.click_video'} />
         </TouchableOpacity>
         <TouchableOpacity
           className="m-4 flex-1 items-center justify-center rounded-md"
@@ -124,7 +124,10 @@ export const BackgroundVideosWidget = () => {
             size={40}
             color={theme}
           />
-          <Text className="font-sfbold text-lg" tx={'editor.select_gallery'} />
+          <Text
+            className="font-sfbold text-base"
+            tx={'editor.select_gallery'}
+          />
         </TouchableOpacity>
       </View>
       <View className="flex-1">

@@ -69,7 +69,7 @@ export const FrameWidget = () => {
             size={40}
             color={theme}
           />
-          <Text className="font-sfbold text-lg" tx={'editor.remove_frame'} />
+          <Text className="font-sfbold text-sm" tx={'editor.remove_frame'} />
         </TouchableOpacity>
         <TouchableOpacity
           className="m-4 flex-1 items-center justify-center rounded-md"
@@ -78,7 +78,7 @@ export const FrameWidget = () => {
           activeOpacity={1}
         >
           <MaterialCommunityIcons name="camera-gopro" size={40} color={theme} />
-          <Text className="font-sfbold text-lg" tx={'editor.select_frame'} />
+          <Text className="font-sfbold text-sm" tx={'editor.select_frame'} />
         </TouchableOpacity>
       </View>
       <View className="flex-1">
