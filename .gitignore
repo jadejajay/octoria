@@ -14,7 +14,7 @@ yarn-error.log
 /coverage
 # macOS
 .DS_Store
-firebase-export-1694701754315JszpLE/
+firebase-export-*/
 storage.rules
 firestore.rules
 firebase.json
