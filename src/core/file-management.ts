@@ -12,7 +12,7 @@ export class FileManagement {
     return await RNFetchBlob.fs.exists(path);
   }
   public async downloadFile(url: string, path: string) {
-    return await RNFetchBlob.config({ path, trusty: true }).fetch('GET', url);
+    return await RNFetchBlob.config({ path }).fetch('GET', url);
   }
   public async readFile(path: string) {
     return await RNFetchBlob.fs.readFile(path, 'base64');

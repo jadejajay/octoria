@@ -1,4 +1,4 @@
-import { CACHE_DIR, CACHE_VIDEO } from '@/types';
+import { CACHE_DIR } from '@/types';
 
 import { FileManagement } from './file-management';
 import { logger } from './logger';
@@ -9,7 +9,7 @@ export class VideoCacheManager {
 
   constructor() {
     // Set the cache directory path
-    this.cacheDir = CACHE_DIR + '/' + CACHE_VIDEO;
+    this.cacheDir = CACHE_DIR;
   }
 
   async getVideo(url: string): Promise<string | null> {
