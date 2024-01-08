@@ -16,7 +16,6 @@ import ColorPicker, {
 
 import {
   FFmpegWrapper,
-  isImageURL,
   logger,
   useBotSearchStore,
   useEditorX,
@@ -24,7 +23,9 @@ import {
 } from '@/core';
 import { Chat } from '@/core/bot';
 import { FileManagement } from '@/core/file-management';
-import { CACHE_DIR } from '@/types';
+import { FirestoreData } from '@/core/fire-util';
+import type { StickerType } from '@/types';
+import { CACHE_DIR, F_STICKERS } from '@/types';
 import {
   ActivityIndicator,
   HorizontalList,
@@ -60,24 +61,21 @@ export const FilterScreen = () => {
   const question = useBotSearchStore((s) => s.text);
   const [displayedText, setDisplayedText] = React.useState('');
   const [modalVisible, setModalVisible] = React.useState(false);
-  const [brightenList, setBrightenList] = React.useState<any>([]);
-  const [contrastList, setContrastList] = React.useState<any>([]);
-  const [saturationList, setSaturationList] = React.useState<any>([]);
-  const [gammaList, setGammaList] = React.useState<any>([]);
-  const [hueList, setHueList] = React.useState<any>([]);
-  const [blurList, setBlurList] = React.useState<any>([]);
-  const [sharpenList, setSharpenList] = React.useState<any>([]);
-  const [tintList, setTintList] = React.useState<any>([]);
-  const [sepiaList, setSepiaList] = React.useState<any>([]);
-  const [thumbnail, setThumbnail] = React.useState('');
   const [chromakey, setChromakey] = React.useState('5');
   const [chromakey2, setChromakey2] = React.useState('10');
   const [chromaFunc, setChromaFunc] = React.useState(true);
   const ffmpeg = React.useMemo(() => new FFmpegWrapper(), []);
+  ///////////////////////////////////////////////
+  const elementsHandler = new FirestoreData<StickerType>(F_STICKERS);
+  const [stickers, setStickers] = React.useState<
+    StickerType[] | undefined | null
+  >([]);
+  //////////////////////////////////////////////
   const filemanagement = new FileManagement();
   React.useEffect(() => {
     setDisplayedText('');
     createThumbnailAsync();
+    getStickers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -94,6 +92,13 @@ export const FilterScreen = () => {
     await filemanagement.deleteThumbnails();
     await ffmpeg.cancel();
   };
+  const getStickers = React.useCallback(async () => {
+    const data = await elementsHandler.getData(40);
+    if (data) setStickers(data);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const stickerImages = stickers?.map((item) => item.image);
+  logger.log(stickerImages, '<=========stickerImages');
 
   const createThumbnailAsync = React.useCallback(async () => {
     setDisplayedText('');
@@ -104,254 +109,19 @@ export const FilterScreen = () => {
     }
     if (!selectedImage) return;
 
-    try {
-      const result = await ffmpeg.applyFilter({
-        dwnimage: selectedImage,
-        filter: '-vf scale=256:-1',
-        ext: 'png',
-      });
-      logger.log(result, '<=========result of thumbnail');
-      if (result) setThumbnail(result);
-    } catch (error) {
-      logger.error(error, '<=========error creating thumbnail');
-    }
+    // try {
+    //   const result = await ffmpeg.applyFilter({
+    //     dwnimage: selectedImage,
+    //     filter: '-vf scale=256:-1',
+    //     ext: 'png',
+    //   });
+    //   logger.log(result, '<=========result of thumbnail');
+    //   if (result) setThumbnail(result);
+    // } catch (error) {
+    //   logger.error(error, '<=========error creating thumbnail');
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const processBrightenCommands = async () => {
-    logger.log(thumbnail, '<=========thumbnail from brightness');
-    if (!thumbnail) return;
-    try {
-      await Promise.all(
-        brightenCommand.map(async (cmd) => {
-          return await ffmpeg
-            .applyFilter({
-              dwnimage: thumbnail,
-              filter: cmd,
-              ext: 'png',
-            })
-            .then((res) => {
-              setBrightenList((prevList: any) => {
-                return [...prevList, { command: cmd, image: res }];
-              });
-            })
-            .catch((err) => {
-              logger.error(err, '<=========error in brighten');
-            });
-        })
-      );
-    } catch (error) {
-      logger.error(error, '<=========error in brighten');
-    }
-  };
-  const processContrastCommands = async () => {
-    logger.log(thumbnail, '<=========thumbnail from contrast');
-    if (!thumbnail) return;
-    try {
-      await Promise.all(
-        contrastCommand.map(async (cmd) => {
-          return await ffmpeg
-            .applyFilter({
-              dwnimage: thumbnail,
-              filter: cmd,
-              ext: 'png',
-            })
-            .then((res) => {
-              setContrastList((prevList: any) => {
-                return [...prevList, { command: cmd, image: res }];
-              });
-            })
-            .catch((err) => {
-              logger.error(err, '<=========error in contrast');
-            });
-        })
-      );
-    } catch (error) {
-      logger.error(error, '<=========error in contrast');
-    }
-  };
-  const processSaturationCommands = async () => {
-    logger.log(thumbnail, '<=========thumbnail from saturation');
-    if (!thumbnail) return;
-    try {
-      await Promise.all(
-        saturationCommand.map(async (cmd) => {
-          return await ffmpeg
-            .applyFilter({
-              dwnimage: thumbnail,
-              filter: cmd,
-              ext: 'png',
-            })
-            .then((res) => {
-              setSaturationList((prevList: any) => {
-                return [...prevList, { command: cmd, image: res }];
-              });
-            })
-            .catch((err) => {
-              logger.error(err, '<=========error in saturation');
-            });
-        })
-      );
-    } catch (error) {
-      logger.error(error, '<=========error in saturation');
-    }
-  };
-  const processGammaCommands = async () => {
-    logger.log(thumbnail, '<=========thumbnail from gamma');
-    if (!thumbnail) return;
-    try {
-      await Promise.all(
-        gammaCommand.map(async (cmd) => {
-          return await ffmpeg
-            .applyFilter({
-              dwnimage: thumbnail,
-              filter: cmd,
-              ext: 'png',
-            })
-            .then((res) => {
-              setGammaList((prevList: any) => {
-                return [...prevList, { command: cmd, image: res }];
-              });
-            })
-            .catch((err) => {
-              logger.error(err, '<=========error in gamma');
-            });
-        })
-      );
-    } catch (error) {
-      logger.error(error, '<=========error in gamma');
-    }
-  };
-  const processHueCommands = async () => {
-    logger.log(thumbnail, '<=========thumbnail from hue');
-    if (!thumbnail) return;
-    try {
-      await Promise.all(
-        hueCommand.map(async (cmd) => {
-          return await ffmpeg
-            .applyFilter({
-              dwnimage: thumbnail,
-              filter: cmd,
-              ext: 'png',
-            })
-            .then((res) => {
-              setHueList((prevList: any) => {
-                return [...prevList, { command: cmd, image: res }];
-              });
-            })
-            .catch((err) => {
-              logger.error(err, '<=========error in hue');
-            });
-        })
-      );
-    } catch (error) {
-      logger.error(error, '<=========error in hue');
-    }
-  };
-  const processBlurCommands = async () => {
-    logger.log(thumbnail, '<=========thumbnail from blur');
-    if (!thumbnail) return;
-    try {
-      await Promise.all(
-        blurCommand.map(async (cmd) => {
-          return await ffmpeg
-            .applyFilter({
-              dwnimage: thumbnail,
-              filter: cmd,
-              ext: 'png',
-            })
-            .then((res) => {
-              setBlurList((prevList: any) => {
-                return [...prevList, { command: cmd, image: res }];
-              });
-            })
-            .catch((err) => {
-              logger.error(err, '<=========error in blur');
-            });
-        })
-      );
-    } catch (error) {
-      logger.error(error, '<=========error in blur');
-    }
-  };
-  const processSharpenCommands = async () => {
-    logger.log(thumbnail, '<=========thumbnail from sharpen');
-    if (!thumbnail) return;
-    try {
-      await Promise.all(
-        sharpenCommand.map(async (cmd) => {
-          return await ffmpeg
-            .applyFilter({
-              dwnimage: thumbnail,
-              filter: cmd,
-              ext: 'png',
-            })
-            .then((res) => {
-              setSharpenList((prevList: any) => {
-                return [...prevList, { command: cmd, image: res }];
-              });
-            })
-            .catch((err) => {
-              logger.error(err, '<=========error in sharpen');
-            });
-        })
-      );
-    } catch (error) {
-      logger.error(error, '<=========error in sharpen');
-    }
-  };
-  const processTintCommands = async () => {
-    logger.log(thumbnail, '<=========thumbnail from tint');
-    if (!thumbnail) return;
-    try {
-      await Promise.all(
-        tintCommand.map(async (cmd: any) => {
-          return await ffmpeg
-            .applyFilter({
-              dwnimage: thumbnail,
-              filter: cmd,
-              ext: 'png',
-            })
-            .then((res) => {
-              setTintList((prevList: any) => {
-                return [...prevList, { command: cmd, image: res }];
-              });
-            })
-            .catch((err) => {
-              logger.error(err, '<=========error in tint');
-            });
-        })
-      );
-    } catch (error) {
-      logger.error(error, '<=========error in tint');
-    }
-  };
-  const processSepiaCommands = async () => {
-    logger.log(thumbnail, '<=========thumbnail from sepia');
-    if (!thumbnail) return;
-    try {
-      await Promise.all(
-        sepiatonesCommand.map(async (cmd: any) => {
-          return await ffmpeg
-            .applyFilter({
-              dwnimage: thumbnail,
-              filter: cmd,
-              ext: 'png',
-            })
-            .then((res) => {
-              setSepiaList((prevList: any) => {
-                return [...prevList, { command: cmd, image: res }];
-              });
-            })
-            .catch((err) => {
-              logger.error(err, '<=========error in sepia');
-            });
-        })
-      );
-    } catch (error) {
-      logger.error(error, '<=========error in sepia');
-    }
-  };
 
   React.useEffect(() => {
     setDisplayedText('');
@@ -488,9 +258,8 @@ export const FilterScreen = () => {
   };
   const SmallImageCard = React.useCallback(
     ({ item, index }: any) => {
-      const image2 = item?.image ? `file://${item.image}` : item;
-      const isValid = isImageURL(image2);
-      logger.log(image2, '<=========image2 from filtered list small card');
+      let imageT = item?.image ? item.image : item;
+      logger.log(imageT, '<=========imageT');
       return (
         <TouchableOpacity
           onPress={() => handleCardPress(item)}
@@ -499,9 +268,9 @@ export const FilterScreen = () => {
           className="overflow-hidden rounded-lg"
           style={[styles.shadow, styles.imageCard]}
         >
-          {image2 && isValid && (
+          {item?.image && (
             <Image
-              src={image2}
+              src={imageT}
               // eslint-disable-next-line react-native/no-inline-styles
               style={{ width: '100%', height: '100%' }}
               resizeMode="stretch"
@@ -621,18 +390,11 @@ export const FilterScreen = () => {
           <Text
             variant="sm"
             onPress={async () => {
+              const imagesList = stickerImages ?? [];
               try {
                 const result = (await PhotoEditor.open({
                   path: image,
-                  stickers: [
-                    'https://ibaisindia.co.in/octoria/database/filters/brightness/minus_one.webp',
-                    'https://ibaisindia.co.in/octoria/database/filters/brightness/minus_half.webp',
-                    'https://ibaisindia.co.in/octoria/database/filters/brightness/minus_p2.webp',
-                    'https://ibaisindia.co.in/octoria/database/filters/brightness/p2.webp',
-                    'https://ibaisindia.co.in/octoria/database/filters/brightness/p3.webp',
-                    'https://ibaisindia.co.in/octoria/database/filters/brightness/p5.webp',
-                    'https://ibaisindia.co.in/octoria/database/filters/brightness/full.webp',
-                  ],
+                  stickers: imagesList,
                 })) as string;
                 if (result) setImage(result);
               } catch (error) {
@@ -646,7 +408,7 @@ export const FilterScreen = () => {
         </View>
       </View>
     );
-  }, [setImage, image]);
+  }, [stickerImages, image, setImage]);
   const ChromaTools = React.useCallback(() => {
     return (
       <>
@@ -752,239 +514,137 @@ export const FilterScreen = () => {
             data={cutOutImages()}
           />
         </View>
-        {thumbnail && (
-          <>
-            <Text variant="sm" className="mt-4 pl-4 text-center font-sfbold">
-              👉🏻 Quick filters👈🏻
+        <>
+          <Text variant="sm" className="mt-4 pl-4 text-center font-sfbold">
+            👉🏻 Quick filters👈🏻
+          </Text>
+          <View className="flex-row items-baseline justify-around">
+            <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+              Brightness
             </Text>
-            <View className="flex-row items-baseline justify-around">
-              <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
-                Brightness
-              </Text>
-              {brightenList.length === 0 && (
-                <Text
-                  variant="sm"
-                  className="rounded-lg bg-blue-500 p-1 text-center"
-                  onPress={async () => {
-                    await processBrightenCommands();
-                  }}
-                >
-                  Generate 🚀
-                </Text>
-              )}
-            </View>
-            <View className="h-36">
-              <HorizontalList
-                Comp={SmallImageCard}
-                padding={7.5}
-                estimatedItemSize={SNAP}
-                snapToInterval={SNAP}
-                data={brightenList}
-              />
-            </View>
-            <View className="flex-row items-baseline justify-around">
-              <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
-                Contrast
-              </Text>
-              {contrastList.length === 0 && (
-                <Text
-                  variant="sm"
-                  className="rounded-lg bg-blue-500 p-1 text-center"
-                  onPress={async () => {
-                    await processContrastCommands();
-                  }}
-                >
-                  Generate 🚀
-                </Text>
-              )}
-            </View>
-            <View className="h-36">
-              <HorizontalList
-                Comp={SmallImageCard}
-                padding={7.5}
-                estimatedItemSize={SNAP}
-                snapToInterval={SNAP}
-                data={contrastList}
-              />
-            </View>
-            <View className="flex-row items-baseline justify-around">
-              <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
-                Saturation
-              </Text>
-              {saturationList.length === 0 && (
-                <Text
-                  variant="sm"
-                  className="rounded-lg bg-blue-500 p-1 text-center"
-                  onPress={async () => {
-                    await processSaturationCommands();
-                  }}
-                >
-                  Generate 🚀
-                </Text>
-              )}
-            </View>
-            <View className="h-36">
-              <HorizontalList
-                Comp={SmallImageCard}
-                padding={7.5}
-                estimatedItemSize={SNAP}
-                snapToInterval={SNAP}
-                data={saturationList}
-              />
-            </View>
-            <View className="flex-row items-baseline justify-around">
-              <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
-                Gamma
-              </Text>
-              {gammaList.length === 0 && (
-                <Text
-                  variant="sm"
-                  className="rounded-lg bg-blue-500 p-1 text-center"
-                  onPress={async () => {
-                    await processGammaCommands();
-                  }}
-                >
-                  Generate 🚀
-                </Text>
-              )}
-            </View>
-            <View className="h-36">
-              <HorizontalList
-                Comp={SmallImageCard}
-                padding={7.5}
-                estimatedItemSize={SNAP}
-                snapToInterval={SNAP}
-                data={gammaList}
-              />
-            </View>
-            <View className="flex-row items-baseline justify-around">
-              <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
-                Hue
-              </Text>
-              {hueList.length === 0 && (
-                <Text
-                  variant="sm"
-                  className="rounded-lg bg-blue-500 p-1 text-center"
-                  onPress={async () => {
-                    await processHueCommands();
-                  }}
-                >
-                  Generate 🚀
-                </Text>
-              )}
-            </View>
-            <View className="h-36">
-              <HorizontalList
-                Comp={SmallImageCard}
-                padding={7.5}
-                estimatedItemSize={SNAP}
-                snapToInterval={SNAP}
-                data={hueList}
-              />
-            </View>
-            <View className="flex-row items-baseline justify-around">
-              <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
-                Blur
-              </Text>
-              {blurList.length === 0 && (
-                <Text
-                  variant="sm"
-                  className="rounded-lg bg-blue-500 p-1 text-center"
-                  onPress={async () => {
-                    await processBlurCommands();
-                  }}
-                >
-                  Generate 🚀
-                </Text>
-              )}
-            </View>
-            <View className="h-36">
-              <HorizontalList
-                Comp={SmallImageCard}
-                padding={7.5}
-                estimatedItemSize={SNAP}
-                snapToInterval={SNAP}
-                data={blurList}
-              />
-            </View>
-            <View className="flex-row items-baseline justify-around">
-              <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
-                Sharpen
-              </Text>
-              {sharpenList.length === 0 && (
-                <Text
-                  variant="sm"
-                  className="rounded-lg bg-blue-500 p-1 text-center"
-                  onPress={async () => {
-                    await processSharpenCommands();
-                  }}
-                >
-                  Generate 🚀
-                </Text>
-              )}
-            </View>
-            <View className="h-36">
-              <HorizontalList
-                Comp={SmallImageCard}
-                padding={7.5}
-                estimatedItemSize={SNAP}
-                snapToInterval={SNAP}
-                data={sharpenList}
-              />
-            </View>
-            <View className="flex-row items-baseline justify-around">
-              <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
-                Tint
-              </Text>
-              {tintList.length === 0 && (
-                <Text
-                  variant="sm"
-                  className="rounded-lg bg-blue-500 p-1 text-center"
-                  onPress={async () => {
-                    await processTintCommands();
-                  }}
-                >
-                  Generate 🚀
-                </Text>
-              )}
-            </View>
-            <View className="h-36">
-              <HorizontalList
-                Comp={SmallImageCard}
-                padding={7.5}
-                estimatedItemSize={SNAP}
-                snapToInterval={SNAP}
-                data={tintList}
-              />
-            </View>
-            <View className="flex-row items-baseline justify-around">
-              <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
-                Sepia Tones
-              </Text>
-              {sepiaList.length === 0 && (
-                <Text
-                  variant="sm"
-                  className="rounded-lg bg-blue-500 p-1 text-center"
-                  onPress={async () => {
-                    await processSepiaCommands();
-                  }}
-                >
-                  Generate 🚀
-                </Text>
-              )}
-            </View>
-            <View className="h-36">
-              <HorizontalList
-                Comp={SmallImageCard}
-                padding={7.5}
-                estimatedItemSize={SNAP}
-                snapToInterval={SNAP}
-                data={sepiaList}
-              />
-            </View>
-          </>
-        )}
-
+          </View>
+          <View className="h-36">
+            <HorizontalList
+              Comp={SmallImageCard}
+              padding={7.5}
+              estimatedItemSize={SNAP}
+              snapToInterval={SNAP}
+              data={brightenList}
+            />
+          </View>
+          <View className="flex-row items-baseline justify-around">
+            <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+              Contrast
+            </Text>
+          </View>
+          <View className="h-36">
+            <HorizontalList
+              Comp={SmallImageCard}
+              padding={7.5}
+              estimatedItemSize={SNAP}
+              snapToInterval={SNAP}
+              data={contrastList}
+            />
+          </View>
+          <View className="flex-row items-baseline justify-around">
+            <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+              Saturation
+            </Text>
+          </View>
+          <View className="h-36">
+            <HorizontalList
+              Comp={SmallImageCard}
+              padding={7.5}
+              estimatedItemSize={SNAP}
+              snapToInterval={SNAP}
+              data={saturationList}
+            />
+          </View>
+          <View className="flex-row items-baseline justify-around">
+            <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+              Gamma
+            </Text>
+          </View>
+          <View className="h-36">
+            <HorizontalList
+              Comp={SmallImageCard}
+              padding={7.5}
+              estimatedItemSize={SNAP}
+              snapToInterval={SNAP}
+              data={gammaList}
+            />
+          </View>
+          <View className="flex-row items-baseline justify-around">
+            <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+              Hue
+            </Text>
+          </View>
+          <View className="h-36">
+            <HorizontalList
+              Comp={SmallImageCard}
+              padding={7.5}
+              estimatedItemSize={SNAP}
+              snapToInterval={SNAP}
+              data={hueList}
+            />
+          </View>
+          <View className="flex-row items-baseline justify-around">
+            <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+              Blur
+            </Text>
+          </View>
+          <View className="h-36">
+            <HorizontalList
+              Comp={SmallImageCard}
+              padding={7.5}
+              estimatedItemSize={SNAP}
+              snapToInterval={SNAP}
+              data={blurList}
+            />
+          </View>
+          <View className="flex-row items-baseline justify-around">
+            <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+              Sharpen
+            </Text>
+          </View>
+          <View className="h-36">
+            <HorizontalList
+              Comp={SmallImageCard}
+              padding={7.5}
+              estimatedItemSize={SNAP}
+              snapToInterval={SNAP}
+              data={sharpenList}
+            />
+          </View>
+          <View className="flex-row items-baseline justify-around">
+            <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+              Tint
+            </Text>
+          </View>
+          <View className="h-36">
+            <HorizontalList
+              Comp={SmallImageCard}
+              padding={7.5}
+              estimatedItemSize={SNAP}
+              snapToInterval={SNAP}
+              data={tintList}
+            />
+          </View>
+          <View className="flex-row items-baseline justify-around">
+            <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+              Sepia Tones
+            </Text>
+          </View>
+          <View className="h-36">
+            <HorizontalList
+              Comp={SmallImageCard}
+              padding={7.5}
+              estimatedItemSize={SNAP}
+              snapToInterval={SNAP}
+              data={sepiaList}
+            />
+          </View>
+        </>
         <View className="mx-16 my-8 border-b-2 border-slate-200" />
       </ScrollView>
       <View className="m-4 self-center rounded-full bg-slate-700 px-16 py-4">
@@ -1131,95 +791,337 @@ const styles = StyleSheet.create({
   },
 });
 
-const brightenCommand = [
-  '-vf eq=brightness=-1',
-  '-vf eq=brightness=-0.7',
-  '-vf eq=brightness=-0.5',
-  '-vf eq=brightness=-0.2',
-  '-vf eq=brightness=0.2',
-  '-vf eq=brightness=0.3',
-  '-vf eq=brightness=0.5',
-  '-vf eq=brightness=0.7',
-  '-vf eq=brightness=1',
-];
-const contrastCommand = [
-  '-vf eq=contrast=-100',
-  '-vf eq=contrast=-50',
-  '-vf eq=contrast=-20',
-  '-vf eq=contrast=-10',
-  '-vf eq=contrast=-3',
-  '-vf eq=contrast=3',
-  '-vf eq=contrast=10',
-  '-vf eq=contrast=20',
-  '-vf eq=contrast=50',
-  '-vf eq=contrast=100',
-];
-const saturationCommand = [
-  '-vf eq=saturation=0',
-  '-vf eq=saturation=0.2',
-  '-vf eq=saturation=0.6',
-  '-vf eq=saturation=1.2',
-  '-vf eq=saturation=1.7',
-  '-vf eq=saturation=2.5',
-  '-vf eq=saturation=3',
-];
-const gammaCommand = [
-  '-vf eq=gamma=0.1',
-  '-vf eq=gamma=0.3',
-  '-vf eq=gamma=0.5',
-  '-vf eq=gamma=1.4',
-  '-vf eq=gamma=2.7',
-  '-vf eq=gamma=4.5',
-  '-vf eq=gamma=6',
-  '-vf eq=gamma=8',
-  '-vf eq=gamma=10',
-];
-const hueCommand = [
-  '-vf hue=h=0',
-  '-vf hue=h=45',
-  '-vf hue=h=90',
-  '-vf hue=h=135',
-  '-vf hue=h=180',
-  '-vf hue=h=225',
-  '-vf hue=h=270',
-  '-vf hue=h=315',
-];
-const blurCommand = [
-  '-vf boxblur=2:2',
-  '-vf boxblur=3:3',
-  '-vf boxblur=4:4',
-  '-vf boxblur=5:5',
-  '-vf boxblur=6:6',
-  '-vf boxblur=8:8',
-  '-vf boxblur=10:10',
-];
-const sharpenCommand = [
-  '-vf unsharp=3:3:1.5:3:3:1.5',
-  '-vf unsharp=5:5:2.5:5:5:2.5',
-  '-vf unsharp=7:7:3.5:7:7:3.5',
-  '-vf unsharp=9:9:4.5:9:9:4.5',
-  '-vf unsharp=11:11:5:11:11:5',
-];
-const tintCommand = [
-  '-vf colorbalance=rs=1',
-  '-vf colorbalance=bs=1',
-  '-vf colorbalance=gs=1',
-  '-vf colorbalance=rs=1:bs=1',
-  '-vf colorbalance=rs=1:gs=1',
-  '-vf colorbalance=bs=1:gs=1',
-];
-const sepiatonesCommand = [
-  '-vf colorchannelmixer=.393:.769:.189:0:.349:.686:.168:0:.272:.534:.131',
-  '-vf colorchannelmixer=.3:.4:.3:0:.3:.4:.3:0:.3:.4:.3',
-  '-vf edgedetect=low=0.1:high=0.4',
+const brightenList = [
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/brightness/brightness_0.webp',
+    command: '-vf eq=brightness=-1',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/brightness/brightness_1.webp',
+    command: '-vf eq=brightness=-0.7',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/brightness/brightness_2.webp',
+    command: '-vf eq=brightness=-0.5',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/brightness/brightness_3.webp',
+    command: '-vf eq=brightness=-0.2',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/brightness/brightness_4.webp',
+    command: '-vf eq=brightness=0.2',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/brightness/brightness_5.webp',
+    command: '-vf eq=brightness=0.3',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/brightness/brightness_6.webp',
+    command: '-vf eq=brightness=0.5',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/brightness/brightness_7.webp',
+    command: '-vf eq=brightness=0.7',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/brightness/brightness_8.webp',
+    command: '-vf eq=brightness=1',
+  },
 ];
 
+const contrastList = [
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/contrast/contrast_0.webp',
+    command: '-vf eq=contrast=-50',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/contrast/contrast_1.webp',
+    command: '-vf eq=contrast=-25',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/contrast/contrast_2.webp',
+    command: '-vf eq=contrast=-10',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/contrast/contrast_3.webp',
+    command: '-vf eq=contrast=-3',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/contrast/contrast_4.webp',
+    command: '-vf eq=contrast=-2',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/contrast/contrast_5.webp',
+    command: '-vf eq=contrast=3',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/contrast/contrast_6.webp',
+    command: '-vf eq=contrast=5',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/contrast/contrast_7.webp',
+    command: '-vf eq=contrast=8',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/contrast/contrast_8.webp',
+    command: '-vf eq=contrast=10',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/contrast/contrast_9.webp',
+    command: '-vf eq=contrast=20',
+  },
+];
+const saturationList = [
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/saturate/saturate_0.webp',
+    command: '-vf eq=saturation=0',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/saturate/saturate_1.webp',
+    command: '-vf eq=saturation=0.2',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/saturate/saturate_2.webp',
+    command: '-vf eq=saturation=0.6',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/saturate/saturate_3.webp',
+    command: '-vf eq=saturation=1.2',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/saturate/saturate_4.webp',
+    command: '-vf eq=saturation=1.7',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/saturate/saturate_5.webp',
+    command: '-vf eq=saturation=2.5',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/saturate/saturate_6.webp',
+    command: '-vf eq=saturation=3',
+  },
+];
+
+const gammaList = [
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/gamma/gamma_0.webp',
+    command: '-vf eq=gamma=0.1',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/gamma/gamma_1.webp',
+    command: '-vf eq=gamma=0.3',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/gamma/gamma_2.webp',
+    command: '-vf eq=gamma=0.5',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/gamma/gamma_3.webp',
+    command: '-vf eq=gamma=1.4',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/gamma/gamma_4.webp',
+    command: '-vf eq=gamma=2.7',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/gamma/gamma_5.webp',
+    command: '-vf eq=gamma=4.5',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/gamma/gamma_6.webp',
+    command: '-vf eq=gamma=6',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/gamma/gamma_7.webp',
+    command: '-vf eq=gamma=8',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/gamma/gamma_8.webp',
+    command: '-vf eq=gamma=10',
+  },
+];
+
+const hueList = [
+  {
+    image: 'https://ibaisindia.co.in/octoria/database/filters/hue/hue_0.webp',
+    command: '-vf hue=h=0',
+  },
+  {
+    image: 'https://ibaisindia.co.in/octoria/database/filters/hue/hue_1.webp',
+    command: '-vf hue=h=45',
+  },
+  {
+    image: 'https://ibaisindia.co.in/octoria/database/filters/hue/hue_2.webp',
+    command: '-vf hue=h=90',
+  },
+  {
+    image: 'https://ibaisindia.co.in/octoria/database/filters/hue/hue_3.webp',
+    command: '-vf hue=h=135',
+  },
+  {
+    image: 'https://ibaisindia.co.in/octoria/database/filters/hue/hue_4.webp',
+    command: '-vf hue=h=180',
+  },
+  {
+    image: 'https://ibaisindia.co.in/octoria/database/filters/hue/hue_5.webp',
+    command: '-vf hue=h=225',
+  },
+  {
+    image: 'https://ibaisindia.co.in/octoria/database/filters/hue/hue_6.webp',
+    command: '-vf hue=h=270',
+  },
+  {
+    image: 'https://ibaisindia.co.in/octoria/database/filters/hue/hue_7.webp',
+    command: '-vf hue=h=315',
+  },
+];
+
+const blurList = [
+  {
+    image: 'https://ibaisindia.co.in/octoria/database/filters/blur/blur_0.webp',
+    command: '-vf boxblur=2:2',
+  },
+  {
+    image: 'https://ibaisindia.co.in/octoria/database/filters/blur/blur_1.webp',
+    command: '-vf boxblur=3:3',
+  },
+  {
+    image: 'https://ibaisindia.co.in/octoria/database/filters/blur/blur_2.webp',
+    command: '-vf boxblur=4:4',
+  },
+  {
+    image: 'https://ibaisindia.co.in/octoria/database/filters/blur/blur_3.webp',
+    command: '-vf boxblur=5:5',
+  },
+  {
+    image: 'https://ibaisindia.co.in/octoria/database/filters/blur/blur_4.webp',
+    command: '-vf boxblur=6:6',
+  },
+  {
+    image: 'https://ibaisindia.co.in/octoria/database/filters/blur/blur_5.webp',
+    command: '-vf boxblur=8:8',
+  },
+  {
+    image: 'https://ibaisindia.co.in/octoria/database/filters/blur/blur_6.webp',
+    command: '-vf boxblur=10:10',
+  },
+];
+
+const sharpenList = [
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/sharp/sharp_0.webp',
+    command: '-vf unsharp=3:3:1.5:3:3:1.5',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/sharp/sharp_1.webp',
+    command: '-vf unsharp=5:5:2.5:5:5:2.5',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/sharp/sharp_2.webp',
+    command: '-vf unsharp=7:7:3.5:7:7:3.5',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/sharp/sharp_3.webp',
+    command: '-vf unsharp=9:9:4.5:9:9:4.5',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/sharp/sharp_4.webp',
+    command: '-vf unsharp=11:11:5:11:11:5',
+  },
+];
+
+const tintList = [
+  {
+    image: 'https://ibaisindia.co.in/octoria/database/filters/tint/tint_0.webp',
+    command: '-vf colorbalance=rs=1',
+  },
+  {
+    image: 'https://ibaisindia.co.in/octoria/database/filters/tint/tint_1.webp',
+    command: '-vf colorbalance=bs=1',
+  },
+  {
+    image: 'https://ibaisindia.co.in/octoria/database/filters/tint/tint_2.webp',
+    command: '-vf colorbalance=gs=1',
+  },
+  {
+    image: 'https://ibaisindia.co.in/octoria/database/filters/tint/tint_3.webp',
+    command: '-vf colorbalance=rs=1:bs=1',
+  },
+  {
+    image: 'https://ibaisindia.co.in/octoria/database/filters/tint/tint_4.webp',
+    command: '-vf colorbalance=rs=1:gs=1',
+  },
+  {
+    image: 'https://ibaisindia.co.in/octoria/database/filters/tint/tint_5.webp',
+    command: '-vf colorbalance=bs=1:gs=1',
+  },
+];
+
+const sepiaList = [
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/sepia/sepia_0.webp',
+    command:
+      '-vf colorchannelmixer=.393:.769:.189:0:.349:.686:.168:0:.272:.534:.131',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/sepia/sepia_1.webp',
+    command: '-vf colorchannelmixer=.3:.4:.3:0:.3:.4:.3:0:.3:.4:.3',
+  },
+  {
+    image:
+      'https://ibaisindia.co.in/octoria/database/filters/sepia/sepia_2.webp',
+    command: '-vf edgedetect=low=0.1:high=0.4',
+  },
+];
 const cutOutImages = () => {
   let temp = [];
   for (let i = 1; i <= 94; i++) {
-    temp.push(
-      `https://ibaisindia.co.in/octoria/database/cutout-shapes/elements%20%28${i}%29.png`
-    );
+    temp.push({
+      image: `https://ibaisindia.co.in/octoria/database/cutout-shapes/elements%20%28${i}%29.png`,
+    });
   }
   return temp;
 };

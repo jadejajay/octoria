@@ -57,6 +57,10 @@ export const F_SHAPES = 'Shapes';
 export const F_STICKERS = 'Stickers';
 export const F_FESTIVAL_IMAGE = 'FestivalImage';
 export const F_LINKS = 'Links';
+export const F_LINKS_BACKGROUND = 'background';
 export const F_LINKS_GSTAPIKEY = 'gstapikey';
 export const F_LINKS_SETTINGS = 'settings';
 export const F_LINKS_SHARE = 'share';
+
+// gstapi
+// server

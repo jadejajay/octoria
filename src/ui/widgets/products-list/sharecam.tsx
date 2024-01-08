@@ -23,7 +23,12 @@ import {
 } from '@/core';
 import { FirestoreData } from '@/core/fire-util';
 import type { ShareCamBgType } from '@/types';
-import { F_LINKS, F_SHARE_CAM_BG_IMAGES } from '@/types';
+import {
+  F_LINKS,
+  F_LINKS_BACKGROUND,
+  F_LINKS_SHARE,
+  F_SHARE_CAM_BG_IMAGES,
+} from '@/types';
 import {
   AbsoluteButton,
   ActivityIndicator,
@@ -73,13 +78,13 @@ export const ShareCam = ({ route }: any) => {
   useEffect(() => {
     setLoading(true);
     const shareLink = server.data.find(
-      (item: any) => item.id === 'share'
+      (item: any) => item.id === F_LINKS_SHARE
     ) as unknown as {
       id: string;
       value: string;
     };
     const backgroundLink = server.data.find(
-      (item: any) => item.id === 'background'
+      (item: any) => item.id === F_LINKS_BACKGROUND
     ) as unknown as {
       id: string;
       url: string;
