@@ -27,7 +27,6 @@ import {
   NewProductList,
   ScrollView,
   SearchBar,
-  Text,
   View,
   WIDTH,
 } from '@/ui';
@@ -223,7 +222,7 @@ export const Style = () => {
         </View>
         {FestivalImageModal()}
       </ScrollView>
-      <Text
+      {/* <Text
         variant="sm"
         className="absolute bottom-6 right-6 rounded-lg bg-blue-600 p-4 font-sfbold text-white"
         onPress={() => {
@@ -231,7 +230,7 @@ export const Style = () => {
         }}
       >
         {'</>'}
-      </Text>
+      </Text> */}
     </>
   );
 };
