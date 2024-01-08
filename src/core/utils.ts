@@ -54,6 +54,7 @@ export function isVideoURL(url: string): boolean {
   return videoExtensions.includes(fileExtension);
 }
 export function isImageURL(url: string): boolean {
+  if (!url) return false;
   // Define an array of image file extensions you want to consider as images
   const imageExtensions = ['jpg', 'jpeg', 'png', 'bmp', 'webp'];
   // Get the file extension from the URL

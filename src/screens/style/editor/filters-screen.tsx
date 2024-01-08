@@ -16,6 +16,7 @@ import ColorPicker, {
 
 import {
   FFmpegWrapper,
+  isImageURL,
   logger,
   useBotSearchStore,
   useEditorX,
@@ -60,6 +61,7 @@ export const FilterScreen = () => {
   const [displayedText, setDisplayedText] = React.useState('');
   const [modalVisible, setModalVisible] = React.useState(false);
   const [brightenList, setBrightenList] = React.useState<any>([]);
+  const [contrastList, setContrastList] = React.useState<any>([]);
   const [saturationList, setSaturationList] = React.useState<any>([]);
   const [gammaList, setGammaList] = React.useState<any>([]);
   const [hueList, setHueList] = React.useState<any>([]);
@@ -140,6 +142,32 @@ export const FilterScreen = () => {
       );
     } catch (error) {
       logger.error(error, '<=========error in brighten');
+    }
+  };
+  const processContrastCommands = async () => {
+    logger.log(thumbnail, '<=========thumbnail from contrast');
+    if (!thumbnail) return;
+    try {
+      await Promise.all(
+        contrastCommand.map(async (cmd) => {
+          return await ffmpeg
+            .applyFilter({
+              dwnimage: thumbnail,
+              filter: cmd,
+              ext: 'png',
+            })
+            .then((res) => {
+              setContrastList((prevList: any) => {
+                return [...prevList, { command: cmd, image: res }];
+              });
+            })
+            .catch((err) => {
+              logger.error(err, '<=========error in contrast');
+            });
+        })
+      );
+    } catch (error) {
+      logger.error(error, '<=========error in contrast');
     }
   };
   const processSaturationCommands = async () => {
@@ -461,6 +489,7 @@ export const FilterScreen = () => {
   const SmallImageCard = React.useCallback(
     ({ item, index }: any) => {
       const image2 = item?.image ? `file://${item.image}` : item;
+      const isValid = isImageURL(image2);
       logger.log(image2, '<=========image2 from filtered list small card');
       return (
         <TouchableOpacity
@@ -470,12 +499,14 @@ export const FilterScreen = () => {
           className="overflow-hidden rounded-lg"
           style={[styles.shadow, styles.imageCard]}
         >
-          <Image
-            src={image2}
-            // eslint-disable-next-line react-native/no-inline-styles
-            style={{ width: '100%', height: '100%' }}
-            resizeMode="stretch"
-          />
+          {image2 && isValid && (
+            <Image
+              src={image2}
+              // eslint-disable-next-line react-native/no-inline-styles
+              style={{ width: '100%', height: '100%' }}
+              resizeMode="stretch"
+            />
+          )}
         </TouchableOpacity>
       );
     },
@@ -749,6 +780,31 @@ export const FilterScreen = () => {
                 estimatedItemSize={SNAP}
                 snapToInterval={SNAP}
                 data={brightenList}
+              />
+            </View>
+            <View className="flex-row items-baseline justify-around">
+              <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
+                Contrast
+              </Text>
+              {contrastList.length === 0 && (
+                <Text
+                  variant="sm"
+                  className="rounded-lg bg-blue-500 p-1 text-center"
+                  onPress={async () => {
+                    await processContrastCommands();
+                  }}
+                >
+                  Generate 🚀
+                </Text>
+              )}
+            </View>
+            <View className="h-36">
+              <HorizontalList
+                Comp={SmallImageCard}
+                padding={7.5}
+                estimatedItemSize={SNAP}
+                snapToInterval={SNAP}
+                data={contrastList}
               />
             </View>
             <View className="flex-row items-baseline justify-around">
@@ -1085,6 +1141,18 @@ const brightenCommand = [
   '-vf eq=brightness=0.5',
   '-vf eq=brightness=0.7',
   '-vf eq=brightness=1',
+];
+const contrastCommand = [
+  '-vf eq=contrast=-100',
+  '-vf eq=contrast=-50',
+  '-vf eq=contrast=-20',
+  '-vf eq=contrast=-10',
+  '-vf eq=contrast=-3',
+  '-vf eq=contrast=3',
+  '-vf eq=contrast=10',
+  '-vf eq=contrast=20',
+  '-vf eq=contrast=50',
+  '-vf eq=contrast=100',
 ];
 const saturationCommand = [
   '-vf eq=saturation=0',
