@@ -194,7 +194,7 @@ export const FilterScreen = () => {
         setLoading(true);
         const result = await ffmpeg.applyFilter({
           dwnimage: image,
-          filter: `-i ${item} -filter_complex "[0:v]scale=600:600[resized_main];[1:v]scale=600:600[resized_cutter];[resized_cutter]format=rgba,alphaextract[alpha];[resized_main][alpha]alphamerge[outv]" -map "[outv]"`,
+          filter: `-i ${item.image} -filter_complex "[0:v]scale=600:600[resized_main];[1:v]scale=600:600[resized_cutter];[resized_cutter]format=rgba,alphaextract[alpha];[resized_main][alpha]alphamerge[outv]" -map "[outv]"`,
           ext: 'png',
         });
         setLoading(false);

@@ -6,6 +6,7 @@ import { addElements } from '@/core/data/elements';
 import { addPostImages } from '@/core/data/festivals';
 import { addFrames } from '@/core/data/frame';
 import { addImagesList } from '@/core/data/images-list';
+import { addLinks } from '@/core/data/links';
 import { addLogos } from '@/core/data/logos';
 import { addMainCarousel } from '@/core/data/main-carousel';
 import { addMainCarousel2 } from '@/core/data/main-carousel2';
@@ -128,6 +129,12 @@ export const DeveloperScreen = () => {
           onPress={() => addShareCamBg()}
         >
           Add ShareCamBg
+        </Text>
+        <Text
+          className="rounded bg-blue-600 p-3 text-center font-sfbold text-white"
+          onPress={() => addLinks()}
+        >
+          Add Links
         </Text>
         <Text
           className="rounded bg-blue-600 p-3 text-center font-sfbold text-white"
