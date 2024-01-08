@@ -47,9 +47,6 @@
 import 'react-native-gesture-handler';
 
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
-import { firebase } from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
-import storage from '@react-native-firebase/storage';
 import { usePreventScreenCapture } from 'expo-screen-capture';
 import * as SplashScreen from 'expo-splash-screen';
 import React from 'react';
@@ -79,10 +76,6 @@ SplashScreen.preventAutoHideAsync();
 const App = () => {
   logger.log('app started', Date.now());
   usePreventScreenCapture();
-  const auth = firebase.auth();
-  auth.useEmulator('http://192.168.0.8:9099');
-  firestore().useEmulator('192.168.0.8', 8080);
-  storage().useEmulator('192.168.0.8', 9199);
   logger.log('Emulator started', Date.now());
   return (
     <GestureHandlerRootView style={styles.container}>
