@@ -119,7 +119,7 @@ export const shareImageWithTitle = async (fileUri: any, title: any) => {
 
     Sharing.shareAsync(fileUri, options);
   } catch (error) {
-    console.error('Error sharing image:', error);
+    logger.error('Error sharing image:', error);
   }
 };
 
@@ -216,7 +216,7 @@ export const handleWhatsappShare = async (
 
     await Share.shareSingle(options);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     ToastAndroid.show('Some Error', ToastAndroid.SHORT);
   }
 };
@@ -233,7 +233,7 @@ export const handleShare = async (fileUri: any, title: any) => {
 
     await Share.shareSingle(options);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     ToastAndroid.show('Some Error', ToastAndroid.SHORT);
   }
 };
@@ -264,7 +264,7 @@ export const handleWhatsappShare2 = async (
 
     await Share.shareSingle(options);
   } catch (error) {
-    console.error(error);
+    logger.error(error);
     ToastAndroid.show('Some Error', ToastAndroid.SHORT);
   }
 };

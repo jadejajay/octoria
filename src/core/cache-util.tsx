@@ -1,6 +1,7 @@
 import { CACHE_DIR, CACHE_VIDEO } from '@/types';
 
 import { FileManagement } from './file-management';
+import { logger } from './logger';
 
 const fileManager = new FileManagement();
 export class VideoCacheManager {
@@ -49,7 +50,7 @@ export class VideoCacheManager {
       }
     } catch (error) {
       // Handle download error
-      console.error('Error downloading video:', error);
+      logger.error('Error downloading video:', error);
       return null;
     }
   }

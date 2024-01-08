@@ -2,6 +2,8 @@ import { Platform } from 'react-native';
 import RNFetchBlob from 'react-native-blob-util';
 
 import { CACHE_DIR, CACHE_IMAGE } from '@/types';
+
+import { logger } from './logger';
 export class FileManagement {
   public addToSession(sessionName: string, filePath: string): void {
     RNFetchBlob.session(sessionName).add(filePath);
@@ -61,7 +63,7 @@ export class FileManagement {
             }
           });
       })
-      .catch((err) => console.log(err));
+      .catch((err) => logger.log(err));
   }
   public async copyFile(source: string, dest: string) {
     await RNFetchBlob.fs.cp(source, dest);
