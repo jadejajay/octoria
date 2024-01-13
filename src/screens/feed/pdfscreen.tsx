@@ -1,10 +1,9 @@
 import React from 'react';
-import { Linking } from 'react-native';
 import { StyleSheet, View } from 'react-native';
 import Pdf from 'react-native-pdf';
 
-import { HEIGHT, WIDTH } from '@/ui';
 import { openLinkInBrowser } from '@/core';
+import { HEIGHT, WIDTH } from '@/ui';
 
 export const PDFExample = ({ route }: { route: any }) => {
   const { url } = route.params;

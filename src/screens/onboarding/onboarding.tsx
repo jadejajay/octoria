@@ -7,7 +7,7 @@ import { Cover } from './cover';
 export const Onboarding = () => {
   const [_, setIsFirstTime] = useIsFirstTime();
   useEffect(() => {
-    speak('hello sir, octoria mobile application me aapka swagat he');
+    speak('assistance.first_greet');
   }, []);
   return (
     <View className="flex h-full items-center justify-center">
@@ -32,7 +32,7 @@ export const Onboarding = () => {
       </View>
       <SafeAreaView className="mt-6">
         <Button
-          label="Let's Get Started "
+          label="onboarding.get_start"
           onPress={() => {
             setIsFirstTime(false);
           }}

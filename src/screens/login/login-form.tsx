@@ -68,7 +68,7 @@ export const LoginForm = () => {
         <View className="mt-20 ">
           <Button
             testID="login-button"
-            label="Login"
+            label="login.loginbut"
             onPress={() => signInWithPhoneNumber()}
             variant="primary"
             disabled={error2}

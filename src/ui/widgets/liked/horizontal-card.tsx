@@ -40,7 +40,7 @@ export const LikedCard = ({ item, index, deleteFavorite }: Props) => {
             <Text className="font-sfbold">{item.name}</Text>
             <Text numberOfLines={1}>{item.desc}</Text>
             <Button
-              label="remove"
+              label="list.remove"
               variant="secondary"
               onPress={() => {
                 deleteFavorite(item.id);

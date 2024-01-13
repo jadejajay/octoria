@@ -1,13 +1,12 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable react-native/no-inline-styles */
 import { useNavigation } from '@react-navigation/native';
-import React, { useRef } from 'react';
+import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated';
-import type { ColorPickerRef } from 'reanimated-color-picker';
 import ColorPicker, {
   colorKit,
   HueCircular,

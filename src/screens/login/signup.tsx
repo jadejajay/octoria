@@ -213,7 +213,7 @@ export const SignUpForm = () => {
         />
 
         <Button
-          label="Submit"
+          label="signup.submit"
           onPress={handleSubmit(onSubmit)}
           variant="outline"
         />

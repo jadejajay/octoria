@@ -1,4 +1,11 @@
 {
+  "assistance": {
+    "afternoon": "下午好。",
+    "evening": "晚上好。",
+    "first_greet": "先生您好，欢迎使用octoria移动应用程序",
+    "morning": "早上好。",
+    "welcome_back": "欢迎回来。"
+  },
   "editor": {
     "capture": "捕获",
     "click_change_image": "单击更改图像",
@@ -27,28 +34,37 @@
     "updating_frame": "正在更新数据...",
     "videos": "视频"
   },
+  "error": {
+    "fallback": "再试一次"
+  },
+  "gallery": {
+    "gallery": "画廊"
+  },
   "info": {
     "error_data": "更新数据时出错。"
   },
   "list": {
-    "no_data": "对不起！\n没有找到数据"
+    "no_data": "对不起！\n没有找到数据",
+    "remove": "消除"
   },
   "login": {
     "login_success": "登陆成功",
+    "loginbut": "登录",
     "network_error": "网络错误",
     "otp_failed": "OTP 无效或 OTP 已过期",
     "otp_sent": "OTP 成功发送到电话号码"
   },
   "mainscreen": {
-    "create_post": "使用 Fast 创建社交媒体帖子",
-    "welcome": "欢迎来到奥克托利亚。",
     "categories": "类别",
+    "create_post": "使用 Fast 创建社交媒体帖子",
+    "hello": "你好",
     "new_prod": "新品上市",
     "see_all": "查看全部",
     "subtitle_new_prod": "我们的新到货产品。",
-    "hello": "你好"
+    "welcome": "欢迎来到奥克托利亚。"
   },
   "onboarding": {
+    "get_start": "让我们开始吧",
     "message": "欢迎来到 Octoria 应用网站"
   },
   "product": {
@@ -62,6 +78,7 @@
     "try_now": "现在试试"
   },
   "render": {
+    "failed_filter": "应用过滤器失败",
     "failed_gen_video": "生成视频失败。",
     "failed_video": "生成视频失败。\n内部错误。",
     "proc_canceled": "生成视频失败。\n进程已取消。",
@@ -71,11 +88,15 @@
     "open_link": "打开/复制链接",
     "scan_again": "点击再次扫描"
   },
+  "setting": {
+    "assistance": "协助"
+  },
   "settings": {
     "about": "关于",
     "app_name": "应用程序名称",
     "arabic": "阿拉伯",
     "chinese": "中国人",
+    "edit": "编辑",
     "english": "英语",
     "feedback": "反馈",
     "gallery": "画廊",
@@ -83,6 +104,7 @@
     "github": "吉图布",
     "gst": "商品及服务税 (GST) 号码信息",
     "gujrati": "古吉拉特语",
+    "hindi": "印地语",
     "language": "语言",
     "links": "链接",
     "logout": "登出",
@@ -93,6 +115,7 @@
     "share": "分享",
     "support": "支持",
     "support_us": "支持我们",
+    "tamil": "泰米尔语",
     "terms": "服务条款",
     "theme": {
       "dark": "黑暗的",
@@ -103,28 +126,14 @@
     "title": "设置",
     "utility": "公用事业",
     "version": "版本",
-    "website": "网站",
-    "hindi": "印地语",
-    "tamil": "泰米尔语",
-    "edit": "编辑"
+    "website": "网站"
   },
   "signup": {
     "add_photo": "添加您的照片以继续",
     "click_to_upload": "点击上传图片",
     "error_profile": "更新个人资料时出错。",
-    "profile_updated": "个人资料更新成功。"
+    "profile_updated": "个人资料更新成功。",
+    "submit": "提交"
   },
-  "welcome": "欢迎使用奥克托利亚应用程序",
-  "assistance": {
-    "welcome_back": "欢迎回来。",
-    "afternoon": "下午好。",
-    "evening": "晚上好。",
-    "morning": "早上好。"
-  },
-  "gallery": {
-    "gallery": "画廊"
-  },
-  "setting": {
-    "assistance": "协助"
-  }
+  "welcome": "欢迎使用奥克托利亚应用程序"
 }

@@ -51,7 +51,7 @@ export const RenderWidget = () => {
   React.useEffect(() => {
     captureView();
     return () => {
-      ffmpeg.cancel(renderedAsset);
+      ffmpeg.cancel();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

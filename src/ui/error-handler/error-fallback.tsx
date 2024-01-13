@@ -8,7 +8,7 @@ export function ErrorFallback({ resetErrorBoundary }: any) {
     <Screen>
       <View>
         <Text> Something went wrong: </Text>
-        <Button label="try Again" onPress={resetErrorBoundary} />
+        <Button label="error.fallback" onPress={resetErrorBoundary} />
       </View>
     </Screen>
   );

@@ -1,6 +1,7 @@
 export * from './background-widget';
 export * from './bg-videos';
 export * from './change-image';
+export * from './drag-list';
 export * from './elements-widget';
 export * from './font-picker';
 export * from './frame-widget';
@@ -15,4 +16,3 @@ export * from './shape-widget';
 export * from './stickers';
 export * from './text-modal';
 export * from './text-widget';
-export * from './drag-list';

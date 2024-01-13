@@ -45,7 +45,11 @@ export const Feed = () => {
         key={`card-${item.id}`}
         item={item}
         index={index}
-        onPress={() => navigate('Post', { id: item.id })}
+        onPress={() => {
+          if (item?.id) {
+            navigate('Post', { id: item.id });
+          }
+        }}
       />
     ),
     [navigate]
