@@ -30,6 +30,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
 
   android: {
     googleServicesFile: 'google-services.json',
+    versionCode: 2,
     adaptiveIcon: {
       foregroundImage: './assets/adaptive-icon.png',
       backgroundColor: '#FFFFFF',
@@ -68,25 +69,8 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         autoVerify: true,
         data: [
           {
-            scheme: 'http',
-            host: '*',
-            mimeType: 'image/*',
-          },
-          {
             scheme: 'https',
-            host: '*',
-            mimeType: 'video/*',
-          },
-        ],
-        category: ['DEFAULT', 'BROWSABLE'],
-      },
-      {
-        action: 'VIEW',
-        autoVerify: true,
-        data: [
-          {
-            scheme: 'https',
-            host: 'www.octoriahardware.com',
+            host: 'www.ibaisindia.co.in',
           },
         ],
         category: ['DEFAULT', 'BROWSABLE'],
@@ -97,7 +81,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         data: [
           {
             scheme: 'https',
-            host: 'www.octoriahardware.com',
+            host: 'www.ibaisindia.co.in',
           },
         ],
         category: ['DEFAULT', 'BROWSABLE'],

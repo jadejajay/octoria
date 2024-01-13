@@ -29,9 +29,9 @@ import {
 
 const schema = z.object({
   email: z.string().email(),
-  name: z.string().max(50),
-  type: z.string(),
-  business: z.string().max(50),
+  name: z.string().max(50).min(3).nonempty(),
+  type: z.string().nonempty(),
+  business: z.string().max(50).min(2).nonempty(),
 });
 
 type FormType = z.infer<typeof schema>;
@@ -188,18 +188,21 @@ export const SignUpForm = () => {
           control={control}
           name="name"
           placeholder="Name"
+          error="Please enter a valid name"
         />
         <ControlledInput
           //@ts-ignore
           control={control}
           name="email"
           placeholder="Email"
+          error="Please enter a valid email"
         />
         <ControlledInput
           //@ts-ignore
           control={control}
           name="business"
           placeholder="Business Name"
+          error="Please enter a valid business name"
         />
         <ControlledSelect
           //@ts-ignore
@@ -210,6 +213,7 @@ export const SignUpForm = () => {
             { label: 'Manufacturer', value: 'Manufacturer' },
             { label: 'Marketer', value: 'Marketer' },
           ]}
+          error="Please select a type"
         />
 
         <Button

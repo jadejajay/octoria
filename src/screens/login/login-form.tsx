@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import auth from '@react-native-firebase/auth';
-import React, { useState } from 'react';
-import IntlPhoneField from 'react-native-intl-phone-field';
+import React, { useEffect, useRef, useState } from 'react';
+import PhoneInput from 'react-native-phone-number-input';
+import SmsRetriever from 'react-native-sms-retriever';
 
+import { logger } from '@/core';
 import {
   ActivityIndicator,
-  Button,
   NoData,
   ReversibleCountdownButton,
   showErrorMessage,
@@ -13,16 +14,36 @@ import {
   VerifCode,
   View,
 } from '@/ui';
+
 export const LoginForm = () => {
   const [confirm, setConfirm] = useState<any>();
   const [phoneNumber, setPhoneNumber] = useState<any>();
-  const [error2, setError2] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const phoneInput = useRef<PhoneInput>(null);
 
-  async function signInWithPhoneNumber() {
+  useEffect(() => {
+    const onPhoneListener = async () => {
+      try {
+        const text = await SmsRetriever.requestPhoneNumber();
+        const checkValid = phoneInput.current?.isValidNumber(text);
+        logger.log(checkValid);
+        if (checkValid) {
+          logger.log(text, 'text phone');
+          setPhoneNumber(text);
+          signInWithPhoneNumber(text);
+        }
+      } catch (error) {
+        logger.log(JSON.stringify(error));
+      }
+    };
+
+    onPhoneListener();
+  }, []); // Empty dependency array to run the effect only once
+
+  async function signInWithPhoneNumber(phoneNum: any) {
     try {
       setIsLoading(true);
-      const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+      const confirmation = await auth().signInWithPhoneNumber(phoneNum);
 
       setConfirm(confirmation);
       setIsLoading(false);
@@ -57,22 +78,27 @@ export const LoginForm = () => {
         </View>
         <View className="mt-20 items-center justify-center">
           {isLoading ? null : (
-            <IntlPhoneField
-              onValidation={(isValid: any) => setError2(!isValid)}
-              defaultCountry="IN"
-              defaultPrefix="+91"
-              onValueUpdate={setPhoneNumber}
-            />
+            <>
+              {true && (
+                //@ts-ignore
+                <PhoneInput
+                  ref={phoneInput}
+                  defaultCode="IN"
+                  layout="first"
+                  onChangeFormattedText={(text) => {
+                    const checkValid = phoneInput.current?.isValidNumber(text);
+                    if (checkValid) {
+                      logger.log(text);
+                      setPhoneNumber(text);
+                      signInWithPhoneNumber(text);
+                    }
+                  }}
+                  withShadow
+                  autoFocus
+                />
+              )}
+            </>
           )}
-        </View>
-        <View className="mt-20 ">
-          <Button
-            testID="login-button"
-            label="login.loginbut"
-            onPress={() => signInWithPhoneNumber()}
-            variant="primary"
-            disabled={error2}
-          />
         </View>
       </View>
     );
@@ -90,7 +116,9 @@ export const LoginForm = () => {
       </View>
       <View className="mt-20 items-center justify-center">
         <VerifCode onFulfill={(code) => onOtpConfirm(code)} />
-        <ReversibleCountdownButton onPress={() => signInWithPhoneNumber()} />
+        <ReversibleCountdownButton
+          onPress={() => signInWithPhoneNumber(phoneNumber)}
+        />
       </View>
     </View>
   );

@@ -110,11 +110,15 @@ export class VerifCode extends Component<Props, State> {
   //     const registered = await SmsRetriever.startSmsRetriever();
   //     if (registered) {
   //       SmsRetriever.addSmsListener((event) => {
-  //         showMessage({
-  //           icon: 'success',
-  //           message: 'sms retrieved',
-  //           duration: 1000,
-  //         });
+  //         const code = event?.message && event.message.match(/\d{6}/);
+  //         if (code) {
+  //           this.setState({ code: code[0].split('') });
+  //           Keyboard.dismiss();
+  //           if (this.props.onFulfill) {
+  //             this.props.onFulfill(code[0]);
+  //           }
+  //         }
+  //         logger.log(event.message, 'sms listener message received');
   //         SmsRetriever.removeSmsListener();
   //       });
   //     }
@@ -233,4 +237,3 @@ export class VerifCode extends Component<Props, State> {
     );
   }
 }
-//jhfoiu fviarvbaer v 745455 erfhef
