@@ -113,6 +113,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         'android:allowBackup': 'false',
       },
     ],
+    [
+      '@config-plugins/ffmpeg-kit-react-native',
+      {
+        package: 'https-gpl',
+      },
+    ],
     '@react-native-firebase/app',
     '@react-native-firebase/auth',
     'expo-localization',

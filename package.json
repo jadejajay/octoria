@@ -41,6 +41,7 @@
     "@bacons/link-assets": "^1.1.0",
     "@bam.tech/react-native-image-resizer": "^3.0.7",
     "@baronha/react-native-photo-editor": "^1.1.6",
+    "@config-plugins/ffmpeg-kit-react-native": "^6.0.0",
     "@gorhom/bottom-sheet": "^4",
     "@hookform/resolvers": "^2.9.11",
     "@react-native-clipboard/clipboard": "^1.11.2",

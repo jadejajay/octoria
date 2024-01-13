@@ -17,6 +17,9 @@ dependencies:
   '@baronha/react-native-photo-editor':
     specifier: ^1.1.6
     version: 1.1.6(react-native@0.72.6)(react@18.2.0)
+  '@config-plugins/ffmpeg-kit-react-native':
+    specifier: ^6.0.0
+    version: 6.0.0(expo@49.0.6)
   '@gorhom/bottom-sheet':
     specifier: ^4
     version: 4.0.0(react-native-gesture-handler@2.12.0)(react-native-reanimated@3.3.0)(react-native@0.72.6)(react@18.2.0)
@@ -2023,6 +2026,15 @@ packages:
     dependencies:
       chalk: 4.1.2
     dev: true
+
+  /@config-plugins/ffmpeg-kit-react-native@6.0.0(expo@49.0.6):
+    resolution: {integrity: sha512-lGYw70bR2xN/JQkKKxwJXwHwikrs1OiNwH6SNaiXltS1CgZ7bO/pdpM8Dtg9Ve/MFvXxJJ7eTsjzyR8QKgDHkA==}
+    peerDependencies:
+      expo: ^49
+    dependencies:
+      expo: 49.0.6(@babel/core@7.21.0)
+      semver: 7.5.4
+    dev: false
 
   /@cspotcode/source-map-support@0.8.1:
     resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
