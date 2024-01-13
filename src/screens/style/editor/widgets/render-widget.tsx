@@ -67,6 +67,7 @@ export const RenderWidget = () => {
     } else {
       try {
         if (dwnVideo) {
+          logger.log('dwnVideo', dwnVideo);
           setRenderedAsset('');
           setRenderModalLoading(true);
           ffmpeg.Logs(setProgress);
