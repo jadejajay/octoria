@@ -117,6 +117,12 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
       '@config-plugins/ffmpeg-kit-react-native',
       {
         package: 'https-gpl',
+        ios: {
+          package: 'https-gpl',
+        },
+        android: {
+          package: 'https-gpl',
+        },
       },
     ],
     '@react-native-firebase/app',
