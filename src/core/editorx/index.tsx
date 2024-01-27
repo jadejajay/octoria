@@ -6,9 +6,9 @@ import { create } from 'zustand';
 
 import type { EditorXState, Element } from '@/types';
 import { EDITORX_DATA, F_FRAME_LIST } from '@/types';
-import { showErrorMessage, showSuccessMessage } from '@/ui';
 
 import { logger } from '../logger';
+import { showErrorMessage, showSuccessMessage } from '../message-utils';
 import { getItem } from '../storage';
 import { createSelectors, newValue } from '../utils';
 import { DATA } from './data-elements';

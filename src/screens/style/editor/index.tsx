@@ -1,11 +1,4 @@
 /* eslint-disable max-lines-per-function */
-/*
-     -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
-    +* .##+ .@..*+ %+-:   *= -##-     :%  #*%  *++* +*.:@.:@--.-% -%.%*:: +* %%+.@ =%::*+ 
- .  @::@*## +*  #=:%--.. .@ -@+#*     #= ##+@  .@-  @: :@ **--  @=#  .-** @.:% %#* %=:-@. 
- =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
-                                                                                          
-*/
 import { Env } from '@env';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -24,6 +17,7 @@ import {
   getItem,
   logger,
   setItem,
+  showErrorMessage,
   shuffleArray,
   useEditorX,
   useFestivalStore,
@@ -46,7 +40,6 @@ import {
   HorizontalList,
   IconButton,
   Image,
-  showErrorMessage,
   SmallCard,
   SmallCard2,
   Text,

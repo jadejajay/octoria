@@ -6,6 +6,7 @@ import * as React from 'react';
 import { StyleSheet } from 'react-native';
 import FastImage from 'react-native-fast-image';
 
+import { shadow } from '@/core';
 import { ScrollView, Text, View } from '@/ui';
 
 type Props = {};
@@ -23,7 +24,7 @@ export const Tutorial = ({}: Props) => {
       <View className="h-48 items-center justify-center">
         <Video
           source={{ uri: Env.INTRO_VIDEO }}
-          style={styles.video}
+          style={[styles.video, shadow.medium]}
           useNativeControls
           resizeMode={ResizeMode.STRETCH}
           isLooping
@@ -60,27 +61,6 @@ const styles = StyleSheet.create({
     height: '100%',
     borderWidth: 8,
     borderColor: 'white',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 5,
-    },
-    shadowOpacity: 0.34,
-    shadowRadius: 6.27,
-
-    elevation: 10,
-  },
-  shadow: {
-    borderWidth: 8,
-    borderColor: 'white',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: -5,
-    },
-    shadowOpacity: 0.34,
-    shadowRadius: 6.27,
-
     elevation: 10,
   },
   image: {

@@ -1,11 +1,4 @@
 /* eslint-disable max-lines-per-function */
-/*
-     -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
-    +* .##+ .@..*+ %+-:   *= -##-     :%  #*%  *++* +*.:@.:@--.-% -%.%*:: +* %%+.@ =%::*+ 
- .  @::@*## +*  #=:%--.. .@ -@+#*     #= ##+@  .@-  @: :@ **--  @=#  .-** @.:% %#* %=:-@. 
- =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
-                                                                                          
-*/
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import type { ForwardedRef } from 'react';
@@ -26,7 +19,7 @@ import {
 } from 'react-native-reanimated';
 import Animated from 'react-native-reanimated';
 
-import { useEditorX } from '@/core';
+import { shadow, useEditorX } from '@/core';
 import { View } from '@/ui';
 
 import { ITWidget } from './itwidget';
@@ -233,7 +226,7 @@ const Magic = (props: Props, ref: ForwardedRef<any>) => {
         <Animated.View style={[animatedStyles, styles.container2]}>
           <View
             className="absolute -top-10 right-1 z-50 w-16 flex-row items-center justify-between rounded-full bg-white p-1"
-            style={[styles.shadow]}
+            style={[styles.shadow, shadow.medium]}
           >
             <MaterialCommunityIcons
               onPress={() => {
@@ -307,10 +300,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#0004',
   },
   shadow: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.8,
-    shadowRadius: 4,
     elevation: 4,
   },
   bottomTip: {

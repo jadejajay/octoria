@@ -5,10 +5,10 @@ import {
 } from 'ffmpeg-kit-react-native';
 
 import { CACHE_DIR, CACHE_IMAGE } from '@/types';
-import { showErrorMessage, showSuccessMessage } from '@/ui';
 
 import { FileManagement } from './file-management';
 import { logger } from './logger';
+import { showErrorMessage, showSuccessMessage } from './message-utils';
 
 const fileManager = new FileManagement();
 export class FFmpegWrapper {

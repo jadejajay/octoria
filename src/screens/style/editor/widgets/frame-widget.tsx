@@ -1,11 +1,4 @@
 /* eslint-disable max-lines-per-function */
-/*
-     -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
-    +* .##+ .@..*+ %+-:   *= -##-     :%  #*%  *++* +*.:@.:@--.-% -%.%*:: +* %%+.@ =%::*+ 
- .  @::@*## +*  #=:%--.. .@ -@+#*     #= ##+@  .@-  @: :@ **--  @=#  .-** @.:% %#* %=:-@. 
- =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
-                                                                                          
-*/
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
@@ -13,7 +6,7 @@ import React, { useCallback } from 'react';
 import { ToastAndroid } from 'react-native';
 import { StyleSheet } from 'react-native';
 
-import { useEditorX, useFrameStore } from '@/core';
+import { shadow, useEditorX, useFrameStore } from '@/core';
 import type { FrameType } from '@/types';
 import { Image, Text, TouchableOpacity, Vertical2CompList, View } from '@/ui';
 
@@ -57,7 +50,7 @@ export const FrameWidget = () => {
       <View className="h-40 flex-row justify-around border-b-2 border-slate-100">
         <TouchableOpacity
           className="m-4 flex-1 items-center justify-center rounded-md"
-          style={styles.shadow}
+          style={[styles.shadow, shadow.medium]}
           onPress={() => {
             setBg('');
             goBack();
@@ -73,7 +66,7 @@ export const FrameWidget = () => {
         </TouchableOpacity>
         <TouchableOpacity
           className="m-4 flex-1 items-center justify-center rounded-md"
-          style={styles.shadow}
+          style={[styles.shadow, shadow.medium]}
           onPress={pickImage}
           activeOpacity={1}
         >
@@ -104,7 +97,7 @@ const Card = ({ item, index, setBg, onClose }: Props) => {
       <TouchableOpacity
         key={`festival-card-${index}`}
         className="aspect-square w-full overflow-hidden rounded-lg"
-        style={styles.shadow}
+        style={[styles.shadow, shadow.medium]}
         activeOpacity={1}
         onPress={() => {
           if (item?.image) setBg(item.image);
@@ -125,13 +118,6 @@ const styles = StyleSheet.create({
   color1: { color: theme },
   shadow: {
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: -5,
-    },
-    shadowOpacity: 0.8,
-    shadowRadius: 5,
     elevation: 5,
   },
 });

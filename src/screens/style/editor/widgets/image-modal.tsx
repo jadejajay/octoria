@@ -1,11 +1,4 @@
 /* eslint-disable max-lines-per-function */
-/*
-     -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
-    +* .##+ .@..*+ %+-:   *= -##-     :%  #*%  *++* +*.:@.:@--.-% -%.%*:: +* %%+.@ =%::*+ 
- .  @::@*## +*  #=:%--.. .@ -@+#*     #= ##+@  .@-  @: :@ **--  @=#  .-** @.:% %#* %=:-@. 
- =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
-                                                                                          
-*/
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
@@ -13,7 +6,7 @@ import React, { useCallback } from 'react';
 import { ToastAndroid } from 'react-native';
 import { StyleSheet } from 'react-native';
 
-import { logger, useEditorX } from '@/core';
+import { logger, shadow, useEditorX } from '@/core';
 import { FirestoreData } from '@/core/fire-util';
 import { F_IMAGES_ELEMENTS, type ImageListType } from '@/types';
 import { Image, Text, TouchableOpacity, Vertical2CompList, View } from '@/ui';
@@ -95,7 +88,7 @@ export const ImageModal = () => {
       <View className="h-40 flex-row justify-around border-b-2 border-slate-100">
         <TouchableOpacity
           className="m-4 flex-1 items-center justify-center rounded-md"
-          style={styles.shadow}
+          style={[styles.shadow, shadow.medium]}
           onPress={captureImage}
           activeOpacity={1}
         >
@@ -108,7 +101,7 @@ export const ImageModal = () => {
         </TouchableOpacity>
         <TouchableOpacity
           className="m-4 flex-1 items-center justify-center rounded-md"
-          style={styles.shadow}
+          style={[styles.shadow, shadow.medium]}
           onPress={pickImage}
           activeOpacity={1}
         >
@@ -145,7 +138,7 @@ const Card = ({ item, index, addElement, onClose }: Props) => {
       <TouchableOpacity
         key={`festival-card-${index}`}
         className="aspect-square w-full overflow-hidden rounded-lg"
-        style={styles.shadow}
+        style={[styles.shadow, shadow.medium]}
         activeOpacity={1}
         onPress={() => {
           addElement(element(item.image, 1));
@@ -166,13 +159,6 @@ const styles = StyleSheet.create({
   color1: { color: theme },
   shadow: {
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: -3,
-    },
-    shadowOpacity: 0.8,
-    shadowRadius: 5,
     elevation: 5,
   },
 });

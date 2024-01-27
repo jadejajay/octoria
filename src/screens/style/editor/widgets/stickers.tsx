@@ -1,15 +1,8 @@
-/*
-     -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
-    +* .##+ .@..*+ %+-:   *= -##-     :%  #*%  *++* +*.:@.:@--.-% -%.%*:: +* %%+.@ =%::*+ 
- .  @::@*## +*  #=:%--.. .@ -@+#*     #= ##+@  .@-  @: :@ **--  @=#  .-** @.:% %#* %=:-@. 
- =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
-                                                                                          
-*/
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 
-import { logger, useEditorX } from '@/core';
+import { logger, shadow, useEditorX } from '@/core';
 import { FirestoreData } from '@/core/fire-util';
 import { F_STICKERS, type StickerType } from '@/types';
 import { Image, TouchableOpacity, Vertical2CompList, View, WIDTH } from '@/ui';
@@ -111,7 +104,7 @@ const Card = ({ item, setElement, onClose }: Props) => {
       {item?.image && (
         <Image
           src={item.image}
-          style={[styles.image, styles.shadow]}
+          style={[styles.image, styles.shadow, shadow.medium]}
           resizeMode="cover"
         />
       )}
@@ -125,13 +118,6 @@ const styles = StyleSheet.create({
   shadow: {
     borderRadius: 10,
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: -3,
-    },
-    shadowOpacity: 0.8,
-    shadowRadius: 5,
     elevation: 5,
   },
 });

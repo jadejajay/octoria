@@ -1,11 +1,4 @@
 /* eslint-disable max-lines-per-function */
-/*
-     -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
-    +* .##+ .@..*+ %+-:   *= -##-     :%  #*%  *++* +*.:@.:@--.-% -%.%*:: +* %%+.@ =%::*+ 
- .  @::@*## +*  #=:%--.. .@ -@+#*     #= ##+@  .@-  @: :@ **--  @=#  .-** @.:% %#* %=:-@. 
- =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
-                                                                                          
-*/
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { MasonryFlashList } from '@shopify/flash-list';
@@ -14,7 +7,7 @@ import React, { useCallback, useEffect } from 'react';
 import { ToastAndroid } from 'react-native';
 import { StyleSheet } from 'react-native';
 
-import { useEditorX } from '@/core';
+import { shadow, useEditorX } from '@/core';
 import { FirestoreData } from '@/core/fire-util';
 import { type ElementsType, F_ELEMENTS } from '@/types';
 import { EmptyList, Image, Text, TouchableOpacity, View } from '@/ui';
@@ -78,6 +71,7 @@ export const ElementsWidget = () => {
             }}
             style={[
               styles.fullWidth,
+              shadow.medium,
               styles.shadow,
               index % 2 === 0 ? styles.height75 : styles.height150,
             ]}
@@ -101,7 +95,7 @@ export const ElementsWidget = () => {
       <View className="h-40 flex-row justify-around border-b-2 border-slate-100">
         <TouchableOpacity
           className="m-4 flex-1 items-center justify-center rounded-md"
-          style={styles.shadow}
+          style={[styles.shadow, shadow.medium]}
           onPress={pickImage}
           activeOpacity={1}
         >
@@ -145,13 +139,6 @@ export const styles = StyleSheet.create({
   shadow: {
     borderRadius: 10,
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: -3,
-    },
-    shadowOpacity: 0.8,
-    shadowRadius: 5,
     elevation: 5,
   },
 });

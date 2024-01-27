@@ -4,7 +4,7 @@ import type { RenderItemParams } from 'react-native-draggable-flatlist';
 import DraggableFlatList from 'react-native-draggable-flatlist';
 import Animated, { SlideInRight, SlideInUp } from 'react-native-reanimated';
 
-import { useEditorX } from '@/core';
+import { shadow, useEditorX } from '@/core';
 import type { Element } from '@/types';
 import { Image, Text, TouchableOpacity, View } from '@/ui';
 
@@ -25,7 +25,7 @@ export const DragList = () => {
           <AnimatedTouchableOpacity
             className="my-2 h-28 w-11/12 flex-row items-center justify-between self-center rounded-md p-2"
             onLongPress={drag}
-            style={styles.shadow}
+            style={[styles.shadow, shadow.medium]}
             entering={SlideInUp.duration(1500)}
             exiting={SlideInRight.duration(1500)}
           >
@@ -65,13 +65,6 @@ export const DragList = () => {
 const styles = StyleSheet.create({
   shadow: {
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: -3,
-    },
-    shadowOpacity: 0.8,
-    shadowRadius: 5,
     elevation: 5,
   },
 });

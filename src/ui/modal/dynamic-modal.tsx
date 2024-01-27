@@ -30,8 +30,11 @@ export const DynamicModal = React.forwardRef(
       <Modal
         {...props}
         ref={bottomSheetRef}
+        // @ts-expect-error
         snapPoints={animatedSnapPoints}
+        // @ts-expect-error
         handleHeight={animatedHandleHeight}
+        // @ts-expect-error
         contentHeight={animatedContentHeight}
       >
         <BottomSheetView onLayout={handleContentLayout}>

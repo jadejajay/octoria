@@ -4,13 +4,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import PhoneInput from 'react-native-phone-number-input';
 import SmsRetriever from 'react-native-sms-retriever';
 
-import { logger } from '@/core';
+import { logger, showErrorMessage, showSuccessMessage } from '@/core';
 import {
   ActivityIndicator,
   NoData,
   ReversibleCountdownButton,
-  showErrorMessage,
-  showSuccessMessage,
   VerifCode,
   View,
 } from '@/ui';
@@ -69,9 +67,11 @@ export const LoginForm = () => {
     return (
       <View className="flex-1 p-4">
         {isLoading && (
-          <View className="absolute z-50 h-full w-full items-center justify-center">
-            <ActivityIndicator color={'black'} size="large" />
-          </View>
+          <ActivityIndicator
+            className="absolute inset-0 self-center"
+            color={'black'}
+            size="large"
+          />
         )}
         <View className="mt-20 items-center justify-center">
           <NoData width={100} height={100} />

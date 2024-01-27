@@ -2,6 +2,7 @@
 import * as React from 'react';
 import { StyleSheet } from 'react-native';
 
+import { shadow } from '@/core';
 import { Image, TouchableOpacity } from '@/ui/core';
 import { WIDTH } from '@/ui/theme';
 
@@ -26,6 +27,7 @@ export const SmallCard = ({
       activeOpacity={1}
       style={[
         styles.container,
+        shadow.medium,
         styles.shadow,
         isSelected ? { backgroundColor: '#86fbea' } : {},
       ]}
@@ -51,13 +53,6 @@ const styles = StyleSheet.create({
   },
   shadow: {
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: -2,
-    },
-    shadowOpacity: 0.8,
-    shadowRadius: 5,
     elevation: 3,
   },
 });

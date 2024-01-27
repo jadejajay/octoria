@@ -18,6 +18,7 @@ import {
   handleShare,
   logger,
   saveToGallery,
+  shadow,
   useFirestoreLiveQuery,
   useImageStore,
 } from '@/core';
@@ -216,7 +217,7 @@ export const ShareCam = ({ route }: any) => {
           >
             <View
               className="overflow-hidden rounded-lg border-2 border-gray-200"
-              style={[styles.container2, styles.imageCard]}
+              style={[styles.container2, styles.imageCard, shadow.medium]}
             >
               {item?.thumbnail && (
                 <Image
@@ -263,7 +264,7 @@ export const ShareCam = ({ route }: any) => {
             goBack();
           }}
           color="#fff"
-          sstyle={styles.shadow}
+          sstyle={[styles.shadow, shadow.medium]}
         />
         <AbsoluteButton
           position="top-right"
@@ -272,7 +273,7 @@ export const ShareCam = ({ route }: any) => {
             setShowList(true);
           }}
           color="#fff"
-          sstyle={styles.shadow}
+          sstyle={[styles.shadow, shadow.medium]}
         />
         <Modal visible={loading} style={{ flex: 1 }} transparent={true}>
           <View
@@ -356,7 +357,7 @@ export const ShareCam = ({ route }: any) => {
             >
               <TouchableOpacity
                 onPress={handleDownload}
-                style={styles.buttonKey}
+                style={[styles.buttonKey, shadow.medium]}
               >
                 <MaterialIcons name="save-alt" size={30} color={'black'} />
                 <Text
@@ -367,7 +368,7 @@ export const ShareCam = ({ route }: any) => {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={handleShareButton}
-                style={styles.buttonKey}
+                style={[styles.buttonKey, shadow.medium]}
               >
                 <MaterialIcons name="share" size={30} color={'black'} />
                 <Text
@@ -397,7 +398,7 @@ export const ShareCam = ({ route }: any) => {
               name="photo-camera-front"
               size={30}
               color={'white'}
-              style={styles.shadow}
+              style={[styles.shadow, shadow.medium]}
             />
             <Text variant="xxs" className="mt-2 font-sfregular text-white">
               Upload From Camera
@@ -412,7 +413,7 @@ export const ShareCam = ({ route }: any) => {
               name="camera-enhance"
               size={30}
               color={'white'}
-              style={styles.shadow}
+              style={[styles.shadow, shadow.medium]}
             />
             <Text variant="xxs" className="mt-2 font-sfregular text-white">
               Capture
@@ -427,7 +428,7 @@ export const ShareCam = ({ route }: any) => {
               name="photo-camera-back"
               size={30}
               color={'white'}
-              style={styles.shadow}
+              style={[styles.shadow, shadow.medium]}
             />
             <Text variant="xxs" className="mt-2 font-sfregular text-white">
               Upload From Gallery
@@ -487,10 +488,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 30,
     borderColor: 'black',
     borderRadius: 10,
-    shadowColor: 'black',
-    shadowOpacity: 0.5,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 2,
     elevation: 4,
   },
   text: {
@@ -501,26 +498,12 @@ const styles = StyleSheet.create({
   container2: {
     backgroundColor: 'white',
     overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
     elevation: 4,
   },
   shadow: {
     backgroundColor: 'rgba(255,255,255,0.5)',
     borderRadius: 100,
     padding: 5,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
     elevation: 4,
   },
   imageCard: {

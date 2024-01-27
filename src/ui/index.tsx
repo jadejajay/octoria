@@ -1,3 +1,4 @@
+export * from '../core/utils';
 export * from './bottom-sheet';
 export * from './core';
 export * from './error-handler';
@@ -10,5 +11,4 @@ export * from './screen';
 export * from './select';
 export * from './shadow';
 export * from './theme';
-export * from './utils';
 export * from './widgets';

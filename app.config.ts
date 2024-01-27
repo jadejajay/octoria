@@ -18,9 +18,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     resizeMode: 'cover',
     backgroundColor: '#FFFFFF',
   },
-  updates: {
-    url: 'https://u.expo.dev/c7642e3d-4e71-4000-83da-ef31f330ec8d',
-  },
+  // updates: {
+  //   url: 'https://u.expo.dev/c7642e3d-4e71-4000-83da-ef31f330ec8d',
+  // },
   assetBundlePatterns: ['**/*'],
   ios: {
     supportsTablet: true,
@@ -113,18 +113,18 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
         'android:allowBackup': 'false',
       },
     ],
-    // [
-    //   '@config-plugins/ffmpeg-kit-react-native',
-    //   {
-    //     package: 'https-gpl',
-    //     ios: {
-    //       package: 'https-gpl',
-    //     },
-    //     android: {
-    //       package: 'https-gpl',
-    //     },
-    //   },
-    // ],
+    [
+      '@config-plugins/ffmpeg-kit-react-native',
+      {
+        package: 'https-gpl',
+        ios: {
+          package: 'https-gpl',
+        },
+        android: {
+          package: 'https-gpl',
+        },
+      },
+    ],
     '@react-native-firebase/app',
     '@react-native-firebase/auth',
     'expo-localization',

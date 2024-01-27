@@ -1,13 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable max-lines-per-function */
-
-/*
-     -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
-    +* .##+ .@..*+ %+-:   *= -##-     :%  #*%  *++* +*.:@.:@--.-% -%.%*:: +* %%+.@ =%::*+ 
- .  @::@*## +*  #=:%--.. .@ -@+#*     #= ##+@  .@-  @: :@ **--  @=#  .-** @.:% %#* %=:-@. 
- =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
-                                                                                          
-*/
 import { zodResolver } from '@hookform/resolvers/zod';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
@@ -19,18 +11,10 @@ import { Controller, useForm } from 'react-hook-form';
 import { StyleSheet } from 'react-native';
 import * as z from 'zod';
 
-import { logger, useEditorX } from '@/core';
+import { logger, shadow, showErrorMessage, useEditorX } from '@/core';
 import type { BusinessDataType } from '@/types';
 import { F_USERS } from '@/types';
-import {
-  Image,
-  Input,
-  ScrollView,
-  showErrorMessage,
-  Text,
-  TouchableOpacity,
-  View,
-} from '@/ui';
+import { Image, Input, ScrollView, Text, TouchableOpacity, View } from '@/ui';
 
 const schema = z.object({
   name: z.string().max(200),
@@ -185,7 +169,7 @@ export const InfoWidget = () => {
         >
           <View
             className="m-4 h-20 w-20 overflow-hidden rounded-md"
-            style={styles.shadow}
+            style={[styles.shadow, shadow.medium]}
           >
             {data?.photo && (
               <Image src={data.photo} style={{ width: wh, height: wh }} />
@@ -287,7 +271,7 @@ export const InfoWidget = () => {
         <View className="mt-4">
           <TouchableOpacity
             className="rounded-lg border bg-white"
-            style={styles.shadow}
+            style={[styles.shadow, shadow.medium]}
             activeOpacity={1}
             onPress={handleSubmit(onSubmit)}
           >
@@ -302,13 +286,6 @@ export const InfoWidget = () => {
 const styles = StyleSheet.create({
   shadow: {
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: -3,
-    },
-    shadowOpacity: 0.8,
-    shadowRadius: 5,
     elevation: 5,
   },
 });

@@ -1,11 +1,4 @@
 /* eslint-disable max-lines-per-function */
-/*
-     -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
-    +* .##+ .@..*+ %+-:   *= -##-     :%  #*%  *++* +*.:@.:@--.-% -%.%*:: +* %%+.@ =%::*+ 
- .  @::@*## +*  #=:%--.. .@ -@+#*     #= ##+@  .@-  @: :@ **--  @=#  .-** @.:% %#* %=:-@. 
- =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
-                                                                                          
-*/
 import { Env } from '@env';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -21,7 +14,9 @@ import {
   handleWhatsappShare2,
   logger,
   saveToGallery,
+  shadow,
   sharePost,
+  showErrorMessage,
   useEditorX,
   useRenderStore,
 } from '@/core';
@@ -29,7 +24,6 @@ import {
   ActivityIndicator,
   Image,
   ScrollView,
-  showErrorMessage,
   Text,
   TouchableOpacity,
   View,
@@ -149,7 +143,7 @@ export const RenderWidget = () => {
       )}
       <View
         className="overflow-hidden"
-        style={[styles.mainPhoto, styles.shadow]}
+        style={[styles.mainPhoto, styles.shadow, shadow.medium]}
       >
         {type === 'video' && renderedAsset ? (
           <Video
@@ -183,7 +177,7 @@ export const RenderWidget = () => {
       </View>
       <View className="flex-column w-full justify-around p-4">
         <TouchableOpacity
-          style={[styles.shadow, styles.button]}
+          style={[styles.shadow, styles.button, shadow.medium]}
           activeOpacity={1}
           onPress={handleWP}
         >
@@ -199,7 +193,7 @@ export const RenderWidget = () => {
           />
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.shadow, styles.button]}
+          style={[styles.shadow, styles.button, shadow.medium]}
           activeOpacity={1}
           onPress={handleIG}
         >
@@ -214,7 +208,7 @@ export const RenderWidget = () => {
           />
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.shadow, styles.button]}
+          style={[styles.shadow, styles.button, shadow.medium]}
           activeOpacity={1}
           onPress={handleFB}
         >
@@ -229,7 +223,7 @@ export const RenderWidget = () => {
           />
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.shadow, styles.button]}
+          style={[styles.shadow, styles.button, shadow.medium]}
           activeOpacity={1}
           onPress={handleTG}
         >
@@ -245,7 +239,7 @@ export const RenderWidget = () => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => saveToGallery(renderedAsset)}
-          style={[styles.shadow, styles.button]}
+          style={[styles.shadow, styles.button, shadow.medium]}
           activeOpacity={1}
         >
           <Image
@@ -281,13 +275,6 @@ const styles = StyleSheet.create({
   },
   shadow: {
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: -5,
-    },
-    shadowOpacity: 0.8,
-    shadowRadius: 10,
     elevation: 10,
   },
   mainPhoto: {

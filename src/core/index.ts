@@ -9,6 +9,8 @@ export * from './hooks';
 export * from './i18n';
 export * from './logger';
 export * from './mainscreen';
+export * from './message-utils';
+export * from './shadow';
 export * from './share-strings';
 export * from './storage';
 export * from './utils';

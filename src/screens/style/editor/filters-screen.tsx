@@ -17,6 +17,7 @@ import ColorPicker, {
 import {
   FFmpegWrapper,
   logger,
+  shadow,
   useBotSearchStore,
   useEditorX,
   useImageColorPickerStore,
@@ -266,7 +267,7 @@ export const FilterScreen = () => {
           key={index}
           activeOpacity={0.9}
           className="overflow-hidden rounded-lg"
-          style={[styles.shadow, styles.imageCard]}
+          style={[styles.shadow, styles.imageCard, shadow.medium]}
         >
           {item?.image && (
             <Image
@@ -292,7 +293,7 @@ export const FilterScreen = () => {
       >
         <ColorPicker
           value={selectedColor.value}
-          style={styles.colorPicker}
+          style={[styles.colorPicker, shadow.medium]}
           sliderThickness={20}
           thumbSize={24}
           onChange={onColorSelect}
@@ -323,7 +324,7 @@ export const FilterScreen = () => {
         <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
           👉🏻 Quick Tools
         </Text>
-        <View key={'1234'} style={[styles.shadow, styles.tools]}>
+        <View key={'1234'} style={[styles.shadow, styles.tools, shadow.medium]}>
           <SmallIconCard
             index={1}
             item={{
@@ -385,7 +386,7 @@ export const FilterScreen = () => {
   }, [setImage, originalImage, applyFilter]);
   const Annotate = React.useCallback(() => {
     return (
-      <View style={[styles.shadow, styles.chromaCol]}>
+      <View style={[styles.shadow, shadow.medium, styles.chromaCol]}>
         <View style={[styles.chroma]}>
           <Text
             variant="sm"
@@ -415,7 +416,7 @@ export const FilterScreen = () => {
         <Text variant="sm" className="mt-4 pl-4 text-left font-sfbold">
           👉🏻 Chroma Tools
         </Text>
-        <View style={[styles.shadow, styles.chromaCol]}>
+        <View style={[styles.shadow, shadow.medium, styles.chromaCol]}>
           <View style={[styles.chroma]}>
             <Text variant="sm" className="text-left font-sfbold text-black">
               🔑 Chroma Key
@@ -430,7 +431,7 @@ export const FilterScreen = () => {
             />
             <AnimatedTouchableOpacity
               activeOpacity={1}
-              style={[styles.box, backgroundColorStyle]}
+              style={[styles.box, shadow.medium, backgroundColorStyle]}
               onPress={() => {
                 setModalVisible(true);
                 setChromaFunc(true);
@@ -438,7 +439,7 @@ export const FilterScreen = () => {
             />
           </View>
         </View>
-        <View style={[styles.shadow, styles.chromaCol]}>
+        <View style={[styles.shadow, shadow.medium, styles.chromaCol]}>
           <View style={[styles.chroma]}>
             <Text variant="sm" className="text-left font-sfbold text-black">
               🔒 Chroma Hold
@@ -453,7 +454,7 @@ export const FilterScreen = () => {
             />
             <AnimatedTouchableOpacity
               activeOpacity={1}
-              style={[styles.box, backgroundColorStyle]}
+              style={[styles.box, shadow.medium, backgroundColorStyle]}
               onPress={() => {
                 setModalVisible(true);
                 setChromaFunc(false);
@@ -467,8 +468,8 @@ export const FilterScreen = () => {
   return (
     <>
       <View
-        style={styles.shadow}
-        className="mt-4 h-52 w-11/12 self-center rounded-lg border border-white shadow-lg"
+        style={[styles.shadow, shadow.medium]}
+        className="mt-4 h-52 w-11/12 self-center rounded-lg border border-white"
       >
         {image && (
           <Image
@@ -492,7 +493,7 @@ export const FilterScreen = () => {
             <Text
               variant="sm"
               className="w-11/12 rounded p-2"
-              style={styles.shadow}
+              style={[styles.shadow, shadow.medium]}
             >
               {displayedText}
             </Text>
@@ -687,13 +688,6 @@ const SmallIconCard = ({ item, index, onClick }: any) => {
 const styles = StyleSheet.create({
   shadow: {
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: -3,
-    },
-    shadowOpacity: 0.8,
-    shadowRadius: 5,
     elevation: 5,
   },
   hueSlider: {
@@ -735,13 +729,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderColor: '#fff',
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: -3,
-    },
-    shadowOpacity: 0.8,
-    shadowRadius: 3,
     elevation: 4,
   },
   imageCard: {
@@ -763,13 +750,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 40,
     borderColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: -6,
-    },
-    shadowOpacity: 0.8,
-    shadowRadius: 3,
     elevation: 8,
   },
   panelStyle: {

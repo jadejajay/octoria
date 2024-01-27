@@ -1,10 +1,3 @@
-/*
-     -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
-    +* .##+ .@..*+ %+-:   *= -##-     :%  #*%  *++* +*.:@.:@--.-% -%.%*:: +* %%+.@ =%::*+ 
- .  @::@*## +*  #=:%--.. .@ -@+#*     #= ##+@  .@-  @: :@ **--  @=#  .-** @.:% %#* %=:-@. 
- =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
-                                                                                          
-*/
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
@@ -12,7 +5,12 @@ import React, { useCallback } from 'react';
 import { ToastAndroid } from 'react-native';
 import { StyleSheet } from 'react-native';
 
-import { extractImagesFromObjects, useEditorX, useProductsStore } from '@/core';
+import {
+  extractImagesFromObjects,
+  shadow,
+  useEditorX,
+  useProductsStore,
+} from '@/core';
 import type { Product } from '@/types';
 import { Image, Text, TouchableOpacity, Vertical2CompList, View } from '@/ui';
 
@@ -58,7 +56,7 @@ export const ProductsWidget = () => {
       <View className="h-40 flex-row justify-around border-b-2 border-slate-100">
         <TouchableOpacity
           className="m-4 flex-1 items-center justify-center rounded-md"
-          style={styles.shadow}
+          style={[styles.shadow, shadow.medium]}
           onPress={pickImage}
           activeOpacity={1}
         >
@@ -89,7 +87,7 @@ const Card = ({ item, index, setElement, onClose }: Props) => {
     <TouchableOpacity
       key={`festival-card-${index}`}
       className="m-2 aspect-[3/4] w-11/12 overflow-hidden rounded-lg"
-      style={[styles.shadow]}
+      style={[styles.shadow, shadow.medium]}
       activeOpacity={1}
       onPress={() => {
         setElement(element(item));
@@ -106,13 +104,6 @@ const styles = StyleSheet.create({
   color1: { color: theme },
   shadow: {
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: -5,
-    },
-    shadowOpacity: 0.8,
-    shadowRadius: 5,
     elevation: 5,
   },
 });

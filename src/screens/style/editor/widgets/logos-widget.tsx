@@ -1,15 +1,8 @@
-/*
-     -  .-.  :--:  .---.  .:  .-       -   -:  -  .: --:   ---:.:  .: --:  : .-  :. -   : 
-    +* .##+ .@..*+ %+-:   *= -##-     :%  #*%  *++* +*.:@.:@--.-% -%.%*:: +* %%+.@ =%::*+ 
- .  @::@*## +*  #=:%--.. .@ -@+#*     #= ##+@  .@-  @: :@ **--  @=#  .-** @.:% %#* %=:-@. 
- =++- +. .* ++=+: =+==.=++:.+  .+  :++= +:  +. :+  .*=+=  *+==  ++  :+++.:+ -- .*..*  :+  
-                                                                                          
-*/
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
 import { StyleSheet } from 'react-native';
 
-import { logger, useEditorX } from '@/core';
+import { logger, shadow, useEditorX } from '@/core';
 import { FirestoreData } from '@/core/fire-util';
 import { F_LOGOS_LIST, type LogosType } from '@/types';
 import { Image, TouchableOpacity, Vertical2CompList, View } from '@/ui';
@@ -103,7 +96,7 @@ const Card = ({ item, index, setElement, onClose }: Props) => {
       <TouchableOpacity
         key={`festival-card-${index}`}
         className="aspect-square w-full overflow-hidden rounded-lg"
-        style={styles.shadow}
+        style={[styles.shadow, shadow.medium]}
         activeOpacity={1}
         onPress={() => {
           setElement(element);
@@ -124,13 +117,6 @@ const styles = StyleSheet.create({
   color1: { color: theme },
   shadow: {
     backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: -3,
-    },
-    shadowOpacity: 0.8,
-    shadowRadius: 5,
     elevation: 5,
   },
 });

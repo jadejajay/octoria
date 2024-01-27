@@ -10,13 +10,13 @@ import { ToastAndroid } from 'react-native';
 import {
   getImageBase64,
   handleWhatsappShare,
+  showSuccessMessage,
   useFavorites,
   useFirestoreDocLiveQuery,
 } from '@/core';
 import { enquiryPost } from '@/core/share-strings';
 import { F_LINKS, F_LINKS_SHARE, type Product } from '@/types';
 import { Text, TouchableOpacity, View } from '@/ui/core';
-import { showSuccessMessage } from '@/ui/utils';
 
 import { ButtonRow } from './button-row';
 import { HorizontalLine } from './horizontal-line';
