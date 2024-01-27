@@ -14,6 +14,7 @@
         "buildType": "app-bundle",
         "image": "latest"
       },
+      "autoIncrement":true,
       "env": {
         "EXPO_NO_DOTENV": "1",
         "APP_ENV": "production",
