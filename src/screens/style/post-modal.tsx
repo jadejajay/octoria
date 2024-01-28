@@ -10,13 +10,18 @@ import {
   Modal,
   Pressable,
   StyleSheet,
-  ToastAndroid,
   TouchableWithoutFeedback,
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import { captureRef } from 'react-native-view-shot';
 
-import { logger, saveToGallery, shareImageWithTitle } from '@/core';
+import {
+  logger,
+  saveToGallery,
+  shareImageWithTitle,
+  showErrorMessage,
+  showSuccessMessage,
+} from '@/core';
 import { sharePost } from '@/core/share-strings';
 import type { FestivalImageType } from '@/types';
 import { ActivityIndicator, Text, TouchableOpacity, View } from '@/ui';
@@ -60,18 +65,15 @@ export const PostModal = ({
       if (status === 'granted') {
         // await MediaLibrary.saveToLibraryAsync(localUri);
         await saveToGallery(localUri);
-        ToastAndroid.show('Photo Saved to Gallery !', ToastAndroid.SHORT);
+        showSuccessMessage('gallery.saved');
       } else {
-        ToastAndroid.show(
-          'Permission denied go to setting and give permission !',
-          ToastAndroid.SHORT
-        );
+        showErrorMessage('gallery.denied');
       }
 
       setLoading(false);
     } catch (e) {
       logger.log(e);
-      ToastAndroid.show('Permission denied !', ToastAndroid.SHORT);
+      showErrorMessage('gallery.denied');
       setLoading(false);
     }
   };
@@ -171,7 +173,7 @@ const Post = ({
             />
           ) : (
             <View className="flex-1 items-center justify-center">
-              <Text>All Izz Well🤗</Text>
+              <Text>🤗</Text>
             </View>
           )}
         </View>

@@ -32,3 +32,6 @@
 // https://github.com/Subhampreet/Google-Map-Clone
 // https://proandroiddev.com/how-to-build-a-snapchat-clone-android-6eaa1a941e87
 // https://www.linkedin.com/advice/0/what-most-common-game-physics-collision-algorithms-4kgzc
+// https://github.com/butlerx/wetty
+// https://github.com/sedwards2009/extraterm
+// https://github.com/GoogleChromeLabs/serial-terminal

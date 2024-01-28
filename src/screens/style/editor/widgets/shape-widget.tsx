@@ -4,10 +4,9 @@ import { useNavigation } from '@react-navigation/native';
 import { MasonryFlashList } from '@shopify/flash-list';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useCallback } from 'react';
-import { ToastAndroid } from 'react-native';
 import { StyleSheet } from 'react-native';
 
-import { logger, shadow, useEditorX } from '@/core';
+import { logger, shadow, showErrorMessage, useEditorX } from '@/core';
 import { FirestoreData } from '@/core/fire-util';
 import { F_SHAPES, type ShapesType } from '@/types';
 import { EmptyList, Image, Text, TouchableOpacity, View } from '@/ui';
@@ -55,7 +54,7 @@ export const ShapesWidget = () => {
         goBack();
       }
     } catch (error) {
-      ToastAndroid.show('Something Unexpected Happen !', ToastAndroid.SHORT);
+      showErrorMessage('capture.failed');
     }
   };
 

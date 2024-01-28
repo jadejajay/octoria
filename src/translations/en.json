@@ -32,13 +32,17 @@
     "share_whatsapp": "Share on Whatsapp",
     "update": "Update",
     "updating_frame": "Updating Data...",
-    "videos": "Videos"
+    "videos": "Videos",
+    "post_saved": "Post saved successfully to Octoria album in your gallery.",
+    "post_not_saved": "Error Creating assets give permissions."
   },
   "error": {
     "fallback": "Try Again"
   },
   "gallery": {
-    "gallery": "Gallery"
+    "gallery": "Gallery",
+    "saved": "Photo Saved to Gallery !",
+    "denied": "Permission denied go to setting and give permission !"
   },
   "info": {
     "error_data": "Error Updating Data."
@@ -135,5 +139,12 @@
     "profile_updated": "Profile updated successfully.",
     "submit": "Submit"
   },
-  "welcome": "Welcome to octoria app"
+  "welcome": "Welcome to octoria app",
+  "share": {
+    "error": "Sharing Failed.",
+    "copy": "Copied To Clipboard."
+  },
+  "capture": {
+    "failed": "Internal Problem."
+  }
 }

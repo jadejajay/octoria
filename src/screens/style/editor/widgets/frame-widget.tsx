@@ -3,10 +3,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useCallback } from 'react';
-import { ToastAndroid } from 'react-native';
 import { StyleSheet } from 'react-native';
 
-import { shadow, useEditorX, useFrameStore } from '@/core';
+import { shadow, showErrorMessage, useEditorX, useFrameStore } from '@/core';
 import type { FrameType } from '@/types';
 import { Image, Text, TouchableOpacity, Vertical2CompList, View } from '@/ui';
 
@@ -42,7 +41,7 @@ export const FrameWidget = () => {
         goBack();
       }
     } catch (error) {
-      ToastAndroid.show('Something Unexpected Happen !', ToastAndroid.SHORT);
+      showErrorMessage('capture.failed');
     }
   };
   return (

@@ -1,4 +1,5 @@
 import { CACHE_DIR } from '@/types';
+import { IS_ANDROID, IS_IOS } from '@/ui';
 
 import { FileManagement } from './file-management';
 import { logger } from './logger';
@@ -13,9 +14,16 @@ export class VideoCacheManager {
   }
 
   async getVideo(url: string): Promise<string | null> {
-    if (url.startsWith('file://')) {
+    logger.log('getVideo', url);
+    if (IS_ANDROID && url.startsWith('file://')) {
       // The URL is already a local file, so return it as is
       return url;
+    }
+    if (IS_IOS && url.startsWith('file://')) {
+      // The URL is not a remote file, so return null
+      let arr = url.split('/');
+      const newfilepath = `${this.cacheDir}/${arr[arr.length - 1]}`;
+      return newfilepath;
     }
 
     const filename = this.getFilenameFromURL(url);

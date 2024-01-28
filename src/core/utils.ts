@@ -2,14 +2,17 @@
 import * as MediaLibrary from 'expo-media-library';
 import * as Sharing from 'expo-sharing';
 import * as Speech from 'expo-speech';
-import { Linking, Platform, ToastAndroid } from 'react-native';
+import { Linking } from 'react-native';
 import type { ShareSingleOptions, Social } from 'react-native-share';
 import Share from 'react-native-share';
 import type { StoreApi, UseBoundStore } from 'zustand';
 
+import { IS_IOS } from '@/ui';
+
 import type { TxKeyPath } from './i18n';
 import { getLanguage, translate } from './i18n';
 import { logger } from './logger';
+import { showErrorMessage, showSuccessMessage } from './message-utils';
 
 export function openLinkInBrowser(url: string) {
   Linking.canOpenURL(url).then((canOpen) => canOpen && Linking.openURL(url));
@@ -128,7 +131,7 @@ const speechOptions = {
   pitch: 1.0, // Set the speech pitch (0.5 to 2.0, where 1.0 is normal)
   rate: 0.8, // Set the speech rate (0.1 to 2.0, where 1.0 is normal)
   volume: 1, // Set the speech volume (0.0 to 1.0, where 1.0 is maximum volume)
-  phoneme: Platform.OS === 'ios' ? 'x-sampa' : 'ipa', // Use 'x-sampa' for iOS and 'ipa' for Android
+  phoneme: IS_IOS ? 'x-sampa' : 'ipa', // Use 'x-sampa' for iOS and 'ipa' for Android
 };
 export async function speak(text: TxKeyPath, vars?: string) {
   logger.log(speechOptions.language);
@@ -217,7 +220,7 @@ export const handleWhatsappShare = async (
     await Share.shareSingle(options);
   } catch (error) {
     logger.error(error);
-    ToastAndroid.show('Some Error', ToastAndroid.SHORT);
+    showErrorMessage('share.error');
   }
 };
 export const handleShare = async (fileUri: any, title: any) => {
@@ -234,7 +237,7 @@ export const handleShare = async (fileUri: any, title: any) => {
     await Share.shareSingle(options);
   } catch (error) {
     logger.error(error);
-    ToastAndroid.show('Some Error', ToastAndroid.SHORT);
+    showErrorMessage('share.error');
   }
 };
 export const handleWhatsappShare2 = async (
@@ -265,7 +268,7 @@ export const handleWhatsappShare2 = async (
     await Share.shareSingle(options);
   } catch (error) {
     logger.error(error);
-    ToastAndroid.show('Some Error', ToastAndroid.SHORT);
+    showErrorMessage('share.error');
   }
 };
 export const handleInstagramShare = async (
@@ -294,7 +297,7 @@ export const handleInstagramShare = async (
     await Share.shareSingle(options);
   } catch (error) {
     logger.error(error);
-    ToastAndroid.show('Some Error', ToastAndroid.SHORT);
+    showErrorMessage('share.error');
   }
 };
 export const handleTelegramShare = async (
@@ -323,7 +326,7 @@ export const handleTelegramShare = async (
     await Share.shareSingle(options);
   } catch (error) {
     logger.error(error);
-    ToastAndroid.show('Some Error', ToastAndroid.SHORT);
+    showErrorMessage('share.error');
   }
 };
 export const handleFacebookShare = async (
@@ -352,7 +355,7 @@ export const handleFacebookShare = async (
     await Share.shareSingle(options);
   } catch (error) {
     logger.error(error);
-    ToastAndroid.show('Some Error', ToastAndroid.SHORT);
+    showErrorMessage('share.error');
   }
 };
 export const saveToGallery = async (res: string) => {
@@ -366,29 +369,17 @@ export const saveToGallery = async (res: string) => {
         true
       );
       if (album) {
-        ToastAndroid.show(
-          `Post saved successfully to Octoria album in your gallery.`,
-          ToastAndroid.LONG
-        );
+        showSuccessMessage('editor.post_saved');
       } else {
-        ToastAndroid.show(
-          `Error Creating assets give permissions`,
-          ToastAndroid.LONG
-        );
+        showErrorMessage('editor.post_not_saved');
       }
     } else {
       const asset = await MediaLibrary.createAssetAsync(res);
       const album = await MediaLibrary.createAlbumAsync('Octoria', asset, true);
       if (album) {
-        ToastAndroid.show(
-          `Post saved successfully to Octoria album in your gallery.`,
-          ToastAndroid.LONG
-        );
+        showSuccessMessage('editor.post_saved');
       } else {
-        ToastAndroid.show(
-          `Error Creating assets give permissions`,
-          ToastAndroid.LONG
-        );
+        showErrorMessage('editor.post_not_saved');
       }
     }
   }

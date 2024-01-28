@@ -16,7 +16,7 @@ export class FFmpegWrapper {
 
   async executeFFmpegCommand(command: string): Promise<number> {
     try {
-      const session = await FFmpegKit.execute(`-y -hide_banner ${command}`);
+      const session = await FFmpegKit.execute(`-y  ${command}`);
       const returnCode = await session.getReturnCode();
 
       if (ReturnCode.isSuccess(returnCode)) {
@@ -55,7 +55,6 @@ export class FFmpegWrapper {
     var temp = `${this.outputFile}.${ext}`;
     const cmd = `-i ${dwnVideo} -i ${renderedAsset} -filter_complex "[0:v]scale=${resolution}:${resolution} [video]; [video][1:v]overlay=0:0 [output]" -map 0:a -c:a copy -map 0:a -strict -2 -c:a aac -map "[output]" -q:v 1 ${temp}`;
     const result = await this.executeFFmpegCommand(cmd);
-    temp = `file://${temp}`;
     if (result === 1) {
       showSuccessMessage('render.succ_video');
       return temp;

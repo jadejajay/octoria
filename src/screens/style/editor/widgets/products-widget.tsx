@@ -2,12 +2,12 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useCallback } from 'react';
-import { ToastAndroid } from 'react-native';
 import { StyleSheet } from 'react-native';
 
 import {
   extractImagesFromObjects,
   shadow,
+  showErrorMessage,
   useEditorX,
   useProductsStore,
 } from '@/core';
@@ -34,7 +34,7 @@ export const ProductsWidget = () => {
         goBack();
       }
     } catch (error) {
-      ToastAndroid.show('Something Unexpected Happen !', ToastAndroid.SHORT);
+      showErrorMessage('capture.failed');
     }
   };
 

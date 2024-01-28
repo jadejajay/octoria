@@ -1,6 +1,4 @@
 import storage from '@react-native-firebase/storage';
-import * as MediaLibrary from 'expo-media-library';
-import { ToastAndroid } from 'react-native';
 
 import { ImageProcessor } from './image-filter';
 import { logger } from './logger';
@@ -29,41 +27,3 @@ export async function uploadImage(uri: string, user: any) {
   }
   return x;
 }
-export const saveToGallery = async (renderedAsset: any) => {
-  if (renderedAsset) {
-    const albumName = await MediaLibrary.getAlbumAsync('Octoria');
-    if (albumName) {
-      const asset = await MediaLibrary.createAssetAsync(renderedAsset);
-      const album = await MediaLibrary.addAssetsToAlbumAsync(
-        asset,
-        albumName.id,
-        true
-      );
-      if (album) {
-        ToastAndroid.show(
-          `Post saved successfully to Octoria album in your gallery.`,
-          ToastAndroid.LONG
-        );
-      } else {
-        ToastAndroid.show(
-          `Error Creating assets give permissions`,
-          ToastAndroid.LONG
-        );
-      }
-    } else {
-      const asset = await MediaLibrary.createAssetAsync(renderedAsset);
-      const album = await MediaLibrary.createAlbumAsync('Octoria', asset, true);
-      if (album) {
-        ToastAndroid.show(
-          `Post saved successfully to Octoria album in your gallery.`,
-          ToastAndroid.LONG
-        );
-      } else {
-        ToastAndroid.show(
-          `Error Creating assets give permissions`,
-          ToastAndroid.LONG
-        );
-      }
-    }
-  }
-};

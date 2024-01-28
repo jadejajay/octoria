@@ -99,7 +99,7 @@ export const FilterScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const stickerImages = stickers?.map((item) => item.image);
-  logger.log(stickerImages, '<=========stickerImages');
+  // logger.log(stickerImages, '<=========stickerImages');
 
   const createThumbnailAsync = React.useCallback(async () => {
     setDisplayedText('');
@@ -260,7 +260,7 @@ export const FilterScreen = () => {
   const SmallImageCard = React.useCallback(
     ({ item, index }: any) => {
       let imageT = item?.image ? item.image : item;
-      logger.log(imageT, '<=========imageT');
+      // logger.log(imageT, '<=========imageT');
       return (
         <TouchableOpacity
           onPress={() => handleCardPress(item)}

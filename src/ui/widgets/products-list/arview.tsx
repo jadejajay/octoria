@@ -6,14 +6,19 @@ import { useNavigation } from '@react-navigation/native';
 import * as MediaLibrary from 'expo-media-library';
 import React, { useRef, useState } from 'react';
 import { Modal } from 'react-native';
-import { ToastAndroid } from 'react-native';
 import { StyleSheet } from 'react-native';
 import { Image } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import ViewShot, { captureRef } from 'react-native-view-shot';
 import { WebView } from 'react-native-webview';
 
-import { handleShare, logger, saveToGallery } from '@/core';
+import {
+  handleShare,
+  logger,
+  saveToGallery,
+  showErrorMessage,
+  showSuccessMessage,
+} from '@/core';
 import {
   AbsoluteButton,
   ActivityIndicator,
@@ -50,13 +55,10 @@ export const ARView = ({ route }: Props) => {
       // You have permission to write to the storage here
       // MediaLibrary.saveToLibraryAsync(localUri);
       await saveToGallery(localUri);
-      ToastAndroid.show('Photo Saved to Gallery !', ToastAndroid.SHORT);
+      showSuccessMessage('gallery.saved');
       setLoading(false);
     } else {
-      ToastAndroid.show(
-        'Permission denied go to setting and give permission !',
-        ToastAndroid.SHORT
-      );
+      showErrorMessage('gallery.denied');
       setLoading(false);
       // Handle the case where permission is denied
     }
@@ -74,7 +76,7 @@ export const ARView = ({ route }: Props) => {
         .finally(() => setLoading(false));
     } catch (e) {
       setLoading(false);
-      ToastAndroid.show('Sharing failed !', ToastAndroid.SHORT);
+      showErrorMessage('share.error');
     }
   };
   async function handleDownload() {
@@ -89,7 +91,7 @@ export const ARView = ({ route }: Props) => {
         .finally(() => setLoading(false));
     } catch (error) {
       setLoading(false);
-      ToastAndroid.show('download Failed !', ToastAndroid.SHORT);
+      showErrorMessage('gallery.denied');
     }
   }
 
@@ -101,7 +103,7 @@ export const ARView = ({ route }: Props) => {
       setLoading(false);
     } catch (e) {
       setLoading(false);
-      ToastAndroid.show('Capturing failed !', ToastAndroid.SHORT);
+      showErrorMessage('capture.failed');
     }
   };
 

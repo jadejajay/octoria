@@ -4,9 +4,9 @@ import IonIcons from '@expo/vector-icons/Ionicons';
 import Clipboard from '@react-native-clipboard/clipboard';
 import axios from 'axios';
 import * as React from 'react';
-import { Modal, StyleSheet, ToastAndroid } from 'react-native';
+import { Modal, StyleSheet } from 'react-native';
 
-import { useFirestoreDocLiveQuery } from '@/core';
+import { showSuccessMessage, useFirestoreDocLiveQuery } from '@/core';
 import { F_LINKS, F_LINKS_GSTAPIKEY } from '@/types';
 import {
   ActivityIndicator,
@@ -261,7 +261,7 @@ const InfoCard = ({ title, data }: { title: string; data: any }) => {
   const handleClip = () => {
     if (data) {
       Clipboard.setString(data);
-      ToastAndroid.show('Copied To Clipboard', ToastAndroid.SHORT);
+      showSuccessMessage('share.copy');
     }
   };
   return (

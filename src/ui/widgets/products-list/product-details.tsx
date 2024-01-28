@@ -5,11 +5,11 @@ import { Entypo } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
-import { ToastAndroid } from 'react-native';
 
 import {
   getImageBase64,
   handleWhatsappShare,
+  showErrorMessage,
   showSuccessMessage,
   useFavorites,
   useFirestoreDocLiveQuery,
@@ -47,7 +47,7 @@ export const ProductDetails = ({ item }: { item: Product }) => {
         handleWhatsappShare(fileUrl, LINK, share?.data?.phone);
       }
     } catch (error) {
-      ToastAndroid.show('Some Error', ToastAndroid.SHORT);
+      showErrorMessage('capture.failed');
     }
   };
 

@@ -3,10 +3,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import React, { useCallback } from 'react';
-import { ToastAndroid } from 'react-native';
 import { StyleSheet } from 'react-native';
 
-import { logger, shadow, useEditorX } from '@/core';
+import { logger, shadow, showErrorMessage, useEditorX } from '@/core';
 import { FirestoreData } from '@/core/fire-util';
 import { F_IMAGES_ELEMENTS, type ImageListType } from '@/types';
 import { Image, Text, TouchableOpacity, Vertical2CompList, View } from '@/ui';
@@ -65,7 +64,7 @@ export const ChangeImageModal = () => {
         goBack();
       }
     } catch (error) {
-      ToastAndroid.show('Something Unexpected Happen !', ToastAndroid.SHORT);
+      showErrorMessage('capture.failed');
     }
   };
   const pickImage = async () => {
@@ -80,7 +79,7 @@ export const ChangeImageModal = () => {
         goBack();
       }
     } catch (error) {
-      ToastAndroid.show('Something Unexpected Happen !', ToastAndroid.SHORT);
+      showErrorMessage('capture.failed');
     }
   };
   return (

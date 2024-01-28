@@ -10,6 +10,8 @@ import { Switch } from 'react-native';
 import { FadeOutDown, FlipInXDown } from 'react-native-reanimated';
 
 import {
+  getImageBase64,
+  handleWhatsappShare2,
   openLinkInBrowser,
   useAssistance,
   useFirestoreDocLiveQuery,
@@ -20,6 +22,7 @@ import {
   colors,
   FocusAwareStatusBar,
   Image,
+  IS_IOS,
   ScrollView,
   Text,
   View,
@@ -33,11 +36,32 @@ import { LanguageItem } from './language-item';
 export const Settings = () => {
   const { navigate } = useNavigation();
   const [update, setUpdate] = React.useState(1);
+  const [image, setImage] = React.useState('');
   const [isEnabled, setIsEnable] = useAssistance();
   const user = auth().currentUser;
-  const { data } = useFirestoreDocLiveQuery(F_LINKS, F_LINKS_SETTINGS);
+  const fdata = useFirestoreDocLiveQuery(F_LINKS, F_LINKS_SETTINGS);
+  const data = fdata?.data as {
+    shareimage: string;
+    share: string;
+    feedback: string;
+    rate: string;
+    rateios: string;
+    support: string;
+    privacy: string;
+    terms: string;
+    website: string;
+  };
+  const letImage = data?.shareimage || false;
   const User = useFirestoreDocLiveQuery(F_USERS, user?.uid as string);
   const iconColor = colors.neutral[400];
+
+  React.useEffect(() => {
+    if (letImage) {
+      getImageBase64(letImage).then((res) => {
+        setImage(res);
+      });
+    }
+  }, [letImage]);
   const signOut = () => {
     auth().signOut();
   };
@@ -159,7 +183,9 @@ export const Settings = () => {
                 text="settings.share"
                 icon={<Share color={iconColor} />}
                 onPress={() => {
-                  data?.share ? openLinkInBrowser(data?.share) : {};
+                  data?.share &&
+                    image &&
+                    handleWhatsappShare2(image, data?.share, 'image/png');
                 }}
               />
               <Item
@@ -172,21 +198,23 @@ export const Settings = () => {
                   />
                 }
                 onPress={() => {
-                  data?.feedback ? openLinkInBrowser(data?.feedback) : {};
+                  data?.feedback && openLinkInBrowser(data?.feedback);
                 }}
               />
               <Item
                 text="settings.rate"
                 icon={<Rate color={iconColor} />}
                 onPress={() => {
-                  data?.rate ? openLinkInBrowser(data?.rate) : {};
+                  IS_IOS
+                    ? data?.rateios && openLinkInBrowser(data?.rateios)
+                    : data?.rate && openLinkInBrowser(data?.rate);
                 }}
               />
               <Item
                 text="settings.support"
                 icon={<Support color={iconColor} />}
                 onPress={() => {
-                  data?.support ? openLinkInBrowser(data?.support) : {};
+                  data?.support && openLinkInBrowser(data?.support);
                 }}
               />
             </ItemsContainer>
@@ -194,20 +222,20 @@ export const Settings = () => {
               <Item
                 text="settings.privacy"
                 onPress={() => {
-                  data?.privacy ? openLinkInBrowser(data?.privacy) : {};
+                  data?.privacy && openLinkInBrowser(data?.privacy);
                 }}
               />
               <Item
                 text="settings.terms"
                 onPress={() => {
-                  data?.terms ? openLinkInBrowser(data?.terms) : {};
+                  data?.terms && openLinkInBrowser(data?.terms);
                 }}
               />
               <Item
                 text="settings.website"
                 icon={<Website color={iconColor} />}
                 onPress={() => {
-                  data?.website ? openLinkInBrowser(data?.website) : {};
+                  data?.website && openLinkInBrowser(data?.website);
                 }}
               />
               <Item text="settings.logout" onPress={signOut} />

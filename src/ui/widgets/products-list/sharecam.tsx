@@ -8,7 +8,6 @@ import * as MediaLibrary from 'expo-media-library';
 import { useEffect, useRef, useState } from 'react';
 import React from 'react';
 import { Modal, StyleSheet } from 'react-native';
-import { ToastAndroid } from 'react-native';
 import { ImageBackground } from 'react-native';
 import * as Animated from 'react-native-animatable';
 import FastImage from 'react-native-fast-image';
@@ -19,6 +18,8 @@ import {
   logger,
   saveToGallery,
   shadow,
+  showErrorMessage,
+  showSuccessMessage,
   useFirestoreLiveQuery,
   useImageStore,
 } from '@/core';
@@ -106,13 +107,10 @@ export const ShareCam = ({ route }: any) => {
       // You have permission to write to the storage here
       // MediaLibrary.saveToLibraryAsync(localUri);
       await saveToGallery(localUri);
-      ToastAndroid.show('Photo Saved to Gallery !', ToastAndroid.SHORT);
+      showSuccessMessage('gallery.saved');
       setLoading(false);
     } else {
-      ToastAndroid.show(
-        'Permission denied go to setting and give permission !',
-        ToastAndroid.SHORT
-      );
+      showErrorMessage('gallery.denied');
       setLoading(false);
     }
   };
@@ -130,7 +128,7 @@ export const ShareCam = ({ route }: any) => {
       }
     } catch (error) {
       setLoading(false);
-      ToastAndroid.show('Something Unexpected Happen !', ToastAndroid.SHORT);
+      showErrorMessage('capture.failed');
     }
   };
   const uploadImage = async () => {
@@ -146,7 +144,7 @@ export const ShareCam = ({ route }: any) => {
       }
     } catch (error) {
       setLoading(false);
-      ToastAndroid.show('Something Unexpected Happen !', ToastAndroid.SHORT);
+      showErrorMessage('capture.failed');
     }
   };
   const handleShareButton = async () => {
@@ -161,7 +159,7 @@ export const ShareCam = ({ route }: any) => {
         .finally(() => setLoading(false));
     } catch (e) {
       setLoading(false);
-      ToastAndroid.show('Sharing failed !', ToastAndroid.SHORT);
+      showErrorMessage('share.error');
     }
   };
   const handleCapture = async () => {
@@ -177,7 +175,7 @@ export const ShareCam = ({ route }: any) => {
         .finally(() => setLoading(false));
     } catch (e) {
       setLoading(false);
-      ToastAndroid.show('Capturing failed !', ToastAndroid.SHORT);
+      showErrorMessage('capture.failed');
     }
   };
   logger.log(data, '<=====image');
@@ -193,7 +191,7 @@ export const ShareCam = ({ route }: any) => {
         .finally(() => setLoading(false));
     } catch (error) {
       setLoading(false);
-      ToastAndroid.show('download Failed !', ToastAndroid.SHORT);
+      showErrorMessage('gallery.denied');
     }
   }
   const LongImageCard = React.useCallback(

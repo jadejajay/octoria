@@ -6,9 +6,9 @@ import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { Camera } from 'expo-camera';
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, ToastAndroid, Vibration } from 'react-native';
+import { StyleSheet, Vibration } from 'react-native';
 
-import { openLinkInBrowser } from '@/core';
+import { logger, openLinkInBrowser, showSuccessMessage } from '@/core';
 import { Text, TouchableOpacity, View } from '@/ui';
 export const ScanNGo = () => {
   const navigation = useNavigation();
@@ -19,10 +19,10 @@ export const ScanNGo = () => {
   const handleOpenURL = async (url: string) => {
     try {
       Clipboard.setString(url);
-      ToastAndroid.show('Content Copied To Clipboard.', ToastAndroid.SHORT);
+      showSuccessMessage('share.copy');
       openLinkInBrowser(url);
     } catch (error) {
-      console.error('Error opening URL:', error);
+      logger.error('Error opening URL:', error);
     }
   };
 
