@@ -1,4 +1,6 @@
+/* eslint-disable max-lines-per-function */
 /* eslint-disable react-native/no-inline-styles */
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -8,7 +10,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 
-import { Image } from '@/ui';
+import { AbsoluteButton, Image } from '@/ui';
 export function ImageViewer({ route }: { route: any }) {
   const { url } = route.params;
   const offset = useSharedValue({ x: 0, y: 0 });
@@ -17,6 +19,7 @@ export function ImageViewer({ route }: { route: any }) {
   const savedScale = useSharedValue(1);
   const rotation = useSharedValue(0);
   const savedRotation = useSharedValue(0);
+  const { goBack } = useNavigation();
   const animatedStyles = useAnimatedStyle(() => {
     return {
       transform: [
@@ -74,6 +77,12 @@ export function ImageViewer({ route }: { route: any }) {
           </Animated.View>
         </Animated.View>
       </GestureDetector>
+      <AbsoluteButton
+        iconName="arrow-back"
+        onPress={() => {
+          goBack();
+        }}
+      />
     </>
   );
 }

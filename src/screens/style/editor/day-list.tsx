@@ -23,6 +23,7 @@ import {
   SUB_CATEGORY,
 } from '@/types';
 import {
+  AbsoluteButton,
   HEIGHT,
   HorizontalList,
   Image,
@@ -213,18 +214,27 @@ export const DayList = ({}: Props) => {
   }, []);
 
   return (
-    <ScrollView className="flex-1">
-      <View className="h-60 w-full">{PostCategoryList()}</View>
-      <View style={styles.cStyle}>
-        <Vertical2CompList
-          Comp={CardComp}
-          Header={image ? CardCompHeader : null}
-          data={categories}
-          estimatedItemSize={300}
-          numColumn={1}
-        />
-      </View>
-    </ScrollView>
+    <>
+      <ScrollView className="flex-1">
+        <View className="h-60 w-full">{PostCategoryList()}</View>
+        <View style={styles.cStyle}>
+          <Vertical2CompList
+            Comp={CardComp}
+            Header={image ? CardCompHeader : null}
+            data={categories}
+            estimatedItemSize={300}
+            numColumn={1}
+          />
+        </View>
+      </ScrollView>
+      <AbsoluteButton
+        iconName="arrow-back"
+        onPress={() => {
+          navigation.goBack();
+        }}
+        color="#fff"
+      />
+    </>
   );
 };
 const styles = StyleSheet.create({

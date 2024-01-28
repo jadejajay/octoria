@@ -1,5 +1,6 @@
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
+import { StyleSheet } from 'react-native';
 
 import { TouchableOpacity } from './touchable-opacity';
 
@@ -40,7 +41,25 @@ export const AbsoluteButton: React.FC<AbsoluteButtonProps> = ({
 
   return (
     <TouchableOpacity className={style2} onPress={onPress} style={sstyle}>
-      <Ionicons name={iconName} size={24} color={color} />
+      <Ionicons
+        name={iconName}
+        size={27}
+        color={'black'}
+        style={styles.container2}
+      />
+      <Ionicons
+        name={iconName}
+        size={24}
+        color={color}
+        style={styles.container2}
+      />
     </TouchableOpacity>
   );
 };
+const styles = StyleSheet.create({
+  container2: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+  },
+});

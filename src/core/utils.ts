@@ -2,12 +2,10 @@
 import * as MediaLibrary from 'expo-media-library';
 import * as Sharing from 'expo-sharing';
 import * as Speech from 'expo-speech';
-import { Linking } from 'react-native';
+import { Linking, Platform } from 'react-native';
 import type { ShareSingleOptions, Social } from 'react-native-share';
 import Share from 'react-native-share';
 import type { StoreApi, UseBoundStore } from 'zustand';
-
-import { IS_IOS } from '@/ui';
 
 import type { TxKeyPath } from './i18n';
 import { getLanguage, translate } from './i18n';
@@ -17,6 +15,9 @@ import { showErrorMessage, showSuccessMessage } from './message-utils';
 export function openLinkInBrowser(url: string) {
   Linking.canOpenURL(url).then((canOpen) => canOpen && Linking.openURL(url));
 }
+
+export const IS_IOS = Platform.OS === 'ios';
+export const IS_ANDROID = Platform.OS === 'android';
 
 type WithSelectors<S> = S extends { getState: () => infer T }
   ? S & { use: { [K in keyof T]: () => T[K] } }

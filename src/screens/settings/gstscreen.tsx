@@ -2,6 +2,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import IonIcons from '@expo/vector-icons/Ionicons';
 import Clipboard from '@react-native-clipboard/clipboard';
+import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import * as React from 'react';
 import { Modal, StyleSheet } from 'react-native';
@@ -9,6 +10,7 @@ import { Modal, StyleSheet } from 'react-native';
 import { showSuccessMessage, useFirestoreDocLiveQuery } from '@/core';
 import { F_LINKS, F_LINKS_GSTAPIKEY } from '@/types';
 import {
+  AbsoluteButton,
   ActivityIndicator,
   AnimatedButton,
   Input,
@@ -30,6 +32,7 @@ export const GstView = ({}: Props) => {
   );
   const [loading, setLoading] = React.useState(false);
   const apiKey = useFirestoreDocLiveQuery(F_LINKS, F_LINKS_GSTAPIKEY);
+  const { goBack } = useNavigation();
 
   const handleSearch = () => {
     setLoading(true);
@@ -52,77 +55,24 @@ export const GstView = ({}: Props) => {
 
   if (result === null) {
     return (
-      <View className="mt-20 w-screen items-center">
-        <Text className="text-xl text-indigo-600">
-          Find GST Number Information
-        </Text>
-        <View className="w-screen p-3">
-          <Input
-            className="m-2 w-max rounded-lg border  border-indigo-600 p-2 pr-10 text-indigo-600"
-            placeholder=" Ex : 24AAAAA0000A1Z5"
-            value={search}
-            placeholderTextColor={'rgb(79, 70, 229)'}
-            cursorColor={'rgb(79, 70, 229)'}
-            onChangeText={(e) => {
-              setSearch(e);
-            }}
-            onEndEditing={() => {
-              handleSearch();
-            }}
-            autoCapitalize="characters"
-          />
-          <TouchableOpacity
-            className="absolute right-7 top-7"
-            onPress={handleSearch}
-          >
-            <IonIcons name="search" size={24} color="rgb(79, 70, 229)" />
-          </TouchableOpacity>
-          {search && (
-            <TouchableOpacity
-              className="absolute right-14 top-7"
-              onPress={handleClear}
-            >
-              <IonIcons name="close" size={24} color="rgb(79, 70, 229)" />
-            </TouchableOpacity>
-          )}
-        </View>
-        <Modal visible={loading} style={{ flex: 1 }} transparent={true}>
-          <View
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <ActivityIndicator size="large" color={'rgb(79, 70, 229)'} />
-          </View>
-        </Modal>
-      </View>
-    );
-  }
-  if (result?.flag === false) {
-    return (
-      <View className="mt-4 flex-1">
-        <View className="mt-4 w-screen items-center">
+      <>
+        <AbsoluteButton
+          iconName="arrow-back"
+          onPress={() => {
+            goBack();
+          }}
+        />
+        <View className="mt-20 w-screen items-center">
           <Text className="text-xl text-indigo-600">
             Find GST Number Information
           </Text>
-          <Modal visible={loading} style={{ flex: 1 }} transparent={true}>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <ActivityIndicator size="large" color={'rgb(79, 70, 229)'} />
-            </View>
-          </Modal>
           <View className="w-screen p-3">
             <Input
-              className="m-2 w-max rounded-lg border  border-indigo-600 p-2 pr-10"
+              className="m-2 w-max rounded-lg border  border-indigo-600 p-2 pr-10 text-indigo-600"
               placeholder=" Ex : 24AAAAA0000A1Z5"
               value={search}
+              placeholderTextColor={'rgb(79, 70, 229)'}
+              cursorColor={'rgb(79, 70, 229)'}
               onChangeText={(e) => {
                 setSearch(e);
               }}
@@ -146,13 +96,88 @@ export const GstView = ({}: Props) => {
               </TouchableOpacity>
             )}
           </View>
+          <Modal visible={loading} style={{ flex: 1 }} transparent={true}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <ActivityIndicator size="large" color={'rgb(79, 70, 229)'} />
+            </View>
+          </Modal>
         </View>
-        <Text className="pl-4 text-xl text-red-700">{result?.message}</Text>
-      </View>
+      </>
+    );
+  }
+  if (result?.flag === false) {
+    return (
+      <>
+        <AbsoluteButton
+          iconName="arrow-back"
+          onPress={() => {
+            goBack();
+          }}
+        />
+        <View className="mt-4 flex-1">
+          <View className="mt-4 w-screen items-center">
+            <Text className="text-xl text-indigo-600">
+              Find GST Number Information
+            </Text>
+            <Modal visible={loading} style={{ flex: 1 }} transparent={true}>
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <ActivityIndicator size="large" color={'rgb(79, 70, 229)'} />
+              </View>
+            </Modal>
+            <View className="w-screen p-3">
+              <Input
+                className="m-2 w-max rounded-lg border  border-indigo-600 p-2 pr-10"
+                placeholder=" Ex : 24AAAAA0000A1Z5"
+                value={search}
+                onChangeText={(e) => {
+                  setSearch(e);
+                }}
+                onEndEditing={() => {
+                  handleSearch();
+                }}
+                autoCapitalize="characters"
+              />
+              <TouchableOpacity
+                className="absolute right-7 top-7"
+                onPress={handleSearch}
+              >
+                <IonIcons name="search" size={24} color="rgb(79, 70, 229)" />
+              </TouchableOpacity>
+              {search && (
+                <TouchableOpacity
+                  className="absolute right-14 top-7"
+                  onPress={handleClear}
+                >
+                  <IonIcons name="close" size={24} color="rgb(79, 70, 229)" />
+                </TouchableOpacity>
+              )}
+            </View>
+          </View>
+          <Text className="pl-4 text-xl text-red-700">{result?.message}</Text>
+        </View>
+      </>
     );
   }
   return (
     <View>
+      <AbsoluteButton
+        iconName="arrow-back"
+        onPress={() => {
+          goBack();
+        }}
+      />
       <View
         className="mt-20 w-screen items-center"
         style={{ backgroundColor: 'white', elevation: 4 }}

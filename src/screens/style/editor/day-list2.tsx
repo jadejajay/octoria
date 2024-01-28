@@ -227,18 +227,6 @@ export const DayList2 = ({ route }: Props) => {
 };
 
 const styles = StyleSheet.create({
-  container2: {
-    backgroundColor: 'white',
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 4,
-  },
   button: {
     flex: 1,
   },

@@ -1,8 +1,8 @@
 import { CACHE_DIR } from '@/types';
-import { IS_ANDROID, IS_IOS } from '@/ui';
 
 import { FileManagement } from './file-management';
 import { logger } from './logger';
+import { IS_ANDROID, IS_IOS } from './utils';
 
 const fileManager = new FileManagement();
 export class VideoCacheManager {

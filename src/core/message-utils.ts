@@ -1,7 +1,6 @@
 import { showMessage } from 'react-native-flash-message';
 
-import type { TxKeyPath } from '@/core';
-import { translate } from '@/core';
+import { translate, type TxKeyPath } from './i18n';
 
 export const showErrorMessage = (message: TxKeyPath) => {
   showMessage({

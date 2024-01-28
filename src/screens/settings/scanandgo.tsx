@@ -9,7 +9,7 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet, Vibration } from 'react-native';
 
 import { logger, openLinkInBrowser, showSuccessMessage } from '@/core';
-import { Text, TouchableOpacity, View } from '@/ui';
+import { AbsoluteButton, Text, TouchableOpacity, View } from '@/ui';
 export const ScanNGo = () => {
   const navigation = useNavigation();
   const [hasPermission, setHasPermission] = useState<boolean>(false);
@@ -46,70 +46,88 @@ export const ScanNGo = () => {
   }
   if (hasPermission === false) {
     return (
-      <View className="flex-1 items-center justify-center">
-        <Text variant="lg" className="text-red-600">
-          No access to camera
-        </Text>
-      </View>
+      <>
+        <AbsoluteButton
+          iconName="arrow-back"
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
+        <View className="flex-1 items-center justify-center">
+          <Text variant="lg" className="text-red-600">
+            No access to camera
+          </Text>
+        </View>
+      </>
     );
   }
   if (isFocused) {
     return (
-      <View style={styles.container}>
-        {scanned && (
-          <TouchableOpacity
-            className=" h-1/2 w-5/6 items-center justify-around gap-4 rounded-lg"
-            style={{
-              backgroundColor: 'white',
-              elevation: 5,
-            }}
-            activeOpacity={1}
-          >
-            <Text className="font-varela text-lg  text-blue-700">{Data}</Text>
-            <TouchableOpacity onPress={() => handleOpenURL(Data)}>
-              <Text
-                className="text-text rounded-2xl bg-blue-700 p-2 font-varela text-xl text-white"
-                tx={'scanqr.open_link'}
-              />
-            </TouchableOpacity>
+      <>
+        <View style={styles.container}>
+          {scanned && (
             <TouchableOpacity
+              className=" h-1/2 w-5/6 items-center justify-around gap-4 rounded-lg"
+              style={{
+                backgroundColor: 'white',
+                elevation: 5,
+              }}
               activeOpacity={1}
-              onPress={() => setScanned(false)}
             >
-              <Text
-                className="text-text rounded-xl p-2 font-varela text-xl"
-                style={{ elevation: 4, backgroundColor: 'white' }}
-                tx={'scanqr.scan_again'}
-              />
+              <Text className="font-varela text-lg  text-blue-700">{Data}</Text>
+              <TouchableOpacity onPress={() => handleOpenURL(Data)}>
+                <Text
+                  className="text-text rounded-2xl bg-blue-700 p-2 font-varela text-xl text-white"
+                  tx={'scanqr.open_link'}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                activeOpacity={1}
+                onPress={() => setScanned(false)}
+              >
+                <Text
+                  className="text-text rounded-xl p-2 font-varela text-xl"
+                  style={{ elevation: 4, backgroundColor: 'white' }}
+                  tx={'scanqr.scan_again'}
+                />
+              </TouchableOpacity>
             </TouchableOpacity>
-          </TouchableOpacity>
-        )}
-        {!scanned && (
-          <>
-            <Camera
-              onBarCodeScanned={(...args) => {
-                const data = args[0].data;
-                setData(data);
-                Vibration.vibrate();
-                setScanned(true);
-              }}
-              barCodeScannerSettings={{
-                barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
-              }}
-              style={styles.camera}
-            />
-            <View className="absolute z-10 flex-1 items-center justify-center">
-              <Ionicons name="scan-outline" size={340} color="white" />
-            </View>
-            <View className="absolute z-10 flex-1 items-center justify-end">
-              <Text className="font-serif text-sm text-white">powered by</Text>
-              <Text className="font-sfbold text-xl text-white">
-                IBAIS MEDIA
-              </Text>
-            </View>
-          </>
-        )}
-      </View>
+          )}
+          {!scanned && (
+            <>
+              <Camera
+                onBarCodeScanned={(...args) => {
+                  const data = args[0].data;
+                  setData(data);
+                  Vibration.vibrate();
+                  setScanned(true);
+                }}
+                barCodeScannerSettings={{
+                  barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr],
+                }}
+                style={styles.camera}
+              />
+              <View className="absolute z-10 flex-1 items-center justify-center">
+                <Ionicons name="scan-outline" size={340} color="white" />
+              </View>
+              <View className="absolute z-10 flex-1 items-center justify-end">
+                <Text className="font-serif text-sm text-white">
+                  powered by
+                </Text>
+                <Text className="font-sfbold text-xl text-white">
+                  IBAIS MEDIA
+                </Text>
+              </View>
+            </>
+          )}
+        </View>
+        <AbsoluteButton
+          iconName="arrow-back"
+          onPress={() => {
+            navigation.goBack();
+          }}
+        />
+      </>
     );
   } else {
     return null;

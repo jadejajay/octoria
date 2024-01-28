@@ -72,7 +72,6 @@ export const Post = ({ route }: { route: RouteProp<'Post'> }) => {
         onPress={() => {
           navigation.goBack();
         }}
-        color="#000"
       />
     </>
   );
