@@ -121,7 +121,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
           package: 'https-gpl',
         },
         android: {
-          package: 'min-gpl',
+          package: 'https-gpl',
         },
       },
     ],

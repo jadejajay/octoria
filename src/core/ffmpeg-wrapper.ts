@@ -53,7 +53,7 @@ export class FFmpegWrapper {
     logger.log('resolution', resolution);
     logger.log('ext', ext);
     var temp = `${this.outputFile}.${ext}`;
-    const cmd = `-i ${dwnVideo} -i ${renderedAsset} -filter_complex "[0:v]scale=${resolution}:${resolution} [video]; [video][1:v]overlay=0:0 [output]" -map 0:a -c:a copy -map 0:a -strict -2 -c:a aac -map "[output]" -q:v 1 ${temp}`;
+    const cmd = `-i ${dwnVideo} -i ${renderedAsset} -filter_complex "[0:v]scale=${resolution}:${resolution}[video];[video][1:v]overlay=0:0[output]" -map 0:a -c:a copy -map "[output]" -c:v libx264 -preset veryfast -crf 22 -c:a aac -strict -2 ${temp}`;
     const result = await this.executeFFmpegCommand(cmd);
     if (result === 1) {
       showSuccessMessage('render.succ_video');
