@@ -6,7 +6,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ...config,
   name: Env.NAME,
   description: `${Env.NAME} Mobile App`,
-  owner: 'ibais',
+  owner: 'jadejajay',
   slug: 'octoria',
   version: Env.VERSION.toString(),
   orientation: 'portrait',
